@@ -181,8 +181,6 @@ const SignUpForm = () => {
       return;
     }
 
-    console.log("hello");
-
     try {
       const response = await signupUser(formData);
 

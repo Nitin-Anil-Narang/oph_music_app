@@ -1,6 +1,27 @@
 const user_details = require("../model/signup.js");
 const bcrypt = require("bcrypt");
 
+const ophidGenerator = (artistT, len, cnt) => {
+  let id = '';
+
+  if (artistT === 'Independent artist') {
+    if (len === 0) {
+      id = 'OPH-CAN-IA-01';
+    } else {
+      id = `OPH-CAN-IA-0${cnt + 1}`;
+    }
+  } else if (artistT === 'Special artist') {
+    if (len === 0) {
+      id = 'OPH-CAN-SA-01';
+    } else {
+      id = `OPH-CAN-SA-0${cnt + 1}`;
+    }
+  }
+
+  return id;
+};
+
+
 const signup = async (req, res) => {
   try {
     const { name, stageName, email, contactNumber, confirmPassword, artistType } =
@@ -20,8 +41,14 @@ const signup = async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(confirmPassword, 10);
 
+    const artist = await user_details.storeArtistType(artistType)
+    console.log(artist);
+    
+
+    const ophId = ophidGenerator(artistType, artist.length, artist[0].cnt)
     // Insert user
     const dbResponse = await user_details.createUser(
+      ophId,
       name,
       stageName,
       email,
