@@ -185,7 +185,8 @@ const SignUpForm = () => {
       const response = await signupUser(formData);
 
       if (response.success) {
-        navigate("/auth/payment");
+        const path = `/auth/payment?ophid=${response.data.id}`
+        navigate(path);
       } 
     } catch (e) {
       toast.error(e.response.data.message)

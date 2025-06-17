@@ -23,6 +23,7 @@ const ophidGenerator = (artistT, len, cnt) => {
 
 
 const signup = async (req, res) => {
+  let count = 0
   try {
     const { name, stageName, email, contactNumber, confirmPassword, artistType } =
       req.body;
@@ -42,10 +43,12 @@ const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(confirmPassword, 10);
 
     const artist = await user_details.storeArtistType(artistType)
-    console.log(artist);
-    
 
-    const ophId = ophidGenerator(artistType, artist.length, artist[0].cnt)
+    if(artist.length > 0)
+    {
+      count = artist[0].cnt
+    }
+    const ophId = ophidGenerator(artistType, artist.length, count)
     // Insert user
     const dbResponse = await user_details.createUser(
       ophId,
@@ -58,7 +61,7 @@ const signup = async (req, res) => {
     );
 
     if (dbResponse) {
-      return res.status(200).json({ success: true, message: "Signup success" });
+      return res.status(200).json({ id : ophId,success: true, message: "Signup success" });
     }
 
     return res.status(500).json({ success: false, message: "Server error" });
