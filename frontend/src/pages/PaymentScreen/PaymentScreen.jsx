@@ -31,6 +31,7 @@ const PaymentScreen = () => {
         artist_id: artist_id,
         plan_ids: planIds,
       };
+      console.log(formData);
 
       const response = await axiosApi.post("/payments/multi", formData);
 
