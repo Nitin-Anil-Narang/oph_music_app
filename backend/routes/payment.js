@@ -1,5 +1,5 @@
 const express = require("express")
-const router = express.Router()Add commentMore actions
+const router = express.Router()
 const {payment} = require("../controllers/payment")
 
 router.route("/auth/payment").post(payment)
