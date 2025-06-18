@@ -5,7 +5,7 @@ import React from 'react';
 const ProtectedRoute = ({ children }) => {
   const { artist } = useArtist();
 
-  if (!artist) {
+  if (!artist) {    
     return <Navigate to="/auth/login" />;
   }
 

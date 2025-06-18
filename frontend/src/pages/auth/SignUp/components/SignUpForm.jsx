@@ -181,16 +181,17 @@ const SignUpForm = () => {
       return;
     }
 
-    console.log("hello");
-
     try {
       const response = await signupUser(formData);
+      console.log(response);
+      
 
       if (response.success) {
-        navigate("/auth/payment");
-      } 
-    } catch (e) {
-      toast.error(e.response.data.message)
+        const path = `/auth/payment?ophid=${response.id}`; // <-- leading slash added        
+        navigate(path);
+      }
+    } catch (e) {      
+      toast.error(e.response.data.message);
     }
   };
 
