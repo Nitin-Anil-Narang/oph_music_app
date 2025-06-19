@@ -3,16 +3,19 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useArtist } from "../auth/API/ArtistContext";
 import axiosApi from "../../conf/axios";
 import Loading from "../../components/Loading";
+import { useParams } from "react-router-dom";
+
 const PaymentScreen = () => {
   const { logout } = useArtist();
   const navigate = useNavigate();
   const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const ophid = queryParams.get("ophid");
   const [trans, setTrans] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const {
-    artist_id,
     amount = 0,
     planIds = [],
     paymentIds = [], // Optional existing payment IDs
@@ -27,12 +30,16 @@ const PaymentScreen = () => {
 
     try {
       const formData = {
-        trans_id: trans,
-        artist_id: artist_id,
-        plan_ids: planIds,
-      };
+        OPH_ID: ophid,
+        Transaction_ID: trans,
+        Review:0, 
+        Status:"Under Review"
 
-      const response = await axiosApi.post("/payments/multi", formData);
+        // plan_ids: planIds,
+      };
+      console.log("Submitting payment form data:", formData);
+
+      const response = await axiosApi.post("/auth/payment", formData);
 
       // check if this payment is from date change
       if (location.state?.fromDateChange) {
