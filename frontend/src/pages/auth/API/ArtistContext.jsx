@@ -42,56 +42,56 @@ export const ArtistProvider = ({ children }) => {
         navigate('/auth/login');
     }
   };
-  // useEffect(() => {
-  //   const verifyToken = async () => {
-  //     const storedToken = localStorage.getItem('token');
-  //     if (!storedToken || storedToken === 'undefined' || storedToken === 'null') {
-  //       if (![
-  //         '/auth/login', 
-  //         '/auth/signup', 
-  //         '/auth/forgot-password',
-  //         '/auth/payment',
-  //         '/auth/signin',
-  //         '/auth/signup/payment-callback',
-  //         '/auth/reset-password'
-  //       ].includes(window.location.pathname)) {
-  //         navigate('/auth/login');
-  //       }
-  //       return;
-  //     }
+  useEffect(() => {
+    const verifyToken = async () => {
+      const storedToken = localStorage.getItem('token');
+      if (!storedToken || storedToken === 'undefined' || storedToken === 'null') {
+        if (![
+          '/auth/login', 
+          '/auth/signup', 
+          '/auth/forgot-password',
+          '/auth/payment',
+          '/auth/signin',
+          '/auth/signup/payment-callback',
+          '/auth/reset-password'
+        ].includes(window.location.pathname)) {
+          navigate('/auth/login');
+        }
+        return;
+      }
 
-  //     try {
-  //       const decodedToken = jwtDecode(storedToken);
-  //       if (!decodedToken?.id) {
-  //         throw new Error('Invalid token');
-  //       }
+      try {
+        const decodedToken = jwtDecode(storedToken);
+        if (!decodedToken?.id) {
+          throw new Error('Invalid token');
+        }
 
-  //       // Only set state if it's different
-  //       setArtist(prev => prev?.id === decodedToken.id ? prev : decodedToken);
-  //       setToken(prev => prev === storedToken ? prev : storedToken);
-  //       setHeaders(prev => prev?.Authorization === `Bearer ${storedToken}` ? prev : { 'Authorization': `Bearer ${storedToken}` });
+        // Only set state if it's different
+        setArtist(prev => prev?.id === decodedToken.id ? prev : decodedToken);
+        setToken(prev => prev === storedToken ? prev : storedToken);
+        setHeaders(prev => prev?.Authorization === `Bearer ${storedToken}` ? prev : { 'Authorization': `Bearer ${storedToken}` });
 
-  //       // Handle onboarding redirection
-  //       if (window.location.pathname.startsWith('/dashboard') && decodedToken.onboarding_status !== 4) {
-  //         redirectBasedOnStatus(decodedToken.onboarding_status);
-  //       }
-  //     } catch (error) {
-  //       console.error('Token validation error:', error);
-  //       logout();
-  //     }
-  //   };
+        // Handle onboarding redirection
+        if (window.location.pathname.startsWith('/dashboard') && decodedToken.onboarding_status !== 4) {
+          redirectBasedOnStatus(decodedToken.onboarding_status);
+        }
+      } catch (error) {
+        console.error('Token validation error:', error);
+        logout();
+      }
+    };
 
-  //   verifyToken();
-  // }, [navigate]);
-  // const logout = () => {
-  //   localStorage.removeItem('token');
-  //   localStorage.removeItem('userData');
-  //   setArtist(null);
-  //   setToken(null);
-  //   setHeaders(null);
-  //   navigate('/auth/login');
-  //   window.location.reload();
-  // };
+    verifyToken();
+  }, [navigate]);
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userData');
+    setArtist(null);
+    setToken(null);
+    setHeaders(null);
+    navigate('/auth/login');
+    window.location.reload();
+  };
 
   const login = (token, userData) => {
     try { 
@@ -115,13 +115,13 @@ export const ArtistProvider = ({ children }) => {
   };
 
   return (
-    // <ArtistContext.Provider value={{ artist, setArtist, logout, login, headers }}>
-    //   {children}
-    // </ArtistContext.Provider>
-
-      <ArtistContext.Provider value={{ setArtist, login }}>
+    <ArtistContext.Provider value={{ artist, setArtist, logout, login, headers }}>
       {children}
     </ArtistContext.Provider>
+
+    //   <ArtistContext.Provider value={{ setArtist, login }}>
+    //   {children}
+    // </ArtistContext.Provider>
   );
 };
 
