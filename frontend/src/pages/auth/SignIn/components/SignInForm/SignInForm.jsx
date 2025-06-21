@@ -34,7 +34,8 @@ const SignInForm = () => {
       if (response.success) {
         toast.success("Login Successful");
         localStorage.setItem("token", response.token);
-        navigate("/auth/payment");
+        const path = `/auth/payment?ophid=${response.ophid}`
+        navigate(path);
       }
     } catch (error) {
       toast.error(
