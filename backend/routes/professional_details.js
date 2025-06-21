@@ -16,6 +16,6 @@ router.post(
 );
 
 // Optional GET route to test fetch
-router.get("/:ophid", controller.getProfessionalDetailsByOphId);
+router.get("/prof/:ophid", controller.getProfessionalDetailsByOphId);
 
 module.exports = router;
