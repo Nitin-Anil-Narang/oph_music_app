@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useArtist } from "../auth/API/ArtistContext";
 import axiosApi from "../../conf/axios";
@@ -18,10 +18,11 @@ const PaymentScreen = () => {
   const {
     amount = 0,
     planIds = [],
-    paymentIds = [], // Optional existing payment IDs
+    paymentIds = [], 
     returnPath = "/",
     heading = "Payment Required",
   } = location.state || {};
+
 
   const handlePaymentSuccess = async (e) => {
     e.preventDefault();
@@ -32,8 +33,8 @@ const PaymentScreen = () => {
       const formData = {
         OPH_ID: ophid,
         Transaction_ID: trans,
-        Review:0, 
-        Status:"Under Review"
+        Review: 0,
+        Status: "Under Review",
 
         // plan_ids: planIds,
       };
@@ -62,8 +63,7 @@ const PaymentScreen = () => {
           },
           replace: true,
         });
-      }
-      else if (returnPath === "/dashboard/events") {
+      } else if (returnPath === "/dashboard/events") {
         // Navigate to success page for ticket submission
         navigate("/dashboard/success", {
           state: {
@@ -73,8 +73,7 @@ const PaymentScreen = () => {
           },
           replace: true,
         });
-      } 
-       else {
+      } else {
         // preserve the toast parameters from the original navigation
         const { showSuccessToast, successMessage } = location.state || {};
 
@@ -115,7 +114,7 @@ const PaymentScreen = () => {
 
   return (
     <div className="relative">
-      {/* {loading && <Loading />} */}
+      {loading && <Loading />}
       <div className="bg-black min-h-[calc(100vh-70px)] text-white flex flex-col items-center justify-center p-8">
         <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
           {heading} <span className="text-cyan-400">₹{amount}/-</span>

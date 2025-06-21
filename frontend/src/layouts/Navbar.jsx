@@ -10,9 +10,6 @@ function Navbar() {
   const { headers, logout, login } = useArtist();
   const [reload, setReload] = useState(false);
 
-  useEffect(() => {
-    // Triggers a re-render when the page loads
-  }, []);
 
   useEffect(() => {
     if (!headers || !headers.Authorization) {
