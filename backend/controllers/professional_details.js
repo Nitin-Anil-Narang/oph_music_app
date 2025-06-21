@@ -1,4 +1,5 @@
 const professional = require("../model/professional_details");
+const { uploadToS3 } = require("../utils");
 
 const insertProfessionalDetails = async (req, res) => {
   try {
@@ -73,13 +74,14 @@ const insertProfessionalDetails = async (req, res) => {
 const getProfessionalDetailsByOphId = async (req, res) => {
   try {
     const { ophid } = req.params;
+    
     const result = await professional.getProfessionalByOphId(ophid);
 
     if (result.length > 0) {
       return res.status(200).json({ success: true, data: result[0] });
     }
 
-    return res.status(404).json({ success: false, message: "No data found for this OPH_ID" });
+    return res.status(404).json({ success: false, message: error });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ success: false, message: "Server error" });
