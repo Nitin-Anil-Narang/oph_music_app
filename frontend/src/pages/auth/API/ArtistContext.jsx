@@ -17,7 +17,6 @@ export const ArtistProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const redirectBasedOnStatus = (status) => {
-    console.log(status);
     ;
     switch (status) {
       case 0:
@@ -62,12 +61,12 @@ export const ArtistProvider = ({ children }) => {
 
       try {
         const decodedToken = jwtDecode(storedToken);
-        if (!decodedToken?.id) {
+        if (!decodedToken?.email) {
           throw new Error('Invalid token');
         }
 
         // Only set state if it's different
-        setArtist(prev => prev?.id === decodedToken.id ? prev : decodedToken);
+        setArtist(prev => prev?.email === decodedToken.email ? prev : decodedToken);
         setToken(prev => prev === storedToken ? prev : storedToken);
         setHeaders(prev => prev?.Authorization === `Bearer ${storedToken}` ? prev : { 'Authorization': `Bearer ${storedToken}` });
 
@@ -96,7 +95,7 @@ export const ArtistProvider = ({ children }) => {
   const login = (token, userData) => {
     try { 
       const decodedToken = jwtDecode(token);
-      if (!decodedToken?.id) {
+      if (!decodedToken?.email) {
         throw new Error('Invalid token');
       }
 
@@ -118,10 +117,6 @@ export const ArtistProvider = ({ children }) => {
     <ArtistContext.Provider value={{ artist, setArtist, logout, login, headers }}>
       {children}
     </ArtistContext.Provider>
-
-    //   <ArtistContext.Provider value={{ setArtist, login }}>
-    //   {children}
-    // </ArtistContext.Provider>
   );
 };
 

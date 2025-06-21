@@ -22,16 +22,10 @@ const signin = async (req, res) => {
 
     const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "1h" });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", 
-      sameSite: "Strict", 
-      maxAge: 60 * 60 * 1000 
-    });
-
     return res.status(200).json({
       success: true,
-      message: "Login successful"
+      message: "Login successful",
+      token:token
     });
 
   } catch (err) {
