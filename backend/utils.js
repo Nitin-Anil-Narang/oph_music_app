@@ -9,7 +9,7 @@ const s3 = new AWS.S3({
 
 const uploadToS3 = async (file, folder) => {
   const params = {
-    Bucket: process.env.S3_BUCKET_NAME,
+    Bucket: process.env.S3_BUCKET,
     Key: `${folder}/${Date.now()}-${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
