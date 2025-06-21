@@ -1,5 +1,5 @@
 const professional = require("../model/professional_details");
-const { uploadToS3 } = require("../utils");
+const { uploadToS3 } = require("../utils/utils");
 
 const insertProfessionalDetails = async (req, res) => {
   try {

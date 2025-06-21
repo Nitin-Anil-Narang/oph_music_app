@@ -19,9 +19,12 @@ const PaymentScreen = () => {
     amount = 0,
     planIds = [],
     paymentIds = [], 
-    returnPath = "/",
+    returnPath = "/create-profile/personal-details",
     heading = "Payment Required",
   } = location.state || {};
+
+  console.log(location.state);
+  
 
 
   const handlePaymentSuccess = async (e) => {
@@ -41,57 +44,64 @@ const PaymentScreen = () => {
       console.log("Submitting payment form data:", formData);
 
       const response = await axiosApi.post("/auth/payment", formData);
+      
 
-      // check if this payment is from date change
-      if (location.state?.fromDateChange) {
-        // if yes, then navigate to date change success page
-        navigate("/dashboard/success", {
-          state: {
-            heading: "Date Changed Successfully!",
-            btnText: "View Calendar",
-            redirectTo: "/dashboard/time-calendar",
-          },
-          replace: true,
-        });
-      } else if (returnPath === "/dashboard/request-ticket") {
-        // Navigate to success page for ticket submission
-        navigate("/dashboard/success", {
-          state: {
-            heading: "Your request ticket has been successfully generated!",
-            btnText: "View Requests",
-            redirectTo: "/dashboard/request-ticket",
-          },
-          replace: true,
-        });
-      } else if (returnPath === "/dashboard/events") {
-        // Navigate to success page for ticket submission
-        navigate("/dashboard/success", {
-          state: {
-            heading: "Payment completed successfully!",
-            btnText: "Go to Dashboard",
-            redirectTo: "/dashboard/events",
-          },
-          replace: true,
-        });
-      } else {
-        // preserve the toast parameters from the original navigation
-        const { showSuccessToast, successMessage } = location.state || {};
 
-        // Return to calling screen with payment data
-        navigate(returnPath, {
-          state: {
-            status: "success",
-            paymentData: {
-              newPaymentIds: response.data.data.payments.map((p) => p.id),
-              existingPaymentIds: paymentIds,
-              transactionId: trans,
-            },
-            showSuccessToast,
-            successMessage,
-          },
-          replace: true,
-        });
+      if (response.data.success) {
+        // toast.success("Login Successful");
+        const path = `/auth/create-profile/personal-details?ophid=${ophid}`
+        navigate(path);
       }
+      // check if this payment is from date change
+      // if (location.state?.fromDateChange) {
+      //   // if yes, then navigate to date change success page
+      //   navigate("/dashboard/success", {
+      //     state: {
+      //       heading: "Date Changed Successfully!",
+      //       btnText: "View Calendar",
+      //       redirectTo: "/dashboard/time-calendar",
+      //     },
+      //     replace: true,
+      //   });
+      // } else if (returnPath === "/dashboard/request-ticket") {
+      //   // Navigate to success page for ticket submission
+      //   navigate("/dashboard/success", {
+      //     state: {
+      //       heading: "Your request ticket has been successfully generated!",
+      //       btnText: "View Requests",
+      //       redirectTo: "/dashboard/request-ticket",
+      //     },
+      //     replace: true,
+      //   });
+      // } else if (returnPath === "/dashboard/events") {
+      //   // Navigate to success page for ticket submission
+      //   navigate("/dashboard/success", {
+      //     state: {
+      //       heading: "Payment completed successfully!",
+      //       btnText: "Go to Dashboard",
+      //       redirectTo: "/dashboard/events",
+      //     },
+      //     replace: true,
+      //   });
+      // } else {
+      //   // preserve the toast parameters from the original navigation
+      //   const { showSuccessToast, successMessage } = location.state || {};
+
+      //   // Return to calling screen with payment data
+      //   navigate(returnPath, {
+      //     state: {
+      //       status: "success",
+      //       paymentData: {
+      //         newPaymentIds: response.data.data.payments.map((p) => p.id),
+      //         existingPaymentIds: paymentIds,
+      //         transactionId: trans,
+      //       },
+      //       showSuccessToast,
+      //       successMessage,
+      //     },
+      //     replace: true,
+      //   });
+      // }
     } catch (err) {
       console.error("Payment error:", err);
       setError("Payment processing failed. Please try again.");

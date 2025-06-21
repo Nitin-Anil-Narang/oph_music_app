@@ -1,5 +1,5 @@
 const { insertDocumentationDetails } = require("../model/documentation_details");
-const { uploadToS3 } = require("../utils");
+const { uploadToS3 } = require("../utils/utils");
 
 const insertDocumentationController = async (req, res) => {
   try {
