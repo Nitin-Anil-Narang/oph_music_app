@@ -29,6 +29,11 @@ const PersonalDetailsForm = () => {
   const [video, setVideo] = useState(null);
   const [rejectReason, setRejectReason] = useState(null);
   const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const ophid = queryParams.get("ophid");
+
+
+  
 
   
   
@@ -104,24 +109,33 @@ const PersonalDetailsForm = () => {
     };
     loadVideo();
   }, []);
+  console.log(`/profile/${ophid}`);
+  
+  const getProfileDetails = async (ophid) => {
+  const response = await axiosApi.get(`/profile/${ophid}`);
+  return response.data;
+  };
+
 
   const fetchPersonalDetails = async () => {
     try {
       // Ensure headers are available
-      if (!headers || !headers.Authorization) {
-        throw new Error("Authentication token missing");
-      }
+      // if (!headers || !headers.Authorization) {
+      //   throw new Error("Authentication token missing");
+      // }
 
-      const response = await getPersonalDetails(headers);
+      const response = await getProfileDetails(ophid);
+      console.log(response.data.full_name);
+      
 
       if (response.success) {
         // window.location.reload();
         setFormData({
           profilePicture: response.data.profile_img_url,
-          legalName: response.data.legal_name || "",
+          legalName: response.data.full_name || "",
           stageName: response.data.stage_name || "",
           contactNumber:
-            response.data.phone.split("+91")[1] || response.data.phone,
+            response.data.contact_num || response.data.phone,
           location: response.data.location || "",
           email: response.data.email || "",
           profileImage: response.data.profile_img_url
@@ -219,10 +233,29 @@ const PersonalDetailsForm = () => {
 
       // Append profile image if it exists
       if (formData.profileImage?.file) {
+        
+        
         formDataToSend.append("profile_image", formData.profileImage.file);
       }
 
-      const response = await updatePersonalDetails(formDataToSend, headers);
+      
+      const updatePersonalDetails = async (ophid,formData) => {
+        const response = await axiosApi.post(
+          `/user/${ophid}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              ...headers,
+            },
+          }
+        );
+        return response.data;
+      };
+
+      const response = await updatePersonalDetails(ophid,formDataToSend);
+      
+      
       if (response.success) {
         toast.success("Personal details updated successfully");
         navigate("/auth/create-profile/professional-details");

@@ -46,6 +46,12 @@ const PaymentScreen = () => {
       const response = await axiosApi.post("/auth/payment", formData);
 
       console.log(response);
+
+      if (response.data.success) {
+        // toast.success("Login Successful");
+        const path = `/auth/create-profile/personal-details?ophid=${ophid}`
+        navigate(path);
+      }
       
 
       // check if this payment is from date change
