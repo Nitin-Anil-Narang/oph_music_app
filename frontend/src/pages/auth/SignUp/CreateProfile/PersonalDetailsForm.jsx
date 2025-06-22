@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { getPersonalDetails, updatePersonalDetails } from "../../API/profile";
 import ProfileFormHeader from "../components/ProfileFormHeader";
@@ -14,50 +14,73 @@ import Elipse from "../../../../../public/assets/images/elipse2.png";
 import { useLocation } from "react-router-dom";
 
 const indianStates = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
-  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
-  "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
-  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
 ];
 
 const PersonalDetailsForm = () => {
   const navigate = useNavigate();
   const { headers } = useArtist();
-  const [isPlaying, setIsPlaying] = useState(false); // Track video play state
-  const videoRef = useRef(null);
-  const [video, setVideo] = useState(null);
-  const [rejectReason, setRejectReason] = useState(null);
+  // const [isPlaying, setIsPlaying] = useState(false); // Track video play state
+  // const videoRef = useRef(null);
+  // const [video, setVideo] = useState(null);
+  // const [rejectReason, setRejectReason] = useState(null);
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const ophid = searchParams.get("ophid");
 
-  
-  
   const inputRef = useRef(null);
 
-  const fetchVideo = async () => {
-    try {
-      const response = await axiosApi.get(
-        "artist-website-configs?param=signup_video"
-      );
-      setVideo(response.data.data[0]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const handlePlay = () => setIsPlaying(true);
-  const handlePause = () => setIsPlaying(false);
-  const togglePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-    }
-  };
-  useEffect(() => {
-    fetchVideo();
-  }, []);
+  // const fetchVideo = async () => {
+  //   try {
+  //     const response = await axiosApi.get(
+  //       "artist-website-configs?param=signup_video"
+  //     );
+  //     setVideo(response.data.data[0]);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+  // const handlePlay = () => setIsPlaying(true);
+  // const handlePause = () => setIsPlaying(false);
+  // const togglePlayPause = () => {
+  //   if (videoRef.current) {
+  //     if (isPlaying) {
+  //       videoRef.current.pause();
+  //     } else {
+  //       videoRef.current.play();
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchVideo();
+  // }, []);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     profilePicture: null,
@@ -68,20 +91,21 @@ const PersonalDetailsForm = () => {
     email: "",
     profileImage: null,
   });
-  const fetchRejectReason = async () => {
-    try {
-      const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-      const response = await axiosApi.get(`/artists/${artistId}`);
-      if (response.data) {
-        setRejectReason(response.data.data.reject_reason || "");
-      }
-    } catch (error) {
-      console.error("Error fetching reject reason:", error);
-      toast.error("Failed to fetch reject reason.");
-    }
-  };
+
+  // const fetchRejectReason = async () => {
+  //   try {
+  //     const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
+  //     const response = await axiosApi.get(`/artists/${artistId}`);
+  //     if (response.data) {
+  //       setRejectReason(response.data.data.reject_reason || "");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching reject reason:", error);
+  //     toast.error("Failed to fetch reject reason.");
+  //   }
+  // };
   useEffect(() => {
-    fetchRejectReason();
+    // fetchRejectReason();
     fetchPersonalDetails();
   }, []);
   const handleInputChange = (e) => {
@@ -92,18 +116,18 @@ const PersonalDetailsForm = () => {
     }));
   };
 
-  const [videoUrl, setVideoUrl] = useState(null);
+  // const [videoUrl, setVideoUrl] = useState(null);
 
-  useEffect(() => {
-    // window.location.reload();
+  // useEffect(() => {
+  //   // window.location.reload();
 
-    const loadVideo = async () => {
-      const url = await fetchVideoForScreen("personal_video");
+  //   const loadVideo = async () => {
+  //     const url = await fetchVideoForScreen("personal_video");
 
-      setVideoUrl(url);
-    };
-    loadVideo();
-  }, []);
+  //     setVideoUrl(url);
+  //   };
+  //   loadVideo();
+  // }, []);
 
   const fetchPersonalDetails = async () => {
     try {
@@ -112,24 +136,18 @@ const PersonalDetailsForm = () => {
         throw new Error("Authentication token missing");
       }
 
-      const response = await getPersonalDetails(headers);
+      const response = await getPersonalDetails(headers, ophid);
 
       if (response.success) {
-        // window.location.reload();
         setFormData({
-          profilePicture: response.data.profile_img_url,
-          legalName: response.data.legal_name || "",
+          profilePicture: null,
+          legalName: response.data.full_name || "",
           stageName: response.data.stage_name || "",
           contactNumber:
-            response.data.phone.split("+91")[1] || response.data.phone,
-          location: response.data.location || "",
+            response.data.contact_num.split("+91")[1] ||
+            response.data.contact_num,
           email: response.data.email || "",
-          profileImage: response.data.profile_img_url
-            ? {
-                file: response.data.profile_image,
-                preview: response.data.profile_img_url,
-              }
-            : null,
+          location: "",
         });
       } else {
         throw new Error(response.message || "Failed to fetch personal details");
@@ -210,22 +228,32 @@ const PersonalDetailsForm = () => {
     try {
       const formDataToSend = new FormData();
 
+
       // Append text fields
+      formDataToSend.append("ophid", ophid);
       formDataToSend.append("legal_name", formData.legalName);
       formDataToSend.append("stage_name", formData.stageName);
-      formDataToSend.append("phone", formData.contactNumber);
-      formDataToSend.append("email", formData.email);
+      formDataToSend.append("contact_num", formData.contactNumber);
+      
       formDataToSend.append("location", formData.location);
+      formDataToSend.append("email", formData.email);
 
       // Append profile image if it exists
       if (formData.profileImage?.file) {
         formDataToSend.append("profile_image", formData.profileImage.file);
       }
 
+      const debugData = {};
+      formDataToSend.forEach((value, key) => {
+        debugData[key] = value;
+      });
+      console.log(debugData);
+
       const response = await updatePersonalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Personal details updated successfully");
-        navigate("/auth/create-profile/professional-details");
+        const path = `/auth/create-profile/professional-details?ophid=${ophid}`
+        navigate(path);
       }
     } catch (error) {
       toast.error(
@@ -255,7 +283,7 @@ const PersonalDetailsForm = () => {
   return (
     <div className="relative bg-cover bg-center">
       {loading && <Loading />}
-      
+
       <img
         src={MusicBg}
         className="absolute top-[50%] -z-10 inset-0 md:top-[20%]"
@@ -271,9 +299,9 @@ const PersonalDetailsForm = () => {
 
       <div className="min-h-screen z-10  bg-opacity-70 text-white p-6">
         <ProfileFormHeader title="PERSONAL DETAILS" />
-        
+
         <div className="min-h-[calc(100vh-70px)] mt-20 bg-opacity-70 text-white p-6 flex flex-col items-center">
-          <div className="relative flex justify-center">
+          {/* <div className="relative flex justify-center">
             {video && (
               <video
                 ref={videoRef}
@@ -293,17 +321,17 @@ const PersonalDetailsForm = () => {
                 <img src={PlayBtn} alt="Play" className="w-32 h-32" />
               </button>
             )}
-          </div>
+          </div> */}
           <div className="w-full max-w-md space-y-8">
             {/* Profile Image Upload */}
             <h2 className="text-cyan-400 uppercase text-2xl mt-4 font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
-            Personal Details
-          </h2>
-          {rejectReason && (
-        <div className="text-red-500">
-          <strong>Reject Reason:</strong> {rejectReason}
-        </div>
-      )}
+              Personal Details
+            </h2>
+            {/* {rejectReason && (
+              <div className="text-red-500">
+                <strong>Reject Reason:</strong> {rejectReason}
+              </div>
+            )} */}
             <div className="flex flex-col items-center space-y-4">
               <div
                 className="relative w-32 h-32 rounded-full overflow-hidden cursor-pointer"
@@ -352,6 +380,7 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
+                  
                 />
               </div>
 
@@ -365,6 +394,7 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
+                  
                 />
               </div>
 
@@ -382,6 +412,7 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
+                  
                 />
               </div>
 
@@ -394,7 +425,7 @@ const PersonalDetailsForm = () => {
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
                 >
-                  <option value="" disabled>
+                  <option value="" >
                     Select Your State
                   </option>
                   {indianStates.map((state) => (
@@ -415,6 +446,7 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
+                  
                 />
               </div>
 
