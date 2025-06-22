@@ -1,5 +1,6 @@
 const user_details = require("../model/signup.js");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const ophidGenerator = (artistT, len, cnt) => {
   let id = '';
@@ -60,8 +61,10 @@ const signup = async (req, res) => {
       artistType
     );
 
+    const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "1h" });
+
     if (dbResponse) {
-      return res.status(200).json({ id : ophId,success: true, message: "Signup success" });
+      return res.status(201).json({ ophid : ophId,success: true, message: "Signup success", token: token});
     }
 
     return res.status(500).json({ success: false, message: "Server error" });

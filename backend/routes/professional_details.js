@@ -6,6 +6,8 @@ const authMiddleware = require("../middleware/authenticate")
 
 const upload = multer({ storage: multer.memoryStorage() });
 
+router.get("/auth/professional-details", authMiddleware, controller.getProfessionalByOphId)
+
 // Route with Multer handling video and photos
 router.post(
   "/auth/professional-details",

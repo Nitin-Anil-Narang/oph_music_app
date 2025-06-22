@@ -32,9 +32,10 @@ export const updatePersonalDetails = async (formData, headers) => {
   return response.data;
 };
 
-export const getProfessionalDetails = async (headers) => {
+export const getProfessionalDetails = async (headers,ophid) => {
   const response = await axiosApi.get("/auth/professional-details", {
     headers,
+    params : {ophid}
   });
   return response.data;
 };

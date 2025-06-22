@@ -63,8 +63,6 @@ const insertPersonalDetails = async (req, res) => {
 
 const mapPersonalDetails = async (req, res) => {
   try {
-
-
     const { ophid } = req.query;
 
     if (!ophid) {

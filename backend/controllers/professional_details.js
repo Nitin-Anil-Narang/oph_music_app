@@ -79,25 +79,24 @@ const insertProfessionalDetails = async (req, res) => {
 };
 
 
-
-const getProfessionalDetailsByOphId = async (req, res) => {
+const getProfessionalByOphId = async (req, res) => {
+  
   try {
-    const { ophid } = req.params;
-    
-    const result = await professional.getProfessionalByOphId(ophid);
+    const { ophid } = req.query;
+    const data = await user_details.getProfessionalByOphId(ophid);
+    console.log(data);
 
-    if (result.length > 0) {
-      return res.status(200).json({ success: true, data: result[0] });
+    if (!data) {
+      return res.status(404).json({ success: false, message: "Data not found for the given OPH_ID" });
     }
-
-    return res.status(404).json({ success: false, message: error });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
 module.exports = {
   insertProfessionalDetails,
-  getProfessionalDetailsByOphId
+  getProfessionalByOphId
 };

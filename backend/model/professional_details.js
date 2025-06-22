@@ -1,4 +1,4 @@
-const db = require('../DB/connect');
+const db = require("../DB/connect");
 
 const insertProfessionalDetails = async (
   OPH_ID,
@@ -45,7 +45,7 @@ const insertProfessionalDetails = async (
       ExperienceYearly,
       ExperienceMonthly,
       SongsPlanningCount,
-      SongsPlanningType
+      SongsPlanningType,
     ]
   );
 
@@ -53,11 +53,12 @@ const insertProfessionalDetails = async (
 };
 
 const getProfessionalByOphId = async (OPH_ID) => {
-  const [result] = await db.execute(
-   " SELECT * FROM professional_details WHERE OPH_ID = ?",
-    [OPH_ID]
-  );
-  return result;
+    const [rows] = await db.execute(
+      "SELECT ud.ophid, pd.Profession, pd.Bio, pd.VideoURL, pd.PhotoURLs, pd.SpotifyLink, pd.InstagramLink, pd.FacebookLink, pd.AppleMusicLink, pd.ExperienceYearly,pd.ExperienceMonthly, pd.SongsPlanningCount, pd.SongsPlanningType FROM user_details ud LEFT JOIN professional_details pd ON ud.ophid = pd.OPH_ID WHERE ud.ophid = ?",
+      [OPH_ID]
+    );
+
+    return rows;
 };
 
 const getProfessionalDetails = async (OPH_ID) => {
@@ -72,5 +73,5 @@ const getProfessionalDetails = async (OPH_ID) => {
 module.exports = {
   insertProfessionalDetails,
   getProfessionalDetails,
-  getProfessionalByOphId
+  getProfessionalByOphId,
 };
