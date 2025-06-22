@@ -2,9 +2,11 @@ import axios from "axios";
 import axiosApi from "../../../conf/axios";
 import { useArtist } from "./ArtistContext";
 
-export const getPersonalDetails = async (headers) => {
-  const response = await axiosApi.get("/auth/personal-details", { headers });
-  console.log(response.data);
+export const getPersonalDetails = async (headers, ophid) => {
+  const response = await axiosApi.get("/auth/personal-details", {
+    headers, // Already in correct format
+    params: { ophid },
+  });
   return response.data;
 };
 export const loginUser = async (email, password) => {
@@ -15,7 +17,7 @@ export const loginUser = async (email, password) => {
 
 export const signupUser = async (formData) => {
   console.log(formData);
-  
+
   const response = await axiosApi.post("/auth/signup", formData);
   return response.data;
 };

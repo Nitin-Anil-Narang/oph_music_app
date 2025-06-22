@@ -45,12 +45,10 @@ const PaymentScreen = () => {
 
       const response = await axiosApi.post("/auth/payment", formData);
 
-      console.log(response);
-
-      if (response.data.success) {
-        // toast.success("Login Successful");
+      if(response.data.success)
+      {
         const path = `/auth/create-profile/personal-details?ophid=${ophid}`
-        navigate(path);
+        navigate(path)
       }
       
 
