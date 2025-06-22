@@ -54,13 +54,23 @@ const insertProfessionalDetails = async (
 
 const getProfessionalByOphId = async (OPH_ID) => {
   const [result] = await db.execute(
-    `SELECT * FROM professional_details WHERE OPH_ID = ?`,
+   " SELECT * FROM professional_details WHERE OPH_ID = ?",
     [OPH_ID]
   );
   return result;
 };
 
+const getProfessionalDetails = async (OPH_ID) => {
+  const [rows] = await db.execute(
+    "SELECT * FROM user_details WHERE ophid = ?",
+    [OPH_ID]
+  );
+
+  return rows;
+};
+
 module.exports = {
   insertProfessionalDetails,
+  getProfessionalDetails,
   getProfessionalByOphId
 };

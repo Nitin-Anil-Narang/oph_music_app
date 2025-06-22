@@ -1,5 +1,6 @@
 const professional = require("../model/professional_details");
 const { uploadToS3 } = require("../utils");
+const user_details = require("../model/professional_details.js");
 
 const insertProfessionalDetails = async (req, res) => {
   try {
@@ -17,6 +18,14 @@ const insertProfessionalDetails = async (req, res) => {
       SongsPlanningType
     } = req.body;
 
+    const user = await user_details.getProfessionalDetails(OPH_ID);
+    
+    if (user.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
     const videoFile = req.files?.video?.[0];
     const photoFiles = req.files?.photos || [];
 

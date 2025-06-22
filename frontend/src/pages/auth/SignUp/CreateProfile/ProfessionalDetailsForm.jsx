@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { toast } from "react-hot-toast";
 import { AiOutlineDown } from "react-icons/ai";
 import {
@@ -14,7 +14,18 @@ import PlayBtn from "../../../../../public/assets/images/playButton.png";
 import MusicBg from "../../../../../public/assets/images/music_bg.png";
 import Elipse from "../../../../../public/assets/images/elipse2.png";
 import axiosApi from "../../../../conf/axios";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+const professionOptions = [
+  { id: 1, name: "Singer" },
+  { id: 2, name: "Musician" },
+  { id: 3, name: "DJ" },
+  { id: 4, name: "Composer" },
+  { id: 5, name: "Instrumentalist" },
+  { id: 6, name: "Lyricist" },
+  { id: 7, name: "Music Producer" },
+];
+
 const ProfessionalDetailsForm = () => {
   const { headers } = useArtist();
   const navigate = useNavigate();
@@ -26,6 +37,9 @@ const ProfessionalDetailsForm = () => {
   const videoRef = useRef(null);
   const [video, setVideo] = useState(null);
   const [rejectReason, setRejectReason] = useState(null);
+  const [searchParams] = useSearchParams();
+  const ophid = searchParams.get("ophid");
+  
   
   const fetchVideo = async () => {
     try {
@@ -60,7 +74,7 @@ const ProfessionalDetailsForm = () => {
     instagramUrl: "",
     facebookUrl: "",
     appleMusicUrl: "",
-    experienceYears: 0,
+    ExperienceYearly: 0,
     experienceMonths: 0,
     songsPlanned: 0,
     songPlanningDuration: "monthly",
@@ -82,8 +96,10 @@ console.log(formData,"formdata");
   const fetchProfessionalDetails = async () => {
     try {
       const response = await getProfessionalDetails(headers);
+      console.log("This is response" + response);
       if (response.success) {
         const data = response.data;
+        console.log("This is response" + data);
         setProfessions(data.professions);
         setFormData({
           profession: data.artist.profession_id || "",
@@ -93,7 +109,7 @@ console.log(formData,"formdata");
           instagramUrl: data.artist.instagram_url || "",
           facebookUrl: data.artist.facebook_url || "",
           appleMusicUrl: data.artist.apple_music_url || "",
-          experienceYears: Math.floor((data.artist.exp_in_months || 0) / 12),
+          ExperienceYearly: Math.floor((data.artist.exp_in_months || 0) / 12),
           experienceMonths: (data.artist.exp_in_months || 0) % 12,
           songsPlanned: data.artist.songs_planned_per_month || 0,
         });
@@ -107,7 +123,6 @@ console.log(formData,"formdata");
   };
 
   const handleSubmit = async (e) => {
-    debugger;
     e.preventDefault();
     setLoading(true);
     // Add validation checks
@@ -126,21 +141,22 @@ console.log(formData,"formdata");
       const formDataToSend = new FormData();
 
       // Append all text fields
-      formDataToSend.append("profession_id", formData.profession);
-      formDataToSend.append("bio", formData.bio);
-      formDataToSend.append("spotify_url", formData.spotifyUrl);
-      formDataToSend.append("instagram_url", formData.instagramUrl);
-      formDataToSend.append("facebook_url", formData.facebookUrl);
-      formDataToSend.append("apple_music_url", formData.appleMusicUrl);
+      formDataToSend.append("OPH_ID", ophid);
+      formDataToSend.append("Profession", formData.profession);
+      formDataToSend.append("Bio", formData.bio);
+      formDataToSend.append("SpotifyLink", formData.spotifyUrl);
+      formDataToSend.append("InstagramLink", formData.instagramUrl);
+      formDataToSend.append("FacebookLink", formData.facebookUrl);
+      formDataToSend.append("AppleMusicLink", formData.appleMusicUrl);
 
       // Calculate and append experience in months
       const experienceMonths =
-        formData.experienceYears * 12 + formData.experienceMonths;
-      formDataToSend.append("exp_in_months", experienceMonths);
+        formData.ExperienceYearly * 12 + formData.experienceMonths;
+      formDataToSend.append("ExperienceMonthly", experienceMonths);
 
       // Append number of songs planned
-      formDataToSend.append("songs_planned_per_month", formData.songsPlanned);
-      formDataToSend.append("song_planning_duration", formData.songPlanningDuration);
+      formDataToSend.append("SongsPlanningCount", formData.songsPlanned);
+      formDataToSend.append("SongsPlanningType", formData.songPlanningDuration);
 
       // Append photos
       if (formData.photos.length > 0) {
@@ -151,13 +167,16 @@ console.log(formData,"formdata");
 
       // Append video bio if it exists
       if (videoBio) {
-        formDataToSend.append("video_bio", videoBio);
+        formDataToSend.append("video", videoBio);
       }
+
+      console.log(" Sending data to backend:", [...formDataToSend.entries()]); 
 
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
-        navigate("/auth/create-profile/documentation-details");
+        const path = `/auth/create-profile/documentation-details?ophid=${ophid}`
+        navigate(path);
       }
     } catch (error) {
       toast.error(
@@ -215,7 +234,7 @@ console.log(formData,"formdata");
   return (
     <div className="relative bg-cover bg-center">
       {loading && <Loading />}
-      
+
       <img
         src={MusicBg}
         className="absolute top-[50%] -z-10 inset-0 md:top-[20%]"
@@ -256,10 +275,10 @@ console.log(formData,"formdata");
             Professional Details
           </h2>
           {rejectReason && (
-        <div className="text-red-500">
-          <strong>Reject Reason:</strong> {rejectReason}
-        </div>
-      )}
+            <div className="text-red-500">
+              <strong>Reject Reason:</strong> {rejectReason}
+            </div>
+          )}
           <form
             className="space-y-4 px-[5%] sm:px-[10%] md:px-[15%] xl:px-[25%] mt-10"
             onSubmit={handleSubmit}
@@ -283,7 +302,7 @@ console.log(formData,"formdata");
                   }
                 >
                   <option value="">Select Profession</option>
-                  {professions.map((profession) => (
+                  {professionOptions.map((profession) => (
                     <option key={profession.id} value={profession.id}>
                       {profession.name}
                     </option>
@@ -376,7 +395,7 @@ console.log(formData,"formdata");
                       className="absolute top-2 right-2 bg-red-500 rounded-full p-1"
                       type="button"
                     >
-                      ×
+                      
                     </button>
                   </div>
                 ))}
@@ -437,11 +456,11 @@ console.log(formData,"formdata");
                   <input
                     min={0}
                     type="number"
-                    value={formData.experienceYears}
+                    value={formData.ExperienceYearly}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
-                        experienceYears: parseInt(e.target.value) || 0,
+                        ExperienceYearly: parseInt(e.target.value) || 0,
                       }))
                     }
                     className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
@@ -496,7 +515,7 @@ console.log(formData,"formdata");
                   <span className="text-red-500">*</span>
                 </label>
                 <select
-                  value={formData.songPlanningDuration  } // Bind it to the form data
+                  value={formData.songPlanningDuration} // Bind it to the form data
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -506,7 +525,7 @@ console.log(formData,"formdata");
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
        focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
                 >
-                  <option  value="monthly">Per Monthly</option>
+                  <option value="monthly">Per Monthly</option>
                   <option value="quarterly">Per Quarterly</option>
                   <option value="yearly">Per Yearlyy</option>
                 </select>
