@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import {
   getDocumentationDetails,
@@ -13,10 +13,24 @@ import MusicBg from "../../../../../public/assets/images/music_bg.png";
 import Elipse from "../../../../../public/assets/images/elipse2.png";
 import axiosApi from "../../../../conf/axios";
 import SignatureCanvas from "react-signature-canvas";
-import { fetchVideoForScreen } from "../../../../utils/fetchVideo";
+// import { fetchVideoForScreen } from "../../../../utils/fetchVideo";
 import MembershipForm from "../MembershipFrom";
+const banking = [
+  { id: 1, bank_name: "State Bank of India" },
+  { id: 2, bank_name: "HDFC Bank" },
+  { id: 3, bank_name: "ICICI Bank" },
+  { id: 4, bank_name: "Axis Bank" },
+  { id: 5, bank_name: "Punjab National Bank" },
+  { id: 6, bank_name: "Bank of Baroda" },
+  { id: 7, bank_name: "Kotak Mahindra Bank" },
+  { id: 8, bank_name: "Canara Bank" },
+  { id: 9, bank_name: "IndusInd Bank" },
+  { id: 10, bank_name: "Union Bank of India" },
+];
 
 const DocumentationDetailsForm = () => {
+  const [searchParams] = useSearchParams();
+  const ophid = searchParams.get("ophid");
   const navigate = useNavigate();
   const { headers } = useArtist();
 
@@ -30,30 +44,30 @@ const DocumentationDetailsForm = () => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [showMembershipForm, setShowMembershipForm] = useState(false);
   const [rejectReason, setRejectReason] = useState(""); // State to store reject reason
-  const fetchVideo = async () => {
-    try {
-      const response = await axiosApi.get(
-        "artist-website-configs?param=signup_video"
-      );
-      setVideo(response.data.data[0]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const fetchVideo = async () => {
+  //   try {
+  //     const response = await axiosApi.get(
+  //       "artist-website-configs?param=signup_video"
+  //     );
+  //     setVideo(response.data.data[0]);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
   const handlePlay = () => setIsPlaying(true);
   const handlePause = () => setIsPlaying(false);
-  const togglePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-    }
-  };
-  useEffect(() => {
-    fetchVideo();
-  }, []);
+  // const togglePlayPause = () => {
+  //   if (videoRef.current) {
+  //     if (isPlaying) {
+  //       videoRef.current.pause();
+  //     } else {
+  //       videoRef.current.play();
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchVideo();
+  // }, []);
   const [formData, setFormData] = useState({
     aadharFront: null,
     aadharBack: null,
@@ -68,27 +82,27 @@ const DocumentationDetailsForm = () => {
   });
   const [videoUrl, setVideoUrl] = useState(null);
 
+  // useEffect(() => {
+  //   const loadVideo = async () => {
+  //     const url = await fetchVideoForScreen("documentation_video");
+  //     setVideoUrl(url);
+  //   };
+  //   loadVideo();
+  // }, []);
+  // const fetchRejectReason = async () => {
+  //   try {
+  //     const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
+  //     const response = await axiosApi.get(`/artists/${artistId}`);
+  //     if (response.data) {
+  //       setRejectReason(response.data.data.reject_reason || "");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching reject reason:", error);
+  //     toast.error("Failed to fetch reject reason.");
+  //   }
+  // };
   useEffect(() => {
-    const loadVideo = async () => {
-      const url = await fetchVideoForScreen("documentation_video");
-      setVideoUrl(url);
-    };
-    loadVideo();
-  }, []);
-  const fetchRejectReason = async () => {
-    try {
-      const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-      const response = await axiosApi.get(`/artists/${artistId}`);
-      if (response.data) {
-        setRejectReason(response.data.data.reject_reason || "");
-      }
-    } catch (error) {
-      console.error("Error fetching reject reason:", error);
-      toast.error("Failed to fetch reject reason.");
-    }
-  };
-  useEffect(() => {
-    fetchRejectReason();
+    // fetchRejectReason();
     fetchDocumentationDetails();
   }, []);
 
@@ -150,45 +164,41 @@ const DocumentationDetailsForm = () => {
 
   const fetchDocumentationDetails = async () => {
     try {
-      const response = await getDocumentationDetails(headers);
+      const response = await getDocumentationDetails(headers, ophid);
       if (response.success) {
-        const { documents, bankDetails, banks } = response.data;
+        // const { documents, bankDetails, banks } = response.data[0];
+        const doc = response.data[0];
         setBanks(banks);
         setFormData({
-          aadharFront: documents.aadhar_front
+          aadharFront: doc.AadharFrontURL
             ? {
-                file: documents.aadhar_front,
-                preview: documents.aadhar_front,
+                file: doc.AadharFrontURL,
+                preview: doc.AadharFrontURL,
               }
             : null,
-          aadharBack: documents.aadhar_back
+          aadharBack: doc.AadharBackURL
             ? {
-                file: documents.aadhar_back,
-                preview: documents.aadhar_back,
+                file: doc.AadharBackURL,
+                preview: doc.AadharBackURL,
               }
             : null,
-          panFront: documents.pan_front
+          panFront: doc.PanFrontURL
             ? {
-                file: documents.pan_front,
-                preview: documents.pan_front,
+                file: doc.PanFrontURL,
+                preview: doc.PanFrontURL,
               }
             : null,
-          panBack: documents.pan_back
+
+          signature: doc.SignatureImageURL
             ? {
-                file: documents.pan_back,
-                preview: documents.pan_back,
+                file: doc.SignatureImageURL,
+                preview: doc.SignatureImageURL,
               }
             : null,
-          signature: documents.signature
-            ? {
-                file: documents.signature,
-                preview: documents.signature,
-              }
-            : null,
-          bankName: bankDetails.bank_name || "",
-          accountHolder: bankDetails.bank_acc_name || "",
-          accountNumber: bankDetails.bank_acc_number || "",
-          ifscCode: bankDetails.bank_ifsc_code || "",
+          bankName: doc.BankName || "",
+          accountHolder: doc.AccountHolderName || "",
+          accountNumber: doc.AccountNumber || "",
+          ifscCode: doc.IFSCCode || "",
           agreementAccepted: false,
         });
       }
@@ -213,46 +223,46 @@ const DocumentationDetailsForm = () => {
       setLoading(false);
       return;
     }
-  
+
     if (!formData.signature) {
       toast.error("Please provide your signature");
       setLoading(false);
       return;
     }
-  
+
     if (!formData.bankName) {
       toast.error("Please select your bank");
       setLoading(false);
       return;
     }
-  
+
     if (!formData.accountHolder) {
       toast.error("Please enter account holder name");
       setLoading(false);
       return;
     }
-  
+
     if (!formData.accountNumber) {
       toast.error("Please enter account number");
       setLoading(false);
       return;
     }
-  
+
     if (!formData.ifscCode) {
       toast.error("Please enter IFSC code");
       setLoading(false);
       return;
     }
-  
+
     if (!formData.agreementAccepted) {
       toast.error("Please accept the agreement");
       setLoading(false);
       return;
     }
-  
+
     try {
       const formDataToSend = new FormData();
-  
+
       // Handle signature separately
       if (formData.signature) {
         if (typeof formData.signature === "string") {
@@ -260,26 +270,26 @@ const DocumentationDetailsForm = () => {
           const blob = await fetch(formData.signature).then((res) =>
             res.blob()
           );
-          formDataToSend.append("signature", blob, "signature.png");
+          formDataToSend.append("SignatureImageURL", blob, "signature.png");
         } else if (formData.signature.file) {
           // If it's a file object
-          formDataToSend.append("signature", formData.signature.file);
+          formDataToSend.append("SignatureImageURL", formData.signature.file);
         } else if (formData.signature.preview) {
           // If it's a URL (previously uploaded signature)
           const response = await fetch(formData.signature.preview);
           const blob = await response.blob();
-          formDataToSend.append("signature", blob, "signature.png");
+          formDataToSend.append("SignatureImageURL", blob, "signature.png");
         }
       }
-  
+
       // Handle other document files
       const documentFields = {
-        aadhar_front: formData.aadharFront,
-        aadhar_back: formData.aadharBack,
-        pan_front: formData.panFront,
-        pan_back: formData.panBack,
+        AadharFrontURL: formData.aadharFront,
+        AadharBackURL: formData.aadharBack,
+        PanFrontURL: formData.panFront,
+        PanBackURL: formData.panBack,
       };
-  
+
       for (const [field, data] of Object.entries(documentFields)) {
         if (data?.file) {
           formDataToSend.append(field, data.file);
@@ -293,28 +303,31 @@ const DocumentationDetailsForm = () => {
           formDataToSend.append(field, blob, `${field}.png`);
         }
       }
-  
+
       // Get the selected bank's ID
-      const selectedBank = banks.find(
+      const selectedBank = banking.find(
         (bank) => bank.bank_name === formData.bankName
       );
       if (!selectedBank) {
         toast.error("Please select a valid bank");
         return;
       }
-  
+
       // Append bank details
-      formDataToSend.append("bank_id", selectedBank.id);
-      formDataToSend.append("bank_acc_name", formData.accountHolder);
-      formDataToSend.append("bank_acc_number", formData.accountNumber);
-      formDataToSend.append("bank_ifsc_code", formData.ifscCode);
-  
+      formDataToSend.append("OPH_ID", ophid);
+      formDataToSend.append("BankName", selectedBank.id);
+      formDataToSend.append("AccountHolderName", formData.accountHolder);
+      formDataToSend.append("AccountNumber", formData.accountNumber);
+      formDataToSend.append("IFSCCode", formData.ifscCode);
+
       const response = await updateDocumentationDetails(
         formDataToSend,
         headers
       );
+      
       if (response.success) {
         toast.success("Documentation details updated successfully");
+        
         setShowMembershipForm(true); // Show MembershipForm
       }
     } catch (error) {
@@ -331,7 +344,7 @@ const DocumentationDetailsForm = () => {
   return (
     <div className="relative bg-cover bg-center">
       {loading && <Loading />}
-      
+
       <img
         src={MusicBg}
         className="absolute top-[50%] -z-10 inset-0 md:top-[20%]"
@@ -347,7 +360,7 @@ const DocumentationDetailsForm = () => {
       <div className="min-h-screen z-10  bg-opacity-70 text-white p-6">
         <ProfileFormHeader title="DOCUMENTATION DETAILS" />
         <div className="min-h-[calc(100vh-70px)] mt-20  text-white p-6 flex flex-col items-center mx-auto">
-          <div className="relative flex justify-center">
+          {/* <div className="relative flex justify-center">
             {video && (
               <video
                 ref={videoRef}
@@ -367,16 +380,16 @@ const DocumentationDetailsForm = () => {
                 <img src={PlayBtn} alt="Play" className="w-32 h-32" />
               </button>
             )}
-          </div>
+          </div> */}
 
           <h2 className="text-cyan-400 uppercase text-2xl mt-4 font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
             Documentation Details
           </h2>
-          {rejectReason && (
-        <div className="text-red-500">
-          <strong>Reject Reason:</strong> {rejectReason}
-        </div>
-      )}
+          {/* {rejectReason && (
+            <div className="text-red-500">
+              <strong>Reject Reason:</strong> {rejectReason}
+            </div>
+          )} */}
 
           {/* Aadhar Card Upload */}
           <div className="flex flex-col lg:px-[300px] md:px-[300px] sm:px-[50px] xl:px-[300px]">
@@ -549,19 +562,19 @@ const DocumentationDetailsForm = () => {
             {/* Bank Details */}
             <div className="space-y-4  mb-4">
               <select
-  name="bankName"
-  value={formData.bankName}
-  onChange={handleInputChange}
-  className="w-full bg-gray-800 rounded px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-  required
->
-  <option value="">Select Bank</option>
-  {banks.map((bank) => (
-    <option key={bank.id} value={bank.bank_name}>
-      {bank.bank_name}
-    </option>
-  ))}
-</select>
+                name="bankName"
+                value={formData.bankName}
+                onChange={handleInputChange}
+                className="w-full bg-gray-800 rounded px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                required
+              >
+                <option value="">Select Bank</option>
+                {banking.map((bank) => (
+                  <option key={bank.id} value={bank.bank_name}>
+                    {bank.bank_name}
+                  </option>
+                ))}
+              </select>
               <input
                 type="text"
                 name="accountHolder"
@@ -597,7 +610,7 @@ const DocumentationDetailsForm = () => {
                 type="checkbox"
                 id="agreement"
                 name="agreementAccepted"
-                checked={formData.agreementAccepted}
+                checked={formData.AgreementAccepted}
                 onChange={handleInputChange}
                 className="w-4 h-4 rounded border-gray-600 text-cyan-400 focus:ring-cyan-400"
                 required
@@ -607,7 +620,7 @@ const DocumentationDetailsForm = () => {
                 <span className="text-red-500">*</span>
               </label>
             </div>
-            
+
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
@@ -617,17 +630,19 @@ const DocumentationDetailsForm = () => {
               Continue →
             </button>
             {showMembershipForm && (
-  <>
-    <MembershipForm />
-    <button
-      onClick={() => {toast.success("Documentation details updated successfully");
-        navigate("/auth/profile-status");}}
-      className="w-full my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
-    >
-      Go to Next Page
-    </button>
-  </>
-)}
+              <>
+                <MembershipForm />
+                <button
+                  onClick={() => {
+                    toast.success("Documentation details updated successfully");
+                    navigate(`/auth/profile-status?ophid=${ophid}`);
+                  }}
+                  className="w-full my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
+                >
+                  Go to Next Page
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
