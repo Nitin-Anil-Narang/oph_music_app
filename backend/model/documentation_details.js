@@ -38,11 +38,33 @@ const insertDocumentationDetails = async (
       AccountHolderName,
       AccountNumber,
       IFSCCode,
-      AgreementAccepted
+      AgreementAccepted,
     ]
   );
 
   return result;
 };
 
-module.exports = { insertDocumentationDetails };
+const getDocumentationDetails = async (OPH_ID) => {
+  const [rows] = await db.execute(
+    "SELECT * FROM user_details WHERE ophid = ?",
+    [OPH_ID]
+  );
+
+  return rows;
+};
+
+const getDocumentationDetailsByOphId = async (OPH_ID) => {
+  const [rows] = await db.execute(
+    "SELECT ud.ophid, dd.AadharFrontURL, dd.AadharBackURL, dd.PanFrontURL, dd.SignatureImageURL, dd.BankName, dd.AccountHolderName, dd.AccountNumber, dd.IFSCCode, dd.AgreementAccepted FROM user_details ud LEFT JOIN documentation_details dd ON ud.ophid = dd.OPH_ID WHERE ud.ophid = ?",
+    [OPH_ID]
+  );
+
+  return rows;
+};
+
+module.exports = {
+  insertDocumentationDetails,
+  getDocumentationDetails,
+  getDocumentationDetailsByOphId,
+};
