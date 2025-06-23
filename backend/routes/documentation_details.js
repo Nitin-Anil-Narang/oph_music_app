@@ -19,7 +19,7 @@ router.post(
     { name: "AadharFrontURL", maxCount: 1 },
     { name: "AadharBackURL", maxCount: 1 },
     { name: "PanFrontURL", maxCount: 1 },
-    { name: "signatureImage", maxCount: 1 },
+    { name: "SignatureImageURL", maxCount: 1 },
   ]),
   controller.insertDocumentationController
 );
