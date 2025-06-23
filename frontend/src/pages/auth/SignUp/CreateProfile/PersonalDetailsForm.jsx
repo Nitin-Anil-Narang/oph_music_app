@@ -90,6 +90,7 @@ const PersonalDetailsForm = () => {
     location: "",
     email: "",
     profileImage: null,
+    
   });
 
   // const fetchRejectReason = async () => {
@@ -107,7 +108,7 @@ const PersonalDetailsForm = () => {
   useEffect(() => {
     // fetchRejectReason();
     fetchPersonalDetails();
-  }, []);
+  }, [headers]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -135,8 +136,12 @@ const PersonalDetailsForm = () => {
       // if (!headers || !headers.Authorization) {
       //   throw new Error("Authentication token missing");
       // }
+      if (!headers || !headers.Authorization) {
+        console.warn("Headers not ready yet");
+        return;
+      }
 
-      const response = await getPersonalDetails(headers,ophid);
+      const response = await getPersonalDetails(headers, ophid);
 
       if (response.success) {
         setFormData({
@@ -228,20 +233,18 @@ const PersonalDetailsForm = () => {
     try {
       const formDataToSend = new FormData();
 
-
       // Append text fields
       formDataToSend.append("ophid", ophid);
       formDataToSend.append("legal_name", formData.legalName);
       formDataToSend.append("stage_name", formData.stageName);
       formDataToSend.append("contact_num", formData.contactNumber);
-      
+
       formDataToSend.append("location", formData.location);
       formDataToSend.append("email", formData.email);
+      formDataToSend.append("step", "/auth/create-profile/professional-details")
 
       // Append profile image if it exists
       if (formData.profileImage?.file) {
-        
-        
         formDataToSend.append("profile_image", formData.profileImage.file);
       }
 
@@ -251,14 +254,12 @@ const PersonalDetailsForm = () => {
       });
       console.log(debugData);
 
-      
-      
-
-      const response = await updatePersonalDetails(formDataToSend,headers);
+      const response = await updatePersonalDetails(formDataToSend, headers);
+      console.log(response);
       
       if (response.success) {
         toast.success("Personal details updated successfully");
-        const path = `/auth/create-profile/professional-details?ophid=${ophid}`
+        const path = `${response.step}?ophid=${ophid}`;
         navigate(path);
       }
     } catch (error) {
@@ -386,7 +387,6 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
-                  
                 />
               </div>
 
@@ -400,7 +400,6 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
-                  
                 />
               </div>
 
@@ -418,7 +417,6 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
-                  
                 />
               </div>
 
@@ -431,9 +429,7 @@ const PersonalDetailsForm = () => {
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
                 >
-                  <option value="" >
-                    Select Your State
-                  </option>
+                  <option value="">Select Your State</option>
                   {indianStates.map((state) => (
                     <option key={state} value={state}>
                       {state}
@@ -452,7 +448,6 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
-                  
                 />
               </div>
 

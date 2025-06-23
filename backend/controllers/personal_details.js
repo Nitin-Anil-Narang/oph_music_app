@@ -3,13 +3,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const bucket = require("../utils.js");
+const {setCurrentStep} = require("../model/common/set_step.js")
 
 const insertPersonalDetails = async (req, res) => {
   try {
     let storageLocation = "";
     
     // Access fields from req.body and req.file
-    const { ophid, legal_name, stage_name, contact_num, location,email } = req.body;
+    const { ophid, legal_name, stage_name, contact_num, location,email,step } = req.body;
     const profile_image = req.file; // multer stores file here
 
     if (!ophid || !legal_name || !stage_name || !profile_image || !contact_num || !location || !email) {
@@ -47,9 +48,10 @@ const insertPersonalDetails = async (req, res) => {
     );
 
     if (updatedData && updatedData.affectedRows > 0) {
+      await setCurrentStep(step, ophid)
       return res
         .status(201)
-        .json({ success: true, message: "Data updated successfully" });
+        .json({ success: true, message: "Data updated successfully", step:step });
     } else {
       return res
         .status(400)

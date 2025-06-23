@@ -1,9 +1,10 @@
 // controllers/payment.js
 const paymentInfo = require("../model/payment");
+const {setCurrentStep} = require("../model/common/set_step.js")
 
 const payment = async (req, res) => {
   try {
-    const { OPH_ID, Transaction_ID, Review, Status } = req.body;
+    const { OPH_ID, Transaction_ID, Review, Status,step } = req.body;
 
     const dbResponse = await paymentInfo.insertPayment(
       OPH_ID,
@@ -13,6 +14,9 @@ const payment = async (req, res) => {
     );
 
     if (dbResponse) {
+
+      await setCurrentStep(step, OPH_ID)
+
       return res.status(200).json({
         id: OPH_ID,
         success: true,

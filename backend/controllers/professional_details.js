@@ -1,6 +1,7 @@
 const professional = require("../model/professional_details");
 const { uploadToS3 } = require("../utils");
 const user_details = require("../model/professional_details.js");
+const {setCurrentStep} = require("../model/common/set_step.js")
 
 const insertProfessionalDetails = async (req, res) => {
   try {
@@ -15,7 +16,8 @@ const insertProfessionalDetails = async (req, res) => {
       ExperienceYearly,
       ExperienceMonthly,
       SongsPlanningCount,
-      SongsPlanningType
+      SongsPlanningType,
+      step
     } = req.body;
 
     const user = await user_details.getProfessionalDetails(OPH_ID);
@@ -60,9 +62,11 @@ const insertProfessionalDetails = async (req, res) => {
     );
 
     if (dbResponse) {
+      await setCurrentStep(step, OPH_ID)
       return res.status(200).json({
         success: true,
         message: "Professional details inserted successfully",
+        step: step
       });
     }
 

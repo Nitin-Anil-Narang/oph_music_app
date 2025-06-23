@@ -1,6 +1,7 @@
 const user_details = require("../model/signup.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const {setCurrentStep} = require("../model/common/set_step.js")
 
 const ophidGenerator = (artistT, len, cnt) => {
   let id = '';
@@ -26,7 +27,7 @@ const ophidGenerator = (artistT, len, cnt) => {
 const signup = async (req, res) => {
   let count = 0
   try {
-    const { name, stageName, email, contactNumber, confirmPassword, artistType } =
+    const { name, stageName, email, contactNumber, confirmPassword, artistType, step } =
       req.body;
 
     // Check if user already exists
@@ -64,6 +65,8 @@ const signup = async (req, res) => {
     const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "1h" });
 
     if (dbResponse) {
+
+      await setCurrentStep(step,ophId)
       return res.status(201).json({ ophid : ophId,success: true, message: "Signup success", token: token});
     }
 

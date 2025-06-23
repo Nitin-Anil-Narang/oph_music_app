@@ -104,7 +104,7 @@ const DocumentationDetailsForm = () => {
   useEffect(() => {
     // fetchRejectReason();
     fetchDocumentationDetails();
-  }, []);
+  }, [headers]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -164,6 +164,12 @@ const DocumentationDetailsForm = () => {
 
   const fetchDocumentationDetails = async () => {
     try {
+
+       if (!headers || !headers.Authorization) {
+        console.warn("Headers not ready yet");
+        return;
+      }
+
       const response = await getDocumentationDetails(headers, ophid);
       if (response.success) {
         // const { documents, bankDetails, banks } = response.data[0];

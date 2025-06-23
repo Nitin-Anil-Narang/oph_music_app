@@ -81,6 +81,7 @@ export const ArtistProvider = ({ children }) => {
     };
 
     verifyToken();
+    
   }, [navigate]);
   const logout = () => {
     localStorage.removeItem('token');
