@@ -83,7 +83,7 @@ const ProfessionalDetailsForm = () => {
   useEffect(() => {
     // fetchRejectReason();
     fetchProfessionalDetails();
-  }, []);
+  }, [headers]);
 
   // useEffect(() => {
   //   const loadVideo = async () => {
@@ -94,6 +94,11 @@ const ProfessionalDetailsForm = () => {
   // }, []);
   const fetchProfessionalDetails = async () => {
     try {
+      if (!headers || !headers.Authorization) {
+        console.warn("Headers not ready yet");
+        return;
+      }
+
       const response = await getProfessionalDetails(headers, ophid);
 
       if (response.success) {
@@ -114,7 +119,6 @@ const ProfessionalDetailsForm = () => {
           songsPlanned: artist.SongsPlanningType || 0,
         });
         setVideoBio(artist.VideoURL || null);
-
       }
     } catch (error) {
       console.log(error);
@@ -150,7 +154,7 @@ const ProfessionalDetailsForm = () => {
       formDataToSend.append("InstagramLink", formData.instagramUrl);
       formDataToSend.append("FacebookLink", formData.facebookUrl);
       formDataToSend.append("AppleMusicLink", formData.appleMusicUrl);
-
+      formDataToSend.append("step", "/auth/create-profile/documentation-details")
       // Calculate and append experience in months
       const experienceMonths =
         formData.ExperienceYearly * 12 + formData.experienceMonths;
@@ -175,7 +179,7 @@ const ProfessionalDetailsForm = () => {
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
-        const path = `/auth/create-profile/documentation-details?ophid=${ophid}`;
+        const path = `${step}?ophid=${ophid}`;
         navigate(path);
       }
     } catch (error) {

@@ -17,29 +17,29 @@ const SignUpForm = () => {
 
   const [video, setVideo] = useState(null);
 
-  const fetchVideo = async () => {
-    try {
-      const response = await axiosApi.get(
-        "artist-website-configs?param=signup_video"
-      );
-      setVideo(response.data.data[0]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const fetchVideo = async () => {
+  //   try {
+  //     const response = await axiosApi.get(
+  //       "artist-website-configs?param=signup_video"
+  //     );
+  //     setVideo(response.data.data[0]);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
   const handlePlay = () => setIsPlaying(true);
   const handlePause = () => setIsPlaying(false);
 
   // Toggle Play/Pause when clicking the play button
-  const togglePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-    }
-  };
+  // const togglePlayPause = () => {
+  //   if (videoRef.current) {
+  //     if (isPlaying) {
+  //       videoRef.current.pause();
+  //     } else {
+  //       videoRef.current.play();
+  //     }
+  //   }
+  // };
 
   const { login } = useArtist();
   const [formData, setFormData] = useState({
@@ -50,6 +50,7 @@ const SignUpForm = () => {
     password: "",
     confirmPassword: "",
     artistType: "",
+    step: "/auth/payment"
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isSubmittingRef = useRef(false);
@@ -196,9 +197,9 @@ const SignUpForm = () => {
     }
   };
 
-  useEffect(() => {
-    fetchVideo();
-  }, []);
+  // useEffect(() => {
+  //   fetchVideo();
+  // }, []);
 
   return (
     <>
@@ -464,7 +465,7 @@ const SignUpForm = () => {
                 alt="Sign Up"
                 className="w-full h-full object-cover rounded-lg"
               /> */}
-              {video && (
+              {/* {video && (
                 <video
                   ref={videoRef}
                   src={video.value}
@@ -482,7 +483,7 @@ const SignUpForm = () => {
                 >
                   <img src={PlayBtn} alt="Play" className="w-32 h-32" />
                 </button>
-              )}
+              )} */}
               {/* <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-4">
                 <img
                   src="/assets/images/resources/play-icon.png"

@@ -38,7 +38,7 @@ const PaymentScreen = () => {
         Transaction_ID: trans,
         Review: 0,
         Status: "Under Review",
-
+        step: '/auth/create-profile/personal-details'
         // plan_ids: planIds,
       };
       console.log("Submitting payment form data:", formData);

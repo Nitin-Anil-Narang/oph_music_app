@@ -26,7 +26,8 @@ const signin = async (req, res) => {
       success: true,
       message: "Login successful",
       token:token,
-      ophid: dbUser.ophid
+      ophid: dbUser.ophid,
+      step: dbUser.current_step
     });
 
   } catch (err) {
