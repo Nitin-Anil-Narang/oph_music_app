@@ -7,24 +7,6 @@ const { uploadToS3 } = require("../utils");
 
 const insertDocumentationController = async (req, res) => {
 
-  const authHeader = req.headers.authorization;
-  
-      if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return res
-          .status(401)
-          .json({ success: false, message: "No token provided" });
-      }
-  
-      const token = authHeader.split(" ")[1];
-  
-      let decoded;
-      try {
-        decoded = jwt.verify(token, process.env.SECRET_KEY);
-      } catch (err) {
-        return res
-          .status(401)
-          .json({ success: false, message: "Invalid or expired token" });
-      }
       
   try {
     const {
