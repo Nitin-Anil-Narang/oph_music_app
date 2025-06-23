@@ -19,9 +19,12 @@ const PaymentScreen = () => {
     amount = 0,
     planIds = [],
     paymentIds = [], 
-    returnPath = "/",
+    returnPath = "/create-profile/personal-details",
     heading = "Payment Required",
   } = location.state || {};
+
+  console.log(location.state);
+  
 
 
   const handlePaymentSuccess = async (e) => {

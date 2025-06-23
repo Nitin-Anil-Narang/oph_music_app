@@ -132,11 +132,11 @@ const PersonalDetailsForm = () => {
   const fetchPersonalDetails = async () => {
     try {
       // Ensure headers are available
-      if (!headers || !headers.Authorization) {
-        throw new Error("Authentication token missing");
-      }
+      // if (!headers || !headers.Authorization) {
+      //   throw new Error("Authentication token missing");
+      // }
 
-      const response = await getPersonalDetails(headers, ophid);
+      const response = await getPersonalDetails(headers,ophid);
 
       if (response.success) {
         setFormData({
@@ -240,6 +240,8 @@ const PersonalDetailsForm = () => {
 
       // Append profile image if it exists
       if (formData.profileImage?.file) {
+        
+        
         formDataToSend.append("profile_image", formData.profileImage.file);
       }
 
@@ -249,7 +251,11 @@ const PersonalDetailsForm = () => {
       });
       console.log(debugData);
 
-      const response = await updatePersonalDetails(formDataToSend, headers);
+      
+      
+
+      const response = await updatePersonalDetails(formDataToSend,headers);
+      
       if (response.success) {
         toast.success("Personal details updated successfully");
         const path = `/auth/create-profile/professional-details?ophid=${ophid}`
