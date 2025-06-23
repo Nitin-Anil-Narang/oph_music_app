@@ -1,37 +1,48 @@
-const {DB} = require('../../data/knex');
+const db = require('../DB/connect');
+const docs = require('../controllers/documentation_details');
+const personal_details = require('../model/personal_details');
+const prof_details =  require('../controllers/professional_details');
+// const users = require('../c')
 
-const artistsController = {
-  async membershipForm(req, res) {
+const membershipForm = async (req,res)=>{
+   {
     try {
+      const { ophid } = req.query;
+      console.log(ophid);
+      
       // Fetch artist data
-      const artist = await DB.knex('artists as a')
-      .leftJoin('professions as p', 'a.profession_id', 'p.id')
-      .where('a.id', req.params.id)
-      .first('a.*', 'p.name as profession_name');
+      // const artist = await DB.knex('artists as a')
+      // .leftJoin('professions as p', 'a.profession_id', 'p.id')
+      // .where('a.id', req.params.id)
+      // .first('a.*', 'p.name as profession_name');
+
+      const artist = await personal_details.getPersonalDetails(ophid);
+      console.log(artist);
+      
 
     
     if (!artist) {
       return res.status(404).send('Artist not found');
     }
-    const paymentId = await DB.knex('payments').where('artist_id', artist.id).where('plan_id', 4).where('status', 0).first('trans_id');
-    // Fetch bank details
-    const bankDetails = await DB.knex('user_bank_accs')
-    .leftJoin('banks as b', 'user_bank_accs.bank_id', 'b.id')
-    .where('artist_id', artist.id)
-    .first('user_bank_accs.*', 'b.bank_name as bank_name');
+    // const paymentId = await DB.knex('payments').where('artist_id', artist.id).where('plan_id', 4).where('status', 0).first('trans_id');
+    // // Fetch bank details
+    // const bankDetails = await DB.knex('user_bank_accs')
+    // .leftJoin('banks as b', 'user_bank_accs.bank_id', 'b.id')
+    // .where('artist_id', artist.id)
+    // .first('user_bank_accs.*', 'b.bank_name as bank_name');
 
     // Fetch documents
-    const documents = await DB.knex('user_docs')
-      .where('artist_id', artist.id)
-      .first();
+    // const documents = await DB.knex('user_docs')
+    //   .where('artist_id', artist.id)
+    //   .first();
 
-    // Get S3 URLs for documents
-    const aadharFrontUrl = documents?.aadhar_front;
-    const aadharBackUrl = documents?.aadhar_back;
-    const panFrontUrl = documents?.pan_front;
-    // const panBackUrl = documents?.pan_back;
-    const signatureUrl = documents?.signature;
-    const profileImgUrl = artist.profile_img_url;
+    // // Get S3 URLs for documents
+    // const aadharFrontUrl = documents?.aadhar_front;
+    // const aadharBackUrl = documents?.aadhar_back;
+    // const panFrontUrl = documents?.pan_front;
+    // // const panBackUrl = documents?.pan_back;
+    // const signatureUrl = documents?.signature;
+    // const profileImgUrl = artist.profile_img_url;
     const html =`
     <!DOCTYPE html>
     <html lang="en">
@@ -1656,4 +1667,4 @@ Agreement shall be subject to arbitration in accordance with the Arbitration and
 }
 }
 
-module.exports = artistsController;
+module.exports = membershipForm;
