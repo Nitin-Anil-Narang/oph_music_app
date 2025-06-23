@@ -17,6 +17,7 @@ const documentationDetailsRoute = require("./routes/documentation_details")
 const dateBookingRoute = require("./routes/date_booking")
 const songResgisterRoute= require("./routes/songs_register")
 const songDetailsRoute= require("./routes/song_details")
+const personalDetails = require("./routes/personal_details")
 
 const forgotPassword = require("./routes/forgot_password")
 const resetPassword = require("./routes/reset_password")

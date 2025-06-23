@@ -136,7 +136,7 @@ const PersonalDetailsForm = () => {
       //   throw new Error("Authentication token missing");
       // }
 
-      const response = await getPersonalDetails(headers);
+      const response = await getPersonalDetails(headers,ophid);
 
       if (response.success) {
         setFormData({
@@ -252,22 +252,9 @@ const PersonalDetailsForm = () => {
       console.log(debugData);
 
       
-      const updatePersonalDetails = async (ophid,formData) => {
-        const response = await axiosApi.post(
-          `/user/${ophid}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              ...headers,
-            },
-          }
-        );
-        return response.data;
-      };
-
-      const response = await updatePersonalDetails(ophid,formDataToSend);
       
+
+      const response = await updatePersonalDetails(formDataToSend,headers);
       
       if (response.success) {
         toast.success("Personal details updated successfully");

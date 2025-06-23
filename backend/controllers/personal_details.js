@@ -2,7 +2,7 @@ const user_details = require("../model/personal_details.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const bucket = require("../utils.js");
+const bucket = require("../utils/utils.js");
 
 const insertPersonalDetails = async (req, res) => {
   try {
@@ -30,7 +30,10 @@ const insertPersonalDetails = async (req, res) => {
     const { ophid, legal_name, stage_name, contact_num, location,email } = req.body;
     const profile_image = req.file; // multer stores file here
 
-    if (!ophid || legal_name || stage_name || !profile_image || contact_num || !location || email) {
+    console.log(req.file);
+    
+
+    if (!ophid || !legal_name || !stage_name || !profile_image || !contact_num || !location || !email) {
       return res.status(400).json({
         success: false,
         message: "Missing required fields",
