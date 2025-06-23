@@ -2,36 +2,15 @@ const user_details = require("../model/personal_details.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const bucket = require("../utils/utils.js");
+const bucket = require("../utils.js");
 
 const insertPersonalDetails = async (req, res) => {
   try {
     let storageLocation = "";
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res
-        .status(401)
-        .json({ success: false, message: "No token provided" });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.SECRET_KEY);
-    } catch (err) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid or expired token" });
-    }
-
+    
     // Access fields from req.body and req.file
     const { ophid, legal_name, stage_name, contact_num, location,email } = req.body;
     const profile_image = req.file; // multer stores file here
-
-    console.log(req.file);
-    
 
     if (!ophid || !legal_name || !stage_name || !profile_image || !contact_num || !location || !email) {
       return res.status(400).json({
@@ -84,29 +63,6 @@ const insertPersonalDetails = async (req, res) => {
 
 const mapPersonalDetails = async (req, res) => {
   try {
-    // 1. Extract token from Authorization header
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res
-        .status(401)
-        .json({ success: false, message: "No token provided" });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    // 2. Verify token
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.SECRET_KEY);
-    } catch (err) {
-      console.error("JWT verification error:", err.message);
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid or expired token" });
-    }
-
-    // 3. Get ophid from query string
     const { ophid } = req.query;
 
     if (!ophid) {
@@ -116,7 +72,6 @@ const mapPersonalDetails = async (req, res) => {
       });
     }
 
-    // 4. Fetch user details
     const user = await user_details.getPersonalDetails(ophid);
     const userDetails = user[0];
 

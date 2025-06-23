@@ -187,7 +187,8 @@ const SignUpForm = () => {
       
 
       if (response.success) {
-        const path = `/auth/payment?ophid=${response.id}`; // <-- leading slash added        
+       localStorage.setItem("token", response.token);
+        const path = `/auth/payment?ophid=${response.ophid}`
         navigate(path);
       }
     } catch (e) {      

@@ -1,5 +1,6 @@
 const professional = require("../model/professional_details");
-const { uploadToS3 } = require("../utils/utils");
+const { uploadToS3 } = require("../utils");
+const user_details = require("../model/professional_details.js");
 
 const insertProfessionalDetails = async (req, res) => {
   try {
@@ -17,6 +18,14 @@ const insertProfessionalDetails = async (req, res) => {
       SongsPlanningType
     } = req.body;
 
+    const user = await user_details.getProfessionalDetails(OPH_ID);
+    
+    if (user.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
     const videoFile = req.files?.video?.[0];
     const photoFiles = req.files?.photos || [];
 
@@ -70,25 +79,24 @@ const insertProfessionalDetails = async (req, res) => {
 };
 
 
-
-const getProfessionalDetailsByOphId = async (req, res) => {
+const getProfessionalByOphId = async (req, res) => {
+  
   try {
-    const { ophid } = req.params;
-    
-    const result = await professional.getProfessionalByOphId(ophid);
+    const { ophid } = req.query;
+    const data = await user_details.getProfessionalByOphId(ophid);
+    console.log(data);
 
-    if (result.length > 0) {
-      return res.status(200).json({ success: true, data: result[0] });
+    if (!data) {
+      return res.status(404).json({ success: false, message: "Data not found for the given OPH_ID" });
     }
-
-    return res.status(404).json({ success: false, message: error });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
 module.exports = {
   insertProfessionalDetails,
-  getProfessionalDetailsByOphId
+  getProfessionalByOphId
 };

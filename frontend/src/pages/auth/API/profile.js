@@ -32,9 +32,10 @@ export const updatePersonalDetails = async (formData, headers) => {
   return response.data;
 };
 
-export const getProfessionalDetails = async (headers) => {
+export const getProfessionalDetails = async (headers, ophid) => {
   const response = await axiosApi.get("/auth/professional-details", {
     headers,
+    params: { ophid },
   });
   return response.data;
 };
@@ -49,20 +50,22 @@ export const updateProfessionalDetails = async (formData, headers) => {
   return response.data;
 };
 
-export const getDocumentationDetails = async (headers) => {
+export const getDocumentationDetails = async (headers, ophid) => {
   const response = await axiosApi.get("/auth/documentation-details", {
     headers,
+    params: { ophid },
   });
   return response.data;
 };
 
 export const updateDocumentationDetails = async (formData, headers) => {
+  console.log(formData);
   const response = await axiosApi.post(
     "/auth/documentation-details",
     formData,
     {
       headers: {
-        "Content-Type": "mulztipart/form-data",
+        "Content-Type": "multipart/form-data",
         ...headers,
       },
     }

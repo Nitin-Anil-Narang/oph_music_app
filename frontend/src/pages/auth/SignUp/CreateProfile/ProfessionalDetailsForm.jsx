@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { toast } from "react-hot-toast";
 import { AiOutlineDown } from "react-icons/ai";
 import {
@@ -9,12 +9,23 @@ import {
 import ProfileFormHeader from "../components/ProfileFormHeader";
 import Loading from "../../../../components/Loading";
 import { useArtist } from "../../API/ArtistContext";
-import { fetchVideoForScreen } from "../../../../utils/fetchVideo";
+// import { fetchVideoForScreen } from "../../../../utils/fetchVideo";
 import PlayBtn from "../../../../../public/assets/images/playButton.png";
 import MusicBg from "../../../../../public/assets/images/music_bg.png";
 import Elipse from "../../../../../public/assets/images/elipse2.png";
 import axiosApi from "../../../../conf/axios";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+const professionOptions = [
+  { id: 1, name: "Singer" },
+  { id: 2, name: "Musician" },
+  { id: 3, name: "DJ" },
+  { id: 4, name: "Composer" },
+  { id: 5, name: "Instrumentalist" },
+  { id: 6, name: "Lyricist" },
+  { id: 7, name: "Music Producer" },
+];
+
 const ProfessionalDetailsForm = () => {
   const { headers } = useArtist();
   const navigate = useNavigate();
@@ -26,20 +37,22 @@ const ProfessionalDetailsForm = () => {
   const videoRef = useRef(null);
   const [video, setVideo] = useState(null);
   const [rejectReason, setRejectReason] = useState(null);
-  
-  const fetchVideo = async () => {
-    try {
-      const response = await axiosApi.get(
-        "artist-website-configs?param=signup_video"
-      );
-      setVideo(response.data.data[0]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const [searchParams] = useSearchParams();
+  const ophid = searchParams.get("ophid");
+
+  // const fetchVideo = async () => {
+  //   try {
+  //     const response = await axiosApi.get(
+  //       "artist-website-configs?param=signup_video"
+  //     );
+  //     setVideo(response.data.data[0]);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
   const handlePlay = () => setIsPlaying(true);
   const handlePause = () => setIsPlaying(false);
-  
+
   const togglePlayPause = () => {
     if (videoRef.current) {
       if (isPlaying) {
@@ -49,9 +62,9 @@ const ProfessionalDetailsForm = () => {
       }
     }
   };
-  useEffect(() => {
-    fetchVideo();
-  }, []);
+  // useEffect(() => {
+  //   fetchVideo();
+  // }, []);
   const [formData, setFormData] = useState({
     profession: "",
     bio: "",
@@ -60,46 +73,51 @@ const ProfessionalDetailsForm = () => {
     instagramUrl: "",
     facebookUrl: "",
     appleMusicUrl: "",
-    experienceYears: 0,
+    ExperienceYearly: 0,
     experienceMonths: 0,
     songsPlanned: 0,
     songPlanningDuration: "monthly",
   });
-console.log(formData,"formdata");
+  // console.log(formData,"formdata");
 
   useEffect(() => {
-    fetchRejectReason(); 
-    fetchProfessionalDetails(); 
+    // fetchRejectReason();
+    fetchProfessionalDetails();
   }, []);
 
-  useEffect(() => {
-    const loadVideo = async () => {
-      const url = await fetchVideoForScreen("professional_video");
-      setVideoUrl(url);
-    };
-    loadVideo();
-  }, []);
+  // useEffect(() => {
+  //   const loadVideo = async () => {
+  //     const url = await fetchVideoForScreen("professional_video");
+  //     setVideoUrl(url);
+  //   };
+  //   loadVideo();
+  // }, []);
   const fetchProfessionalDetails = async () => {
     try {
-      const response = await getProfessionalDetails(headers);
+      const response = await getProfessionalDetails(headers, ophid);
+
       if (response.success) {
         const data = response.data;
-        setProfessions(data.professions);
+        const artist = data[0];
+
+        setProfessions(artist.Profession);
         setFormData({
-          profession: data.artist.profession_id || "",
-          bio: data.artist.bio || "",
-          photos: data.artist.photos || [],
-          spotifyUrl: data.artist.spotify_url || "",
-          instagramUrl: data.artist.instagram_url || "",
-          facebookUrl: data.artist.facebook_url || "",
-          appleMusicUrl: data.artist.apple_music_url || "",
-          experienceYears: Math.floor((data.artist.exp_in_months || 0) / 12),
-          experienceMonths: (data.artist.exp_in_months || 0) % 12,
-          songsPlanned: data.artist.songs_planned_per_month || 0,
+          profession: artist.Profession || "",
+          bio: artist.Bio || "",
+          photos: artist.PhotoURLs || [],
+          spotifyUrl: artist.SpotifyLink || "",
+          instagramUrl: artist.InstagramLink || "",
+          facebookUrl: artist.FacebookLink || "",
+          appleMusicUrl: artist.AppleMusicLink || "",
+          ExperienceYearly: Math.floor((artist.ExperienceYearly || 0) / 12),
+          experienceMonths: (artist.SongsPlanningCount || 0) % 12,
+          songsPlanned: artist.SongsPlanningType || 0,
         });
-        setVideoBio(data.artist.video_bio || null);
+        setVideoBio(artist.VideoURL || null);
+
       }
     } catch (error) {
+      console.log(error);
       toast.error("Failed to fetch professional details");
     } finally {
       setLoading(false);
@@ -107,7 +125,6 @@ console.log(formData,"formdata");
   };
 
   const handleSubmit = async (e) => {
-    debugger;
     e.preventDefault();
     setLoading(true);
     // Add validation checks
@@ -126,21 +143,22 @@ console.log(formData,"formdata");
       const formDataToSend = new FormData();
 
       // Append all text fields
-      formDataToSend.append("profession_id", formData.profession);
-      formDataToSend.append("bio", formData.bio);
-      formDataToSend.append("spotify_url", formData.spotifyUrl);
-      formDataToSend.append("instagram_url", formData.instagramUrl);
-      formDataToSend.append("facebook_url", formData.facebookUrl);
-      formDataToSend.append("apple_music_url", formData.appleMusicUrl);
+      formDataToSend.append("OPH_ID", ophid);
+      formDataToSend.append("Profession", formData.profession);
+      formDataToSend.append("Bio", formData.bio);
+      formDataToSend.append("SpotifyLink", formData.spotifyUrl);
+      formDataToSend.append("InstagramLink", formData.instagramUrl);
+      formDataToSend.append("FacebookLink", formData.facebookUrl);
+      formDataToSend.append("AppleMusicLink", formData.appleMusicUrl);
 
       // Calculate and append experience in months
       const experienceMonths =
-        formData.experienceYears * 12 + formData.experienceMonths;
-      formDataToSend.append("exp_in_months", experienceMonths);
+        formData.ExperienceYearly * 12 + formData.experienceMonths;
+      formDataToSend.append("ExperienceMonthly", experienceMonths);
 
       // Append number of songs planned
-      formDataToSend.append("songs_planned_per_month", formData.songsPlanned);
-      formDataToSend.append("song_planning_duration", formData.songPlanningDuration);
+      formDataToSend.append("SongsPlanningCount", formData.songsPlanned);
+      formDataToSend.append("SongsPlanningType", formData.songPlanningDuration);
 
       // Append photos
       if (formData.photos.length > 0) {
@@ -151,13 +169,14 @@ console.log(formData,"formdata");
 
       // Append video bio if it exists
       if (videoBio) {
-        formDataToSend.append("video_bio", videoBio);
+        formDataToSend.append("video", videoBio);
       }
 
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
-        navigate("/auth/create-profile/documentation-details");
+        const path = `/auth/create-profile/documentation-details?ophid=${ophid}`;
+        navigate(path);
       }
     } catch (error) {
       toast.error(
@@ -193,29 +212,26 @@ console.log(formData,"formdata");
       photos: prev.photos.filter((_, i) => i !== index),
     }));
   };
-  const fetchRejectReason = async () => {
-    try {
-      const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-      const response = await axiosApi.get(`/artists/${artistId}`);
-      console.log(response.data, "response.data"); // Log the response data
-      
-      if (response.data) {
-        setRejectReason(response.data.data.reject_reason || "");
-        
-      }
-      console.log(rejectReason, "rejectReason"); // Log the reject reason
-      
-    } catch (error) {
-      console.error("Error fetching reject reason:", error);
-      toast.error("Failed to fetch reject reason.");
-    }
-  };
-  
+  // const fetchRejectReason = async () => {
+  //   try {
+  //     const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
+  //     const response = await axiosApi.get(`/artists/${artistId}`);
+  //     // console.log(response.data, "response.data"); // Log the response data
+
+  //     if (response.data) {
+  //       setRejectReason(response.data.data.reject_reason || "");
+  //     }
+  //     // console.log(rejectReason, "rejectReason"); // Log the reject reason
+  //   } catch (error) {
+  //     console.error("Error fetching reject reason:", error);
+  //     toast.error("Failed to fetch reject reason.");
+  //   }
+  // };
 
   return (
     <div className="relative bg-cover bg-center">
       {loading && <Loading />}
-      
+
       <img
         src={MusicBg}
         className="absolute top-[50%] -z-10 inset-0 md:top-[20%]"
@@ -256,10 +272,10 @@ console.log(formData,"formdata");
             Professional Details
           </h2>
           {rejectReason && (
-        <div className="text-red-500">
-          <strong>Reject Reason:</strong> {rejectReason}
-        </div>
-      )}
+            <div className="text-red-500">
+              <strong>Reject Reason:</strong> {rejectReason}
+            </div>
+          )}
           <form
             className="space-y-4 px-[5%] sm:px-[10%] md:px-[15%] xl:px-[25%] mt-10"
             onSubmit={handleSubmit}
@@ -283,7 +299,7 @@ console.log(formData,"formdata");
                   }
                 >
                   <option value="">Select Profession</option>
-                  {professions.map((profession) => (
+                  {professionOptions.map((profession) => (
                     <option key={profession.id} value={profession.id}>
                       {profession.name}
                     </option>
@@ -359,28 +375,30 @@ console.log(formData,"formdata");
                 <span className="text-gray-400 text-sm">*Maximum 5 photos</span>
               </label>
 
-              <div className="grid grid-cols-3 gap-4 mt-4">
-                {formData.photos.map((photo, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={
-                        photo instanceof File
-                          ? URL.createObjectURL(photo)
-                          : photo
-                      }
-                      alt={`Upload ${index + 1}`}
-                      className="w-full h-32 object-cover rounded"
-                    />
-                    <button
-                      onClick={() => handleDeletePhoto(index)}
-                      className="absolute top-2 right-2 bg-red-500 rounded-full p-1"
-                      type="button"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
+              {Array.isArray(formData.photos) && formData.photos.length > 0 && (
+                <div className="grid grid-cols-3 gap-4 mt-4">
+                  {formData.photos.map((photo, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={
+                          photo instanceof File
+                            ? URL.createObjectURL(photo)
+                            : photo
+                        }
+                        alt={`Upload ${index + 1}`}
+                        className="w-full h-32 object-cover rounded"
+                      />
+                      <button
+                        onClick={() => handleDeletePhoto(index)}
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
+                        type="button"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
@@ -437,11 +455,11 @@ console.log(formData,"formdata");
                   <input
                     min={0}
                     type="number"
-                    value={formData.experienceYears}
+                    value={formData.ExperienceYearly}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
-                        experienceYears: parseInt(e.target.value) || 0,
+                        ExperienceYearly: parseInt(e.target.value) || 0,
                       }))
                     }
                     className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
@@ -496,7 +514,7 @@ console.log(formData,"formdata");
                   <span className="text-red-500">*</span>
                 </label>
                 <select
-                  value={formData.songPlanningDuration  } // Bind it to the form data
+                  value={formData.songPlanningDuration} // Bind it to the form data
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -506,7 +524,7 @@ console.log(formData,"formdata");
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
        focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
                 >
-                  <option  value="monthly">Per Monthly</option>
+                  <option value="monthly">Per Monthly</option>
                   <option value="quarterly">Per Quarterly</option>
                   <option value="yearly">Per Yearlyy</option>
                 </select>
