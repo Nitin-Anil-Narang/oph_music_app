@@ -333,8 +333,8 @@ const DocumentationDetailsForm = () => {
       
       if (response.success) {
         toast.success("Documentation details updated successfully");
-        
-        setShowMembershipForm(true); // Show MembershipForm
+        navigate(`/auth/membership-form?ophid=${ophid}`)
+        // setShowMembershipForm(true); // Show MembershipForm
       }
     } catch (error) {
       toast.error(
@@ -633,9 +633,9 @@ const DocumentationDetailsForm = () => {
               type="submit"
               className="w-full  my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
             >
-              Continue →
+              Submit
             </button>
-            {showMembershipForm && (
+            {/* {showMembershipForm && (
               <>
                 <MembershipForm />
                 <button
@@ -645,10 +645,10 @@ const DocumentationDetailsForm = () => {
                   }}
                   className="w-full my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
                 >
-                  Go to Next Page
+                  Submit
                 </button>
               </>
-            )}
+            )} */}
           </div>
         </div>
       </div>

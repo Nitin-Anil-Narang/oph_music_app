@@ -14,7 +14,7 @@ import PlayBtn from "../../../../../public/assets/images/playButton.png";
 import MusicBg from "../../../../../public/assets/images/music_bg.png";
 import Elipse from "../../../../../public/assets/images/elipse2.png";
 import axiosApi from "../../../../conf/axios";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { data, useNavigate, useSearchParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 const professionOptions = [
   { id: 1, name: "Singer" },
@@ -82,7 +82,7 @@ const ProfessionalDetailsForm = () => {
   // console.log(formData,"formdata");
 
   useEffect(() => {
-    // fetchRejectReason();
+    fetchRejectReason();
     fetchProfessionalDetails();
   }, [headers]);
 
@@ -119,7 +119,7 @@ const ProfessionalDetailsForm = () => {
           ExperienceYearly: Math.floor((artist.ExperienceYearly || 0) / 12),
           experienceMonths: (artist.SongsPlanningCount || 0) % 12,
           songsPlanned: artist.SongsPlanningType || 0,
-           songsPlanned: artist.SongsPlanningCount || 0,
+          songsPlannedCount: artist.SongsPlanningCount || 0,
         });
         setVideoBio(artist.VideoURL || null);
       }
@@ -145,7 +145,8 @@ const ProfessionalDetailsForm = () => {
       setLoading(false);
       return;
     }
-
+    console.log(data.songsPlannedCount);
+    
     try {
       const formDataToSend = new FormData();
 
@@ -243,21 +244,22 @@ const ProfessionalDetailsForm = () => {
       photos: prev.photos.filter((_, i) => i !== index),
     }));
   };
-  // const fetchRejectReason = async () => {
-  //   try {
-  //     const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-  //     const response = await axiosApi.get(`/artists/${artistId}`);
-  //     // console.log(response.data, "response.data"); // Log the response data
+  const fetchRejectReason = async () => {
+    try {
+      // const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
+      // const response = await axiosApi.get(`/artists/${artistId}`);
+      const response =  await getProfessionalDetails(headers, ophid);
+      console.log(response, "response.data"); // Log the response data
 
-  //     if (response.data) {
-  //       setRejectReason(response.data.data.reject_reason || "");
-  //     }
-  //     // console.log(rejectReason, "rejectReason"); // Log the reject reason
-  //   } catch (error) {
-  //     console.error("Error fetching reject reason:", error);
-  //     toast.error("Failed to fetch reject reason.");
-  //   }
-  // };
+      if (response.data) {
+        setRejectReason(response.data[0].reject_reason || "");
+      }
+      // console.log(rejectReason, "rejectReason"); // Log the reject reason
+    } catch (error) {
+      console.error("Error fetching reject reason:", error);
+      toast.error("Failed to fetch reject reason.");
+    }
+  };
 
   return (
     <div className="relative bg-cover bg-center">

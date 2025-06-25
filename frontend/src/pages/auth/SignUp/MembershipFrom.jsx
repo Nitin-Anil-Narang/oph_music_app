@@ -3,7 +3,9 @@ import axios from "axios";
 import { useArtist } from "../API/ArtistContext";
 import "../../../../src/index.css"; // Import CSS for styling
 import axiosApi from "../../../conf/axios";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import {  } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const MembershipForm = ({ id }) => {
   const [content, setContent] = useState("");
@@ -11,6 +13,7 @@ const MembershipForm = ({ id }) => {
   const { artist, headers } = useArtist();
   const [searchParams] = useSearchParams();
   const ophid = searchParams.get("ophid");
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log(ophid);
@@ -52,6 +55,16 @@ const MembershipForm = ({ id }) => {
       ) : (
         <p className="loading-message">Loading form...</p>
       )}
+
+      <button
+                  onClick={() => {
+                    toast.success("Documentation details updated successfully");
+                    navigate(`/auth/profile-status?ophid=${ophid}`);
+                  }}
+                  className="w-full my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
+                >
+                  Submit
+                </button>
     </div>
   );
 };
