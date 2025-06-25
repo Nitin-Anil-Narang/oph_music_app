@@ -83,14 +83,12 @@ const PersonalDetailsForm = () => {
   // }, []);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    profilePicture: null,
     legalName: "",
     stageName: "",
     contactNumber: "",
     location: "",
     email: "",
     profileImage: null,
-    
   });
 
   // const fetchRejectReason = async () => {
@@ -142,18 +140,22 @@ const PersonalDetailsForm = () => {
       }
 
       const response = await getPersonalDetails(headers, ophid);
+      console.log(response);
 
       if (response.success) {
         setFormData({
-          profilePicture: null,
+          profileImage: response.data.profile_pic || null,
           legalName: response.data.full_name || "",
           stageName: response.data.stage_name || "",
           contactNumber:
             response.data.contact_num.split("+91")[1] ||
             response.data.contact_num,
           email: response.data.email || "",
-          location: "",
+          location: response.data.location || "",
         });
+
+        console.log(formData);
+        
       } else {
         throw new Error(response.message || "Failed to fetch personal details");
       }
@@ -241,7 +243,10 @@ const PersonalDetailsForm = () => {
 
       formDataToSend.append("location", formData.location);
       formDataToSend.append("email", formData.email);
-      formDataToSend.append("step", "/auth/create-profile/professional-details")
+      formDataToSend.append(
+        "step",
+        "/auth/create-profile/professional-details"
+      );
 
       // Append profile image if it exists
       if (formData.profileImage?.file) {
@@ -256,7 +261,7 @@ const PersonalDetailsForm = () => {
 
       const response = await updatePersonalDetails(formDataToSend, headers);
       console.log(response);
-      
+
       if (response.success) {
         toast.success("Personal details updated successfully");
         const path = `${response.step}?ophid=${ophid}`;
@@ -344,9 +349,13 @@ const PersonalDetailsForm = () => {
                 className="relative w-32 h-32 rounded-full overflow-hidden cursor-pointer"
                 onClick={() => inputRef.current?.click()}
               >
-                {formData.profileImage?.preview ? (
+                {formData.profileImage ? (
                   <img
-                    src={formData.profileImage.preview}
+                    src={
+                      typeof formData.profileImage === "string"
+                        ? formData.profileImage
+                        : formData.profileImage.preview
+                    }
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />

@@ -3,21 +3,45 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const bucket = require("../utils.js");
-const {setCurrentStep} = require("../model/common/set_step.js")
+const { setCurrentStep } = require("../model/common/set_step.js");
 
 const insertPersonalDetails = async (req, res) => {
   try {
     let storageLocation = "";
-    
+
     // Access fields from req.body and req.file
-    const { ophid, legal_name, stage_name, contact_num, location,email,step } = req.body;
+    const {
+      ophid,
+      legal_name,
+      stage_name,
+      contact_num,
+      location,
+      email,
+      step,
+    } = req.body;
     const profile_image = req.file; // multer stores file here
 
-    if (!ophid || !legal_name || !stage_name || !profile_image || !contact_num || !location || !email) {
+    if (
+      !ophid ||
+      !legal_name ||
+      !stage_name ||
+      !profile_image ||
+      !contact_num ||
+      !location ||
+      !email
+    ) {
       return res.status(400).json({
         success: false,
         message: "Missing required fields",
       });
+    }
+
+    const user = await user_details.getPersonalDetails(ophid);
+
+    if (user.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     const storeImgIntoBucket = await bucket.uploadToS3(
@@ -27,14 +51,6 @@ const insertPersonalDetails = async (req, res) => {
 
     if (storeImgIntoBucket) {
       storageLocation = storeImgIntoBucket;
-    }
-
-    const user = await user_details.getPersonalDetails(ophid);
-
-    if (user.length === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
     }
 
     const updatedData = await user_details.setPersonalDetails(
@@ -48,10 +64,14 @@ const insertPersonalDetails = async (req, res) => {
     );
 
     if (updatedData && updatedData.affectedRows > 0) {
-      await setCurrentStep(step, ophid)
+      await setCurrentStep(step, ophid);
       return res
         .status(201)
-        .json({ success: true, message: "Data updated successfully", step:step });
+        .json({
+          success: true,
+          message: "Data updated successfully",
+          step: step,
+        });
     } else {
       return res
         .status(400)
@@ -86,6 +106,8 @@ const mapPersonalDetails = async (req, res) => {
           stage_name: userDetails.stage_name,
           contact_num: userDetails.contact_num,
           email: userDetails.email,
+          profile_pic : userDetails.personal_photo,
+          location: userDetails.location
         },
       });
     }
