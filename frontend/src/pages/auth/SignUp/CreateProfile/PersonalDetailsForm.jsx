@@ -50,7 +50,7 @@ const PersonalDetailsForm = () => {
   // const [isPlaying, setIsPlaying] = useState(false); // Track video play state
   // const videoRef = useRef(null);
   // const [video, setVideo] = useState(null);
-  // const [rejectReason, setRejectReason] = useState(null);
+  const [rejectReason, setRejectReason] = useState(null);
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const ophid = searchParams.get("ophid");
@@ -91,20 +91,20 @@ const PersonalDetailsForm = () => {
     profileImage: null,
   });
 
-  // const fetchRejectReason = async () => {
-  //   try {
-  //     const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-  //     const response = await axiosApi.get(`/artists/${artistId}`);
-  //     if (response.data) {
-  //       setRejectReason(response.data.data.reject_reason || "");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching reject reason:", error);
-  //     toast.error("Failed to fetch reject reason.");
-  //   }
-  // };
+  const fetchRejectReason = async () => {
+    try {
+      // const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
+      const response = await getPersonalDetails(headers, ophid);;
+      if (response.data) {
+        setRejectReason(response.data.reject_reason || "");
+      }
+    } catch (error) {
+      console.error("Error fetching reject reason:", error);
+      toast.error("Failed to fetch reject reason.");
+    }
+  };
   useEffect(() => {
-    // fetchRejectReason();
+    fetchRejectReason();
     fetchPersonalDetails();
   }, [headers]);
   const handleInputChange = (e) => {
@@ -152,10 +152,12 @@ const PersonalDetailsForm = () => {
             response.data.contact_num,
           email: response.data.email || "",
           location: response.data.location || "",
+          step_status: response.data.step_status || "",
+          current_step: response.data.current_step || ""
         });
 
-        console.log(formData);
-        
+
+
       } else {
         throw new Error(response.message || "Failed to fetch personal details");
       }
@@ -191,10 +193,12 @@ const PersonalDetailsForm = () => {
       reader.readAsDataURL(file);
     }
   };
+  console.log(formData.current_step);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
 
     // Validation checks
     if (!formData.legalName) {
@@ -243,9 +247,19 @@ const PersonalDetailsForm = () => {
 
       formDataToSend.append("location", formData.location);
       formDataToSend.append("email", formData.email);
+      let stepPath;
+
+      if (formData.step_status === "under review") {
+        
+        stepPath = "/auth/create-profile/professional-details";
+      } else if (formData.step_status === "rejected") {
+        stepPath = "/auth/profile-status";
+      } else {
+        stepPath = formData.current_step;
+      }
       formDataToSend.append(
         "step",
-        "/auth/create-profile/professional-details"
+        stepPath
       );
 
       // Append profile image if it exists
@@ -339,11 +353,11 @@ const PersonalDetailsForm = () => {
             <h2 className="text-cyan-400 uppercase text-2xl mt-4 font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
               Personal Details
             </h2>
-            {/* {rejectReason && (
+            {rejectReason && (
               <div className="text-red-500">
                 <strong>Reject Reason:</strong> {rejectReason}
               </div>
-            )} */}
+            )}
             <div className="flex flex-col items-center space-y-4">
               <div
                 className="relative w-32 h-32 rounded-full overflow-hidden cursor-pointer"

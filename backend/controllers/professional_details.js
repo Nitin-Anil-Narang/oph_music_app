@@ -29,32 +29,32 @@ const insertProfessionalDetails = async (req, res) => {
       });
     }
 
-    const result = user[0];
-    console.log(result);
+    // const result = user[0];
+    // console.log(result);
     
 
-    if (result.step_status === "rejected") {
-     const response = await user_details.updateProfessionalDetails(
-        OPH_ID,
-        Profession,
-        Bio,
-        videoURL,
-        JSON.stringify(photoURLs),
-        SpotifyLink,
-        InstagramLink,
-        FacebookLink,
-        AppleMusicLink,
-        parseInt(ExperienceYearly),
-        parseInt(ExperienceMonthly),
-        parseInt(SongsPlanningCount),
-        SongsPlanningType
-      );
+    // if (result.step_status === "rejected") {
+    //  const response = await user_details.updateProfessionalDetails(
+    //     OPH_ID,
+    //     Profession,
+    //     Bio,
+    //     videoURL,
+    //     JSON.stringify(photoURLs),
+    //     SpotifyLink,
+    //     InstagramLink,
+    //     FacebookLink,
+    //     AppleMusicLink,
+    //     parseInt(ExperienceYearly),
+    //     parseInt(ExperienceMonthly),
+    //     parseInt(SongsPlanningCount),
+    //     SongsPlanningType
+    //   );
 
-      if(response)
-      {
-        return res.status(201).json({success: true, message : "Data updated successfully"})
-      }
-    }
+    //   if(response)
+    //   {
+    //     return res.status(201).json({success: true, message : "Data updated successfully"})
+    //   }
+    // }
 
     const videoFile = req.files?.video?.[0];
     const photoFiles = req.files?.photos || [];
@@ -113,7 +113,7 @@ const insertProfessionalDetails = async (req, res) => {
 const getProfessionalByOphId = async (req, res) => {
   try {
     const { ophid } = req.query;
-    const data = await user_details.getProfessionalByOphId(ophid);
+    const data = await user_details.getProfessionalDetails(ophid);
     console.log(data);
 
     if (!data) {
