@@ -1,49 +1,104 @@
-const db = require('../DB/connect');
-const docs = require('../controllers/documentation_details');
-const personal_details = require('../model/personal_details');
-const prof_details =  require('../controllers/professional_details');
-// const users = require('../c')
+const docs = require("../model/documentation_details");
+const personal_details = require("../model/personal_details");
+const prof_details = require("../model/professional_details");
+const puppeteer = require("puppeteer");
+const fs = require("fs");
+const { uploadToS3 } = require("../utils");
+const { log } = require("console");
 
-const membershipForm = async (req,res)=>{
-   {
+const membershipForm = async (req, res) => {
+  {
     try {
+      const professionOptions = [
+        { id: 1, name: "Singer" },
+        { id: 2, name: "Musician" },
+        { id: 3, name: "DJ" },
+        { id: 4, name: "Composer" },
+        { id: 5, name: "Instrumentalist" },
+        { id: 6, name: "Lyricist" },
+        { id: 7, name: "Music Producer" },
+      ];
+
+      const banking = [
+        { id: 1, bank_name: "State Bank of India" },
+        { id: 2, bank_name: "HDFC Bank" },
+        { id: 3, bank_name: "ICICI Bank" },
+        { id: 4, bank_name: "Axis Bank" },
+        { id: 5, bank_name: "Punjab National Bank" },
+        { id: 6, bank_name: "Bank of Baroda" },
+        { id: 7, bank_name: "Kotak Mahindra Bank" },
+        { id: 8, bank_name: "Canara Bank" },
+        { id: 9, bank_name: "IndusInd Bank" },
+        { id: 10, bank_name: "Union Bank of India" },
+      ];
       const { ophid } = req.query;
+      const OPH_ID = ophid;
       console.log(ophid);
-      
+
       // Fetch artist data
       // const artist = await DB.knex('artists as a')
       // .leftJoin('professions as p', 'a.profession_id', 'p.id')
       // .where('a.id', req.params.id)
       // .first('a.*', 'p.name as profession_name');
 
-      const artist = await personal_details.getPersonalDetails(ophid);
+      const artist = await personal_details.getFullPersonalDetails(ophid);
+      const artistProf = await prof_details.getProfessionalByOphId(OPH_ID);
+      const artistDoc = await docs.getDocumentationDetailsByOphId(ophid);
+
       console.log(artist);
-      
+      console.log(artistProf);
+      console.log(artistDoc);
 
-    
-    if (!artist) {
-      return res.status(404).send('Artist not found');
-    }
-    // const paymentId = await DB.knex('payments').where('artist_id', artist.id).where('plan_id', 4).where('status', 0).first('trans_id');
-    // // Fetch bank details
-    // const bankDetails = await DB.knex('user_bank_accs')
-    // .leftJoin('banks as b', 'user_bank_accs.bank_id', 'b.id')
-    // .where('artist_id', artist.id)
-    // .first('user_bank_accs.*', 'b.bank_name as bank_name');
+      const formattedDate = artist[0].createdAt.toISOString().split("T")[0];
+      const aadharFrontUrl = artistDoc[0].AadharFrontURL;
+      const aadharBackUrl = artistDoc[0].AadharBackURL;
 
-    // Fetch documents
-    // const documents = await DB.knex('user_docs')
-    //   .where('artist_id', artist.id)
-    //   .first();
+      const panFrontUrl = artistDoc[0].PanFrontURL;
+      console.log("pan", panFrontUrl);
+      console.log(artistProf[0]?.VideoURL);
 
-    // // Get S3 URLs for documents
-    // const aadharFrontUrl = documents?.aadhar_front;
-    // const aadharBackUrl = documents?.aadhar_back;
-    // const panFrontUrl = documents?.pan_front;
-    // // const panBackUrl = documents?.pan_back;
-    // const signatureUrl = documents?.signature;
-    // const profileImgUrl = artist.profile_img_url;
-    const html =`
+      const bankname = parseInt(artistDoc[0].BankName); // Convert from string to number
+      const BankName = banking.find((b) => b.id === bankname)?.bank_name;
+
+      const bankDetails = {
+        bank_name: BankName,
+        bank_acc_number: artistDoc[0].AccountNumber,
+        bank_ifsc_code: artistDoc[0].IFSCCode,
+        bank_acc_name: artistDoc[0].AccountHolderName,
+      };
+      const signatureUrl = artistDoc[0].SignatureImageURL;
+
+      const professionId = parseInt(artistProf[0].Profession); // Convert from string to number
+      const professionName = professionOptions.find(
+        (p) => p.id === professionId
+      )?.name;
+
+      console.log(artistProf[0].ExperienceMonthly % 12);
+      console.log(artistProf[0].ExperienceMonthly % 12);
+
+      if (!artist) {
+        return res.status(404).send("Artist not found");
+      }
+      // const paymentId = await DB.knex('payments').where('artist_id', artist.id).where('plan_id', 4).where('status', 0).first('trans_id');
+      // // Fetch bank details
+      // const bankDetails = await DB.knex('user_bank_accs')
+      // .leftJoin('banks as b', 'user_bank_accs.bank_id', 'b.id')
+      // .where('artist_id', artist.id)
+      // .first('user_bank_accs.*', 'b.bank_name as bank_name');
+
+      // Fetch documents
+      // const documents = await DB.knex('user_docs')
+      //   .where('artist_id', artist.id)
+      //   .first();
+
+      // // Get S3 URLs for documents
+      // const aadharFrontUrl = documents?.aadhar_front;
+      // const aadharBackUrl = documents?.aadhar_back;
+      // const panFrontUrl = documents?.pan_front;
+      // // const panBackUrl = documents?.pan_back;
+      // const signatureUrl = documents?.signature;
+      // const profileImgUrl = artist.profile_img_url;
+      const html = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -179,6 +234,11 @@ const membershipForm = async (req,res)=>{
           display: flex;
           align-items: center;
           justify-content: center;
+        }
+
+        .page-break {
+          page-break-after: always;
+          break-after: page;
         }
 
         .page-number {
@@ -342,16 +402,17 @@ const membershipForm = async (req,res)=>{
       <!-- Page 1 -->
       <div class="page">
         <div class="header">
-        <img src="/assets/membership_header.jpg" alt="Header" class="header-image" width="223mm">
+        <img src="https://ophcommunity.s3.ap-south-1.amazonaws.com/assets/membership_header.jpg" alt="Header" class="header-image" width="223mm">
         </div>
         <div class="row gap-10">
         <div class="form-group">
           <label class="field-name">Artist Membership Code</label>
-          <div class="field-value">&nbsp;</div>
+          <div class="field-value"> ${artist[0].ophid || ""} &nbsp;</div>
         </div>
         <div class="form-group">
           <label class="field-name">Date</label>
-          <div class="field-value">${artist.created_at.toLocaleDateString().split('T')[0] || ''}</div>
+          <!-- artist.created_at.toLocaleDateString().split("T")[0] -->
+          <div class="field-value">${formattedDate || ""}</div>
         </div>
         </div>
 
@@ -362,21 +423,21 @@ const membershipForm = async (req,res)=>{
                 <span>Legal Name</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-80">${artist.legal_name || ''}</span>
+            <span class="field-value w-80">${artist[0].full_name || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
                 <span>Stage Name</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-80">${artist.stage_name || ''}</span>
+            <span class="field-value w-80">${artist[0].stage_name || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
                 <span>Phone Number</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${artist.phone || ''}</span>
+            <span class="field-value w-60">${artist[0].contact_num || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
@@ -384,7 +445,7 @@ const membershipForm = async (req,res)=>{
                 <span class="mr-22">:</span>
             </span>
             <span class="field-value w-60">
-            ${artist.email || ''}
+            ${artist[0].email || ""}
             </span>
         </div>
         <div class="field grid-template-columns-2">
@@ -393,7 +454,7 @@ const membershipForm = async (req,res)=>{
                 <span class="mr-22">:</span>
             </span>
             <span class="field-value w-60">
-            ${artist.location || ''}
+            ${artist[0].location || ""}
             </span>
         </div>
 
@@ -405,35 +466,35 @@ const membershipForm = async (req,res)=>{
                 <span>Profession</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${artist.profession_name || ''}</span>
+            <span class="field-value w-60">${professionName || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
                 <span>Instagram</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${artist.instagram_url || ''}</span>
+            <span class="field-value w-60">${artistProf[0].InstagramLink || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
                 <span>Facebook</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${artist.facebook_url || ''}</span>
+            <span class="field-value w-60">${artistProf[0].FacebookLink || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
                 <span>Spotify</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${artist.spotify_url|| ''}</span>
+            <span class="field-value w-60">${artistProf[0].SpotifyLink || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
                 <span>Apple</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${artist.apple_music_url || ''}</span>
+            <span class="field-value w-60">${artistProf[0].AppleMusicLink || ""}</span>
         </div>
         <div>
             <span class="field-name">
@@ -445,13 +506,13 @@ const membershipForm = async (req,res)=>{
                 <span class="field-name">
                     Monthly
                 </span>
-                <div class="field-value">${parseInt(artist.exp_in_months%12) || 'N/A'}</div>
+                <div class="field-value">${parseInt(artistProf[0].ExperienceMonthly % 12) || "N/A"}</div>
             </div>
             <div>
                 <span class="field-name">
                     Yearly
                 </span>
-                <div class="field-value">${(parseInt(artist.exp_in_months/12)) || '0'}</div>
+                <div class="field-value">${parseInt(artistProf[0].ExperienceMonthly / 12) || "0"}</div>
             </div>
         </div>
         <div>
@@ -464,19 +525,19 @@ const membershipForm = async (req,res)=>{
                 <span class="field-name">
                     Monthly
                 </span>
-                <div class="field-value">${artist.song_planning_duration === 'monthly' && artist.songs_planned_per_month || 'N/A'}</div>
+                <div class="field-value">${(artistProf[0].SongsPlanningType === "monthly" && artistProf[0].SongsPlanningCount) || "N/A"}</div>
             </div>
             <div class="mr-22">
                 <span class="field-name">
                     Quarterly
                 </span>
-                <div class="field-value">${artist.song_planning_duration === 'quarterly' && artist.songs_planned_per_month || 'N/A'}</div>
+                <div class="field-value">${(artistProf[0].SongsPlanningType === "quarterly" && artistProf[0].SongsPlanningCount) || "N/A"}</div>
             </div>
             <div>
                 <span class="field-name">
                     Yearly
                 </span>
-                <div class="field-value">${artist.song_planning_duration === 'yearly' && artist.songs_planned_per_month || 'N/A'}</div>
+                <div class="field-value">${(artistProf[0].SongsPlanningType === "yearly" && artistProf[0].SongsPlanningCount) || "N/A"}</div>
             </div>
         </div>
 
@@ -484,6 +545,7 @@ const membershipForm = async (req,res)=>{
         <div class="page-number">Page.No - 1</div>
         </div>
       </div>
+      <div class="page-break"></div>
 
       <!-- Page 2 -->
       <div class="page">
@@ -492,72 +554,72 @@ const membershipForm = async (req,res)=>{
         <div class="row" style=" padding-right: 10px;align-items: center; display: grid; grid-template-columns: 1fr 0.6fr 1fr; gap: 20px;">
           <div>
             <label class="label">Profile Image</label>
-            <input type="checkbox" ${artist?.profile_img_url ? 'checked' : ''} disabled>
+            <input type="checkbox" ${artist[0]?.personal_photo ? "checked" : ""} disabled>
           </div>
           <div>
             <label class="label">File Name :</label>
           </div>
           <div>
-            <div class="field-value mb-16">${artist?.profile_img_url?.split('/')[artist?.profile_img_url?.split('/').length - 1] || ''}</div>
+            <div class="field-value mb-16">${artist[0]?.personal_photo?.split("/")[artist[0]?.personal_photo?.split("/").length - 1] || ""}</div>
           </div>
         </div>
 
         <div class="row" style=" padding-right: 10px;align-items: center; display: grid; grid-template-columns: 1fr 0.6fr 1fr; gap: 20px;">
           <div>
             <label class="label">Bio</label>
-            <input type="checkbox" ${artist?.bio ? 'checked' : ''} disabled>
+            <input type="checkbox" ${artistProf[0]?.Bio ? "checked" : ""} disabled>
           </div>
           <div>
             <label class="label">Video Bio</label>
-            <input type="checkbox" ${artist?.video_bio ? 'checked' : ''} disabled>
+            <input type="checkbox" ${artistProf[0]?.VideoURL ? "checked" : ""} disabled>
           </div>
           <div>
-            <div class="field-value mb-16">${artist?.video_bio?.split('/')[artist?.video_bio?.split('/').length - 1] || ''}</div>
+            <div class="field-value mb-16">${artistProf[0]?.VideoURL?.split("/")[artist[0]?.VideoURL?.split("/").length - 1] || ""}</div>
           </div>
         </div>
 
         <div class="row" style=" padding-right: 10px;align-items: center; display: grid; grid-template-columns: 1fr 0.6fr 1fr; gap: 20px;">
           <div>
             <label class="label">Photos</label>
-            <input type="checkbox" ${artist?.photos ? 'checked' : ''} disabled>
+            <input type="checkbox" ${artistProf[0]?.PhotoURLs ? "checked" : ""} disabled>
           </div>
 
         </div>
         <div class="row" style=" padding-right: 10px;align-items: center; display: grid; grid-template-columns: 1fr 0.6fr 1fr; gap: 20px;">
           <div>
             <label class="label">Aadhar Card</label>
-            <input type="checkbox" ${aadharFrontUrl ? 'checked' : ''} disabled>
+            <input type="checkbox" ${aadharFrontUrl ? "checked" : ""} disabled>
           </div>
           <div>
             <label class="label">File Name :</label>
           </div>
           <div>
-            <div class="field-value mb-16">${aadharFrontUrl?.split('/')[aadharFrontUrl?.split('/').length - 1] || ''}</div>
+            <div class="field-value mb-16">${aadharFrontUrl?.split("/")[aadharFrontUrl?.split("/").length - 1] || ""}</div>
           </div>
         </div>
         <div class="row" style=" padding-right: 10px;align-items: center; display: grid; grid-template-columns: 1fr 0.6fr 1fr; gap: 20px;">
           <div>
             <label class="label">Aadhar Card Back</label>
-            <input type="checkbox" ${aadharBackUrl ? 'checked' : ''} disabled>
+            <input type="checkbox" ${aadharBackUrl ? "checked" : ""} disabled>
           </div>
           <div>
             <label class="label">File Name :</label>
           </div>
           <div>
-            <div class="field-value mb-16">${aadharBackUrl?.split('/')[aadharBackUrl?.split('/').length - 1] || ''}</div>
+            <div class="field-value mb-16">${aadharBackUrl?.split("/")[aadharBackUrl?.split("/").length - 1] || ""}</div>
           </div>
         </div>
 
           <div class="row" style=" padding-right: 10px;align-items: center; display: grid; grid-template-columns: 1fr 0.6fr 1fr; gap: 20px;">
           <div>
             <label class="label">Pan Card</label>
-            <input type="checkbox" ${panFrontUrl ? 'checked' : ''} disabled>
+            <input type="checkbox" ${panFrontUrl ? "checked" : ""} disabled>
           </div>
           <div>
             <label class="label">File Name :</label>
           </div>
           <div>
-            <div class="field-value mb-16">${panFrontUrl?.split('/')[panFrontUrl?.split('/').length - 1] || ''}</div>
+            <div class="field-value mb-16">${panFrontUrl?.split("/")[panFrontUrl?.split("/").length - 1] || ""}</div>
           </div>
         </div>
 
@@ -566,28 +628,28 @@ const membershipForm = async (req,res)=>{
               <span>Bank Name</span>
               <span class="mr-22">:</span>
           </span>
-          <span class="field-value w-60">${bankDetails?.bank_name || ''}</span>
+          <span class="field-value w-60">${bankDetails?.bank_name || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
                 <span>Account Number</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${bankDetails?.bank_acc_number || ''}</span>
+            <span class="field-value w-60">${bankDetails?.bank_acc_number || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
                 <span>IFSC Code</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${bankDetails?.bank_ifsc_code || ''}</span>
+            <span class="field-value w-60">${bankDetails?.bank_ifsc_code || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
                 <span>Account Holder Name</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${bankDetails?.bank_acc_name || ''}</span>
+            <span class="field-value w-60">${bankDetails?.bank_acc_name || ""}</span>
         </div>
         <div class="field grid-template-columns-2">
           <span class="field-name d-flex justify-content-between align-items-center">
@@ -652,6 +714,7 @@ const membershipForm = async (req,res)=>{
         <div class="page-number">Page.No - 2</div>
         </div>
       </div>
+      <div class="page-break"></div>
 
       <!-- Page 3 -->
       <div class="page">
@@ -665,14 +728,15 @@ const membershipForm = async (req,res)=>{
                 <span>Legal Name</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${artist.legal_name || ''}</span>
+            <span class="field-value w-60">${artist[0].full_name || ""}</span>
           </div>
           <div class="field grid-template-columns-2">
             <span class="field-name d-flex justify-content-between align-items-center">
                 <span>Date</span>
                 <span class="mr-22">:</span>
             </span>
-            <span class="field-value w-60">${artist.created_at.toLocaleDateString().split('T')[0] || ''}</span>
+            <!-- artist.created_at.toLocaleDateString().split("T")[0] -->
+            <span class="field-value w-60">${formattedDate || ""}</span>
           </div>
           <div class="form-group">
           <p style="font-size: 12px; line-height: 1.6; text-align: left; color: black;">
@@ -726,6 +790,7 @@ rights between both parties.<br><br>
         <div class="page-number">Page.No - 3</div>
         </div>
       </div>
+      <div class="page-break"></div>
 
       <div class="page">
         <div class="section-header">TERMS AND CONDITIONS</div>
@@ -829,6 +894,7 @@ The data is covered under Section 43 of the IT Act, 2000 ("IT Act, 2000").
         <div class="page-number">Page.No - 4</div>
         </div>
       </div>
+      <div class="page-break"></div>
 
       <div class="page">
         <div class="section-header">TERMS AND CONDITIONS</div>
@@ -965,6 +1031,7 @@ as per Section 2(1)(r) of the Consumer Protection Act, 2019.
         <div class="page-number">Page.No - 5</div>
         </div>
       </div>
+      <div class="page-break"></div>
       <div class="page">
         <div class="section-header">TERMS AND CONDITIONS</div>
 
@@ -1137,6 +1204,7 @@ delay in analytics, there will be visible revenue supplied.
         <div class="page-number">Page.No - 6</div>
         </div>
       </div>
+      <div class="page-break"></div>
       <div class="page">
         <div class="section-header">TERMS AND CONDITIONS</div>
 
@@ -1277,6 +1345,7 @@ regard.
         <div class="page-number">Page.No - 7</div>
         </div>
       </div>
+      <div class="page-break"></div>
       <div class="page">
         <div class="section-header">TERMS AND CONDITIONS</div>
 
@@ -1379,6 +1448,7 @@ available to Artists on the Platform.
         <div class="page-number">Page.No - 8</div>
         </div>
       </div>
+      <div class="page-break"></div>
       <div class="page">
         <div class="section-header">TERMS AND CONDITIONS</div>
 
@@ -1474,6 +1544,7 @@ the Artist's profile made on OPH Community may be on chargeable terms at the dis
         <div class="page-number">Page.No - 9</div>
         </div>
       </div>
+      <div class="page-break"></div>
       <div class="page">
         <div class="section-header">TERMS AND CONDITIONS</div>
 
@@ -1560,6 +1631,7 @@ the Information Technology Act, 2000, and will act only as an intermediary unles
         <div class="page-number">Page.No - 10</div>
         </div>
       </div>
+      <div class="page-break"></div>
       <div class="page">
         <div class="section-header">TERMS AND CONDITIONS</div>
 
@@ -1657,14 +1729,49 @@ Agreement shall be subject to arbitration in accordance with the Arbitration and
     </body>
     </html>
     `;
-    // Generate HTML
-   
-    res.send(html);
-  } catch (error) {
-    console.error('Error generating membership form:', error);
-    res.status(500).send('Error generating membership form');
+      // Generate HTML
+
+      res.send(html);
+      try {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        // Set the HTML content
+        await page.setContent(html, { waitUntil: "networkidle0" });
+
+        // Generate PDF as buffer
+        const pdfBuffer = await page.pdf({
+          format: "A4",
+          printBackground: true,
+          margin: {
+            top: "10mm",
+            bottom: "10mm",
+            left: "10mm",
+            right: "10mm",
+          },
+        });
+
+        await browser.close();
+        const fileName = `${artist[0].full_name.replace(/\s+/g, "_")}.pdf`;
+        const file = {
+          originalname: fileName,
+          buffer: pdfBuffer,
+          mimetype: "application/pdf",
+        };
+        try {
+          const s3Url = await uploadToS3(file, "pdfs");
+          console.log("✅ PDF uploaded to:", s3Url);
+        } catch (err) {
+          console.error("Upload failed:", err.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } catch (error) {
+      console.error("Error generating membership form:", error);
+      res.status(500).send("Error generating membership form");
+    }
   }
-}
-}
+};
 
 module.exports = membershipForm;

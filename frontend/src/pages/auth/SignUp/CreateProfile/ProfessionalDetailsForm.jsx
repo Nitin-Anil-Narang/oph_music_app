@@ -39,6 +39,7 @@ const ProfessionalDetailsForm = () => {
   const [rejectReason, setRejectReason] = useState(null);
   const [searchParams] = useSearchParams();
   const ophid = searchParams.get("ophid");
+  const shouldHideSongsPlanned = ophid?.includes("SA");
 
   // const fetchVideo = async () => {
   //   try {
@@ -154,15 +155,26 @@ const ProfessionalDetailsForm = () => {
       formDataToSend.append("InstagramLink", formData.instagramUrl);
       formDataToSend.append("FacebookLink", formData.facebookUrl);
       formDataToSend.append("AppleMusicLink", formData.appleMusicUrl);
-      formDataToSend.append("step", "/auth/create-profile/documentation-details")
+      formDataToSend.append(
+        "step",
+        "/auth/create-profile/documentation-details"
+      );
       // Calculate and append experience in months
       const experienceMonths =
         formData.ExperienceYearly * 12 + formData.experienceMonths;
       formDataToSend.append("ExperienceMonthly", experienceMonths);
 
       // Append number of songs planned
-      formDataToSend.append("SongsPlanningCount", formData.songsPlanned);
-      formDataToSend.append("SongsPlanningType", formData.songPlanningDuration);
+      if (ophid && shouldHideSongsPlanned) {
+        formDataToSend.append("SongsPlanningCount", "NA");
+        formDataToSend.append("SongsPlanningType", "NA");
+      } else {
+        formDataToSend.append("SongsPlanningCount", formData.songsPlanned);
+        formDataToSend.append(
+          "SongsPlanningType",
+          formData.songPlanningDuration
+        );
+      }
 
       // Append photos
       if (formData.photos.length > 0) {
@@ -179,7 +191,7 @@ const ProfessionalDetailsForm = () => {
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
-        const path = `${step}?ophid=${ophid}`;
+        const path = `${response.step}?ophid=${ophid}`;
         navigate(path);
       }
     } catch (error) {
@@ -492,47 +504,51 @@ const ProfessionalDetailsForm = () => {
             </div>
 
             <div className="flex gap-4 items-end">
-              <div className="flex-grow">
-                <label className="block w-full mb-1">
-                  Number of songs planning:{" "}
-                  <span className="text-red-500">*</span>
-                </label>
-                <input
-                  min={0}
-                  type="number"
-                  value={formData.songsPlanned}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      songsPlanned: parseInt(e.target.value) || 0,
-                    }))
-                  }
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+              {!shouldHideSongsPlanned && (
+                <>
+                  <div className="flex-grow">
+                    <label className="block w-full mb-1">
+                      Number of songs planning:{" "}
+                      <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      min={0}
+                      type="number"
+                      value={formData.songsPlanned}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          songsPlanned: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
        focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
-                />
-              </div>
+                    />
+                  </div>
 
-              <div>
-                <label className="block w-full mb-1">
-                  Song planning duration:{" "}
-                  <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={formData.songPlanningDuration} // Bind it to the form data
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      songPlanningDuration: e.target.value || "monthly", // Update with selected value
-                    }))
-                  }
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                  <div>
+                    <label className="block w-full mb-1">
+                      Song planning duration:{" "}
+                      <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.songPlanningDuration} // Bind it to the form data
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          songPlanningDuration: e.target.value || "monthly", // Update with selected value
+                        }))
+                      }
+                      className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
        focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
-                >
-                  <option value="monthly">Per Monthly</option>
-                  <option value="quarterly">Per Quarterly</option>
-                  <option value="yearly">Per Yearlyy</option>
-                </select>
-              </div>
+                    >
+                      <option value="monthly">Per Monthly</option>
+                      <option value="quarterly">Per Quarterly</option>
+                      <option value="yearly">Per Yearlyy</option>
+                    </select>
+                  </div>
+                </>
+              )}
             </div>
 
             <button

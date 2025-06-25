@@ -25,4 +25,13 @@ const getPersonalDetails = async (ophid) => {
   return rows;
 };
 
-module.exports = { setPersonalDetails, getPersonalDetails };
+const getFullPersonalDetails = async (ophid) => {
+  const [rows] = await db.execute(
+    "SELECT * FROM user_details WHERE ophid = ?;",
+    [ophid]
+  );
+
+  return rows;
+};
+
+module.exports = { setPersonalDetails, getPersonalDetails ,getFullPersonalDetails};
