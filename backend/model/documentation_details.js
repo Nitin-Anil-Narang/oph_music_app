@@ -26,7 +26,18 @@ const insertDocumentationDetails = async (
       AccountNumber,
       IFSCCode,
       AgreementAccepted
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      AadharFrontURL = VALUES(AadharFrontURL),
+      AadharBackURL = VALUES(AadharBackURL),
+      PanFrontURL = VALUES(PanFrontURL),
+      PanBackURL = VALUES(PanBackURL),
+      SignatureImageURL = VALUES(SignatureImageURL),
+      BankName = VALUES(BankName),
+      AccountHolderName = VALUES(AccountHolderName),
+      AccountNumber = VALUES(AccountNumber),
+      IFSCCode = VALUES(IFSCCode),
+      AgreementAccepted = VALUES(AgreementAccepted)`,
     [
       OPH_ID,
       AadharFrontURL,
@@ -44,6 +55,52 @@ const insertDocumentationDetails = async (
 
   return result;
 };
+
+
+// const insertDocumentationDetails = async (
+//   OPH_ID,
+//   AadharFrontURL,
+//   AadharBackURL,
+//   PanFrontURL,
+//   PanBackURL,
+//   SignatureImageURL,
+//   BankName,
+//   AccountHolderName,
+//   AccountNumber,
+//   IFSCCode,
+//   AgreementAccepted
+// ) => {
+//   const [result] = await db.execute(
+//     `INSERT INTO documentation_details (
+//       OPH_ID,
+//       AadharFrontURL,
+//       AadharBackURL,
+//       PanFrontURL,
+//       PanBackURL,
+//       SignatureImageURL,
+//       BankName,
+//       AccountHolderName,
+//       AccountNumber,
+//       IFSCCode,
+//       AgreementAccepted
+//     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+//     [
+//       OPH_ID,
+//       AadharFrontURL,
+//       AadharBackURL,
+//       PanFrontURL,
+//       PanBackURL,
+//       SignatureImageURL,
+//       BankName,
+//       AccountHolderName,
+//       AccountNumber,
+//       IFSCCode,
+//       AgreementAccepted,
+//     ]
+//   );
+
+//   return result;
+// };
 
 const getDocumentationDetails = async (OPH_ID) => {
   const [rows] = await db.execute(
