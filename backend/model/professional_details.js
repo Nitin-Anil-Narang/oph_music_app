@@ -52,6 +52,47 @@ const insertProfessionalDetails = async (
   return result;
 };
 
+const updateProfessionalDetails = async (
+  OPH_ID,
+  Profession,
+  Bio,
+  VideoURL,
+  PhotoURLs,
+  SpotifyLink,
+  InstagramLink,
+  FacebookLink,
+  AppleMusicLink,
+  ExperienceYearly,
+  ExperienceMonthly,
+  SongsPlanningCount,
+  SongsPlanningType,
+
+) => {
+  const [result] = await db.execute(
+    "UPDATE professional_details SET Profession = ?,Bio = ?,VideoURL= ?,PhotoURLs= ?,SpotifyLink= ?,InstagramLink= ?,FacebookLink= ?,AppleMusicLink= ?,ExperienceYearly= ?,ExperienceMonthly= ?,SongsPlanningCount= ?,SongsPlanningType= ?,step_status= ?, reject_reason = ? WHERE OPH_ID = ?",
+      
+      [
+      Profession,
+      Bio,
+      VideoURL,
+      PhotoURLs,
+      SpotifyLink,
+      InstagramLink,
+      FacebookLink,
+      AppleMusicLink,
+      ExperienceYearly,
+      ExperienceMonthly,
+      SongsPlanningCount,
+      SongsPlanningType,
+      'under review',
+      null,
+      OPH_ID,
+    ]
+  );
+
+  return result;
+};
+
 const getProfessionalByOphId = async (OPH_ID) => {
     const [rows] = await db.execute(
       "SELECT ud.ophid, pd.Profession, pd.Bio, pd.VideoURL, pd.PhotoURLs, pd.SpotifyLink, pd.InstagramLink, pd.FacebookLink, pd.AppleMusicLink, pd.ExperienceYearly,pd.ExperienceMonthly, pd.SongsPlanningCount, pd.SongsPlanningType FROM user_details ud LEFT JOIN professional_details pd ON ud.ophid = pd.OPH_ID WHERE ud.ophid = ?",
@@ -74,4 +115,5 @@ module.exports = {
   insertProfessionalDetails,
   getProfessionalDetails,
   getProfessionalByOphId,
+  updateProfessionalDetails
 };

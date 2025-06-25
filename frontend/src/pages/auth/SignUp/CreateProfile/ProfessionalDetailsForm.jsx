@@ -104,12 +104,13 @@ const ProfessionalDetailsForm = () => {
       if (response.success) {
         const data = response.data;
         const artist = data[0];
+      console.log(artist);
 
         setProfessions(artist.Profession);
         setFormData({
           profession: artist.Profession || "",
           bio: artist.Bio || "",
-          photos: artist.PhotoURLs || [],
+          photos: JSON.parse(artist.PhotoURLs) || [],
           spotifyUrl: artist.SpotifyLink || "",
           instagramUrl: artist.InstagramLink || "",
           facebookUrl: artist.FacebookLink || "",
@@ -117,6 +118,7 @@ const ProfessionalDetailsForm = () => {
           ExperienceYearly: Math.floor((artist.ExperienceYearly || 0) / 12),
           experienceMonths: (artist.SongsPlanningCount || 0) % 12,
           songsPlanned: artist.SongsPlanningType || 0,
+           songsPlanned: artist.SongsPlanningCount || 0,
         });
         setVideoBio(artist.VideoURL || null);
       }
@@ -154,7 +156,10 @@ const ProfessionalDetailsForm = () => {
       formDataToSend.append("InstagramLink", formData.instagramUrl);
       formDataToSend.append("FacebookLink", formData.facebookUrl);
       formDataToSend.append("AppleMusicLink", formData.appleMusicUrl);
-      formDataToSend.append("step", "/auth/create-profile/documentation-details")
+      formDataToSend.append(
+        "step",
+        "/auth/create-profile/documentation-details"
+      );
       // Calculate and append experience in months
       const experienceMonths =
         formData.ExperienceYearly * 12 + formData.experienceMonths;
@@ -179,7 +184,7 @@ const ProfessionalDetailsForm = () => {
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
-        const path = `${step}?ophid=${ophid}`;
+        const path = `${response.step}?ophid=${ophid}`;
         navigate(path);
       }
     } catch (error) {
@@ -209,6 +214,19 @@ const ProfessionalDetailsForm = () => {
       setVideoBio(file);
     }
   };
+
+  useEffect(() => {
+    if (videoBio && typeof videoBio !== "string") {
+      const objectUrl = URL.createObjectURL(videoBio);
+      setVideoUrl(objectUrl);
+
+      return () => {
+        URL.revokeObjectURL(objectUrl); // Clean up on unmount or when videoBio changes
+      };
+    } else if (typeof videoBio === "string") {
+      setVideoUrl(videoBio); // Already a URL (e.g. from backend)
+    }
+  }, [videoBio]);
 
   const handleDeletePhoto = (index) => {
     setFormData((prev) => ({
@@ -347,17 +365,9 @@ const ProfessionalDetailsForm = () => {
             </div>
 
             <div className="relative mb-8">
-              {videoBio ? (
-                <video
-                  src={
-                    typeof videoBio === "string"
-                      ? videoBio
-                      : URL.createObjectURL(videoBio)
-                  }
-                  className="w-full rounded-lg"
-                  controls
-                />
-              ) : null}
+              {videoUrl && (
+                <video src={videoUrl} className="w-full rounded-lg" controls />
+              )}
             </div>
 
             <div>
