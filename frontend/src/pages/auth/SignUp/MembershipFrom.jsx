@@ -3,18 +3,24 @@ import axios from "axios";
 import { useArtist } from "../API/ArtistContext";
 import "../../../../src/index.css"; // Import CSS for styling
 import axiosApi from "../../../conf/axios";
+import { useSearchParams } from "react-router-dom";
 
 const MembershipForm = ({ id }) => {
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
   const { artist, headers } = useArtist();
+  const [searchParams] = useSearchParams();
+  const ophid = searchParams.get("ophid");
 
   useEffect(() => {
+    console.log(ophid);
     const fetchMembershipForm = async () => {
       try {
-        const artist_id = JSON.parse(localStorage.getItem("userData")).artist.id;
-        console.log("Artist ID:", JSON.parse(localStorage.getItem("userData")).artist.id);
-        const response = await axiosApi.get(`/artists/membership-form/${artist_id}`, { headers });
+        
+        
+        // const artist_id = JSON.parse(localStorage.getItem("userData")).artist.id;
+        // console.log("Artist ID:", JSON.parse(localStorage.getItem("userData")).artist.id);
+        const response = await axiosApi.get(`auth/membership?ophid=${ophid}`, { headers });
         console.log("API Response:", response.data);
         
         if (typeof response.data === "string") {
