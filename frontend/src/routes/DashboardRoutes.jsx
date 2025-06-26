@@ -31,6 +31,7 @@ const ArtistRoutes = () => {
     <Provider store={artistStore}>
       <Routes>
       <Route path="/" element={<DashboardLayout />}>
+      
         <Route index element={<Home />} />
         <Route path="notification" element={<Notification />} />
         <Route path="song-details" element={<SongDetails />} />
@@ -42,7 +43,6 @@ const ArtistRoutes = () => {
         <Route path="success" element={<SuccessScreen />} />
         <Route path="payment" element={<PaymentScreen />} />
 
-        {/* Upload Song Routes */}
         <Route path="upload-song" element={<UploadSongs />} />
         <Route
           path="upload-song/register-song"
@@ -92,6 +92,8 @@ const ArtistRoutes = () => {
 
         <Route path="tv-publishing" element={<TVPublishing />} />
         <Route path="artist-spotlight" element={<ArtistSpotlight />} />
+     
+
         <Route path="*" element={<Error />} />
         </Route>
         <Route path="*" element={<Error />} />
