@@ -37,15 +37,15 @@ const ArtistLayout = () => {
   }, [isSidebarOpen]);
 
   useEffect(() => {
-    dispatch(fetchBlockedDates());
-    dispatch(fetchContentTypes());
-    dispatch(fetchPaymentPlans());
-    dispatch(fetchNewRelease());
-    dispatch(fetchLeaderboard());
-    dispatch(fetchTicketCategories());
-    dispatch(getProfile());
-    dispatch(fetchNotifications());
-    dispatch(fetchIncome(headers));
+    // dispatch(fetchBlockedDates());
+    // dispatch(fetchContentTypes());
+    // dispatch(fetchPaymentPlans());
+    // dispatch(fetchNewRelease());
+    // dispatch(fetchLeaderboard());
+    // dispatch(fetchTicketCategories());
+    // dispatch(getProfile());
+    // dispatch(fetchNotifications());
+    // dispatch(fetchIncome(headers));
   });
 
   return (
@@ -82,7 +82,7 @@ const ArtistLayout = () => {
 
       {/* Main Content */}
       <div className="flex-1">
-        <Navbar onMenuClick={() => setIsSidebarOpen(true)} />
+        {/* <Navbar onMenuClick={() => setIsSidebarOpen(true)} /> */}
         <main>
           <Outlet />
         </main>

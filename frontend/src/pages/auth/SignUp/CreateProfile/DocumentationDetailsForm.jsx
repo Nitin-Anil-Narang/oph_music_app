@@ -104,7 +104,7 @@ const DocumentationDetailsForm = () => {
   useEffect(() => {
     // fetchRejectReason();
     fetchDocumentationDetails();
-  }, []);
+  }, [headers]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -164,10 +164,22 @@ const DocumentationDetailsForm = () => {
 
   const fetchDocumentationDetails = async () => {
     try {
+
+       if (!headers || !headers.Authorization) {
+        console.warn("Headers not ready yet");
+        return;
+      }
+
       const response = await getDocumentationDetails(headers, ophid);
       if (response.success) {
+      
         // const { documents, bankDetails, banks } = response.data[0];
         const doc = response.data[0];
+        console.log(doc);
+        const bankname = parseInt(doc.BankName); // Convert from string to number
+        const BankName = banking.find((b) => b.id === bankname)?.bank_name;
+        console.log(BankName);
+        
         setBanks(banks);
         setFormData({
           aadharFront: doc.AadharFrontURL
@@ -195,7 +207,7 @@ const DocumentationDetailsForm = () => {
                 preview: doc.SignatureImageURL,
               }
             : null,
-          bankName: doc.BankName || "",
+          bankName: BankName || "",
           accountHolder: doc.AccountHolderName || "",
           accountNumber: doc.AccountNumber || "",
           ifscCode: doc.IFSCCode || "",
@@ -208,7 +220,8 @@ const DocumentationDetailsForm = () => {
       setLoading(false);
     }
   };
-
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -327,8 +340,8 @@ const DocumentationDetailsForm = () => {
       
       if (response.success) {
         toast.success("Documentation details updated successfully");
-        
-        setShowMembershipForm(true); // Show MembershipForm
+        navigate(`/auth/membership-form?ophid=${ophid}`)
+        // setShowMembershipForm(true); // Show MembershipForm
       }
     } catch (error) {
       toast.error(
@@ -627,9 +640,9 @@ const DocumentationDetailsForm = () => {
               type="submit"
               className="w-full  my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
             >
-              Continue →
+              Submit
             </button>
-            {showMembershipForm && (
+            {/* {showMembershipForm && (
               <>
                 <MembershipForm />
                 <button
@@ -639,10 +652,10 @@ const DocumentationDetailsForm = () => {
                   }}
                   className="w-full my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
                 >
-                  Go to Next Page
+                  Submit
                 </button>
               </>
-            )}
+            )} */}
           </div>
         </div>
       </div>

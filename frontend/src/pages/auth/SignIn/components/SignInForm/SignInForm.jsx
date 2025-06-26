@@ -32,10 +32,14 @@ const SignInForm = () => {
       const response = await loginUser(credentials.email, credentials.password);
 
       if (response.success) {
-        toast.success("Login Successful");
+        toast.success("Login Successful");       
         localStorage.setItem("token", response.token);
-        const path = `/auth/payment?ophid=${response.ophid}`
-        navigate(path);
+        const path = `${response.step}?ophid=${response.ophid}`
+        navigate(path, {
+          state: {
+            from: "Registeration"
+          }
+        });
       }
     } catch (error) {
       toast.error(

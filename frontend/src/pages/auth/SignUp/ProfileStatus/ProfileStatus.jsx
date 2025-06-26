@@ -31,7 +31,6 @@ const ProfileStatus = () => {
         setLoading(false); // Stop loading
         console.log(artist);
         
-        debugger;
         console.log(artist.reject_reason, artist.data.onboarding_status)
         // Redirect based on onboarding status and pass reject reason
         if (artist.data.onboarding_status === 0 || artist.data.onboarding_status === 5) {

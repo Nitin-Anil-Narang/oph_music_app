@@ -42,7 +42,7 @@ export default function UploadSongs() {
   })) : null;
 
   const handleProjectClick = (projectType) => {
-    debugger;
+    ;
 
     localStorage.setItem("projectType", projectType);
     // Navigate to the appropriate project type page

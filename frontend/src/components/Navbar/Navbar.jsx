@@ -15,7 +15,6 @@ export default function Navbar({ onMenuClick }) {
   const navigate = useNavigate();
   const countNoti = useSelector((state) => state.notification.countNewNotifications);
   const currentPage = useLocation().pathname;
-  console.log(currentPage);
   
   useEffect(() => {
     const storedData = localStorage.getItem("userData");

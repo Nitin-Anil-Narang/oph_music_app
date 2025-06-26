@@ -14,7 +14,7 @@ import PlayBtn from "../../../../../public/assets/images/playButton.png";
 import MusicBg from "../../../../../public/assets/images/music_bg.png";
 import Elipse from "../../../../../public/assets/images/elipse2.png";
 import axiosApi from "../../../../conf/axios";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { data, useNavigate, useSearchParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 const professionOptions = [
   { id: 1, name: "Singer" },
@@ -39,6 +39,7 @@ const ProfessionalDetailsForm = () => {
   const [rejectReason, setRejectReason] = useState(null);
   const [searchParams] = useSearchParams();
   const ophid = searchParams.get("ophid");
+  const shouldHideSongsPlanned = ophid?.includes("SA");
 
   // const fetchVideo = async () => {
   //   try {
@@ -81,9 +82,9 @@ const ProfessionalDetailsForm = () => {
   // console.log(formData,"formdata");
 
   useEffect(() => {
-    // fetchRejectReason();
+    fetchRejectReason();
     fetchProfessionalDetails();
-  }, []);
+  }, [headers]);
 
   // useEffect(() => {
   //   const loadVideo = async () => {
@@ -94,27 +95,34 @@ const ProfessionalDetailsForm = () => {
   // }, []);
   const fetchProfessionalDetails = async () => {
     try {
+      if (!headers || !headers.Authorization) {
+        console.warn("Headers not ready yet");
+        return;
+      }
+
       const response = await getProfessionalDetails(headers, ophid);
 
       if (response.success) {
         const data = response.data;
         const artist = data[0];
+      console.log(artist);
 
         setProfessions(artist.Profession);
         setFormData({
           profession: artist.Profession || "",
           bio: artist.Bio || "",
-          photos: artist.PhotoURLs || [],
+          photos: JSON.parse(artist.PhotoURLs) || [],
           spotifyUrl: artist.SpotifyLink || "",
           instagramUrl: artist.InstagramLink || "",
           facebookUrl: artist.FacebookLink || "",
           appleMusicUrl: artist.AppleMusicLink || "",
-          ExperienceYearly: Math.floor((artist.ExperienceYearly || 0) / 12),
-          experienceMonths: (artist.SongsPlanningCount || 0) % 12,
-          songsPlanned: artist.SongsPlanningType || 0,
+          ExperienceYearly: Math.floor((artist.ExperienceMonthly || 0) / 12),
+          experienceMonths: (artist.ExperienceMonthly || 0) % 12,
+          songPlanningDuration: artist.SongsPlanningType || 0,
+          songsPlanned: artist.SongsPlanningCount || 0,
+          step_status:artist.step_status
         });
         setVideoBio(artist.VideoURL || null);
-
       }
     } catch (error) {
       console.log(error);
@@ -138,7 +146,8 @@ const ProfessionalDetailsForm = () => {
       setLoading(false);
       return;
     }
-
+    console.log(data.songsPlannedCount);
+    
     try {
       const formDataToSend = new FormData();
 
@@ -150,15 +159,35 @@ const ProfessionalDetailsForm = () => {
       formDataToSend.append("InstagramLink", formData.instagramUrl);
       formDataToSend.append("FacebookLink", formData.facebookUrl);
       formDataToSend.append("AppleMusicLink", formData.appleMusicUrl);
-
+      let stepPath
+      if (formData.step_status === "under review") {
+        
+        stepPath = "/auth/create-profile/professional-details";
+      } else if (formData.step_status === "rejected") {
+        stepPath = `/auth/membership-form`;
+      } else {
+        stepPath = formData.current_step;
+      }
+      formDataToSend.append(
+        "step",
+        stepPath
+      );
       // Calculate and append experience in months
       const experienceMonths =
         formData.ExperienceYearly * 12 + formData.experienceMonths;
       formDataToSend.append("ExperienceMonthly", experienceMonths);
 
       // Append number of songs planned
-      formDataToSend.append("SongsPlanningCount", formData.songsPlanned);
-      formDataToSend.append("SongsPlanningType", formData.songPlanningDuration);
+      if (ophid && shouldHideSongsPlanned) {
+        formDataToSend.append("SongsPlanningCount", "NA");
+        formDataToSend.append("SongsPlanningType", "NA");
+      } else {
+        formDataToSend.append("SongsPlanningCount", formData.songsPlanned);
+        formDataToSend.append(
+          "SongsPlanningType",
+          formData.songPlanningDuration
+        );
+      }
 
       // Append photos
       if (formData.photos.length > 0) {
@@ -175,7 +204,7 @@ const ProfessionalDetailsForm = () => {
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
-        const path = `/auth/create-profile/documentation-details?ophid=${ophid}`;
+        const path = `${response.step}?ophid=${ophid}`;
         navigate(path);
       }
     } catch (error) {
@@ -206,27 +235,41 @@ const ProfessionalDetailsForm = () => {
     }
   };
 
+  useEffect(() => {
+    if (videoBio && typeof videoBio !== "string") {
+      const objectUrl = URL.createObjectURL(videoBio);
+      setVideoUrl(objectUrl);
+
+      return () => {
+        URL.revokeObjectURL(objectUrl); // Clean up on unmount or when videoBio changes
+      };
+    } else if (typeof videoBio === "string") {
+      setVideoUrl(videoBio); // Already a URL (e.g. from backend)
+    }
+  }, [videoBio]);
+
   const handleDeletePhoto = (index) => {
     setFormData((prev) => ({
       ...prev,
       photos: prev.photos.filter((_, i) => i !== index),
     }));
   };
-  // const fetchRejectReason = async () => {
-  //   try {
-  //     const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-  //     const response = await axiosApi.get(`/artists/${artistId}`);
-  //     // console.log(response.data, "response.data"); // Log the response data
+  const fetchRejectReason = async () => {
+    try {
+      // const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
+      // const response = await axiosApi.get(`/artists/${artistId}`);
+      const response =  await getProfessionalDetails(headers, ophid);
+      console.log(response, "response.data"); // Log the response data
 
-  //     if (response.data) {
-  //       setRejectReason(response.data.data.reject_reason || "");
-  //     }
-  //     // console.log(rejectReason, "rejectReason"); // Log the reject reason
-  //   } catch (error) {
-  //     console.error("Error fetching reject reason:", error);
-  //     toast.error("Failed to fetch reject reason.");
-  //   }
-  // };
+      if (response.data) {
+        setRejectReason(response.data[0].reject_reason || "");
+      }
+      // console.log(rejectReason, "rejectReason"); // Log the reject reason
+    } catch (error) {
+      console.error("Error fetching reject reason:", error);
+      toast.error("Failed to fetch reject reason.");
+    }
+  };
 
   return (
     <div className="relative bg-cover bg-center">
@@ -343,17 +386,9 @@ const ProfessionalDetailsForm = () => {
             </div>
 
             <div className="relative mb-8">
-              {videoBio ? (
-                <video
-                  src={
-                    typeof videoBio === "string"
-                      ? videoBio
-                      : URL.createObjectURL(videoBio)
-                  }
-                  className="w-full rounded-lg"
-                  controls
-                />
-              ) : null}
+              {videoUrl && (
+                <video src={videoUrl} className="w-full rounded-lg" controls />
+              )}
             </div>
 
             <div>
@@ -488,47 +523,51 @@ const ProfessionalDetailsForm = () => {
             </div>
 
             <div className="flex gap-4 items-end">
-              <div className="flex-grow">
-                <label className="block w-full mb-1">
-                  Number of songs planning:{" "}
-                  <span className="text-red-500">*</span>
-                </label>
-                <input
-                  min={0}
-                  type="number"
-                  value={formData.songsPlanned}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      songsPlanned: parseInt(e.target.value) || 0,
-                    }))
-                  }
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+              {!shouldHideSongsPlanned && (
+                <>
+                  <div className="flex-grow">
+                    <label className="block w-full mb-1">
+                      Number of songs planning:{" "}
+                      <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      min={0}
+                      type="number"
+                      value={formData.songsPlanned}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          songsPlanned: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
        focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
-                />
-              </div>
+                    />
+                  </div>
 
-              <div>
-                <label className="block w-full mb-1">
-                  Song planning duration:{" "}
-                  <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={formData.songPlanningDuration} // Bind it to the form data
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      songPlanningDuration: e.target.value || "monthly", // Update with selected value
-                    }))
-                  }
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                  <div>
+                    <label className="block w-full mb-1">
+                      Song planning duration:{" "}
+                      <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.songPlanningDuration} // Bind it to the form data
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          songPlanningDuration: e.target.value || "monthly", // Update with selected value
+                        }))
+                      }
+                      className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
        focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
-                >
-                  <option value="monthly">Per Monthly</option>
-                  <option value="quarterly">Per Quarterly</option>
-                  <option value="yearly">Per Yearlyy</option>
-                </select>
-              </div>
+                    >
+                      <option value="monthly">Per Monthly</option>
+                      <option value="quarterly">Per Quarterly</option>
+                      <option value="yearly">Per Yearlyy</option>
+                    </select>
+                  </div>
+                </>
+              )}
             </div>
 
             <button

@@ -38,7 +38,7 @@ export default function Events() {
   }, [dispatch, headers]);
 
   const handleReg = async (data) => {
-    debugger;
+    ;
     
     if (location.state?.state === "success") {
     } else {

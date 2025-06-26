@@ -342,7 +342,7 @@ console.log(formData, "formData");
         sessionStorage.removeItem(REGISTER_SONG_STATE_KEY);
         sessionStorage.removeItem("isSubmitting");
         console.log(response.data.data.available_on_music_platforms, "response.data");
-        debugger;
+        ;
         if(response.data.data.available_on_music_platforms){
           navigate(`/dashboard/upload-song/video-metadata/${response.data.data.id}`, { state: { projectType } });
         }

@@ -6,6 +6,8 @@ const {
 const { uploadToS3 } = require("../utils");
 
 const insertDocumentationController = async (req, res) => {
+
+      
   try {
     const {
       OPH_ID,
@@ -81,10 +83,12 @@ const insertDocumentationController = async (req, res) => {
 const getDocumentByOphIdController = async (req, res) => {
   try {
     const { ophid } = req.query;
-    console.log(ophid);
+    // console.log(ophid);
 
     const data = await getDocumentationDetailsByOphId(ophid);
-    console.log(data);
+    // console.log(ophid);
+    
+    // console.log(data);
 
     if (!data) {
       return res.status(404).json({

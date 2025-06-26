@@ -50,7 +50,7 @@ const PersonalDetailsForm = () => {
   // const [isPlaying, setIsPlaying] = useState(false); // Track video play state
   // const videoRef = useRef(null);
   // const [video, setVideo] = useState(null);
-  // const [rejectReason, setRejectReason] = useState(null);
+  const [rejectReason, setRejectReason] = useState(null);
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const ophid = searchParams.get("ophid");
@@ -83,7 +83,6 @@ const PersonalDetailsForm = () => {
   // }, []);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    profilePicture: null,
     legalName: "",
     stageName: "",
     contactNumber: "",
@@ -92,22 +91,22 @@ const PersonalDetailsForm = () => {
     profileImage: null,
   });
 
-  // const fetchRejectReason = async () => {
-  //   try {
-  //     const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-  //     const response = await axiosApi.get(`/artists/${artistId}`);
-  //     if (response.data) {
-  //       setRejectReason(response.data.data.reject_reason || "");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching reject reason:", error);
-  //     toast.error("Failed to fetch reject reason.");
-  //   }
-  // };
+  const fetchRejectReason = async () => {
+    try {
+      // const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
+      const response = await getPersonalDetails(headers, ophid);;
+      if (response.data) {
+        setRejectReason(response.data.reject_reason || "");
+      }
+    } catch (error) {
+      console.error("Error fetching reject reason:", error);
+      toast.error("Failed to fetch reject reason.");
+    }
+  };
   useEffect(() => {
-    // fetchRejectReason();
+    fetchRejectReason();
     fetchPersonalDetails();
-  }, []);
+  }, [headers]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -132,23 +131,33 @@ const PersonalDetailsForm = () => {
   const fetchPersonalDetails = async () => {
     try {
       // Ensure headers are available
+      // if (!headers || !headers.Authorization) {
+      //   throw new Error("Authentication token missing");
+      // }
       if (!headers || !headers.Authorization) {
-        throw new Error("Authentication token missing");
+        console.warn("Headers not ready yet");
+        return;
       }
 
       const response = await getPersonalDetails(headers, ophid);
+      console.log(response);
 
       if (response.success) {
         setFormData({
-          profilePicture: null,
+          profileImage: response.data.profile_pic || null,
           legalName: response.data.full_name || "",
           stageName: response.data.stage_name || "",
           contactNumber:
             response.data.contact_num.split("+91")[1] ||
             response.data.contact_num,
           email: response.data.email || "",
-          location: "",
+          location: response.data.location || "",
+          step_status: response.data.step_status || "",
+          current_step: response.data.current_step || ""
         });
+
+
+
       } else {
         throw new Error(response.message || "Failed to fetch personal details");
       }
@@ -184,10 +193,12 @@ const PersonalDetailsForm = () => {
       reader.readAsDataURL(file);
     }
   };
+  console.log(formData.current_step);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
 
     // Validation checks
     if (!formData.legalName) {
@@ -228,15 +239,28 @@ const PersonalDetailsForm = () => {
     try {
       const formDataToSend = new FormData();
 
-
       // Append text fields
       formDataToSend.append("ophid", ophid);
       formDataToSend.append("legal_name", formData.legalName);
       formDataToSend.append("stage_name", formData.stageName);
       formDataToSend.append("contact_num", formData.contactNumber);
-      
+
       formDataToSend.append("location", formData.location);
       formDataToSend.append("email", formData.email);
+      let stepPath;
+
+      if (formData.step_status === "under review") {
+        
+        stepPath = "/auth/create-profile/professional-details";
+      } else if (formData.step_status === "rejected") {
+        stepPath = `/auth/membership-form`;
+      } else {
+        stepPath = formData.current_step;
+      }
+      formDataToSend.append(
+        "step",
+        stepPath
+      );
 
       // Append profile image if it exists
       if (formData.profileImage?.file) {
@@ -250,9 +274,11 @@ const PersonalDetailsForm = () => {
       console.log(debugData);
 
       const response = await updatePersonalDetails(formDataToSend, headers);
+      console.log(response);
+
       if (response.success) {
         toast.success("Personal details updated successfully");
-        const path = `/auth/create-profile/professional-details?ophid=${ophid}`
+        const path = `${response.step}?ophid=${ophid}`;
         navigate(path);
       }
     } catch (error) {
@@ -327,19 +353,23 @@ const PersonalDetailsForm = () => {
             <h2 className="text-cyan-400 uppercase text-2xl mt-4 font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
               Personal Details
             </h2>
-            {/* {rejectReason && (
+            {rejectReason && (
               <div className="text-red-500">
                 <strong>Reject Reason:</strong> {rejectReason}
               </div>
-            )} */}
+            )}
             <div className="flex flex-col items-center space-y-4">
               <div
                 className="relative w-32 h-32 rounded-full overflow-hidden cursor-pointer"
                 onClick={() => inputRef.current?.click()}
               >
-                {formData.profileImage?.preview ? (
+                {formData.profileImage ? (
                   <img
-                    src={formData.profileImage.preview}
+                    src={
+                      typeof formData.profileImage === "string"
+                        ? formData.profileImage
+                        : formData.profileImage.preview
+                    }
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -380,7 +410,6 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
-                  
                 />
               </div>
 
@@ -394,7 +423,6 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
-                  
                 />
               </div>
 
@@ -412,7 +440,6 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
-                  
                 />
               </div>
 
@@ -425,9 +452,7 @@ const PersonalDetailsForm = () => {
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
                 >
-                  <option value="" >
-                    Select Your State
-                  </option>
+                  <option value="">Select Your State</option>
                   {indianStates.map((state) => (
                     <option key={state} value={state}>
                       {state}
@@ -446,7 +471,6 @@ const PersonalDetailsForm = () => {
                   onChange={handleInputChange}
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
-                  
                 />
               </div>
 

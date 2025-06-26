@@ -379,7 +379,7 @@ export default function AudioMetadataForm() {
   };
 
   const handleSubmit = async (e) => {
-    debugger;
+    ;
     e.preventDefault();
 
     if (isSubmitting) return;

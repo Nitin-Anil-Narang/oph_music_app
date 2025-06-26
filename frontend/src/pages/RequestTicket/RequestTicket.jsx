@@ -201,7 +201,7 @@ export default function RequestTicketForm() {
     sessionStorage.setItem(TICKET_KEY, JSON.stringify(formData));
 
     if (isGeneralEnquiry) {
-      debugger;
+      ;
       // If it's a General Enquiry, submit the ticket directly
       setIsSubmitting(true);
       try {

@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 const ArtistContext = createContext();
 
 export const ArtistProvider = ({ children }) => {
-  const [artist, setArtist] = useState(() => {
-    const storedUser = localStorage.getItem('userData');
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+  // const [artist, setArtist] = useState(() => {
+  //   const storedUser = localStorage.getItem('userData');
+  //   return storedUser ? JSON.parse(storedUser) : null;
+  // });
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [headers, setHeaders] = useState(() => {
     const storedToken = localStorage.getItem('token');
@@ -66,14 +66,14 @@ export const ArtistProvider = ({ children }) => {
         }
 
         // Only set state if it's different
-        setArtist(prev => prev?.email === decodedToken.email ? prev : decodedToken);
+        // setArtist(prev => prev?.email === decodedToken.email ? prev : decodedToken);
         setToken(prev => prev === storedToken ? prev : storedToken);
         setHeaders(prev => prev?.Authorization === `Bearer ${storedToken}` ? prev : { 'Authorization': `Bearer ${storedToken}` });
 
         // Handle onboarding redirection
-        if (window.location.pathname.startsWith('/dashboard') && decodedToken.onboarding_status !== 4) {
-          redirectBasedOnStatus(decodedToken.onboarding_status);
-        }
+        // if (window.location.pathname.startsWith('/dashboard') && decodedToken.onboarding_status !== 4) {
+        //   redirectBasedOnStatus(decodedToken.onboarding_status);
+        // }
       } catch (error) {
         console.error('Token validation error:', error);
         logout();
@@ -81,11 +81,12 @@ export const ArtistProvider = ({ children }) => {
     };
 
     verifyToken();
+    
   }, [navigate]);
   const logout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('userData');
-    setArtist(null);
+    // localStorage.removeItem('userData');
+    // setArtist(null);
     setToken(null);
     setHeaders(null);
     navigate('/auth/login');
@@ -100,13 +101,13 @@ export const ArtistProvider = ({ children }) => {
       }
 
       localStorage.setItem('token', token);
-      localStorage.setItem('userData', JSON.stringify(userData));
+      // localStorage.setItem('userData', JSON.stringify(userData));
 
-      setArtist(decodedToken);
+      // setArtist(decodedToken);
       setToken(token);
       setHeaders({ 'Authorization': `Bearer ${token}` });
 
-      redirectBasedOnStatus(decodedToken.onboarding_status);
+      // redirectBasedOnStatus(decodedToken.onboarding_status);
     } catch (error) {
       console.error('Token validation error:', error);
       logout();
@@ -114,7 +115,11 @@ export const ArtistProvider = ({ children }) => {
   };
 
   return (
-    <ArtistContext.Provider value={{ artist, setArtist, logout, login, headers }}>
+    // <ArtistContext.Provider value={{ artist, setArtist, logout, login, headers }}>
+    //   {children}
+    // </ArtistContext.Provider>
+
+    <ArtistContext.Provider value={{ logout, login, headers }}>
       {children}
     </ArtistContext.Provider>
   );

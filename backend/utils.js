@@ -24,5 +24,21 @@ const uploadToS3 = async (file, folder) => {
     throw new Error('Failed to upload file to S3');
   }
 };
+const uploadToS3Form = async (file, folder) => {
+  const params = {
+    Bucket: process.env.S3_BUCKET,
+    Key: `${folder}/${file.originalname}`,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+  };
 
-module.exports = { uploadToS3 };
+  try {
+    const result = await s3.upload(params).promise();
+    return result.Location;
+  } catch (error) {
+    console.error('S3 upload error:', error);
+    throw new Error('Failed to upload file to S3');
+  }
+};
+
+module.exports = { uploadToS3 ,uploadToS3Form};

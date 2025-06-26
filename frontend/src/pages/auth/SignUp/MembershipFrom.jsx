@@ -4,6 +4,9 @@ import axios from "axios";
 import { useArtist } from "../API/ArtistContext";
 import "../../../../src/index.css"; // Import CSS for styling
 import axiosApi from "../../../conf/axios";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import {  } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const MembershipForm = ({ id }) => {
   const [searchParams] = useSearchParams();
@@ -11,14 +14,19 @@ const MembershipForm = ({ id }) => {
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
   const { artist, headers } = useArtist();
+  const [searchParams] = useSearchParams();
+  const ophid = searchParams.get("ophid");
+  const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(ophid);
     const fetchMembershipForm = async () => {
       try {
-        formDataToSend.append("OPH_ID", ophid);
-        const artist_id = JSON.parse(localStorage.getItem("userData")).artist.id;
-        console.log("Artist ID:", JSON.parse(localStorage.getItem("userData")).artist.id);
-        const response = await axiosApi.get(`/artists/membership-form/${artist_id}`, { headers });
+        
+        
+        // const artist_id = JSON.parse(localStorage.getItem("userData")).artist.id;
+        // console.log("Artist ID:", JSON.parse(localStorage.getItem("userData")).artist.id);
+        const response = await axiosApi.get(`auth/membership?ophid=${ophid}`, { headers });
         console.log("API Response:", response.data);
         console.log(ophid);
         
@@ -52,6 +60,16 @@ const MembershipForm = ({ id }) => {
       ) : (
         <p className="loading-message">Loading form...</p>
       )}
+
+      <button
+                  onClick={() => {
+                    toast.success("Documentation details updated successfully");
+                    navigate(`/auth/profile-status?ophid=${ophid}`);
+                  }}
+                  className="w-full my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
+                >
+                  Submit
+                </button>
     </div>
   );
 };
