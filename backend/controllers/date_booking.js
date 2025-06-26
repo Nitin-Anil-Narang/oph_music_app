@@ -8,6 +8,11 @@ exports.createOrUpdateBooking = async (req, res) => {
   }
 
   try {
+
+    const response = await bookingModel.createOrUpdateBooking(
+      
+    )
+
     // Case 1: New booking → only oph_id & booking_date given
     // if (booking_date && !old_booking_date && !new_booking_date) {
     //   const existing = await bookingModel.findBookingByDate(booking_date);
