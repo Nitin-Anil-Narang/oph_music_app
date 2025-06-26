@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useArtist } from "../API/ArtistContext";
 import "../../../../src/index.css"; // Import CSS for styling
 import axiosApi from "../../../conf/axios";
 
 const MembershipForm = ({ id }) => {
+  const [searchParams] = useSearchParams();
+  const ophid = searchParams.get("ophid");
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
   const { artist, headers } = useArtist();
@@ -12,10 +15,12 @@ const MembershipForm = ({ id }) => {
   useEffect(() => {
     const fetchMembershipForm = async () => {
       try {
+        formDataToSend.append("OPH_ID", ophid);
         const artist_id = JSON.parse(localStorage.getItem("userData")).artist.id;
         console.log("Artist ID:", JSON.parse(localStorage.getItem("userData")).artist.id);
         const response = await axiosApi.get(`/artists/membership-form/${artist_id}`, { headers });
         console.log("API Response:", response.data);
+        console.log(ophid);
         
         if (typeof response.data === "string") {
           setContent(response.data);
@@ -31,6 +36,7 @@ const MembershipForm = ({ id }) => {
     fetchMembershipForm();
   }, [id]);
 
+  console.log(ophid);
   return (
     <div className="w-100 overflow-x-hidden"> 
       <h2 className="form-title">Membership Form</h2>

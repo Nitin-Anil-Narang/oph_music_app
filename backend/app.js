@@ -16,8 +16,8 @@ const professionalDetailsRoute = require("./routes/professional_details")
 const documentationDetailsRoute = require("./routes/documentation_details")
 const dateBookingRoute = require("./routes/date_booking")
 const songResgisterRoute= require("./routes/songs_register")
-const songDetailsRoute= require("./routes/song_details")
-
+const songDetailsRoute = require("./routes/song_details")
+const secondaryArtist = require("./routes/secondary_artist")
 const forgotPassword = require("./routes/forgot_password")
 const resetPassword = require("./routes/reset_password")
 const personalDetails = require("./routes/personal_details")
@@ -40,7 +40,8 @@ app.use("/", songResgisterRoute);
 app.use("/", songDetailsRoute);
 app.use("/", forgotPassword)
 app.use("/", resetPassword)
-app.use("/",personalDetails)
+app.use("/", personalDetails)
+app.use("/", secondaryArtist);
 
 // ✅ Start server
 app.listen(port, () => {
