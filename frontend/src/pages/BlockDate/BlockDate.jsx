@@ -5,24 +5,24 @@ import axiosApi from "../../conf/axios";
 import getToken from "../../utils/getToken";
 import {useArtist} from "../auth/API/ArtistContext";
 export default function BlockDateForm() {
-  const {headers,artist}=useArtist();
+  const {headers}=useArtist();
   const location = useLocation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    oph_id: "",
+    oph_id: "OPH-CAN-IA-014",
     numberOfSongs: "",
     selectedDate: location.state?.selectedDate || "",
   });
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    if (userData?.artist.oph_id) {
-      setFormData(prev => ({
-        ...prev,
-        oph_id: userData.artist.oph_id
-      }));
-    }
+    // const userData = JSON.parse(localStorage.getItem('userData'));
+    // if (userData?.artist.oph_id) {
+    //   setFormData(prev => ({
+    //     ...prev,
+    //     oph_id: userData.artist.oph_id
+    //   }));
+    // }
 
     // Handle payment return
     if (location.state?.status === "success") {
@@ -47,10 +47,11 @@ export default function BlockDateForm() {
     // Navigate to payment screen with form data
     navigate("/dashboard/payment", {
       state: {
-        artist_id:artist.id,
+        artist_id:formData.oph_id,
         planIds: [2], // Date blocking plan ID
         returnPath: "/dashboard/block-date",
-        heading: "Date Blocking Fee"
+        heading: "Date Blocking Fee",
+        from: "Date booking"
       }
     });
   };
