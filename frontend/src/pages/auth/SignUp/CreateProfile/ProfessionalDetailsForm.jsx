@@ -116,10 +116,11 @@ const ProfessionalDetailsForm = () => {
           instagramUrl: artist.InstagramLink || "",
           facebookUrl: artist.FacebookLink || "",
           appleMusicUrl: artist.AppleMusicLink || "",
-          ExperienceYearly: Math.floor((artist.ExperienceYearly || 0) / 12),
-          experienceMonths: (artist.SongsPlanningCount || 0) % 12,
-          songsPlanned: artist.SongsPlanningType || 0,
-          songsPlannedCount: artist.SongsPlanningCount || 0,
+          ExperienceYearly: Math.floor((artist.ExperienceMonthly || 0) / 12),
+          experienceMonths: (artist.ExperienceMonthly || 0) % 12,
+          songPlanningDuration: artist.SongsPlanningType || 0,
+          songsPlanned: artist.SongsPlanningCount || 0,
+          step_status:artist.step_status
         });
         setVideoBio(artist.VideoURL || null);
       }
@@ -158,9 +159,18 @@ const ProfessionalDetailsForm = () => {
       formDataToSend.append("InstagramLink", formData.instagramUrl);
       formDataToSend.append("FacebookLink", formData.facebookUrl);
       formDataToSend.append("AppleMusicLink", formData.appleMusicUrl);
+      let stepPath
+      if (formData.step_status === "under review") {
+        
+        stepPath = "/auth/create-profile/professional-details";
+      } else if (formData.step_status === "rejected") {
+        stepPath = `/auth/membership-form`;
+      } else {
+        stepPath = formData.current_step;
+      }
       formDataToSend.append(
         "step",
-        "/auth/create-profile/documentation-details"
+        stepPath
       );
       // Calculate and append experience in months
       const experienceMonths =
