@@ -14,6 +14,7 @@ const PaymentScreen = () => {
   const [trans, setTrans] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const from = location.state.from;
 
   const {
     amount = 0,
@@ -23,10 +24,6 @@ const PaymentScreen = () => {
     heading = "Payment Required",
   } = location.state || {};
 
-  console.log(location.state);
-  
-
-
   const handlePaymentSuccess = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -34,11 +31,12 @@ const PaymentScreen = () => {
 
     try {
       const formData = {
-        OPH_ID: ophid,
+        OPH_ID: "OPH-CAN-IA-014",
         Transaction_ID: trans,
         Review: 0,
         Status: "Under Review",
-        step: '/auth/create-profile/personal-details'
+        step: '/auth/create-profile/personal-details',
+        from : from
         // plan_ids: planIds,
       };
       console.log("Submitting payment form data:", formData);

@@ -35,7 +35,11 @@ const SignInForm = () => {
         toast.success("Login Successful");       
         localStorage.setItem("token", response.token);
         const path = `${response.step}?ophid=${response.ophid}`
-        navigate(path);
+        navigate(path, {
+          state: {
+            from: "Registeration"
+          }
+        });
       }
     } catch (error) {
       toast.error(

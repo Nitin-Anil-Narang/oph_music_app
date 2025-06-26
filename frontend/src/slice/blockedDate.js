@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosApi from "../conf/axios";
-import getToken from "../utils/getToken";
 
 export const fetchBlockedDates = createAsyncThunk(
     'fetchBlockedDates',
     async (_, { rejectWithValue }) => {
         try {
-            const token = getToken();
-            const response = await axiosApi.get('/date-block/blocked-dates', {
+            const token = localStorage.getItem("token");
+            console.log("api call 1");
+            const response = await axiosApi.get('/bookings', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

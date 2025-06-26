@@ -157,10 +157,10 @@ const SignUpForm = () => {
       const confirmPasswordError =
         name === "password"
           ? getFieldError(
-              "confirmPassword",
-              updatedFormData.confirmPassword,
-              updatedFormData
-            )
+            "confirmPassword",
+            updatedFormData.confirmPassword,
+            updatedFormData
+          )
           : errors.confirmPassword;
 
       // Set updated errors
@@ -185,14 +185,18 @@ const SignUpForm = () => {
     try {
       const response = await signupUser(formData);
       console.log(response);
-      
+
 
       if (response.success) {
-       localStorage.setItem("token", response.token);
+        localStorage.setItem("token", response.token);
         const path = `/auth/payment?ophid=${response.ophid}`
-        navigate(path);
+        navigate(path, {
+          state: {
+            from: "Registeration"
+          }
+        })
       }
-    } catch (e) {      
+    } catch (e) {
       toast.error(e.response.data.message);
     }
   };
