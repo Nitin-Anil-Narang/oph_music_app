@@ -172,8 +172,14 @@ const DocumentationDetailsForm = () => {
 
       const response = await getDocumentationDetails(headers, ophid);
       if (response.success) {
+      
         // const { documents, bankDetails, banks } = response.data[0];
         const doc = response.data[0];
+        console.log(doc);
+        const bankname = parseInt(doc.BankName); // Convert from string to number
+        const BankName = banking.find((b) => b.id === bankname)?.bank_name;
+        console.log(BankName);
+        
         setBanks(banks);
         setFormData({
           aadharFront: doc.AadharFrontURL
@@ -201,7 +207,7 @@ const DocumentationDetailsForm = () => {
                 preview: doc.SignatureImageURL,
               }
             : null,
-          bankName: doc.BankName || "",
+          bankName: BankName || "",
           accountHolder: doc.AccountHolderName || "",
           accountNumber: doc.AccountNumber || "",
           ifscCode: doc.IFSCCode || "",
@@ -214,7 +220,8 @@ const DocumentationDetailsForm = () => {
       setLoading(false);
     }
   };
-
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

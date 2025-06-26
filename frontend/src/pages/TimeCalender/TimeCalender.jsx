@@ -25,7 +25,8 @@ export default function TimeCalendar() {
       try {
         console.log("Fetching blocked dates with headers:", headers);
         const response = await axiosApi.get(
-          "/date-block/blocked-dates-with-artists",
+          "/bookings",
+          // "/date-block/blocked-dates-with-artists",
           {
             headers: headers,
           }
