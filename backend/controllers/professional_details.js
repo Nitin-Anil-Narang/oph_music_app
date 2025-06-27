@@ -18,6 +18,8 @@ const insertProfessionalDetails = async (req, res) => {
       SongsPlanningCount,
       SongsPlanningType,
       step,
+      VideoURL, // coming from frontend if URL
+      photoURLs = [], // frontend sends photoURLs[] array if reusing old ones
     } = req.body;
 
     const user = await user_details.getProfessionalDetails(OPH_ID);
@@ -28,7 +30,6 @@ const insertProfessionalDetails = async (req, res) => {
         message: "User not found",
       });
     }
-
     // const result = user[0];
     // console.log(result);
     
@@ -60,17 +61,25 @@ const insertProfessionalDetails = async (req, res) => {
     const photoFiles = req.files?.photos || [];
 
     let videoURL = null;
-    let photoURLs = [];
+    let allPhotoURLs = [];
 
+    // Use uploaded file OR existing URL
     if (videoFile) {
       videoURL = await uploadToS3(videoFile, "videos");
+    } else if (VideoURL) {
+      videoURL = VideoURL; // fallback to existing
     }
 
+    // Handle photos (mix of uploaded + existing)
     if (photoFiles.length > 0) {
       for (const file of photoFiles) {
         const url = await uploadToS3(file, "images");
-        photoURLs.push(url);
+        allPhotoURLs.push(url);
       }
+    }
+
+    if (photoURLs && Array.isArray(photoURLs)) {
+      allPhotoURLs.push(...photoURLs); // append old URLs
     }
 
     const dbResponse = await professional.insertProfessionalDetails(
@@ -78,7 +87,7 @@ const insertProfessionalDetails = async (req, res) => {
       Profession,
       Bio,
       videoURL,
-      JSON.stringify(photoURLs),
+      JSON.stringify(allPhotoURLs),
       SpotifyLink,
       InstagramLink,
       FacebookLink,
@@ -104,11 +113,14 @@ const insertProfessionalDetails = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    return res
-      .status(500)
-      .json({ success: false, message: "Server error", error: err.message });
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message,
+    });
   }
 };
+
 
 const getProfessionalByOphId = async (req, res) => {
   try {

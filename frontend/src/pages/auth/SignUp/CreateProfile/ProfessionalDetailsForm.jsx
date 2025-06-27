@@ -105,7 +105,7 @@ const ProfessionalDetailsForm = () => {
       if (response.success) {
         const data = response.data;
         const artist = data[0];
-      console.log(artist);
+        console.log(artist);
 
         setProfessions(artist.Profession);
         setFormData({
@@ -120,9 +120,12 @@ const ProfessionalDetailsForm = () => {
           experienceMonths: (artist.ExperienceMonthly || 0) % 12,
           songPlanningDuration: artist.SongsPlanningType || 0,
           songsPlanned: artist.SongsPlanningCount || 0,
-          step_status:artist.step_status
+          step_status: artist.step_status,
+          url: artist.VideoURL
+
         });
         setVideoBio(artist.VideoURL || null);
+        setVideoUrl(artist.VideoURL)
       }
     } catch (error) {
       console.log(error);
@@ -131,6 +134,10 @@ const ProfessionalDetailsForm = () => {
       setLoading(false);
     }
   };
+
+  // console.log(formData.url);
+
+  console.log(videoBio);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -146,8 +153,9 @@ const ProfessionalDetailsForm = () => {
       setLoading(false);
       return;
     }
-    console.log(data.songsPlannedCount);
-    
+    // console.log(data.songsPlannedCount);
+
+
     try {
       const formDataToSend = new FormData();
 
@@ -161,12 +169,10 @@ const ProfessionalDetailsForm = () => {
       formDataToSend.append("AppleMusicLink", formData.appleMusicUrl);
       let stepPath
       if (formData.step_status === "under review") {
-        
-        stepPath = "/auth/create-profile/professional-details";
+
+        stepPath = "/auth/create-profile/documentation-details";
       } else if (formData.step_status === "rejected") {
         stepPath = `/auth/membership-form`;
-      } else {
-        stepPath = formData.current_step;
       }
       formDataToSend.append(
         "step",
@@ -190,20 +196,44 @@ const ProfessionalDetailsForm = () => {
       }
 
       // Append photos
-      if (formData.photos.length > 0) {
-        formData.photos.forEach((photo) => {
-          formDataToSend.append("photos", photo);
-        });
+      // if (typeof formData.photos.length === "string") {
+      //   formData.photos.forEach((photo) => {
+      //     formDataToSend.append("photoURLs", photo);
+      //   });
+      // }
+      // else if (formData.photos.length < 5) {
+      //   formData.photos.forEach((photo) => {
+      //     formDataToSend.append("photos", photo);
+      //   })
+      // }
+
+      formData.photos.forEach((photo) => {
+        if (typeof photo === "string") {
+          formDataToSend.append("photoURLs[]",photo); // existing URLs
+        } else if (photo instanceof File) {
+          formDataToSend.append("photos", photo); // new uploads
+        }
+      });
+
+      if (typeof videoBio === "string") {
+        formDataToSend.append("VideoURL", formData.url); // send as body field
+      } else {
+        formDataToSend.append("video", videoBio); // will go to multer
       }
 
+
       // Append video bio if it exists
-      if (videoBio) {
-        formDataToSend.append("video", videoBio);
-      }
+      // if (videoBio) {
+      //   formDataToSend.append("video", videoBio);
+      // }
+      
+
 
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
+        console.log(response.message);
+        
         const path = `${response.step}?ophid=${ophid}`;
         navigate(path);
       }
@@ -216,17 +246,37 @@ const ProfessionalDetailsForm = () => {
     }
   };
 
+  // const handleFileChange = (e) => {
+  //   const files = Array.from(e.target.files);
+  //   if (files.length + formData.photos.length > 5) {
+  //     toast.error("Maximum 5 photos allowed");
+  //     return;
+  //   }
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     photos: [...prev.photos, ...files],
+  //   }));
+
+  // };
+
   const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length + formData.photos.length > 5) {
-      toast.error("Maximum 5 photos allowed");
-      return;
-    }
-    setFormData((prev) => ({
-      ...prev,
-      photos: [...prev.photos, ...files],
-    }));
-  };
+  const newFiles = Array.from(e.target.files);
+
+  const currentCount = formData.photos.length;
+  const newCount = newFiles.length;
+  
+  // Prevent more than 5 total (old + new)
+  if (currentCount + newCount > 5) {
+    toast.error("Maximum 5 photos allowed");
+    return;
+  }
+
+  setFormData((prev) => ({
+    ...prev,
+    photos: [...prev.photos, ...newFiles], // keep old (URLs or Files) + add new Files
+  }));
+};
+
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
@@ -234,6 +284,8 @@ const ProfessionalDetailsForm = () => {
       setVideoBio(file);
     }
   };
+
+
 
   useEffect(() => {
     if (videoBio && typeof videoBio !== "string") {
@@ -252,13 +304,15 @@ const ProfessionalDetailsForm = () => {
     setFormData((prev) => ({
       ...prev,
       photos: prev.photos.filter((_, i) => i !== index),
+
+
     }));
   };
   const fetchRejectReason = async () => {
     try {
       // const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-      // const response = await axiosApi.get(`/artists/${artistId}`);
-      const response =  await getProfessionalDetails(headers, ophid);
+      // const response = await axiosApi.get(/artists/${artistId});
+      const response = await getProfessionalDetails(headers, ophid);
       console.log(response, "response.data"); // Log the response data
 
       if (response.data) {
