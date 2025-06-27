@@ -14,6 +14,7 @@ const PaymentScreen = () => {
   const [trans, setTrans] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const from = location.state.from;
 
   const {
     amount = 0,
@@ -23,10 +24,6 @@ const PaymentScreen = () => {
     heading = "Payment Required",
   } = location.state || {};
 
-  console.log(location.state);
-  
-
-
   const handlePaymentSuccess = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -34,11 +31,12 @@ const PaymentScreen = () => {
 
     try {
       const formData = {
-        OPH_ID: ophid,
+        OPH_ID: "OPH-CAN-IA-014",
         Transaction_ID: trans,
         Review: 0,
         Status: "Under Review",
-        step: '/auth/create-profile/personal-details'
+        step: '/auth/create-profile/personal-details',
+        from : from
         // plan_ids: planIds,
       };
       console.log("Submitting payment form data:", formData);
@@ -52,56 +50,8 @@ const PaymentScreen = () => {
       }
       
 
-      // check if this payment is from date change
-      // if (location.state?.fromDateChange) {
-      //   // if yes, then navigate to date change success page
-      //   navigate("/dashboard/success", {
-      //     state: {
-      //       heading: "Date Changed Successfully!",
-      //       btnText: "View Calendar",
-      //       redirectTo: "/dashboard/time-calendar",
-      //     },
-      //     replace: true,
-      //   });
-      // } else if (returnPath === "/dashboard/request-ticket") {
-      //   // Navigate to success page for ticket submission
-      //   navigate("/dashboard/success", {
-      //     state: {
-      //       heading: "Your request ticket has been successfully generated!",
-      //       btnText: "View Requests",
-      //       redirectTo: "/dashboard/request-ticket",
-      //     },
-      //     replace: true,
-      //   });
-      // } else if (returnPath === "/dashboard/events") {
-      //   // Navigate to success page for ticket submission
-      //   navigate("/dashboard/success", {
-      //     state: {
-      //       heading: "Payment completed successfully!",
-      //       btnText: "Go to Dashboard",
-      //       redirectTo: "/dashboard/events",
-      //     },
-      //     replace: true,
-      //   });
-      // } else {
-      //   // preserve the toast parameters from the original navigation
-      //   const { showSuccessToast, successMessage } = location.state || {};
-
-      //   // Return to calling screen with payment data
-      //   navigate(returnPath, {
-      //     state: {
-      //       status: "success",
-      //       paymentData: {
-      //         newPaymentIds: response.data.data.payments.map((p) => p.id),
-      //         existingPaymentIds: paymentIds,
-      //         transactionId: trans,
-      //       },
-      //       showSuccessToast,
-      //       successMessage,
-      //     },
-      //     replace: true,
-      //   });
-      // }
+      const CalenderRes = axiosApi.post("/")
+      
     } catch (err) {
       console.error("Payment error:", err);
       setError("Payment processing failed. Please try again.");

@@ -23,27 +23,28 @@ export default function TimeCalendar() {
       setIsLoading(true);
       setError(null);
       try {
-        console.log("Fetching blocked dates with headers:", headers);
+        console.log("api call 2");
         const response = await axiosApi.get(
           "/bookings",
+<<<<<<< dev
           // "/date-block/blocked-dates-with-artists",
+=======
+>>>>>>> dev
           {
             headers: headers,
           }
         );
-        console.log("API Response:", response);
 
-        if (response.data.success) {
+        if (response.status === 200) {
           const dateMap = {};
-          response.data.data.forEach((item) => {
-            const date = item.date.split("T")[0];
+          response.data.forEach((item) => {
+            const date = item.current_booking_date.split("T")[0];
             dateMap[date] = {
               content: item.content,
               artist: item.artist,
             };
           });
           setBlockedDatesInfo(dateMap);
-          console.log("Processed date map:", dateMap);
         } else {
           console.error("API did not return success:", response.data);
           setError("Failed to load data from server");
@@ -84,6 +85,7 @@ export default function TimeCalendar() {
 
   // Helper function to check if a date is blocked
   const isDateBlocked = (year, month, day) => {
+    // console.log(year,month,day);
     const dateStr = new Date(Date.UTC(year, month, day))
       .toISOString()
       .split("T")[0];
