@@ -26,10 +26,7 @@ export default function TimeCalendar() {
         console.log("api call 2");
         const response = await axiosApi.get(
           "/bookings",
-<<<<<<< dev
           // "/date-block/blocked-dates-with-artists",
-=======
->>>>>>> dev
           {
             headers: headers,
           }
