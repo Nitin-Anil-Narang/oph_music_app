@@ -4,6 +4,7 @@ const {
   getDocumentationDetailsByOphId,
 } = require("../model/documentation_details");
 const { uploadToS3 } = require("../utils");
+const { setCurrentStep } = require("../model/common/set_step.js");
 
 const insertDocumentationController = async (req, res) => {
   try {
@@ -19,6 +20,7 @@ const insertDocumentationController = async (req, res) => {
       AadharBackURL: aadharBackFromBody,
       PanFrontURL: panFrontFromBody,
       PanBackURL: panBackFromBody,
+      step
     } = req.body;
 
     // Validate user exists
@@ -35,24 +37,24 @@ const insertDocumentationController = async (req, res) => {
     const files = req.files;
 
     const AadharFrontURL = files?.AadharFrontURL
-      ? await uploadToS3(files.AadharFrontURL[0], "kyc/aadhar")
+      ? await uploadToS3(files.AadharFrontURL[0], `allUsers/${OPH_ID}/kyc/aadhar`)
       : aadharFrontFromBody || null;
 
     const AadharBackURL = files?.AadharBackURL
-      ? await uploadToS3(files.AadharBackURL[0], "kyc/aadhar")
+      ? await uploadToS3(files.AadharBackURL[0], `allUsers/${OPH_ID}/kyc/aadhar`)
       : aadharBackFromBody || null;
 
     const PanFrontURL = files?.PanFrontURL
-      ? await uploadToS3(files.PanFrontURL[0], "kyc/pan")
+      ? await uploadToS3(files.PanFrontURL[0], `allUsers/${OPH_ID}/kyc/pan`)
       : panFrontFromBody || null;
 
     const PanBackURL = files?.PanBackURL
-      ? await uploadToS3(files.PanBackURL[0], "kyc/pan")
+      ? await uploadToS3(files.PanBackURL[0], `allUsers/${OPH_ID}/kyc/pan`)
       : panBackFromBody || null;
 
     let SignatureImageURL;
     if (files?.SignatureImageURL) {
-      SignatureImageURL = await uploadToS3(files.SignatureImageURL[0], "kyc/signature");
+      SignatureImageURL = await uploadToS3(files.SignatureImageURL[0], `allUsers/${OPH_ID}/kyc/signature`);
     } else if (signatureFromBody) {
       SignatureImageURL = signatureFromBody;
     } else {
@@ -102,9 +104,11 @@ const insertDocumentationController = async (req, res) => {
 
     if (changedDetails.length === 0) {
       console.log("No changes detected, skipping update");
+      await await setCurrentStep(step, OPH_ID);
       return res.status(200).json({
         success: true,
         message: "No changes detected, skipped update",
+        step:step
       });
     }
 
@@ -125,12 +129,18 @@ const insertDocumentationController = async (req, res) => {
       inputAgreement
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Documentation details inserted/updated successfully",
-      insertId: result.insertId,
-      changedDetails,
-    });
+    if (result) {
+      await setCurrentStep(step, OPH_ID);
+      return res.status(200).json({
+        success: true,
+        message: "Documentation details inserted/updated successfully",
+        insertId: result.insertId,
+        changedDetails,
+        step: step,
+      });
+    }
+
+    
   } catch (err) {
     console.error("Insert documentation error:", err);
     res.status(500).json({

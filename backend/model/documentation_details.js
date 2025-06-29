@@ -113,8 +113,8 @@ const getDocumentationDetails = async (OPH_ID) => {
 
 const getDocumentationDetailsByOphId = async (OPH_ID) => {
   const [rows] = await db.execute(
-    // "SELECT ud.ophid, dd.AadharFrontURL, dd.AadharBackURL, dd.PanFrontURL, dd.SignatureImageURL, dd.BankName, dd.AccountHolderName, dd.AccountNumber, dd.IFSCCode, dd.AgreementAccepted FROM user_details ud LEFT JOIN documentation_details dd ON ud.ophid = dd.OPH_ID WHERE ud.ophid = ?",
-    "SELECT * FROM documentation_details WHERE OPH_ID = ?",
+    "SELECT ud.ophid, dd.AadharFrontURL, dd.AadharBackURL, dd.PanFrontURL, dd.SignatureImageURL, dd.BankName, dd.AccountHolderName, dd.AccountNumber, dd.IFSCCode, dd.AgreementAccepted FROM user_details ud LEFT JOIN documentation_details dd ON ud.ophid = dd.OPH_ID WHERE ud.ophid = ?",
+    // "SELECT * FROM documentation_details WHERE OPH_ID = ?",
     [OPH_ID]
   );
 

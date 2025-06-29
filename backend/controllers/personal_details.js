@@ -47,7 +47,7 @@ const insertPersonalDetails = async (req, res) => {
     if (profile_image) {
       const storeImgIntoBucket = await bucket.uploadToS3(
         profile_image,
-        "profile_image"
+        `allUsers/${ophid}/profile_image`
       );
       if (storeImgIntoBucket) {
         storageLocation = storeImgIntoBucket;

@@ -234,7 +234,7 @@ const ProfessionalDetailsForm = () => {
         toast.success("Professional details updated successfully");
         console.log(response.message);
         
-        const path = `${response.step}?ophid=${ophid}`;
+        const path = `/auth/create-profile/documentation-details?ophid=${ophid}`;
         navigate(path);
       }
     } catch (error) {

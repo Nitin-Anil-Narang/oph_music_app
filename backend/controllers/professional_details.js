@@ -24,7 +24,7 @@ const insertProfessionalDetails = async (req, res) => {
 
     console.log(photoURLs, "from Frontend");
 
-    const user = await user_details.getProfessionalDetails(OPH_ID);
+    const user = await user_details.getProfessionalByOphId (OPH_ID);
 
     if (user.length === 0) {
       return res.status(404).json({
@@ -212,7 +212,7 @@ const insertProfessionalDetails = async (req, res) => {
 
     // Video logic
     if (videoFile) {
-      videoFinalURL = await uploadToS3(videoFile, "videos");
+      videoFinalURL = await uploadToS3(videoFile, `allUsers/${OPH_ID}/videos`);
     } else if (VideoURL) {
       videoFinalURL = VideoURL;
     }
@@ -220,7 +220,7 @@ const insertProfessionalDetails = async (req, res) => {
     // Photos logic
     if (photoFiles.length > 0) {
       for (const file of photoFiles) {
-        const url = await uploadToS3(file, "images");
+        const url = await uploadToS3(file, `allUsers/${OPH_ID}/images`);
         allPhotoURLs.push(url);
       }
     }

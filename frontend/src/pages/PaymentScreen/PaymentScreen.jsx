@@ -31,7 +31,7 @@ const PaymentScreen = () => {
 
     try {
       const formData = {
-        OPH_ID: "OPH-CAN-IA-014",
+        OPH_ID: ophid,
         Transaction_ID: trans,
         Review: 0,
         Status: "Under Review",

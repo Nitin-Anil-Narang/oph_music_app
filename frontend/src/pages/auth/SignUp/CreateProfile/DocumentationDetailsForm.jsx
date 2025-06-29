@@ -350,10 +350,11 @@ const DocumentationDetailsForm = () => {
         "AgreementAccepted",
         formData.agreementAccepted ? "1" : "0"
       );
-
-      console.log(
-        "FormData SignatureImageURL:",
-        formDataToSend.get("SignatureImageURL")
+      let stepPath = `/auth/membership-form`;
+      
+      formDataToSend.append(
+        "step",
+        stepPath
       );
 
       const response = await updateDocumentationDetails(
