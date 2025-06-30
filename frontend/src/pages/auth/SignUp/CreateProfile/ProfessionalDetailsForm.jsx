@@ -102,10 +102,9 @@ const ProfessionalDetailsForm = () => {
 
       const response = await getProfessionalDetails(headers, ophid);
 
-      if (response.success) {
+      if (response.success && response.data.length > 0) {
         const data = response.data;
         const artist = data[0];
-        console.log(artist);
 
         setProfessions(artist.Profession);
         setFormData({
@@ -136,8 +135,6 @@ const ProfessionalDetailsForm = () => {
 
   // console.log(formData.url);
 
-  console.log(videoBio);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -152,8 +149,7 @@ const ProfessionalDetailsForm = () => {
       setLoading(false);
       return;
     }
-    // console.log(data.songsPlannedCount);
-
+  
     try {
       const formDataToSend = new FormData();
 
@@ -227,9 +223,10 @@ const ProfessionalDetailsForm = () => {
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
-        console.log(response.message);
 
-        const path = `${stepPath}?ophid=${ophid}`;
+        console.log(response.message);
+        
+        const path = `/auth/create-profile/documentation-details?ophid=${ophid}`;
         navigate(path);
       }
     } catch (error) {
@@ -303,12 +300,10 @@ const ProfessionalDetailsForm = () => {
       // const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
       // const response = await axiosApi.get(/artists/${artistId});
       const response = await getProfessionalDetails(headers, ophid);
-      console.log(response, "response.data"); // Log the response data
 
-      if (response.data) {
-        setRejectReason(response.data[0].reject_reason || "");
+      if (response.data.length > 0) {
+        setRejectReason(response.data[0].reject_reason);
       }
-      // console.log(rejectReason, "rejectReason"); // Log the reject reason
     } catch (error) {
       console.error("Error fetching reject reason:", error);
       toast.error("Failed to fetch reject reason.");
