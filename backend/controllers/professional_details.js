@@ -22,7 +22,7 @@ const insertProfessionalDetails = async (req, res) => {
       photoURLs = [],
     } = req.body;
 
-    console.log(photoURLs, "from Frontend");
+    console.log(req.body);
 
     const user = await user_details.getProfessionalByOphId (OPH_ID);
 
@@ -247,6 +247,8 @@ const insertProfessionalDetails = async (req, res) => {
 
     if (dbResponse) {
       await setCurrentStep(step, OPH_ID);
+      console.log(step);
+      
       return res.status(200).json({
         success: true,
         message: "Professional details inserted successfully",

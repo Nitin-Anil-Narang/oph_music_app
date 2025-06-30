@@ -121,11 +121,10 @@ const ProfessionalDetailsForm = () => {
           songPlanningDuration: artist.SongsPlanningType || 0,
           songsPlanned: artist.SongsPlanningCount || 0,
           step_status: artist.step_status,
-          url: artist.VideoURL
-
+          url: artist.VideoURL,
         });
         setVideoBio(artist.VideoURL || null);
-        setVideoUrl(artist.VideoURL)
+        setVideoUrl(artist.VideoURL);
       }
     } catch (error) {
       console.log(error);
@@ -155,7 +154,6 @@ const ProfessionalDetailsForm = () => {
     }
     // console.log(data.songsPlannedCount);
 
-
     try {
       const formDataToSend = new FormData();
 
@@ -167,17 +165,13 @@ const ProfessionalDetailsForm = () => {
       formDataToSend.append("InstagramLink", formData.instagramUrl);
       formDataToSend.append("FacebookLink", formData.facebookUrl);
       formDataToSend.append("AppleMusicLink", formData.appleMusicUrl);
-      let stepPath
+      let stepPath;
       if (formData.step_status === "under review") {
-
         stepPath = "/auth/create-profile/documentation-details";
       } else if (formData.step_status === "rejected") {
         stepPath = `/auth/membership-form`;
       }
-      formDataToSend.append(
-        "step",
-        stepPath
-      );
+      formDataToSend.append("step", stepPath);
       // Calculate and append experience in months
       const experienceMonths =
         formData.ExperienceYearly * 12 + formData.experienceMonths;
@@ -209,7 +203,7 @@ const ProfessionalDetailsForm = () => {
 
       formData.photos.forEach((photo) => {
         if (typeof photo === "string") {
-          formDataToSend.append("photoURLs[]",photo); // existing URLs
+          formDataToSend.append("photoURLs[]", photo); // existing URLs
         } else if (photo instanceof File) {
           formDataToSend.append("photos", photo); // new uploads
         }
@@ -221,20 +215,21 @@ const ProfessionalDetailsForm = () => {
         formDataToSend.append("video", videoBio); // will go to multer
       }
 
-
       // Append video bio if it exists
       // if (videoBio) {
       //   formDataToSend.append("video", videoBio);
       // }
-      
 
+      for (let [key, value] of formDataToSend.entries()) {
+        console.log(key, value);
+      }
 
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
         console.log(response.message);
-        
-        const path = `/auth/create-profile/documentation-details?ophid=${ophid}`;
+
+        const path = `${stepPath}?ophid=${ophid}`;
         navigate(path);
       }
     } catch (error) {
@@ -260,23 +255,22 @@ const ProfessionalDetailsForm = () => {
   // };
 
   const handleFileChange = (e) => {
-  const newFiles = Array.from(e.target.files);
+    const newFiles = Array.from(e.target.files);
 
-  const currentCount = formData.photos.length;
-  const newCount = newFiles.length;
-  
-  // Prevent more than 5 total (old + new)
-  if (currentCount + newCount > 5) {
-    toast.error("Maximum 5 photos allowed");
-    return;
-  }
+    const currentCount = formData.photos.length;
+    const newCount = newFiles.length;
 
-  setFormData((prev) => ({
-    ...prev,
-    photos: [...prev.photos, ...newFiles], // keep old (URLs or Files) + add new Files
-  }));
-};
+    // Prevent more than 5 total (old + new)
+    if (currentCount + newCount > 5) {
+      toast.error("Maximum 5 photos allowed");
+      return;
+    }
 
+    setFormData((prev) => ({
+      ...prev,
+      photos: [...prev.photos, ...newFiles], // keep old (URLs or Files) + add new Files
+    }));
+  };
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
@@ -284,8 +278,6 @@ const ProfessionalDetailsForm = () => {
       setVideoBio(file);
     }
   };
-
-
 
   useEffect(() => {
     if (videoBio && typeof videoBio !== "string") {
@@ -304,8 +296,6 @@ const ProfessionalDetailsForm = () => {
     setFormData((prev) => ({
       ...prev,
       photos: prev.photos.filter((_, i) => i !== index),
-
-
     }));
   };
   const fetchRejectReason = async () => {
