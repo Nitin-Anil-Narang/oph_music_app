@@ -23,6 +23,7 @@ const insertProfessionalDetails = async (req, res) => {
     } = req.body;
 
     console.log(photoURLs, "from Frontend");
+    console.log(OPH_ID);
 
     const user = await user_details.getProfessionalDetails(OPH_ID);
 

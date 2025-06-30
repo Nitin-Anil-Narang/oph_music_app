@@ -176,7 +176,7 @@ const getProfessionalByOphId = async (OPH_ID) => {
 
 const getProfessionalDetails = async (OPH_ID) => {
   const [rows] = await db.execute(
-    "SELECT * FROM professional_details WHERE OPH_ID = ?",
+    "SELECT * FROM user_details WHERE ophid = ?",
     [OPH_ID]
   );
 
