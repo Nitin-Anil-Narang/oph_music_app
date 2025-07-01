@@ -104,7 +104,9 @@ const ProfessionalDetailsForm = () => {
 
       if (response.success && response.data.length > 0) {
         const data = response.data;
+       
         const artist = data[0];
+        
 
         setProfessions(artist.Profession);
         setFormData({
@@ -166,6 +168,9 @@ const ProfessionalDetailsForm = () => {
         stepPath = "/auth/create-profile/documentation-details";
       } else if (formData.step_status === "rejected") {
         stepPath = `/auth/membership-form`;
+      }
+      else{
+        stepPath = "/auth/create-profile/documentation-details";
       }
       formDataToSend.append("step", stepPath);
       // Calculate and append experience in months

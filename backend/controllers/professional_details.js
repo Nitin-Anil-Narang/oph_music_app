@@ -273,7 +273,7 @@ const insertProfessionalDetails = async (req, res) => {
 const getProfessionalByOphId = async (req, res) => {
   try {
     const { ophid } = req.query;
-    const data = await user_details.getProfessionalDetails(ophid);
+    const data = await user_details.getProfessionalByOphId(ophid);
     console.log(data);
 
     if (!data) {

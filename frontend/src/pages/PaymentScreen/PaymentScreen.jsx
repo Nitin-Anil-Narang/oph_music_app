@@ -6,20 +6,24 @@ import Loading from "../../components/Loading";
 import { useParams } from "react-router-dom";
 
 const PaymentScreen = () => {
-  const { logout } = useArtist();
+  const { logout, headers } = useArtist();
+
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const ophid = queryParams.get("ophid");
+  let ophid = queryParams.get("ophid");
   const [trans, setTrans] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const from = location.state.from;
+  let ophid_book = location.state.artist_id;
+  console.log(ophid);
+  
 
   const {
     amount = 0,
     planIds = [],
-    paymentIds = [], 
+    paymentIds = [],
     returnPath = "/create-profile/personal-details",
     heading = "Payment Required",
   } = location.state || {};
@@ -35,23 +39,42 @@ const PaymentScreen = () => {
         Transaction_ID: trans,
         Review: 0,
         Status: "Under Review",
-        step: '/auth/create-profile/personal-details',
-        from : from
+        step: "/auth/create-profile/personal-details",
+        from: from,
         // plan_ids: planIds,
       };
       console.log("Submitting payment form data:", formData);
 
       const response = await axiosApi.post("/auth/payment", formData);
+      console.log(response);
 
-      if(response.data.success)
-      {
-        const path = `/auth/create-profile/personal-details?ophid=${ophid}`
-        navigate(path)
+      if (response.data.success && from == "Date booking") {
+        {
+          const path = `/dashboard/time-calendar`;
+          navigate(path);
+
+          const CalenderRes = await axiosApi.post(
+            "/booking",
+            { oph_id: "OPH-CAN-IA-032", booking_date: location.state.date },
+            { headers: headers }
+          );
+          console.log( ophid,  location.state.date);
+          
+
+          if (CalenderRes.status === 201) {
+            navigate("/dashboard/success", {
+              state: {
+                heading: "Your date blocked successfully!",
+                btnText: "View Calendar",
+                redirectTo: "/dashboard/time-calendar",
+              },
+            });
+          }
+        }
+      } else if (response.data.success) {
+        const path = `/auth/create-profile/personal-details?ophid=${ophid}`;
+        navigate(path);
       }
-      
-
-      const CalenderRes = axiosApi.post("/")
-      
     } catch (err) {
       console.error("Payment error:", err);
       setError("Payment processing failed. Please try again.");
