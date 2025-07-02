@@ -149,4 +149,13 @@ const mapPersonalDetails = async (req, res) => {
   }
 };
 
-module.exports = { mapPersonalDetails, insertPersonalDetails };
+const getAllPersonal = async (req, res) => {
+  try {
+    const bookings = await user_details.getFullPersonal()
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { mapPersonalDetails, insertPersonalDetails,getAllPersonal };

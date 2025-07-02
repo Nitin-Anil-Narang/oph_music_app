@@ -22,6 +22,10 @@ const membership = require('./routes/membership')
 const forgotPassword = require("./routes/forgot_password")
 const resetPassword = require("./routes/reset_password")
 
+//Admin route assignment
+const adminSignUp = require("./admin/routes/adminSignUp")
+const adminSignIn = require("./admin/routes/adminSignIn")
+
 // ✅ Middleware order is important
 app.use(cors({
   origin: "http://localhost:5173",
@@ -43,6 +47,12 @@ app.use("/", forgotPassword);
 app.use("/", resetPassword);
 app.use("/",personalDetails);
 app.use("/",membership);
+
+
+//Admin Routes
+
+app.use("/",adminSignUp);
+app.use("/",adminSignIn);
 
 // ✅ Start server
 app.listen(port, () => {
