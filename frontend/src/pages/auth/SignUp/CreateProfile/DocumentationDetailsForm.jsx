@@ -209,7 +209,6 @@ const DocumentationDetailsForm = () => {
 
   const fetchDocumentationDetails = async () => {
     try {
-
       if (!headers || !headers.Authorization) {
         console.warn("Headers not ready yet");
         return;
@@ -272,7 +271,6 @@ const DocumentationDetailsForm = () => {
       setLoading(false);
     }
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -339,20 +337,30 @@ const DocumentationDetailsForm = () => {
 
       // Handle signature separately
       if (formData.signature) {
-        if (typeof formData.signature === "string") {
-          // If it's a data URL (drawn signature)
-          const blob = await fetch(formData.signature).then((res) =>
-            res.blob()
-          );
-          formDataToSend.append("SignatureImageURL", blob, "signature.png");
-        } else if (formData.signature.file) {
-          // If it's a file object
-          formDataToSend.append("SignatureImageURL", formData.signature.file);
-        } else if (formData.signature.preview) {
-          // If it's a URL (previously uploaded signature)
-          const response = await fetch(formData.signature.preview);
-          const blob = await response.blob();
-          formDataToSend.append("SignatureImageURL", blob, "signature.png");
+        try {
+          if (typeof formData.signature === "string") {
+            // 🟢 Case 1: Drawn signature (data URL)
+            const blob = await fetch(formData.signature).then((res) =>
+              res.blob()
+            );
+            
+            const randomString = Math.random().toString(36).substring(2, 10);
+  const fileName = `signature_${randomString}.png`;
+
+  formDataToSend.append("SignatureImageURL", blob, fileName);
+          } else if (formData.signature?.file instanceof File) {
+            // 🟢 Case 2: Uploaded File
+            formDataToSend.append("SignatureImageURL", formData.signature.file);
+          } else if (typeof formData.signature?.preview === "string") {
+            // 🟢 Case 3: URL — append URL string directly
+            formDataToSend.append(
+              "SignatureImageURL",
+              formData.signature.preview
+            );
+          }
+
+        } catch (error) {
+          console.error("Error appending signature to FormData:", error);
         }
       }
 
@@ -412,7 +420,7 @@ const DocumentationDetailsForm = () => {
 
       if (response.success) {
         toast.success("Documentation details updated successfully");
-        navigate(`/auth/membership-form?ophid=${ophid}`)
+        navigate(`/auth/membership-form?ophid=${ophid}`);
         // setShowMembershipForm(true); // Show MembershipForm
       }
     } catch (error) {

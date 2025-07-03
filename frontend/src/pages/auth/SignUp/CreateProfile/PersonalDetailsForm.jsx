@@ -288,7 +288,7 @@ const PersonalDetailsForm = () => {
       } else if (formData.step_status === "rejected") {
         stepPath = `/auth/membership-form`;
       } else {
-        stepPath = formData.current_step;
+        stepPath = "/auth/create-profile/professional-details" ;
       }
       formDataToSend.append(
         "step",
