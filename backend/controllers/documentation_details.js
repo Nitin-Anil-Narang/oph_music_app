@@ -42,13 +42,10 @@ const insertDocumentationController = async (req, res) => {
       ? await uploadToS3(files.PanFrontURL[0], "kyc/pan")
       : null;
 
-    const PanBackURL = files?.PanBackURL
-      ? await uploadToS3(files.PanBackURL[0], "kyc/pan")
-      : null;
-
     const SignatureImageURL = files?.SignatureImageURL
       ? await uploadToS3(files.SignatureImageURL[0], "kyc/signature")
       : null;
+
 
     // Save to DB
     const result = await insertDocumentationDetails(
@@ -56,13 +53,12 @@ const insertDocumentationController = async (req, res) => {
       AadharFrontURL,
       AadharBackURL,
       PanFrontURL,
-      PanBackURL,
       SignatureImageURL,
       BankName,
       AccountHolderName,
       AccountNumber,
       IFSCCode,
-      parseInt(AgreementAccepted)
+      AgreementAccepted
     );
 
     res.status(200).json({

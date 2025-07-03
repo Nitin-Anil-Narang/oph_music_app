@@ -5,7 +5,6 @@ const insertDocumentationDetails = async (
   AadharFrontURL,
   AadharBackURL,
   PanFrontURL,
-  PanBackURL,
   SignatureImageURL,
   BankName,
   AccountHolderName,
@@ -13,43 +12,48 @@ const insertDocumentationDetails = async (
   IFSCCode,
   AgreementAccepted
 ) => {
+
   const [result] = await db.execute(
     `INSERT INTO documentation_details (
       OPH_ID,
       AadharFrontURL,
       AadharBackURL,
       PanFrontURL,
-      PanBackURL,
-      SignatureImageURL,
-      BankName,
-      AccountHolderName,
-      AccountNumber,
-      IFSCCode,
-      AgreementAccepted
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON DUPLICATE KEY UPDATE
-      AadharFrontURL = VALUES(AadharFrontURL),
-      AadharBackURL = VALUES(AadharBackURL),
-      PanFrontURL = VALUES(PanFrontURL),
-      PanBackURL = VALUES(PanBackURL),
-      SignatureImageURL = VALUES(SignatureImageURL),
-      BankName = VALUES(BankName),
-      AccountHolderName = VALUES(AccountHolderName),
-      AccountNumber = VALUES(AccountNumber),
-      IFSCCode = VALUES(IFSCCode),
-      AgreementAccepted = VALUES(AgreementAccepted)`,
-    [
-      OPH_ID,
-      AadharFrontURL,
-      AadharBackURL,
-      PanFrontURL,
-      PanBackURL,
       SignatureImageURL,
       BankName,
       AccountHolderName,
       AccountNumber,
       IFSCCode,
       AgreementAccepted,
+      step_status,
+      reject_reason
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
+    ON DUPLICATE KEY UPDATE
+      AadharFrontURL = VALUES(AadharFrontURL),
+      AadharBackURL = VALUES(AadharBackURL),
+      PanFrontURL = VALUES(PanFrontURL),
+      SignatureImageURL = VALUES(SignatureImageURL),
+      BankName = VALUES(BankName),
+      AccountHolderName = VALUES(AccountHolderName),
+      AccountNumber = VALUES(AccountNumber),
+      IFSCCode = VALUES(IFSCCode),
+      AgreementAccepted = VALUES(AgreementAccepted),
+      step_status = VALUES(step_status),
+      reject_reason = VALUES(reject_reason)
+      `,
+    [
+      OPH_ID,
+      AadharFrontURL,
+      AadharBackURL,
+      PanFrontURL,
+      SignatureImageURL,
+      BankName,
+      AccountHolderName,
+      AccountNumber,
+      IFSCCode,
+      AgreementAccepted,
+      'under review', // step_status
+      null             // reject_reason
     ]
   );
 
