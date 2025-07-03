@@ -35,11 +35,20 @@ export default function TimeCalendar() {
         if (response.status === 200) {
           const dateMap = {};
           response.data.forEach((item) => {
-            const date = item.current_booking_date.split("T")[0];
-            dateMap[date] = {
+            const d = new Date(item.current_booking_date);
+            const localDateStr = `${d.getFullYear()}-${String(
+              d.getMonth() + 1
+            ).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+            dateMap[localDateStr] = {
               content: item.content,
               artist: item.artist,
             };
+
+            // const date = item.current_booking_date.split("T")[0];
+            // dateMap[date] = {
+            //   content: item.content,
+            //   artist: item.artist,
+            // };
           });
           setBlockedDatesInfo(dateMap);
         } else {
@@ -83,10 +92,17 @@ export default function TimeCalendar() {
   // Helper function to check if a date is blocked
   const isDateBlocked = (year, month, day) => {
     // console.log(year,month,day);
-    const dateStr = new Date(Date.UTC(year, month, day))
-      .toISOString()
-      .split("T")[0];
+    const d = new Date(year, month, day);
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(d.getDate()).padStart(2, "0")}`;
     return blockedDatesInfo.hasOwnProperty(dateStr);
+
+    // const dateStr = new Date(Date.UTC(year, month, day))
+    //   .toISOString()
+    //   .split("T")[0];
+    // return blockedDatesInfo.hasOwnProperty(dateStr);
   };
 
   // Helper function to check if a date is in the past
@@ -243,27 +259,37 @@ export default function TimeCalendar() {
     <div className="flex items-center gap-2 mb-2">
       {/* Circle with Initial */}
       <div className="sm:w-8 sm:h-8  w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold sm:text-md text-xs">
-        {artist.artist.name.charAt(0).toUpperCase()}
+        {/* {artist.artist.name.charAt(0).toUpperCase()} */}
+        test
       </div>
 
       {/* Full name only on larger screens */}
-      <span className="text-sm hidden lg:block">{artist.artist.name}</span>
+      {/* <span className="text-sm hidden lg:block">{artist.artist.name}</span> */}
     </div>
   );
 
   const handleDateCellClick = (year, month, day, isCurrentMonth) => {
     if (!isCurrentMonth) return; // Don't handle clicks on non-current month days
 
-    const dateStr = new Date(Date.UTC(year, month, day))
-      .toISOString()
-      .split("T")[0];
+    // const dateStr = new Date(Date.UTC(year, month, day))
+    //   .toISOString()
+    //   .split("T")[0];
+    // const dateInfo = blockedDatesInfo[dateStr];
+    const d = new Date(year, month, day);
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(d.getDate()).padStart(2, "0")}`;
     const dateInfo = blockedDatesInfo[dateStr];
+
     if (dateInfo) {
       // Date is blocked
       const currentArtistId = JSON.parse(localStorage.getItem("userData")); // Assuming you store current artist ID
-      if (dateInfo.artist.id === currentArtistId.artist.id) {
+      // if (dateInfo.artist.id === currentArtistId.artist.id) {
+      if(1 === 1){
         // It's the current artist's date - navigate to date change
-        const artistId = currentArtistId.artist.id;
+        // const artistId = currentArtistId.artist.id;
+        
         navigate("/dashboard/date-change", {
           state: {
             date: dateStr,
@@ -290,10 +316,17 @@ export default function TimeCalendar() {
       currentMonthIndex,
       day
     );
-    const dateStr = new Date(Date.UTC(currentYear, currentMonthIndex, day))
-      .toISOString()
-      .split("T")[0];
+    const d = new Date(currentYear, currentMonthIndex, day);
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(d.getDate()).padStart(2, "0")}`;
     const artist = blockedDatesInfo[dateStr];
+
+    // const dateStr = new Date(Date.UTC(currentYear, currentMonthIndex, day))
+    //   .toISOString()
+    //   .split("T")[0];
+    // const artist = blockedDatesInfo[dateStr];
     return (
       <div
         key={index}

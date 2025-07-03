@@ -67,7 +67,22 @@ const signup = async (req, res) => {
       artistType
     );
 
-    const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "1h" });
+    // const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign(
+  {
+    email: email,
+    userData: {
+      artist: {
+        id: ophId
+      },
+    }
+  },
+  process.env.SECRET_KEY,
+  { expiresIn: "1h" }
+
+  
+);
+console.log(token);
 
     if (dbResponse) {
 

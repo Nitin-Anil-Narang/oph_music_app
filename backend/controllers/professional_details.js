@@ -22,10 +22,9 @@ const insertProfessionalDetails = async (req, res) => {
       photoURLs = [],
     } = req.body;
 
-    console.log(photoURLs, "from Frontend");
-    console.log(OPH_ID);
+    console.log(req.body);
 
-    const user = await user_details.getProfessionalDetails(OPH_ID);
+    const user = await user_details.getProfessionalByOphId (OPH_ID);
 
     if (user.length === 0) {
       return res.status(404).json({
@@ -213,7 +212,7 @@ const insertProfessionalDetails = async (req, res) => {
 
     // Video logic
     if (videoFile) {
-      videoFinalURL = await uploadToS3(videoFile, "videos");
+      videoFinalURL = await uploadToS3(videoFile, `allUsers/${OPH_ID}/videos`);
     } else if (VideoURL) {
       videoFinalURL = VideoURL;
     }
@@ -221,7 +220,7 @@ const insertProfessionalDetails = async (req, res) => {
     // Photos logic
     if (photoFiles.length > 0) {
       for (const file of photoFiles) {
-        const url = await uploadToS3(file, "images");
+        const url = await uploadToS3(file, `allUsers/${OPH_ID}/images`);
         allPhotoURLs.push(url);
       }
     }
@@ -248,6 +247,8 @@ const insertProfessionalDetails = async (req, res) => {
 
     if (dbResponse) {
       await setCurrentStep(step, OPH_ID);
+      console.log(step);
+      
       return res.status(200).json({
         success: true,
         message: "Professional details inserted successfully",
@@ -272,7 +273,7 @@ const insertProfessionalDetails = async (req, res) => {
 const getProfessionalByOphId = async (req, res) => {
   try {
     const { ophid } = req.query;
-    const data = await user_details.getProfessionalDetails(ophid);
+    const data = await user_details.getProfessionalByOphId(ophid);
     console.log(data);
 
     if (!data) {

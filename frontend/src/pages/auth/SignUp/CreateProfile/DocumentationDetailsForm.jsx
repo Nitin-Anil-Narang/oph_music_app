@@ -164,22 +164,20 @@ const DocumentationDetailsForm = () => {
 
   const fetchDocumentationDetails = async () => {
     try {
-
-       if (!headers || !headers.Authorization) {
+      if (!headers || !headers.Authorization) {
         console.warn("Headers not ready yet");
         return;
       }
 
       const response = await getDocumentationDetails(headers, ophid);
       if (response.success) {
-      
         // const { documents, bankDetails, banks } = response.data[0];
         const doc = response.data[0];
         console.log(doc);
         const bankname = parseInt(doc.BankName); // Convert from string to number
         const BankName = banking.find((b) => b.id === bankname)?.bank_name;
         console.log(BankName);
-        
+
         setBanks(banks);
         setFormData({
           aadharFront: doc.AadharFrontURL
@@ -220,8 +218,10 @@ const DocumentationDetailsForm = () => {
       setLoading(false);
     }
   };
-  
-  
+  console.log(typeof formData.signature?.file, "typeof if string ");
+  console.log(formData?.signature?.file);
+  console.log(formData);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -278,20 +278,34 @@ const DocumentationDetailsForm = () => {
 
       // Handle signature separately
       if (formData.signature) {
-        if (typeof formData.signature === "string") {
-          // If it's a data URL (drawn signature)
-          const blob = await fetch(formData.signature).then((res) =>
-            res.blob()
+        try {
+          if (typeof formData.signature === "string") {
+            // 🟢 Case 1: Drawn signature (data URL)
+            const blob = await fetch(formData.signature).then((res) =>
+              res.blob()
+            );
+            
+            const randomString = Math.random().toString(36).substring(2, 10);
+  const fileName = `signature_${randomString}.png`;
+
+  formDataToSend.append("SignatureImageURL", blob, fileName);
+          } else if (formData.signature?.file instanceof File) {
+            // 🟢 Case 2: Uploaded File
+            formDataToSend.append("SignatureImageURL", formData.signature.file);
+          } else if (typeof formData.signature?.preview === "string") {
+            // 🟢 Case 3: URL — append URL string directly
+            formDataToSend.append(
+              "SignatureImageURL",
+              formData.signature.preview
+            );
+          }
+
+          console.log(
+            "Appended SignatureImageURL:",
+            formDataToSend.get("SignatureImageURL")
           );
-          formDataToSend.append("SignatureImageURL", blob, "signature.png");
-        } else if (formData.signature.file) {
-          // If it's a file object
-          formDataToSend.append("SignatureImageURL", formData.signature.file);
-        } else if (formData.signature.preview) {
-          // If it's a URL (previously uploaded signature)
-          const response = await fetch(formData.signature.preview);
-          const blob = await response.blob();
-          formDataToSend.append("SignatureImageURL", blob, "signature.png");
+        } catch (error) {
+          console.error("Error appending signature to FormData:", error);
         }
       }
 
@@ -305,15 +319,15 @@ const DocumentationDetailsForm = () => {
 
       for (const [field, data] of Object.entries(documentFields)) {
         if (data?.file) {
+          // File upload
           formDataToSend.append(field, data.file);
         } else if (
           data?.preview &&
           typeof data.preview === "string" &&
           data.preview.startsWith("http")
         ) {
-          const response = await fetch(data.preview);
-          const blob = await response.blob();
-          formDataToSend.append(field, blob, `${field}.png`);
+          // 🟢 Append URL string directly
+          formDataToSend.append(field, data.preview);
         }
       }
 
@@ -332,15 +346,25 @@ const DocumentationDetailsForm = () => {
       formDataToSend.append("AccountHolderName", formData.accountHolder);
       formDataToSend.append("AccountNumber", formData.accountNumber);
       formDataToSend.append("IFSCCode", formData.ifscCode);
+      formDataToSend.append(
+        "AgreementAccepted",
+        formData.agreementAccepted ? "1" : "0"
+      );
+      let stepPath = `/auth/membership-form`;
+      
+      formDataToSend.append(
+        "step",
+        stepPath
+      );
 
       const response = await updateDocumentationDetails(
         formDataToSend,
         headers
       );
-      
+
       if (response.success) {
         toast.success("Documentation details updated successfully");
-        navigate(`/auth/membership-form?ophid=${ophid}`)
+        navigate(`/auth/membership-form?ophid=${ophid}`);
         // setShowMembershipForm(true); // Show MembershipForm
       }
     } catch (error) {
