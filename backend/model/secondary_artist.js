@@ -9,11 +9,11 @@ const insertSecondaryArtist = async (
   artist_type,
   artist_name,
   Legal_name,
+  artistPictureUrl,
   SpotifyLink,
   InstagramLink,
   FacebookLink,
-  AppleMusicLink,
-  artistPictureUrl
+  AppleMusicLink
 ) => {
   const [result] = await db.execute(
     `INSERT INTO secondary_artist (
@@ -21,22 +21,22 @@ const insertSecondaryArtist = async (
   artist_type,
   artist_name,
   Legal_name,
+  artistPictureUrl,
   SpotifyLink,
   InstagramLink,
   FacebookLink,
-  AppleMusicLink,
-  artistPictureUrl
+  AppleMusicLink
      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       OPH_ID,
       artist_type,
       artist_name,
       Legal_name,
+      artistPictureUrl,
       SpotifyLink,
       InstagramLink,
       FacebookLink,
-      AppleMusicLink,
-      artistPictureUrl
+      AppleMusicLink
     ]
   );
 
@@ -51,36 +51,29 @@ const updateSecondaryArtist = async (
   artist_type,
   artist_name,
   Legal_name,
+  artistPictureUrl,
   SpotifyLink,
   InstagramLink,
   FacebookLink,
-  AppleMusicLink,
-  artistPictureUrl
-) => {
+  AppleMusicLink
+ )  => {
   const [result] = await db.execute(
     `UPDATE secondary_artist
-        SET artist_name      = ?,
-        Legal_name       = ?,
-        artistPictureUrl = ?,
-        SpotifyLink      = ?,
-        InstagramLink     = ?,
-        FacebookLink     = ?,
-        AppleMusicLink  = ?
-        WHERE OPH_ID      = ?
-        AND artist_type = ?`,
+     SET artist_name = ?, Legal_name = ?, artistPictureUrl = ?,
+         SpotifyLink = ?, InstagramLink = ?, FacebookLink = ?, AppleMusicLink = ?
+     WHERE OPH_ID = ? AND artist_type = ?`,
     [
-      OPH_ID,
-      artist_type,
-      artist_name,
-      Legal_name,
-      SpotifyLink,
-      InstagramLink,
-      FacebookLink,
-      AppleMusicLink,
-      artistPictureUrl
+      artist_name ?? null,
+      Legal_name ?? null,
+      artistPictureUrl ?? null,
+      SpotifyLink ?? null,
+      InstagramLink ?? null,
+      FacebookLink ?? null,
+      AppleMusicLink ?? null,
+      OPH_ID ?? null,
+      artist_type ?? null,
     ]
   );
-
   return result;
 };
 

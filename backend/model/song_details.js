@@ -18,7 +18,7 @@ const insertSongDetails = async (data) => {
   } = data;
 
   const [result] = await db.execute(
-    `INSERT INTO song_details (
+    `INSERT INTO audio_details (
       OPH_ID, Song_name, language, genre, sub_genre, mood,
       lyrics, primary_artist, featuring, lyricist,
       composer, producer, audio_url

@@ -17,9 +17,12 @@ const documentationDetailsRoute = require("./routes/documentation_details")
 const dateBookingRoute = require("./routes/date_booking")
 const songResgisterRoute= require("./routes/songs_register")
 const songDetailsRoute= require("./routes/song_details")
-
+const personalDetails = require("./routes/personal_details")
 const forgotPassword = require("./routes/forgot_password")
 const resetPassword = require("./routes/reset_password")
+const membership = require("./routes/membership");
+const secondaryArtist = require("./routes/secondary_artist")
+const videoDetail = require("./routes/video_details");
 
 // ✅ Middleware order is important
 app.use(cors({
@@ -43,6 +46,7 @@ app.use("/", resetPassword);
 app.use("/", personalDetails);
 app.use("/",membership);
 app.use("/", secondaryArtist);
+app.use("/", videoDetail);
 
 // ✅ Start server
 app.listen(port, () => {
