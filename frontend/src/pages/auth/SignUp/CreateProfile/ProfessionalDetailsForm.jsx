@@ -23,14 +23,13 @@ const professionOptions = [
   { id: 4, name: "Composer" },
   { id: 5, name: "Instrumentalist" },
   { id: 6, name: "Lyricist" },
-  { id: 7, name: "Music Producer" },
+  { id: 7, name: "Music Producer" }
 ];
 
 const ProfessionalDetailsForm = () => {
   const { headers } = useArtist();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [professions, setProfessions] = useState([]);
   const [videoBio, setVideoBio] = useState(null);
   const [videoUrl, setVideoUrl] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false); // Track video play state
@@ -79,10 +78,23 @@ const ProfessionalDetailsForm = () => {
     songsPlanned: 0,
     songPlanningDuration: "monthly",
   });
+
+  const [checkSimilarData, setcheckSimilarData] = useState({
+    profession: "",
+    bio: "",
+    photos: [],
+    spotifyUrl: "",
+    instagramUrl: "",
+    facebookUrl: "",
+    appleMusicUrl: "",
+    ExperienceYearly: 0,
+    experienceMonths: 0,
+    songsPlanned: 0,
+    songPlanningDuration: "monthly",
+  });
   // console.log(formData,"formdata");
 
   useEffect(() => {
-    fetchRejectReason();
     fetchProfessionalDetails();
   }, [headers]);
 
@@ -93,7 +105,34 @@ const ProfessionalDetailsForm = () => {
   //   };
   //   loadVideo();
   // }, []);
+
+  const checkSimilarity = () => {
+    let isSimilarity = false;
+
+    if (formData.profession === checkSimilarData.profession &&
+      formData.bio === checkSimilarData.bio &&
+      formData.spotifyUrl === checkSimilarData.spotifyUrl &&
+      formData.instagramUrl === checkSimilarData.instagramUrl &&
+      formData.facebookUrl === checkSimilarData.facebookUrl &&
+      formData.appleMusicUrl === checkSimilarData.appleMusicUrl &&
+      formData.ExperienceYearly === checkSimilarData.ExperienceYearly &&
+      formData.experienceMonths === checkSimilarData.experienceMonths &&
+      formData.songPlanningDuration === checkSimilarData.songPlanningDuration &&
+      formData.songsPlanned === checkSimilarData.songsPlanned &&
+      formData.url === checkSimilarData.url &&
+      JSON.stringify(formData.photos) === JSON.stringify(checkSimilarData.photos)
+    ) {
+      toast.error("Please check rejection reason and make update");
+      isSimilarity = true;
+    }
+    return isSimilarity;
+
+  }
+
   const fetchProfessionalDetails = async () => {
+
+    console.log("hekekekfnds");
+
     try {
       if (!headers || !headers.Authorization) {
         console.warn("Headers not ready yet");
@@ -104,11 +143,10 @@ const ProfessionalDetailsForm = () => {
 
       if (response.success && response.data.length > 0) {
         const data = response.data;
-       
-        const artist = data[0];
-        
 
-        setProfessions(artist.Profession);
+        const artist = data[0];
+
+
         setFormData({
           profession: artist.Profession || "",
           bio: artist.Bio || "",
@@ -122,10 +160,33 @@ const ProfessionalDetailsForm = () => {
           songPlanningDuration: artist.SongsPlanningType || 0,
           songsPlanned: artist.SongsPlanningCount || 0,
           step_status: artist.step_status,
-          url: artist.VideoURL,
+          url: artist.VideoURL
         });
+
+        setcheckSimilarData({
+          profession: artist.Profession || "",
+          bio: artist.Bio || "",
+          photos: JSON.parse(artist.PhotoURLs) || [],
+          spotifyUrl: artist.SpotifyLink || "",
+          instagramUrl: artist.InstagramLink || "",
+          facebookUrl: artist.FacebookLink || "",
+          appleMusicUrl: artist.AppleMusicLink || "",
+          ExperienceYearly: Math.floor((artist.ExperienceMonthly || 0) / 12),
+          experienceMonths: (artist.ExperienceMonthly || 0) % 12,
+          songPlanningDuration: artist.SongsPlanningType || 0,
+          songsPlanned: artist.SongsPlanningCount || 0,
+          step_status: artist.step_status,
+          url: artist.VideoURL
+        });
+
+
+
         setVideoBio(artist.VideoURL || null);
-        setVideoUrl(artist.VideoURL);
+        setVideoUrl(artist.VideoURL)
+
+        if (response.data[0].reject_reason != null) {
+          setRejectReason(response.data[0].reject_reason);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -133,9 +194,10 @@ const ProfessionalDetailsForm = () => {
     } finally {
       setLoading(false);
     }
-  };
 
-  // console.log(formData.url);
+    console.log("hekekekfnds sadasd");
+
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -151,7 +213,16 @@ const ProfessionalDetailsForm = () => {
       setLoading(false);
       return;
     }
-  
+
+    if (formData.step_status === "rejected") {
+      const result = checkSimilarity()
+      if (result) {
+        setLoading(false);
+        return
+      }
+    }
+
+
     try {
       const formDataToSend = new FormData();
 
@@ -163,16 +234,19 @@ const ProfessionalDetailsForm = () => {
       formDataToSend.append("InstagramLink", formData.instagramUrl);
       formDataToSend.append("FacebookLink", formData.facebookUrl);
       formDataToSend.append("AppleMusicLink", formData.appleMusicUrl);
-      let stepPath;
-      if (formData.step_status === "under review") {
+      let stepPath
+      console.log(formData.step_status);
+      if (formData.step_status === null || formData.step_status === "under review") {
+
         stepPath = "/auth/create-profile/documentation-details";
       } else if (formData.step_status === "rejected") {
         stepPath = `/auth/membership-form`;
       }
-      else{
-        stepPath = "/auth/create-profile/documentation-details";
-      }
-      formDataToSend.append("step", stepPath);
+      formDataToSend.append(
+        "step",
+        stepPath
+      );
+
       // Calculate and append experience in months
       const experienceMonths =
         formData.ExperienceYearly * 12 + formData.experienceMonths;
@@ -220,17 +294,9 @@ const ProfessionalDetailsForm = () => {
       // if (videoBio) {
       //   formDataToSend.append("video", videoBio);
       // }
-
-      for (let [key, value] of formDataToSend.entries()) {
-        console.log(key, value);
-      }
-
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
-
-        console.log(response.message);
-        
         const path = `/auth/create-profile/documentation-details?ophid=${ophid}`;
         navigate(path);
       }
@@ -281,16 +347,17 @@ const ProfessionalDetailsForm = () => {
     }
   };
 
+  // ✅ useEffect goes here — at top-level of the component
   useEffect(() => {
     if (videoBio && typeof videoBio !== "string") {
       const objectUrl = URL.createObjectURL(videoBio);
       setVideoUrl(objectUrl);
 
       return () => {
-        URL.revokeObjectURL(objectUrl); // Clean up on unmount or when videoBio changes
+        URL.revokeObjectURL(objectUrl); // Clean up
       };
     } else if (typeof videoBio === "string") {
-      setVideoUrl(videoBio); // Already a URL (e.g. from backend)
+      setVideoUrl(videoBio); // already a URL
     }
   }, [videoBio]);
 
@@ -300,21 +367,6 @@ const ProfessionalDetailsForm = () => {
       photos: prev.photos.filter((_, i) => i !== index),
     }));
   };
-  const fetchRejectReason = async () => {
-    try {
-      // const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-      // const response = await axiosApi.get(/artists/${artistId});
-      const response = await getProfessionalDetails(headers, ophid);
-
-      if (response.data.length > 0) {
-        setRejectReason(response.data[0].reject_reason);
-      }
-    } catch (error) {
-      console.error("Error fetching reject reason:", error);
-      toast.error("Failed to fetch reject reason.");
-    }
-  };
-
   return (
     <div className="relative bg-cover bg-center">
       {loading && <Loading />}
@@ -625,6 +677,7 @@ const ProfessionalDetailsForm = () => {
       </div>
     </div>
   );
+
 };
 
 export default ProfessionalDetailsForm;

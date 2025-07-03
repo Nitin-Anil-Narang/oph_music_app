@@ -54,24 +54,6 @@ const insertPersonalDetails = async (req, res) => {
       }
     }
 
-    // Compare all fields including new image
-    const isSameData =
-      existingUser.full_name === legal_name &&
-      existingUser.stage_name === stage_name &&
-      existingUser.email === email &&
-      existingUser.contact_num === contact_num &&
-      existingUser.location === location &&
-      existingUser.personal_photo === storageLocation;
-
-    if (isSameData) {
-      await setCurrentStep(step, ophid);
-      return res.status(200).json({
-        success: true,
-        message: "Data already exists and is unchanged. Proceeding to next step.",
-        step: step,
-      });
-    }
-
     // 🟢 Update in DB if data changed or new photo provided
     const updatedData = await user_details.setPersonalDetails(
       ophid,

@@ -15,11 +15,6 @@ const insertDocumentationController = async (req, res) => {
       AccountNumber,
       IFSCCode,
       AgreementAccepted,
-      SignatureImageURL: signatureFromBody,
-      AadharFrontURL: aadharFrontFromBody,
-      AadharBackURL: aadharBackFromBody,
-      PanFrontURL: panFrontFromBody,
-      PanBackURL: panBackFromBody,
       step
     } = req.body;
 
@@ -48,71 +43,10 @@ const insertDocumentationController = async (req, res) => {
       ? await uploadToS3(files.PanFrontURL[0], `allUsers/${OPH_ID}/kyc/pan`)
       : panFrontFromBody || null;
 
-    const PanBackURL = files?.PanBackURL
-      ? await uploadToS3(files.PanBackURL[0], `allUsers/${OPH_ID}/kyc/pan`)
-      : panBackFromBody || null;
+    const SignatureImageURL = files?.SignatureImageURL
+      ? await uploadToS3(files.SignatureImageURL[0], "kyc/signature")
+      : null;
 
-    let SignatureImageURL;
-    if (files?.SignatureImageURL) {
-      SignatureImageURL = await uploadToS3(files.SignatureImageURL[0], `allUsers/${OPH_ID}/kyc/signature`);
-    } else if (signatureFromBody) {
-      SignatureImageURL = signatureFromBody;
-    } else {
-      SignatureImageURL = null;
-    }
-
-    console.log(SignatureImageURL, "Final Signature URL");
-
-    const normalize = (value) =>
-      value === null || value === undefined
-        ? null
-        : typeof value === "string"
-        ? value.trim()
-        : value;
-
-    const dbAgreement = parseInt(user.AgreementAccepted) || 0;
-    const inputAgreement = parseInt(AgreementAccepted) || 0;
-
-    // Build change details
-    const changedDetails = [];
-
-    const checkAndAdd = (field, oldValRaw, newValRaw) => {
-      const oldVal = normalize(oldValRaw);
-      const newVal = normalize(newValRaw);
-      if (oldVal !== newVal) {
-        changedDetails.push({ field, oldValue: oldVal, newValue: newVal });
-      }
-    };
-
-    checkAndAdd("AadharFrontURL", user.AadharFrontURL, AadharFrontURL);
-    checkAndAdd("AadharBackURL", user.AadharBackURL, AadharBackURL);
-    checkAndAdd("PanFrontURL", user.PanFrontURL, PanFrontURL);
-    checkAndAdd("PanBackURL", user.PanBackURL, PanBackURL);
-    checkAndAdd("SignatureImageURL", user.SignatureImageURL, SignatureImageURL);
-    checkAndAdd("BankName", user.BankName, BankName);
-    checkAndAdd("AccountHolderName", user.AccountHolderName, AccountHolderName);
-    checkAndAdd("AccountNumber", user.AccountNumber, AccountNumber);
-    checkAndAdd("IFSCCode", user.IFSCCode, IFSCCode);
-
-    if (dbAgreement !== inputAgreement) {
-      changedDetails.push({
-        field: "AgreementAccepted",
-        oldValue: dbAgreement,
-        newValue: inputAgreement,
-      });
-    }
-
-    if (changedDetails.length === 0) {
-      console.log("No changes detected, skipping update");
-      await await setCurrentStep(step, OPH_ID);
-      return res.status(200).json({
-        success: true,
-        message: "No changes detected, skipped update",
-        step:step
-      });
-    }
-
-    console.log("Changed details:", changedDetails);
 
     // Save to DB
     const result = await insertDocumentationDetails(
@@ -120,13 +54,12 @@ const insertDocumentationController = async (req, res) => {
       AadharFrontURL,
       AadharBackURL,
       PanFrontURL,
-      PanBackURL,
       SignatureImageURL,
       BankName,
       AccountHolderName,
       AccountNumber,
       IFSCCode,
-      inputAgreement
+      AgreementAccepted
     );
 
     if (result) {
@@ -134,8 +67,6 @@ const insertDocumentationController = async (req, res) => {
       return res.status(200).json({
         success: true,
         message: "Documentation details inserted/updated successfully",
-        insertId: result.insertId,
-        changedDetails,
         step: step,
       });
     }
