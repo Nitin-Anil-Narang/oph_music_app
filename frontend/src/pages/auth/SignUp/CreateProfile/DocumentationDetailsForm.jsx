@@ -215,7 +215,7 @@ const DocumentationDetailsForm = () => {
       }
 
       const response = await getDocumentationDetails(headers, ophid);
-
+      console.log(response);
       if (response.success && response.data.length > 0) {
         const doc = response.data[0];
         const bankname = parseInt(doc.BankName); // Convert from string to number
@@ -407,6 +407,7 @@ const DocumentationDetailsForm = () => {
       formDataToSend.append("AccountNumber", formData.accountNumber);
       formDataToSend.append("IFSCCode", formData.ifscCode);
       formDataToSend.append("AgreementAccepted", formData.agreementAccepted);
+      formDataToSend.append("step", '/auth/membership-form');
 
       const formDataObj = {};
       formDataToSend.forEach((value, key) => {

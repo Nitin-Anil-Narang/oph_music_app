@@ -15,11 +15,6 @@ const insertDocumentationController = async (req, res) => {
       AccountNumber,
       IFSCCode,
       AgreementAccepted,
-      SignatureImageURL: signatureFromBody,
-      AadharFrontURL: aadharFrontFromBody,
-      AadharBackURL: aadharBackFromBody,
-      PanFrontURL: panFrontFromBody,
-      PanBackURL: panBackFromBody,
       step
     } = req.body;
 
@@ -72,8 +67,6 @@ const insertDocumentationController = async (req, res) => {
       return res.status(200).json({
         success: true,
         message: "Documentation details inserted/updated successfully",
-        insertId: result.insertId,
-        changedDetails,
         step: step,
       });
     }
