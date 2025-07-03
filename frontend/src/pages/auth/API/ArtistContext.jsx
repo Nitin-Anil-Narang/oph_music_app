@@ -14,6 +14,7 @@ export const ArtistProvider = ({ children }) => {
     const storedToken = localStorage.getItem('token');
     return storedToken ? { 'Authorization': `Bearer ${storedToken}` } : null;
   });
+  cosnt [user,setUser] = useState(null);
   const navigate = useNavigate();
 
   const redirectBasedOnStatus = (status) => {
@@ -70,6 +71,8 @@ export const ArtistProvider = ({ children }) => {
         setToken(prev => prev === storedToken ? prev : storedToken);
         setHeaders(prev => prev?.Authorization === `Bearer ${storedToken}` ? prev : { 'Authorization': `Bearer ${storedToken}` });
 
+        setUser(decodedToken);
+
         // Handle onboarding redirection
         // if (window.location.pathname.startsWith('/dashboard') && decodedToken.onboarding_status !== 4) {
         //   redirectBasedOnStatus(decodedToken.onboarding_status);
@@ -119,7 +122,7 @@ export const ArtistProvider = ({ children }) => {
     //   {children}
     // </ArtistContext.Provider>
 
-    <ArtistContext.Provider value={{ logout, login, headers }}>
+    <ArtistContext.Provider value={{ logout, login, headers, user }}>
       {children}
     </ArtistContext.Provider>
   );

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaPauseCircle } from "react-icons/fa";
-import axios from 'axios';
+import axiosApi from "../conf/axios";
 
 // import PlayBtn from "../../../../../public/assets/images/playButton.png";
 // import Struggle from "../../../../../public/assets/images/struggle.png";
@@ -132,7 +132,7 @@ const AdminSignUpForm = () => {
       const signupUser = async (formData) => {
         console.log(formData);
 
-        const response = await axios.post("http://localhost:5000/admin/signup", formData);
+        const response = await axiosApi.post("/admin/signup", formData);
         return response.data;
       };
       const response = await signupUser(formData);

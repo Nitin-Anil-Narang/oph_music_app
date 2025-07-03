@@ -39,6 +39,7 @@ const signup = async (req, res) => {
     const token = jwt.sign(
   {
     email: Email,
+    role: "super_admin"
     
   },
   process.env.SECRET_KEY,
@@ -50,7 +51,7 @@ console.log(token);
 
     if (dbResponse) {
 
-      return res.status(201).json({ ophid : ophId,success: true, message: "Signup success", token: token});
+      return res.status(201).json({ success: true, message: "Signup success", token: token});
     }
 
     return res.status(500).json({ success: false, message: "Server error" });
