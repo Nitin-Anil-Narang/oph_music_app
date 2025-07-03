@@ -167,7 +167,7 @@ const insertProfessionalDetails = async (
 
 const getProfessionalByOphId = async (OPH_ID) => {
     const [rows] = await db.execute(
-      "SELECT ud.ophid, pd.Profession, pd.Bio, pd.VideoURL, pd.PhotoURLs, pd.SpotifyLink, pd.InstagramLink, pd.FacebookLink, pd.AppleMusicLink, pd.ExperienceYearly,pd.ExperienceMonthly, pd.SongsPlanningCount, pd.SongsPlanningType FROM user_details ud LEFT JOIN professional_details pd ON ud.ophid = pd.OPH_ID WHERE ud.ophid = ?",
+      "SELECT ud.ophid, pd.Profession, pd.Bio, pd.VideoURL, pd.PhotoURLs, pd.SpotifyLink, pd.InstagramLink, pd.FacebookLink, pd.AppleMusicLink, pd.ExperienceYearly,pd.ExperienceMonthly, pd.SongsPlanningCount, pd.SongsPlanningType, pd.reject_reason, pd.step_status FROM user_details ud LEFT JOIN professional_details pd ON ud.ophid = pd.OPH_ID WHERE ud.ophid = ?",
       [OPH_ID]
     );
 
@@ -176,7 +176,7 @@ const getProfessionalByOphId = async (OPH_ID) => {
 
 const getProfessionalDetails = async (OPH_ID) => {
   const [rows] = await db.execute(
-    "SELECT * FROM professional_details WHERE OPH_ID = ?",
+    "SELECT * FROM user_details WHERE ophid = ?",
     [OPH_ID]
   );
 

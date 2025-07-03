@@ -4,10 +4,9 @@ const {
   getDocumentationDetailsByOphId,
 } = require("../model/documentation_details");
 const { uploadToS3 } = require("../utils");
+const { setCurrentStep } = require("../model/common/set_step.js");
 
 const insertDocumentationController = async (req, res) => {
-
-      
   try {
     const {
       OPH_ID,
@@ -16,39 +15,38 @@ const insertDocumentationController = async (req, res) => {
       AccountNumber,
       IFSCCode,
       AgreementAccepted,
+      step
     } = req.body;
 
     // Validate user exists
-    const user = await getDocumentationDetails(OPH_ID);
-    if (!user || user.length === 0) {
+    const userRows = await getDocumentationDetailsByOphId(OPH_ID);
+    if (!userRows || userRows.length === 0) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-
-    // Upload files to S3
+    
+    const user = userRows[0];
+    console.log(user,"usersRows");
     const files = req.files;
 
     const AadharFrontURL = files?.AadharFrontURL
-      ? await uploadToS3(files.AadharFrontURL[0], "kyc/aadhar")
-      : null;
+      ? await uploadToS3(files.AadharFrontURL[0], `allUsers/${OPH_ID}/kyc/aadhar`)
+      : aadharFrontFromBody || null;
 
     const AadharBackURL = files?.AadharBackURL
-      ? await uploadToS3(files.AadharBackURL[0], "kyc/aadhar")
-      : null;
+      ? await uploadToS3(files.AadharBackURL[0], `allUsers/${OPH_ID}/kyc/aadhar`)
+      : aadharBackFromBody || null;
 
     const PanFrontURL = files?.PanFrontURL
-      ? await uploadToS3(files.PanFrontURL[0], "kyc/pan")
-      : null;
-
-    const PanBackURL = files?.PanBackURL
-      ? await uploadToS3(files.PanBackURL[0], "kyc/pan")
-      : null;
+      ? await uploadToS3(files.PanFrontURL[0], `allUsers/${OPH_ID}/kyc/pan`)
+      : panFrontFromBody || null;
 
     const SignatureImageURL = files?.SignatureImageURL
       ? await uploadToS3(files.SignatureImageURL[0], "kyc/signature")
       : null;
+
 
     // Save to DB
     const result = await insertDocumentationDetails(
@@ -56,20 +54,24 @@ const insertDocumentationController = async (req, res) => {
       AadharFrontURL,
       AadharBackURL,
       PanFrontURL,
-      PanBackURL,
       SignatureImageURL,
       BankName,
       AccountHolderName,
       AccountNumber,
       IFSCCode,
-      parseInt(AgreementAccepted)
+      AgreementAccepted
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Documentation details inserted successfully",
-      insertId: result.insertId,
-    });
+    if (result) {
+      await setCurrentStep(step, OPH_ID);
+      return res.status(200).json({
+        success: true,
+        message: "Documentation details inserted/updated successfully",
+        step: step,
+      });
+    }
+
+    
   } catch (err) {
     console.error("Insert documentation error:", err);
     res.status(500).json({
@@ -80,15 +82,14 @@ const insertDocumentationController = async (req, res) => {
   }
 };
 
+
 const getDocumentByOphIdController = async (req, res) => {
   try {
     const { ophid } = req.query;
-    // console.log(ophid);
+    
 
     const data = await getDocumentationDetailsByOphId(ophid);
-    // console.log(ophid);
     
-    // console.log(data);
 
     if (!data) {
       return res.status(404).json({

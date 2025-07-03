@@ -1,4 +1,4 @@
-const user_details = require("../model/signin.js");
+const admin_details = require("../model/adminSignIn");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -8,7 +8,7 @@ const signin = async (req, res) => {
     const { email, password } = req.body;
     let navTo = "";
 
-    const user = await user_details.findUserByEmail(email);
+    const user = await admin_details.findUserByEmail(email);
 
     if (user.length === 0) {
       return res
@@ -19,8 +19,8 @@ const signin = async (req, res) => {
     const dbUser = user[0];
     console.log(dbUser);
     
-    const ophId = user[0].ophid;
-    const isPasswordValid = await bcrypt.compare(password, dbUser.user_pass);
+    
+    const isPasswordValid = await bcrypt.compare(password, dbUser.Password);
 
     if (!isPasswordValid) {
       return res
@@ -34,38 +34,17 @@ const signin = async (req, res) => {
     const token = jwt.sign(
       {
         email: email,
-        userData: {
-          artist: {
-            id: ophId
-          },
-        }
+        
       },
       process.env.SECRET_KEY,
       { expiresIn: "1h" });
     
 
-    const result = await user_details.checkRejectedStep(dbUser.ophid);
-
-    const checkRejectedStep = result[0];
-
-    if (checkRejectedStep.user_details_status === "rejected") {
-      navTo = "/auth/create-profile/personal-details";
-    } else if (checkRejectedStep.professional_details_status === "rejected") {
-      navTo = "/auth/create-profile/professional-details";
-    } else if (checkRejectedStep.document_details_status === "rejected") {
-      navTo = "/auth/create-profile/documentation-details";
-    } else {
-      navTo = dbUser.current_step;
-    }
-
-    console.log(navTo);
-
+    
     return res.status(200).json({
       success: true,
       message: "Login successful",
       token: token,
-      ophid: dbUser.ophid,
-      step: navTo,
     });
   } catch (err) {
     console.error("Login error:", err);
