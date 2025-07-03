@@ -22,13 +22,7 @@ const insertProfessionalDetails = async (req, res) => {
       photoURLs = [],
     } = req.body;
 
-<<<<<<< HEAD
     const user = await user_details.getProfessionalDetails(OPH_ID);
-=======
-    console.log(req.body);
-
-    const user = await user_details.getProfessionalByOphId (OPH_ID);
->>>>>>> 9fbaea30c9dd9ed0849e432f861cc231297f3292
 
     if (user.length === 0) {
       return res.status(404).json({
