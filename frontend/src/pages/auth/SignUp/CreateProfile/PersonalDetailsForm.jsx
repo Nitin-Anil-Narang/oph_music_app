@@ -55,7 +55,7 @@ const PersonalDetailsForm = () => {
   const [searchParams] = useSearchParams();
 
   const inputRef = useRef(null);
-
+  console.log(ophid);
   // const fetchVideo = async () => {
   //   try {
   //     const response = await axiosApi.get(
@@ -101,7 +101,7 @@ const PersonalDetailsForm = () => {
 
   useEffect(() => {
     fetchPersonalDetails();
-  }, [headers]);
+  }, [ophid]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
