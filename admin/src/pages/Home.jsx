@@ -28,11 +28,15 @@
 // export default Home;
 
 
+
 import { useEffect } from "react";
 import { useAuth } from "../auth/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import LogoutButton from "../components/Logout";
 
 export default function Home() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -41,10 +45,51 @@ export default function Home() {
   }, [user]);
 
   return (
-    <div className="bg-white">
-      <h1 >Profile Page</h1>
-      <p >Email: {user?.email}</p>
-      <p>Role: {user?.role}</p>
+    <div className="flex min-h-screen bg-black text-white">
+      {/* Sidebar */}
+      <aside className="w-64 bg-[#111] p-6 flex flex-col border-r border-gray-800">
+        <h2 className="text-2xl font-bold mb-8">Dashboard</h2>
+        <nav className="flex flex-col gap-4">
+          <button
+            onClick={() => navigate("/home")}
+            className="hover:bg-gray-700 p-3 rounded transition text-left"
+          >
+            Home
+          </button>
+          <button
+            onClick={() => navigate("/profile")}
+            className="hover:bg-gray-700 p-3 rounded transition text-left"
+          >
+            Profile
+          </button>
+          <button
+            onClick={() => navigate("/settings")}
+            className="hover:bg-gray-700 p-3 rounded transition text-left"
+          >
+            Settings
+          </button>
+          <button
+            onClick={() => navigate("/role_change")}
+            className="hover:bg-gray-700 p-3 rounded transition text-left"
+          >
+            Admin Management
+          </button>
+          <LogoutButton />
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-10">
+        <h1 className="text-4xl font-extrabold mb-6">Profile Page</h1>
+        <div className="bg-[#222] p-6 rounded-xl shadow-lg max-w-lg">
+          <p className="mb-2">
+            <span className="font-semibold">Email:</span> {user?.email}
+          </p>
+          <p>
+            <span className="font-semibold">Role:</span> {user?.role}
+          </p>
+        </div>
+      </main>
     </div>
   );
 }

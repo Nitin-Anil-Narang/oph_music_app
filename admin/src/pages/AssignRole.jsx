@@ -26,7 +26,7 @@ export default function AssignRoles() {
   const handleRoleChange = (email, newRole) => {
     setAdmins((prev) =>
       prev.map((admin) =>
-        admin.Email === email ? { ...admin, Role: newRole } : admin
+        admin.Email === email ? { ...admin, Role: newRole, changed: true } : admin
       )
     );
   };
@@ -37,6 +37,11 @@ export default function AssignRoles() {
         email,
         newRole,
       });
+      setAdmins((prev) =>
+        prev.map((admin) =>
+          admin.Email === email ? { ...admin, changed: false } : admin
+        )
+      );
       alert("Role updated successfully!");
     } catch (error) {
       console.error("Failed to update role", error);
@@ -45,8 +50,11 @@ export default function AssignRoles() {
   };
 
   const handleDelete = async (email) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this admin?");
+    if (!confirmDelete) return;
+
     try {
-      await axios.delete(`http://localhost:5000/admins/${email}`);
+      await axiosApi.delete(`/admins/${email}`);
       setAdmins((prev) => prev.filter((admin) => admin.Email !== email));
       alert("Admin deleted successfully!");
     } catch (error) {
@@ -55,58 +63,67 @@ export default function AssignRoles() {
     }
   };
 
-  if (!user || user.role !== ROLES.SUPER_ADMIN) {
-    return <p>Unauthorized. Only Super Admin can access this page.</p>;
-  }
-
-  if (loading) return <p>Loading admins...</p>;
+  if (loading) return <p className="text-center text-gray-300 mt-10">Loading admins...</p>;
 
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4 bg-white">Assign Roles</h2>
-      <table className="min-w-full bg-white border">
-        <thead>
-          <tr>
-            <th className="border p-2">Name</th>
-            <th className="border p-2">Email</th>
-            <th className="border p-2">Role</th>
-            <th className="border p-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {admins.map((admin) => (
-            <tr key={admin.Email}>
-              <td className="border p-2">{admin.Name}</td>
-              <td className="border p-2">{admin.Email}</td>
-              <td className="border p-2">
-                <select
-                  value={admin.Role}
-                  onChange={(e) => handleRoleChange(admin.Email, e.target.value)}
-                  className="border p-1"
-                >
-                  {Object.values(ROLES).map((role) => (
-                    <option key={role} value={role}>{role}</option>
-                  ))}
-                </select>
-              </td>
-              <td className="border p-2 flex gap-2">
-                <button
-                  onClick={() => handleSave(admin.Email, admin.Role)}
-                  className="bg-green-500 text-white px-2 py-1 rounded"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => handleDelete(admin.Email)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                >
-                  Delete
-                </button>
-              </td>
+    <div className="max-w-6xl mx-auto p-6 text-gray-100">
+      <h2 className="text-3xl font-bold mb-6 text-center text-gray-100">Assign Roles</h2>
+      <div className="overflow-x-auto shadow rounded-lg bg-gray-900">
+        <table className="min-w-full divide-y divide-gray-700">
+          <thead className="bg-gray-800 text-gray-300">
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase">Name</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase">Email</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase">Role</th>
+              <th className="px-4 py-3 text-center text-xs font-medium uppercase">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-gray-900 divide-y divide-gray-700">
+            {admins.map((admin) => (
+              <tr key={admin.Email} className="hover:bg-gray-800">
+                <td className="px-4 py-3 whitespace-nowrap">{admin.Name}</td>
+                <td className="px-4 py-3 whitespace-nowrap">{admin.Email}</td>
+                <td className="px-4 py-3">
+                  <select
+                    value={admin.Role}
+                    onChange={(e) => handleRoleChange(admin.Email, e.target.value)}
+                    className="border-gray-600 rounded p-2 bg-gray-800 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {Object.values(ROLES).map((role) => (
+                      <option key={role} value={role}>
+                        {role}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td className="px-4 py-3 text-center flex justify-center gap-2">
+                  <button
+                    onClick={() => handleSave(admin.Email, admin.Role)}
+                    disabled={!admin.changed}
+                    className={`px-3 py-1 rounded text-sm font-medium transition 
+                      ${admin.changed ? "bg-green-600 hover:bg-green-700 text-white" : "bg-green-300 text-gray-700 cursor-not-allowed"}`}
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => handleDelete(admin.Email)}
+                    className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {admins.length === 0 && (
+              <tr>
+                <td colSpan="4" className="text-center py-6 text-gray-400">
+                  No admins found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

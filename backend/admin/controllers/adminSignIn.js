@@ -34,7 +34,7 @@ const signin = async (req, res) => {
     const token = jwt.sign(
       {
         email: email,
-        role: "super_admin"
+        role: dbUser.Role
         
       },
       process.env.SECRET_KEY,
