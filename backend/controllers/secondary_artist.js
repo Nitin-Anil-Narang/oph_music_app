@@ -123,7 +123,6 @@ const updateSecondaryArtist = async (req, res) => {
       .json({ success: false, message: "Failed to update secondary artist" });
   } catch (err) {
     console.error(err);
-    console.log(res);
     return res
       .status(500)
       .json({ success: false, message: "Server error", error: err.message });

@@ -46,14 +46,13 @@ const indianStates = [
 
 const PersonalDetailsForm = () => {
   const navigate = useNavigate();
-  const { headers } = useArtist();
+  const { headers, ophid } = useArtist();
   // const [isPlaying, setIsPlaying] = useState(false); // Track video play state
   // const videoRef = useRef(null);
   // const [video, setVideo] = useState(null);
   const [rejectReason, setRejectReason] = useState(null);
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const ophid = searchParams.get("ophid");
 
   const inputRef = useRef(null);
 
@@ -309,7 +308,7 @@ const PersonalDetailsForm = () => {
 
       if (response.success) {
         toast.success("Personal details updated successfully");
-        const path = `${response.step}?ophid=${ophid}`;
+        const path = `${response.step}`;
         navigate(path);
       }
     } catch (error) {

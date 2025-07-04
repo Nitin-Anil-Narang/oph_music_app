@@ -33,8 +33,7 @@ const insertProfessionalDetails = async (req, res) => {
 
     const videoFile = req.files?.video?.[0];
     const photoFiles = req.files?.photos || [];
-    console.log(photoFiles);
-    
+  
     let videoFinalURL = null;
     let allPhotoURLs = [];
 
@@ -75,7 +74,6 @@ const insertProfessionalDetails = async (req, res) => {
 
     if (dbResponse) {
       await setCurrentStep(step, OPH_ID);
-      console.log(step);
       
       return res.status(200).json({
         success: true,
@@ -102,7 +100,6 @@ const getProfessionalByOphId = async (req, res) => {
   try {
     const { ophid } = req.query;
     const data = await user_details.getProfessionalByOphId(ophid);
-    console.log(data);
 
     if (!data) {
       return res.status(404).json({

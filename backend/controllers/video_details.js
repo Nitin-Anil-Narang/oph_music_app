@@ -4,7 +4,7 @@ const videoDetails = require("../model/video_details");
 exports.createVideoDetails = async (req, res) => {
   try {
     const { OPH_ID, Song_name, credits } = req.body;
-    console.log(req.body);
+
     const image_url = req.file;
     const video_url = req.file;
     // 3️⃣  Insert into the child table

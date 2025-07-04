@@ -27,7 +27,7 @@ const professionOptions = [
 ];
 
 const ProfessionalDetailsForm = () => {
-  const { headers } = useArtist();
+  const { headers,ophid } = useArtist();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [videoBio, setVideoBio] = useState(null);
@@ -37,7 +37,7 @@ const ProfessionalDetailsForm = () => {
   const [video, setVideo] = useState(null);
   const [rejectReason, setRejectReason] = useState(null);
   const [searchParams] = useSearchParams();
-  const ophid = searchParams.get("ophid");
+
   const shouldHideSongsPlanned = ophid?.includes("SA");
 
   // const fetchVideo = async () => {
@@ -194,9 +194,6 @@ const ProfessionalDetailsForm = () => {
     } finally {
       setLoading(false);
     }
-
-    console.log("hekekekfnds sadasd");
-
   };
 
   const handleSubmit = async (e) => {
@@ -297,8 +294,7 @@ const ProfessionalDetailsForm = () => {
       const response = await updateProfessionalDetails(formDataToSend, headers);
       if (response.success) {
         toast.success("Professional details updated successfully");
-        const path = `/auth/create-profile/documentation-details?ophid=${ophid}`;
-        navigate(path);
+        navigate('/auth/create-profile/documentation-details');
       }
     } catch (error) {
       toast.error(

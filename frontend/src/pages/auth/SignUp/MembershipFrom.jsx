@@ -4,8 +4,6 @@ import axios from "axios";
 import { useArtist } from "../API/ArtistContext";
 import "../../../../src/index.css"; // Import CSS for styling
 import axiosApi from "../../../conf/axios";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import MusicBg from "../../../../public/assets/images/music_bg.png";
 import Elipse from "../../../../public/assets/images/elipse2.png";
@@ -13,12 +11,9 @@ import ProfileFormHeader from "./components/ProfileFormHeader";
 
 const MembershipForm = ({ id }) => {
   const [searchParams] = useSearchParams();
-  const ophid = searchParams.get("ophid");
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
-  const { artist, headers } = useArtist();
-  const [searchParams] = useSearchParams();
-  const ophid = searchParams.get("ophid");
+  const { artist, headers,ophid } = useArtist();
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -6,10 +6,7 @@ const signup = async (req, res) => {
   try {
     
     const { Name, Email, contactNumber, confirmPassword} =
-      req.body;
-
-    console.log(req.body);
-    
+      req.body;    
 
     // Check if user already exists
     const userExists = await admin_details.getEmailAndNumber(
@@ -46,8 +43,6 @@ const signup = async (req, res) => {
 
   
 );
-console.log(token);
-
     if (dbResponse) {
 
       return res.status(201).json({ ophid : ophId,success: true, message: "Signup success", token: token});

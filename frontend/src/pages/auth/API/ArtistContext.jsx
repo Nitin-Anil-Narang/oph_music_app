@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
 const ArtistContext = createContext();
@@ -14,6 +14,21 @@ export const ArtistProvider = ({ children }) => {
     const storedToken = localStorage.getItem('token');
     return storedToken ? { 'Authorization': `Bearer ${storedToken}` } : null;
   });
+
+  const [ophid, setOphid] = useState(null);
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decryptToken = jwtDecode(token);
+        const id = decryptToken.userData.artist.id;
+        setOphid(id);
+      } catch (err) {
+        console.error("Failed to decode token", err);
+      }
+    }
+  }, [token]);
+
   const navigate = useNavigate();
 
   const redirectBasedOnStatus = (status) => {
@@ -46,8 +61,8 @@ export const ArtistProvider = ({ children }) => {
       const storedToken = localStorage.getItem('token');
       if (!storedToken || storedToken === 'undefined' || storedToken === 'null') {
         if (![
-          '/auth/login', 
-          '/auth/signup', 
+          '/auth/login',
+          '/auth/signup',
           '/auth/forgot-password',
           '/auth/payment',
           '/auth/signin',
@@ -81,7 +96,7 @@ export const ArtistProvider = ({ children }) => {
     };
 
     verifyToken();
-    
+
   }, [navigate]);
   const logout = () => {
     localStorage.removeItem('token');
@@ -94,7 +109,7 @@ export const ArtistProvider = ({ children }) => {
   };
 
   const login = (token, userData) => {
-    try { 
+    try {
       const decodedToken = jwtDecode(token);
       if (!decodedToken?.email) {
         throw new Error('Invalid token');
@@ -119,7 +134,7 @@ export const ArtistProvider = ({ children }) => {
     //   {children}
     // </ArtistContext.Provider>
 
-    <ArtistContext.Provider value={{ logout, login, headers }}>
+    <ArtistContext.Provider value={{ logout, login, headers, ophid }}>
       {children}
     </ArtistContext.Provider>
   );

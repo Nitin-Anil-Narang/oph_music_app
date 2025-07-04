@@ -24,7 +24,6 @@ export default function TimeCalendar() {
       setIsLoading(true);
       setError(null);
       try {
-        console.log("api call 2");
         const response = await axiosApi.get(
           "/bookings",
           // "/date-block/blocked-dates-with-artists",
@@ -92,7 +91,6 @@ export default function TimeCalendar() {
 
   // Helper function to check if a date is blocked
   const isDateBlocked = (year, month, day) => {
-    // console.log(year,month,day);
     const d = new Date(year, month, day);
     const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
       2,

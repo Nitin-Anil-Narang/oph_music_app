@@ -30,9 +30,8 @@ const banking = [
 
 const DocumentationDetailsForm = () => {
   const [searchParams] = useSearchParams();
-  const ophid = searchParams.get("ophid");
   const navigate = useNavigate();
-  const { headers } = useArtist();
+  const { headers,ophid } = useArtist();
 
   const [loading, setLoading] = useState(true);
 
@@ -421,7 +420,7 @@ const DocumentationDetailsForm = () => {
 
       if (response.success) {
         toast.success("Documentation details updated successfully");
-        navigate(`/auth/membership-form?ophid=${ophid}`);
+        navigate('/auth/membership-form');
         // setShowMembershipForm(true); // Show MembershipForm
       }
     } catch (error) {

@@ -5,15 +5,16 @@ import axiosApi from "../../conf/axios";
 import getToken from "../../utils/getToken";
 import {useArtist} from "../auth/API/ArtistContext";
 export default function BlockDateForm() {
-  const {headers}=useArtist();
+  const {headers,ophid}=useArtist();
   const location = useLocation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    oph_id: "OPH-CAN-IA-014",
+    oph_id: ophid,
     numberOfSongs: "",
     selectedDate: location.state?.selectedDate || "",
   });
   const [isProcessing, setIsProcessing] = useState(false);
+  console.log(formData.selectedDate);
 
   useEffect(() => {
     // const userData = JSON.parse(localStorage.getItem('userData'));
@@ -47,8 +48,7 @@ export default function BlockDateForm() {
     // Navigate to payment screen with form data
     navigate("/dashboard/payment", {
       state: {
-        artist_id:formData.oph_id,
-        planIds: [2], // Date blocking plan ID
+        date:formData.selectedDate,
         returnPath: "/dashboard/block-date",
         heading: "Date Blocking Fee",
         from: "Date booking"

@@ -36,8 +36,7 @@ const getFullPersonalDetails = async (ophid) => {
 
 const getFullPersonal = async () => {
   const [rows] = await db.execute("SELECT * FROM user_details;");
-  console.log(rows);
-  
+
   // If you want to return as JSON explicitly (usually it already is an array of objects)
   return rows;
 };
