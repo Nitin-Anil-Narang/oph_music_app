@@ -9,7 +9,7 @@ import { ROLES } from "./utils/roles";
 //Import for pages
 import Home from "./pages/Home";
 import AdminSignUpForm from "./pages/AdminSignUp";
-mport Dashboard from "./view/dashboard/home";
+import Dashboard from "./view/dashboard/home";
 import ArtistPortal from "./view/dashboard/artistPortal";
 import WebsiteConfig from "./view/dashboard/websiteConfig";
 
