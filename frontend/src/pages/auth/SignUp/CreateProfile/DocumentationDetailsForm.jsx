@@ -31,7 +31,7 @@ const banking = [
 const DocumentationDetailsForm = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { headers,ophid } = useArtist();
+  const { headers, ophid } = useArtist();
 
   const [loading, setLoading] = useState(true);
 
@@ -107,8 +107,10 @@ const DocumentationDetailsForm = () => {
   // }, []);
 
   useEffect(() => {
-    fetchDocumentationDetails();
-  }, [headers]);
+    if (ophid) {
+      fetchDocumentationDetails();
+    }
+  }, [ophid]);
 
 
   const parseString = (accept) => {
@@ -221,7 +223,7 @@ const DocumentationDetailsForm = () => {
         const BankName = banking.find((b) => b.id === bankname)?.bank_name;
 
         setBanks(BankName);
-  
+
         const aadharFrontFile = doc.AadharFrontURL
           ? await urlToFile(doc.AadharFrontURL, "aadhar-front.png")
           : null;
@@ -234,7 +236,7 @@ const DocumentationDetailsForm = () => {
         const signatureFile = doc.SignatureImageURL
           ? await urlToFile(doc.SignatureImageURL, "signature.png")
           : null;
-  
+
         const baseForm = {
           aadharFront: aadharFrontFile
             ? { file: aadharFrontFile, preview: doc.AadharFrontURL }
@@ -342,11 +344,11 @@ const DocumentationDetailsForm = () => {
             const blob = await fetch(formData.signature).then((res) =>
               res.blob()
             );
-            
-            const randomString = Math.random().toString(36).substring(2, 10);
-  const fileName = `signature_${randomString}.png`;
 
-  formDataToSend.append("SignatureImageURL", blob, fileName);
+            const randomString = Math.random().toString(36).substring(2, 10);
+            const fileName = `signature_${randomString}.png`;
+
+            formDataToSend.append("SignatureImageURL", blob, fileName);
           } else if (formData.signature?.file instanceof File) {
             // 🟢 Case 2: Uploaded File
             formDataToSend.append("SignatureImageURL", formData.signature.file);
@@ -375,7 +377,7 @@ const DocumentationDetailsForm = () => {
 
       for (const [field, data] of Object.entries(documentFields)) {
         if (data?.file) {
-        
+
           formDataToSend.append(field, data.file);
         } else if (
           data?.preview &&

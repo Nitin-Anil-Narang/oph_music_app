@@ -1,11 +1,12 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import axiosApi from "../../conf/axios";
 import getToken from "../../utils/getToken";
-import {useArtist} from "../auth/API/ArtistContext";
+import { useArtist } from "../auth/API/ArtistContext";
+import { use } from "react";
 export default function BlockDateForm() {
-  const {headers,ophid}=useArtist();
+  const { headers, ophid } = useArtist();
   const location = useLocation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -14,31 +15,41 @@ export default function BlockDateForm() {
     selectedDate: location.state?.selectedDate || "",
   });
   const [isProcessing, setIsProcessing] = useState(false);
-  console.log(formData.selectedDate);
-
   useEffect(() => {
-    // const userData = JSON.parse(localStorage.getItem('userData'));
-    // if (userData?.artist.oph_id) {
-    //   setFormData(prev => ({
-    //     ...prev,
-    //     oph_id: userData.artist.oph_id
-    //   }));
-    // }
-
-    // Handle payment return
-    if (location.state?.status === "success") {
-      const savedFormData = JSON.parse(sessionStorage.getItem('blockDateFormData'));
-      if (savedFormData) {
-        handleBlockDate(location.state.paymentData, savedFormData);
-        // Clean up after successful processing
-        sessionStorage.removeItem('blockDateFormData');
-      }
+    if (ophid) {
+      setFormData(prev => ({
+        ...prev,
+        oph_id: ophid
+      }));
     }
-  }, [location.state]);
+  }, [ophid]);
+
+  // useEffect(() => {
+  //   // const userData = JSON.parse(localStorage.getItem('userData'));
+  //   // if (userData?.artist.oph_id) {
+  //   //   setFormData(prev => ({
+  //   //     ...prev,
+  //   //     oph_id: userData.artist.oph_id
+  //   //   }));
+  //   // }
+
+  //   // Handle payment return
+  //   if (location.state?.status === "success") {
+  //     const savedFormData = JSON.parse(sessionStorage.getItem('blockDateFormData'));
+  //     if (savedFormData) {
+  //       handleBlockDate(location.state.paymentData, savedFormData);
+  //       // Clean up after successful processing
+  //       sessionStorage.removeItem('blockDateFormData');
+  //     }
+  //   }
+  // }, [location.state]);
+
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Save form data to sessionStorage before navigation
     sessionStorage.setItem('blockDateFormData', JSON.stringify({
       selectedDate: formData.selectedDate,
@@ -48,7 +59,7 @@ export default function BlockDateForm() {
     // Navigate to payment screen with form data
     navigate("/dashboard/payment", {
       state: {
-        date:formData.selectedDate,
+        date: formData.selectedDate,
         returnPath: "/dashboard/block-date",
         heading: "Date Blocking Fee",
         from: "Date booking"
@@ -66,7 +77,7 @@ export default function BlockDateForm() {
         date: new Date(dateBlockData.selectedDate),
         payment_id: paymentData.newPaymentIds[0]
       }, {
-        headers:headers
+        headers: headers
       });
 
       if (response.data.success) {
@@ -151,12 +162,12 @@ export default function BlockDateForm() {
           </div>
 
           <button
-  type="submit"
-  disabled={isProcessing}
-  className="w-full bg-cyan-400 text-gray-900 rounded-full py-3 font-semibold hover:bg-cyan-300 transition-colors mt-8 disabled:opacity-50"
->
-  {isProcessing ? "Processing..." : "Pay & Block"}
-</button>
+            type="submit"
+            disabled={isProcessing}
+            className="w-full bg-cyan-400 text-gray-900 rounded-full py-3 font-semibold hover:bg-cyan-300 transition-colors mt-8 disabled:opacity-50"
+          >
+            {isProcessing ? "Processing..." : "Pay & Block"}
+          </button>
         </form>
       </div>
     </div>

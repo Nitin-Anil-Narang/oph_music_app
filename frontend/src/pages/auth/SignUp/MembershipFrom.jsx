@@ -13,7 +13,7 @@ const MembershipForm = ({ id }) => {
   const [searchParams] = useSearchParams();
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
-  const { artist, headers,ophid } = useArtist();
+  const { artist, headers, ophid } = useArtist();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,63 +36,64 @@ const MembershipForm = ({ id }) => {
         setError("Error fetching membership form. Please try again later.");
       }
     };
-
-    fetchMembershipForm();
-  }, [id]);
+    if (ophid) {
+      fetchMembershipForm();
+    }
+  }, [ophid]);
 
   console.log(ophid);
   return (
 
     <>
-    <div className="relative bg-cover bg-center">
-      
+      <div className="relative bg-cover bg-center">
 
-      <img
-        src={MusicBg}
-        className="absolute top-[50%] -z-10 inset-0 md:top-[20%]"
-        alt=""
-        srcSet=""
-      />
-      <img
-        src={Elipse}
-        className="absolute top-[50%] -z-10 inset-0 w-[30%] md:top-[20%]"
-        alt=""
-        srcSet=""
-      />
-      <div className="min-h-screen z-10  bg-opacity-70 text-white p-6">
-        <ProfileFormHeader title="Membership Form" />
-        <div className="min-h-[calc(100vh-800px)] mt-20  text-white p-6 flex flex-col items-center mx-auto">
-       
-      </div>
-      <div className="w-100 overflow-x-hidden">
-        <h2 className="form-title">Membership Form</h2>
-        {error ? (
-          <p className="error-message">{error}</p>
-        ) : content ? (
-          // Option 1: Render using iframe to prevent styling conflicts
-          <iframe
-            title="Membership Form"
-            srcDoc={content}
-            className="membership-form-iframe"
-          />
-        ) : (
-          <p className="loading-message">Loading form...</p>
-        )}
 
-        <button
-          onClick={() => {
-            toast.success("Documentation details updated successfully");
-            navigate(`/auth/profile-status?ophid=${ophid}`);
-          }}
-          className="w-full my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
-        >
-          Submit
-        </button>
-      </div>
-      </div>
+        <img
+          src={MusicBg}
+          className="absolute top-[50%] -z-10 inset-0 md:top-[20%]"
+          alt=""
+          srcSet=""
+        />
+        <img
+          src={Elipse}
+          className="absolute top-[50%] -z-10 inset-0 w-[30%] md:top-[20%]"
+          alt=""
+          srcSet=""
+        />
+        <div className="min-h-screen z-10  bg-opacity-70 text-white p-6">
+          <ProfileFormHeader title="Membership Form" />
+          <div className="min-h-[calc(100vh-800px)] mt-20  text-white p-6 flex flex-col items-center mx-auto">
+
+          </div>
+          <div className="w-100 overflow-x-hidden">
+            <h2 className="form-title">Membership Form</h2>
+            {error ? (
+              <p className="error-message">{error}</p>
+            ) : content ? (
+              // Option 1: Render using iframe to prevent styling conflicts
+              <iframe
+                title="Membership Form"
+                srcDoc={content}
+                className="membership-form-iframe"
+              />
+            ) : (
+              <p className="loading-message">Loading form...</p>
+            )}
+
+            <button
+              onClick={() => {
+                toast.success("Documentation details updated successfully");
+                navigate(`/auth/profile-status?ophid=${ophid}`);
+              }}
+              className="w-full my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
       </div>
 
-    </>      );
+    </>);
 };
 
-      export default MembershipForm;
+export default MembershipForm;

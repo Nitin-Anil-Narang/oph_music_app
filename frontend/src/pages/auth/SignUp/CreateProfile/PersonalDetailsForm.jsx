@@ -100,7 +100,10 @@ const PersonalDetailsForm = () => {
   });
 
   useEffect(() => {
-    fetchPersonalDetails();
+    if(ophid)
+    {
+      fetchPersonalDetails();
+    }
   }, [ophid]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
