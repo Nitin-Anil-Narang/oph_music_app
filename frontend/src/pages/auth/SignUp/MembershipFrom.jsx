@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useArtist } from "../API/ArtistContext";
 import "../../../../src/index.css"; // Import CSS for styling
@@ -11,6 +12,8 @@ import Elipse from "../../../../public/assets/images/elipse2.png";
 import ProfileFormHeader from "./components/ProfileFormHeader";
 
 const MembershipForm = ({ id }) => {
+  const [searchParams] = useSearchParams();
+  const ophid = searchParams.get("ophid");
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
   const { artist, headers } = useArtist();
@@ -28,7 +31,6 @@ const MembershipForm = ({ id }) => {
         // console.log("Artist ID:", JSON.parse(localStorage.getItem("userData")).artist.id);
         const response = await axiosApi.get(`auth/membership?ophid=${ophid}`, { headers });
         console.log("API Response:", response.data);
-
         if (typeof response.data === "string") {
           setContent(response.data);
         } else {
@@ -43,6 +45,7 @@ const MembershipForm = ({ id }) => {
     fetchMembershipForm();
   }, [id]);
 
+  console.log(ophid);
   return (
 
     <>

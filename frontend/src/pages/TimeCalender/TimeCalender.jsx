@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useArtist } from "../auth/API/ArtistContext";
 
+
 export default function TimeCalendar() {
   const { headers } = useArtist();
   const [currentMonthIndex, setCurrentMonthIndex] = useState(
