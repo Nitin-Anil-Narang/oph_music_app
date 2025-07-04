@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useArtist } from "../auth/API/ArtistContext";
 
+
 export default function TimeCalendar() {
   const { headers } = useArtist();
   const [currentMonthIndex, setCurrentMonthIndex] = useState(
@@ -23,7 +24,6 @@ export default function TimeCalendar() {
       setIsLoading(true);
       setError(null);
       try {
-        console.log("api call 2");
         const response = await axiosApi.get(
           "/bookings",
           // "/date-block/blocked-dates-with-artists",
@@ -91,7 +91,6 @@ export default function TimeCalendar() {
 
   // Helper function to check if a date is blocked
   const isDateBlocked = (year, month, day) => {
-    // console.log(year,month,day);
     const d = new Date(year, month, day);
     const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
       2,
@@ -258,11 +257,6 @@ export default function TimeCalendar() {
   const UserAvatar = ({ artist }) => (
     <div className="flex items-center gap-2 mb-2">
       {/* Circle with Initial */}
-      <div className="sm:w-8 sm:h-8  w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold sm:text-md text-xs">
-        {/* {artist.artist.name.charAt(0).toUpperCase()} */}
-        test
-      </div>
-
       {/* Full name only on larger screens */}
       {/* <span className="text-sm hidden lg:block">{artist.artist.name}</span> */}
     </div>

@@ -6,10 +6,16 @@
 // const Home = () => {
 //   const [tableData, setTableData] = useState([]);
 
+
 //   useEffect(() => {
 //     const fetchData = async () => {
 //       const res = await axios.get("http://localhost:5000/admin/personal");
 //       console.log(res);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       const res = await axios.get("http://localhost:5000/auth/personal");
+
       
 //       setTableData(res.data);
 //     };

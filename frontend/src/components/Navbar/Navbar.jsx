@@ -30,7 +30,6 @@ export default function Navbar({ onMenuClick }) {
         const results = await searchContent(query);
         setSearchResults(results.data);
         setShowDropdown(true);
-        console.log(results.data);
       }
       catch (error) {
         console.error("Search failed:", error);

@@ -38,7 +38,7 @@ const membershipForm = async (req, res) => {
       ];
       const { ophid } = req.query;
       const OPH_ID = ophid;
-      console.log(ophid);
+
 
       // Fetch artist data
       // const artist = await DB.knex('artists as a')
@@ -50,17 +50,11 @@ const membershipForm = async (req, res) => {
       const artistProf = await prof_details.getProfessionalByOphId(OPH_ID);
       const artistDoc = await docs.getDocumentationDetailsByOphId(ophid);
 
-      console.log(artist);
-      console.log(artistProf);
-      console.log(artistDoc);
-
       const formattedDate = artist[0].createdAt.toISOString().split("T")[0];
       const aadharFrontUrl = artistDoc[0].AadharFrontURL;
       const aadharBackUrl = artistDoc[0].AadharBackURL;
 
       const panFrontUrl = artistDoc[0].PanFrontURL;
-      console.log("pan", panFrontUrl);
-      console.log(artistProf[0]?.VideoURL);
 
       const bankname = parseInt(artistDoc[0].BankName); // Convert from string to number
       const BankName = banking.find((b) => b.id === bankname)?.bank_name;
@@ -77,9 +71,6 @@ const membershipForm = async (req, res) => {
       const professionName = professionOptions.find(
         (p) => p.id === professionId
       )?.name;
-
-      console.log(artistProf[0].ExperienceMonthly % 12);
-      console.log(artistProf[0].ExperienceMonthly % 12);
 
       if (!artist) {
         return res.status(404).send("Artist not found");
@@ -1773,7 +1764,6 @@ Agreement shall be subject to arbitration in accordance with the Arbitration and
             Bucket: bucketName,
             Key: s3Key,
           }));
-          console.log(`🗑️ Existing file deleted: ${s3Key}`);
         } catch (err) {
           if (err.name !== "NotFound") {
             console.error("Error checking/deleting existing file:", err.message);
@@ -1788,7 +1778,7 @@ Agreement shall be subject to arbitration in accordance with the Arbitration and
         };
         try {
           const s3Url = await uploadToS3Form(file, "pdfs");
-          console.log("✅ PDF uploaded to:", s3Url);
+
         } catch (err) {
           console.error("Upload failed:", err.message);
         }

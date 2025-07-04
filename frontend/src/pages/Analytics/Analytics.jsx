@@ -40,7 +40,6 @@ export default function AnalyticsDashboard() {
       setIsLoading(true);
       try {
         // Fetch contents
-        console.log("Artist ID:", artist);
         const contentsResponse = await axiosApi.get(
           `/content/search?artist_id=${artist.id}&lastNDays=${selectedDuration}`,
           headers
@@ -57,7 +56,7 @@ export default function AnalyticsDashboard() {
             `/analytics/content/${firstContent.id}/streams?lastNDays=${selectedDuration}`,
             headers
           );
-          console.log("Streams Response:", streamsResponse.data.data);
+    
           
           setStreams(streamsResponse.data.data);
 
@@ -238,9 +237,7 @@ export default function AnalyticsDashboard() {
                               value={selectedContent?.id || ""}
                               onChange={async (e) => {
                                 const contentId = e.target.value;
-                                console.log("Selected Content ID:", contentId);
-                                console.log("Contents Array:", contents);
-                        
+                                                      
                                 // Find the selected content in the current contents array
                                 const selected = contents.find(
                                   (content) => content.id == contentId

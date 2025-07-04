@@ -6,20 +6,16 @@ import Loading from "../../components/Loading";
 import { useParams } from "react-router-dom";
 
 const PaymentScreen = () => {
-  const { logout, headers } = useArtist();
+  const { logout, headers, ophid } = useArtist();
 
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  let ophid = queryParams.get("ophid");
   const [trans, setTrans] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const from = location.state.from;
-  let ophid_book = location.state.artist_id;
   console.log(ophid);
-  
-
   const {
     amount = 0,
     planIds = [],
@@ -41,27 +37,22 @@ const PaymentScreen = () => {
         Status: "Under Review",
         step: "/auth/create-profile/personal-details",
         from: from,
-        // plan_ids: planIds,
       };
       console.log("Submitting payment form data:", formData);
 
       const response = await axiosApi.post("/auth/payment", formData);
-      console.log(response);
 
       if (response.data.success && from == "Date booking") {
         {
-          const path = `/dashboard/time-calendar`;
-          navigate(path);
-
           const CalenderRes = await axiosApi.post(
             "/booking",
-            { oph_id: "OPH-CAN-IA-032", booking_date: location.state.date },
+            { oph_id: ophid, booking_date: location.state.date },
             { headers: headers }
           );
-          console.log( ophid,  location.state.date);
-          
+          console.log(CalenderRes);
 
-          if (CalenderRes.status === 201) {
+
+          if (CalenderRes.data.success) {
             navigate("/dashboard/success", {
               state: {
                 heading: "Your date blocked successfully!",
@@ -71,8 +62,30 @@ const PaymentScreen = () => {
             });
           }
         }
-      } else if (response.data.success) {
-        const path = `/auth/create-profile/personal-details?ophid=${ophid}`;
+      }
+      else if (response.data.success && from == "Release date change") {
+        {
+          const CalenderRes = await axiosApi.post(
+            "/change-release-date",
+            { oph_id: ophid, old_booking_date: location.state.old_booking_date, new_booking_date: location.state.new_booking_date },
+            { headers: headers }
+          );
+          console.log(CalenderRes);
+
+
+          if (CalenderRes.data.success) {
+            navigate("/dashboard/success", {
+              state: {
+                heading: "Your date blocked successfully!",
+                btnText: "View Calendar",
+                redirectTo: "/dashboard/time-calendar",
+              },
+            });
+          }
+        }
+      }
+      else if (response.data.success) {
+        const path = `/auth/create-profile/personal-details`;
         navigate(path);
       }
     } catch (err) {

@@ -40,8 +40,8 @@ const ArtistRoutes = () => {
         <Route path="block-date" element={<BlockDateForm />}></Route>
         <Route path="date-change" element={<DateChange />} />
 
-        <Route path="success" element={<SuccessScreen />} />
-        <Route path="payment" element={<PaymentScreen />} />
+          <Route path="success" element={<SuccessScreen />} />
+          <Route path="payment" element={<PaymentScreen />} />
 
         <Route path="upload-song" element={<UploadSongs />} />
         <Route
@@ -77,30 +77,35 @@ const ArtistRoutes = () => {
           element={<Notification />}
         />
           <Route
-            path="events"
-            element={<Events />}
+            path="upload-song/register-song"
+            element={<SongRegistrationForm />}
           />
+          <Route
+            path="upload-song/audio-metadata/:contentId"
+            element={<AudioMetadataForm />}
+          />
+          <Route
+            path="upload-song/video-metadata/:contentId"
+            element={<VideoMetadataForm />}
+          />
+          <Route path="request-ticket" element={<RequestTicketForm />} />
+          <Route path="events" element={<Events />} />
+          <Route path="profile" element={<ArtistProfile />} />
+          <Route path="income" element={<IncomeWithdrawal />} />
+          <Route path="notifications" element={<Notification />} />
+          <Route path="events" element={<Events />} />
           <Route path="key-performance-indicators" element={<KPIDashboard />} />
           <Route path="analytics" element={<AnalyticsDashboard />} />
           <Route path="tv-publishing" element={<TVPublishing />} />
           <Route path="artist-spotlight" element={<ArtistSpotlight />} />
-          <Route
+          <Route path="learnings" element={<Learnings />} />
 
-          path="learnings"
-          element={<Learnings />}
-        />
-
-        <Route path="tv-publishing" element={<TVPublishing />} />
-        <Route path="artist-spotlight" element={<ArtistSpotlight />} />
-     
-
-        <Route path="*" element={<Error />} />
+          <Route path="tv-publishing" element={<TVPublishing />} />
+          <Route path="artist-spotlight" element={<ArtistSpotlight />} />
+          <Route path="*" element={<Error />} />
         </Route>
         <Route path="*" element={<Error />} />
-       
-    </Routes>
-
-
+      </Routes>
     </Provider>
   );
 };

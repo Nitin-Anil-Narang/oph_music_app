@@ -19,7 +19,6 @@ const months = [
 
 const ArtistRankingSection = ({ data, selectedMonth }) => {
   const leaderboard = useSelector((state) => state.newRelease.leaderboard);
-  console.log(leaderboard);
 
   const [currentMonth, setCurrentMonth] = useState("");
 

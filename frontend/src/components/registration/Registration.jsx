@@ -3,8 +3,7 @@ import { toast, Bounce, ToastContainer } from "react-toastify";
 import axiosApi from "../../conf/axios";
 
 const RegistrationModal = ({ setIsModalOpen,id}) => {
-   console.log(id);
-   
+
     const [professions,setProfessions] = useState([])
   const [formData, setFormData] = useState({
     first_name: "",
@@ -17,7 +16,6 @@ const RegistrationModal = ({ setIsModalOpen,id}) => {
     try{
     const response = await axiosApi.get('/professions')
     setProfessions(response.data.data)
-    console.log(professions);
 
     }
     catch(err){
@@ -27,7 +25,6 @@ const RegistrationModal = ({ setIsModalOpen,id}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
 
     try {
       const response = await axiosApi.post(`/events/bookings/${id}`, formData);

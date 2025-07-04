@@ -17,19 +17,20 @@ export default function DateChangeForm() {
     newDate: "",
     reason: "",
   });
-  const { headers } = useArtist();
-  const userData = localStorage.getItem("userData");
-  const oph_id = userData ? JSON.parse(userData).artist.oph_id : "";
+  const { headers, ophid } = useArtist();
+  console.log(ophid);
 
   useEffect(() => {
     const fetchBlockedDates = async () => {
       try {
         const response = await axiosApi.get(
-          "/date-block/blocked-dates-with-artists",
+          "/bookings",
           {
             headers: headers,
           }
         );
+
+
         if (response.data.success) {
           // Extract just the dates from the response
           const dates = response.data.data.map(
@@ -71,41 +72,30 @@ export default function DateChangeForm() {
 
     setIsProcessing(true);
     try {
-      const response = await axiosApi.post(
-        "/date-block/change",
-        {
-          old_date: formData.oldDate,
-          new_date: formData.newDate,
-          reason: formData.reason,
-          content_id: formData.contentId,
+      // const response = await axiosApi.post(
+      //   "/date-block/change",
+      //   {
+      //     old_date: formData.oldDate,
+      //     new_date: formData.newDate,
+      //     reason: formData.reason,
+      //     content_id: formData.contentId,
+      //   },
+      //   {
+      //     headers: headers,
+      //   }
+      // );
+
+      navigate("/auth/payment", {
+        state: {
+          old_booking_date: formData.oldDate,
+          new_booking_date: formData.newDate,
+          returnPath: "/dashboard/time-calendar",
+          amount: 100,
+          heading: "Payment Required",
+          from: "Release date change",
         },
-        {
-          headers: headers,
-        }
-      );
+      });
 
-      console.log(response);
-      if (response.data.success) {
-        console.log("Date changed successfully:", response.data);
-        navigate("/auth/payment", {
-          state: {
-            artist_id: localStorage.getItem("artist_id"),
-            returnPath: "/dashboard/time-calendar",
-            amount: 100,
-            planIds: [2],
-            heading: "Payment Required",
-            fromDateChange: true,
-          },
-        });
-
-        // navigate("/dashboard/success", {
-        //   state: {
-        //     heading: "Date Changed Successfully!",
-        //     btnText: "View Calendar",
-        //     redirectTo: "/dashboard/time-calendar"
-        //   }
-        // });
-      }
     } catch (error) {
       console.error("Error changing date:", error);
       toast.error("Error changing date. Please try again.");
@@ -137,7 +127,7 @@ export default function DateChangeForm() {
             <input
               type="text"
               name="contentId"
-              value={oph_id}
+              value={ophid}
               disabled
               className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400 cursor-not-allowed"
             />

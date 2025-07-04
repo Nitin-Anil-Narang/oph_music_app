@@ -28,7 +28,6 @@ const insertDocumentationController = async (req, res) => {
     }
     
     const user = userRows[0];
-    console.log(user,"usersRows");
     const files = req.files;
 
     const AadharFrontURL = files?.AadharFrontURL

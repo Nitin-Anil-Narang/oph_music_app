@@ -9,6 +9,10 @@ import { ROLES } from "./utils/roles";
 //Import for pages
 import Home from "./pages/Home";
 import AdminSignUpForm from "./pages/AdminSignUp";
+mport Dashboard from "./view/dashboard/home";
+import ArtistPortal from "./view/dashboard/artistPortal";
+import WebsiteConfig from "./view/dashboard/websiteConfig";
+
 import AssignRoles from "./pages/AssignRole";
 
 function App() {
@@ -18,6 +22,12 @@ function App() {
         <Routes>
           <Route path="/" element={<AdminSignInForm />} />
           <Route path="/signup" element={<AdminSignUpForm />} />
+          <Route path="/WebsiteConfig" element={<WebsiteConfig/>} />
+          
+         
+          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/artistPortal" element={<ArtistPortal />} />
+        
           <Route path="/home" element={<ProtectedRoute allowedRoles={Object.values(ROLES)}><Home /></ProtectedRoute>} />
           <Route
             path="/role_change"
@@ -30,6 +40,7 @@ function App() {
         </Routes>
       </Router>
     </AuthProvider>
+
   );
 }
 
