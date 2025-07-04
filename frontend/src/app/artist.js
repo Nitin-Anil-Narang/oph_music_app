@@ -23,4 +23,4 @@ export const artistStore = configureStore({
     }
 })
 
-//test
+//tes
