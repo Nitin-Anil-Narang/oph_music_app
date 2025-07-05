@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-import axios from 'axios';
+import axiosApi from "../conf/axios";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-
+import { useAuth } from "../auth/AuthProvider";
+import { use } from "react";
 
 const AdminSignInForm = () => {
+  const { login } = useAuth();
+  const user = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
@@ -30,16 +33,21 @@ const AdminSignInForm = () => {
     setLoading(true);
     
     try {
-    //   const response = await loginUser(credentials.email, credentials.password);
-    console.log(credentials.email, credentials.password);
-    
-    const response = await axios.post("http://localhost:5000/admin/signin", { email:credentials.email,  password: credentials.password});
-    console.log(response);
-    
-
+      //   const response = await loginUser(credentials.email, credentials.password);
+      console.log(credentials.email, credentials.password);
+      
+      const response = await axiosApi.post("/admin/signin", { email:credentials.email,  password: credentials.password});
+      console.log(response);
+      
+      
       if (response.status === 200) {
         toast.success("Login Successful");       
         localStorage.setItem("token", response.data.token);
+        const token=response.data.token;
+        login(token);
+        console.log(response.data.token,"done");
+        
+        
         navigate("/home")
         // const path = `${response.step}?ophid=${response.ophid}`
         // navigate(path, {
