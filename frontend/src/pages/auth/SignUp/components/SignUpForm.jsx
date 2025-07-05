@@ -189,8 +189,7 @@ const SignUpForm = () => {
 
       if (response.success) {
         localStorage.setItem("token", response.token);
-        const path = `/auth/payment?ophid=${response.ophid}`
-        navigate(path, {
+        navigate('/auth/payment', {
           state: {
             from: "Registeration"
           }

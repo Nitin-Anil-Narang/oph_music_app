@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
+
 import {useNavigate } from "react-router-dom";
+
+
+import Sidebar from "../../../components/Sidebar";
+// Dashboard with two views: Home & Artist Portal
+// Tailwind‑only styling – brand colour #0d3c44
+
 
 // Main Dashboard component
 const Dashboard = () => {
@@ -10,56 +17,25 @@ const Dashboard = () => {
 
   // Sidebar link sets
   const homeLinks = [
-    { label: "Section 1", href: "#section1" },
-    { label: "Section 2", href: "#section2" },
-    { label: "Section 3", href: "#section3" },
+    { label: "Artist Portal", route: "/artistPortal" },
+    { label: "New SignUp", route: "/New_SignUp" },
+    { label: "Website Config", route: "/WebsiteConfig" },
   ];
 
+
   const artistLinks = []; // placeholder for future use
+
+
 
   const links = page === "home" ? homeLinks : artistLinks;
 
   return (
     <div className="h-screen flex overflow-hidden relative bg-gray-50">
-      {/* Dim overlay behind the sidebar */}
-      {sidebarOpen && (
-        <div
-          // className="fixed inset-0 bg-black bg-opacity-30 z-10"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
 
-      {/* Hamburger / Close button (always visible) */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-4 left-4 z-30 p-2 rounded-full text-[#0d3c44] bg-transparent hover:bg-transparent focus:outline-none active:bg-transparent"
-        aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
-      >
-        {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
+    
 
-      {/* Sidebar */}
-      {sidebarOpen && (
-        <aside className="fixed inset-y-0 left-0 w-64 bg-[#0d3c44] text-white flex flex-col py-6 shadow-2xl rounded-r-2xl z-20 transition-transform duration-300">
-          <h1 className="text-2xl font-bold px-6 mb-8">
-            {page === "home" ? "Dashboard" : "Artist Portal"}
-          </h1>
-          <nav className="flex-1 overflow-y-auto px-6">
-            <ul className="space-y-4">
-              {links.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="block font-medium hover:underline"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </aside>
-      )}
+     
+    <Sidebar title="Artist Portal" links={homeLinks} /> 
 
       {/* Main content */}
       <main className="flex-1 p-10 flex items-center justify-center">

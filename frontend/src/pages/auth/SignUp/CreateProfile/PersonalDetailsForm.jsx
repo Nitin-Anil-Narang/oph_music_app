@@ -46,17 +46,16 @@ const indianStates = [
 
 const PersonalDetailsForm = () => {
   const navigate = useNavigate();
-  const { headers } = useArtist();
+  const { headers, ophid } = useArtist();
   // const [isPlaying, setIsPlaying] = useState(false); // Track video play state
   // const videoRef = useRef(null);
   // const [video, setVideo] = useState(null);
   const [rejectReason, setRejectReason] = useState(null);
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const ophid = searchParams.get("ophid");
 
   const inputRef = useRef(null);
-
+  console.log(ophid);
   // const fetchVideo = async () => {
   //   try {
   //     const response = await axiosApi.get(
@@ -101,8 +100,11 @@ const PersonalDetailsForm = () => {
   });
 
   useEffect(() => {
-    fetchPersonalDetails();
-  }, [headers]);
+    if(ophid)
+    {
+      fetchPersonalDetails();
+    }
+  }, [ophid]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -309,7 +311,7 @@ const PersonalDetailsForm = () => {
 
       if (response.success) {
         toast.success("Personal details updated successfully");
-        const path = `${response.step}?ophid=${ophid}`;
+        const path = `${response.step}`;
         navigate(path);
       }
     } catch (error) {

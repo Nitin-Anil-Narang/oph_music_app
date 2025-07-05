@@ -17,7 +17,6 @@ export const getProfile = createAsyncThunk('getProfile',async()=>{
         }
 
         const response = await axiosApi(`/artists/${id}`);
-        console.log(response.data.data);
 
         return response.data.data;
     }

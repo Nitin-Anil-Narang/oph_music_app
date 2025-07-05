@@ -82,8 +82,6 @@ const signup = async (req, res) => {
 
   
 );
-console.log(token);
-
     if (dbResponse) {
 
       await setCurrentStep(step,ophId)

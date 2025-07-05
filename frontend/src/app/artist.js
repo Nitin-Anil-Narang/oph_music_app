@@ -22,3 +22,5 @@ export const artistStore = configureStore({
         income : incomeReducer,
     }
 })
+
+//tes

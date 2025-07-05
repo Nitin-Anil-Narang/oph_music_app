@@ -37,7 +37,7 @@ const updateBooking = async (oph_id, old_booking_date, new_booking_date) => {
 
 const getAllBookings = async () => {
   const [rows] = await db.execute('SELECT * FROM calender');
-  console.log(rows);
+
   
   return rows;
 };

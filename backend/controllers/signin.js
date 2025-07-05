@@ -17,8 +17,7 @@ const signin = async (req, res) => {
     }
 
     const dbUser = user[0];
-    console.log(dbUser);
-    
+   
     const ophId = user[0].ophid;
     const isPasswordValid = await bcrypt.compare(password, dbUser.user_pass);
 
@@ -57,9 +56,7 @@ const signin = async (req, res) => {
     } else {
       navTo = dbUser.current_step;
     }
-
-    console.log(navTo);
-
+    
     return res.status(200).json({
       success: true,
       message: "Login successful",
