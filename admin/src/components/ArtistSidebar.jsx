@@ -6,21 +6,53 @@ import { useAuth } from "../auth/AuthProvider";
 const artistLinks = [
   {
     label: "Artist",
+    roles: [
+      ROLES.SUPER_ADMIN,
+      ROLES.ADMINISTRATIVE_HEAD,
+      ROLES.ADMINISTRATIVE_MEMBER,
+      ROLES.SALES_HEAD,
+      ROLES.SALES_MEMBER,
+    ],
     children: [
-      { label: "All", route: "/artist/all" },
-      { label: "New", route: "/artist/new" },
+      {
+        label: "All",
+        route: "/artist/all",
+      },
+      {
+        label: "New",
+        route: "/artist/new",
+      },
     ],
   },
   {
     label: "Content",
+    roles: [
+      ROLES.SUPER_ADMIN,
+      ROLES.ADMINISTRATIVE_HEAD,
+      ROLES.ADMINISTRATIVE_MEMBER,
+      ROLES.CREATIVE_HEAD,
+      ROLES.CREATIVE_MEMBER,
+      ROLES.ACCOUNTS_HEAD,
+      ROLES.ACCOUNTS_MEMBER,
+    ],
     children: [
-      { label: "New", route: "/content/new" },
-      { label: "Manage", route: "/content/manage" },
-      { label: "Tv Publishing", route: "/content/tv" },
+      {
+        label: "New",
+        route: "/content/new",
+      },
+      {
+        label: "Manage",
+        route: "/content/manage",
+      },
+      {
+        label: "Tv Publishing",
+        route: "/content/tv",
+      },  
     ],
   },
   {
     label: "Analytics",
+    roles: [ROLES.SUPER_ADMIN, ROLES.OPERATION_HEAD, ROLES.OPERATION_MEMBER],
     children: [
       { label: "Artist KPI", route: "/analytics/kpi" },
       { label: "Content Analysis", route: "/analytics/analysis" },
@@ -29,15 +61,46 @@ const artistLinks = [
   },
   {
     label: "Payments",
+    roles: [
+      ROLES.SUPER_ADMIN,
+      ROLES.ADMINISTRATIVE_HEAD,
+      ROLES.ADMINISTRATIVE_MEMBER,
+      ROLES.ACCOUNTS_HEAD,
+      ROLES.ACCOUNTS_MEMBER,
+    ],
     children: [
-      { label: "All", route: "/payments/all" },
-      { label: "Withdrawals", route: "/payments/withdrawals" },
+      {
+        label: "All",
+        route: "/payments/all",
+      },
+      {
+        label: "Withdrawals",
+        route: "/payments/withdrawals",
+      },
     ],
   },
   { label: "All Data", route: "/data" },
   { label: "Notifications", route: "/notifications" },
-  { label: "Time Calendar", route: "/calendar" },
-  { label: "Tickets", route: "/tickets", roles: [ROLES.SUPER_ADMIN] },
+  {
+    label: "Time Calendar",
+    route: "/calendar",
+    roles: [
+      ROLES.SUPER_ADMIN,
+      ROLES.ADMINISTRATIVE_HEAD,
+      ROLES.ADMINISTRATIVE_MEMBER,
+    ],
+  },
+  {
+    label: "Tickets",
+    route: "/tickets",
+    roles: [
+      ROLES.SUPER_ADMIN,
+      ROLES.ADMINISTRATIVE_HEAD,
+      ROLES.ADMINISTRATIVE_MEMBER,
+      ROLES.ACCOUNTS_HEAD,
+      ROLES.ACCOUNTS_MEMBER,
+    ],
+  },
   { label: "Settings", route: "/settings", roles: [ROLES.SUPER_ADMIN] },
 ];
 

@@ -35,7 +35,7 @@ const Dashboard = () => {
     
 
      
-    <Sidebar title="Artist Portal" links={homeLinks} /> 
+    <Sidebar title="DashBoard" links={homeLinks} /> 
 
       {/* Main content */}
       <main className="flex-1 p-10 flex items-center justify-center">
