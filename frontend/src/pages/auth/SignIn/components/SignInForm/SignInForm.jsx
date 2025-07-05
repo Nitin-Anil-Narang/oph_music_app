@@ -27,11 +27,11 @@ const SignInForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    localStorage.setItem("token", "sdsdad");
     try {
       const response = await loginUser(credentials.email, credentials.password);
 
       if (response.success) {
+       
         toast.success("Login Successful");       
         localStorage.setItem("token", response.token);
         const path = `${response.step}`

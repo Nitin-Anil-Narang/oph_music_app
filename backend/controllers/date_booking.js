@@ -65,7 +65,11 @@ exports.updateBooking = async (req, res) => {
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await bookingModel.getAllBookings();
-    res.status(200).json(bookings);
+    res.status(200).json({
+      success:true,
+      message: "Data fetched successfully",
+      data: bookings
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -35,7 +35,9 @@ const signin = async (req, res) => {
         email: email,
         userData: {
           artist: {
-            id: ophId
+            id: ophId,
+            name: dbUser.full_name,
+            stage_name: dbUser.stage_name
           },
         }
       },
@@ -56,6 +58,9 @@ const signin = async (req, res) => {
     } else {
       navTo = dbUser.current_step;
     }
+
+    console.log(token);
+    
     
     return res.status(200).json({
       success: true,

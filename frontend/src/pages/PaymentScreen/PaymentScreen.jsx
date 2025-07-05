@@ -7,7 +7,8 @@ import { useParams } from "react-router-dom";
 
 const PaymentScreen = () => {
   const { logout, headers, ophid } = useArtist();
-
+  console.log(ophid);
+  
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -15,7 +16,8 @@ const PaymentScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const from = location.state.from;
-  console.log(ophid);
+  const [oph_id, setoph_id] = useState("")
+
   const {
     amount = 0,
     planIds = [],
@@ -23,6 +25,13 @@ const PaymentScreen = () => {
     returnPath = "/create-profile/personal-details",
     heading = "Payment Required",
   } = location.state || {};
+
+  useEffect(() => {
+    if(ophid)
+      {
+        setoph_id(ophid)
+      }  
+  },[ophid])
 
   const handlePaymentSuccess = async (e) => {
     e.preventDefault();
@@ -42,6 +51,8 @@ const PaymentScreen = () => {
 
       const response = await axiosApi.post("/auth/payment", formData);
 
+      console.log(response);
+    
       if (response.data.success && from == "Date booking") {
         {
           const CalenderRes = await axiosApi.post(
@@ -74,6 +85,25 @@ const PaymentScreen = () => {
 
 
           if (CalenderRes.data.success) {
+            navigate("/dashboard/success", {
+              state: {
+                heading: "Your date blocked successfully!",
+                btnText: "View Calendar",
+                redirectTo: "/dashboard/time-calendar",
+              },
+            });
+          }
+        }
+      }
+      else if (response.data.success && from == "new project") {
+        {
+          const RegSongRes = await axiosApi.post(
+            "/register-song",
+            { oph_id: ophid, old_booking_date: location.state.old_booking_date, new_booking_date: location.state.new_booking_date },
+            { headers: headers }
+          );
+     
+          if (RegSongRes.data.success) {
             navigate("/dashboard/success", {
               state: {
                 heading: "Your date blocked successfully!",
