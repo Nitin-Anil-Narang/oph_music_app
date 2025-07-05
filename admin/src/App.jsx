@@ -25,12 +25,12 @@ function App() {
           <Route path="/WebsiteConfig" element={<WebsiteConfig/>} />
           
          
-          <Route path="/Dashboard" element={<Dashboard />} />
+          {/* <Route path="/home" element={<Dashboard />} /> */}
           <Route path="/artistPortal" element={<ArtistPortal />} />
         
           <Route path="/home" element={<ProtectedRoute allowedRoles={Object.values(ROLES)}><Home /></ProtectedRoute>} />
           <Route
-            path="/role_change"
+            path="/role_change/:id"
             element={
               <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
                 <AssignRoles />
