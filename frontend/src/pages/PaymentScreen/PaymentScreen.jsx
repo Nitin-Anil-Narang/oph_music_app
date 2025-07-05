@@ -7,7 +7,8 @@ import { useParams } from "react-router-dom";
 
 const PaymentScreen = () => {
   const { logout, headers, ophid } = useArtist();
-
+  console.log(ophid);
+  
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -15,7 +16,8 @@ const PaymentScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const from = location.state.from;
-  console.log(ophid);
+  const [oph_id, setoph_id] = useState("")
+
   const {
     amount = 0,
     planIds = [],
@@ -23,6 +25,13 @@ const PaymentScreen = () => {
     returnPath = "/create-profile/personal-details",
     heading = "Payment Required",
   } = location.state || {};
+
+  useEffect(() => {
+    if(ophid)
+      {
+        setoph_id(ophid)
+      }  
+  },[ophid])
 
   const handlePaymentSuccess = async (e) => {
     e.preventDefault();

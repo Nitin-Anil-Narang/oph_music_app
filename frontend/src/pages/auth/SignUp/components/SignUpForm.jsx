@@ -188,6 +188,7 @@ const SignUpForm = () => {
 
 
       if (response.success) {
+        
         localStorage.setItem("token", response.token);
         navigate('/auth/payment', {
           state: {
@@ -196,6 +197,8 @@ const SignUpForm = () => {
         })
       }
     } catch (e) {
+      console.log(e);
+      
       toast.error(e.response.data.message);
     }
   };

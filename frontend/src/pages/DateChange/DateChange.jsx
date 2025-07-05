@@ -38,12 +38,18 @@ export default function DateChangeForm() {
           );
           setBlockedDates(dates);
         }
+
+        if(blockedDates)
+        {
+          console.log(blockedDates);
+          
+        }
       } catch (error) {
         console.error("Error fetching blocked dates:", error);
       }
     };
 
-    fetchBlockedDates();
+    fetchBlockedDates();    
   }, []);
 
   const isBlockedDate = (date) => {
@@ -53,6 +59,8 @@ export default function DateChangeForm() {
     if (isNaN(parsedDate.getTime())) return false;
 
     const formattedDate = parsedDate.toISOString().split("T")[0];
+    console.log(blockedDates);
+    
     // Exclude the current date being changed from blocked dates check
     return blockedDates.some(
       (blockedDate) =>

@@ -56,6 +56,9 @@ const signin = async (req, res) => {
     } else {
       navTo = dbUser.current_step;
     }
+
+    console.log(token);
+    
     
     return res.status(200).json({
       success: true,
