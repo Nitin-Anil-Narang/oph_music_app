@@ -6,7 +6,6 @@ const insertSong = async (data) => {
     OPH_ID,
     project_type,
     Song_name,
-    Video_type,
     release_date,
     payment,
     Lyrics_services

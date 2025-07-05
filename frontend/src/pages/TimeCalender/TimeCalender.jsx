@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useArtist } from "../auth/API/ArtistContext";
 
-
 export default function TimeCalendar() {
   const { headers } = useArtist();
   const [currentMonthIndex, setCurrentMonthIndex] = useState(
@@ -32,9 +31,13 @@ export default function TimeCalendar() {
           }
         );
 
-        if (response.status === 200) {
+        console.log(response);
+
+        if (response.data.status=200) {
           const dateMap = {};
-          response.data.forEach((item) => {
+          console.log(response.data.data);
+          
+          response.data.data.forEach((item) => {
             const d = new Date(item.current_booking_date);
             const localDateStr = `${d.getFullYear()}-${String(
               d.getMonth() + 1
@@ -280,10 +283,10 @@ export default function TimeCalendar() {
       // Date is blocked
       const currentArtistId = JSON.parse(localStorage.getItem("userData")); // Assuming you store current artist ID
       // if (dateInfo.artist.id === currentArtistId.artist.id) {
-      if(1 === 1){
+      if (1 === 1) {
         // It's the current artist's date - navigate to date change
         // const artistId = currentArtistId.artist.id;
-        
+
         navigate("/dashboard/date-change", {
           state: {
             date: dateStr,

@@ -1,31 +1,49 @@
-import { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Navigate } from "react-router-dom";
-import AdminSignInForm from "./pages/AdminSignIn";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ROLES } from "./utils/roles";
 
-//Import for pages
-import Home from "./pages/Home";
+// pages
+import AdminSignInForm from "./pages/AdminSignIn";
 import AdminSignUpForm from "./pages/AdminSignUp";
+import AssignRoles from "./pages/AssignRole";
+import Home from "./pages/Home";
+
 import Dashboard from "./view/dashboard/home";
 import ArtistPortal from "./view/dashboard/artistPortal";
+
 import WebsiteConfig from "./view/dashboard/websiteConfig";
+import Contact from "./view/dashboard/websiteConfig/contact";
+import Resource from "./view/dashboard/websiteConfig/resource";
+import HomePage from "./view/dashboard/websiteConfig/homePage";
+import Collab from "./view/dashboard/websiteConfig/collab";
+import Events from "./view/dashboard/websiteConfig/Events";
+import LeaderBoard from "./view/dashboard/websiteConfig/leaderBoard";
+
 import ArtistNew from "./view/dashboard/artistPortal/artistNew";
 import ArtistAll from "./view/dashboard/artistPortal/artistAll";
 import ContentNew from "./view/dashboard/artistPortal/contentNew";
 import ContentManage from "./view/dashboard/artistPortal/contentManage";
 import NewSignupDetails from "./view/dashboard/New_signUp";
+import tvpublishing from "./view/dashboard/artistPortal/tvPublishing";
+import artistKPI from "./view/dashboard/artistPortal/artistKPI";
+import Alldata from "./view/dashboard/artistPortal/allData";
+import ContentAnalysis from "./view/dashboard/artistPortal/contentAnalysis";
+import ContentRelease from "./view/dashboard/artistPortal/contentRelease";
+import Notifications from "./view/dashboard/artistPortal/notifications";
+import PaymentAll from "./view/dashboard/artistPortal/paymentAll";
+import PaymentWidthdrawal from "./view/dashboard/artistPortal/paymentsWithdrawals";
+import Settings from "./view/dashboard/artistPortal/Settings";
+import Tickets from "./view/dashboard/artistPortal/Tickets";
+import timeCalender from "./view/dashboard/artistPortal/timeCalender";
 
-import AssignRoles from "./pages/AssignRole";
 
 function App() {
   return (
-
     <AuthProvider>
       <Router>
         <Routes>
+          {/* ---------- PUBLIC ---------- */}
           <Route path="/" element={<AdminSignInForm />} />
           <Route path="/signup" element={<AdminSignUpForm />} />
           <Route path="/WebsiteConfig" element={<WebsiteConfig />} />
@@ -40,6 +58,324 @@ function App() {
           <Route path="/newsignup/:ophid" element={<NewSignupDetails />} />
 
           <Route path="/home" element={<ProtectedRoute allowedRoles={Object.values(ROLES)}><Home /></ProtectedRoute>} />
+
+          {/* ---------- PROTECTED (SUPER_ADMIN) ---------- */}
+          <Route
+            path="/WebsiteConfig"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <WebsiteConfig />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Contact"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                  ROLES.SALES_MEMBER,
+                  ROLES.SALES_HEAD,
+                ]}
+              >
+                <Contact />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Resource"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                  ROLES.OPERATION_HEAD,
+                  ROLES.OPERATION_MEMBER,
+                ]}
+              >
+                <Resource />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/HomePage"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                ]}
+              >
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Collab"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                ]}
+              >
+                <Collab />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Events"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.SALES_HEAD,
+                  ROLES.SALES_MEMBER,
+                  ROLES.PROJECT_HEAD,
+                  ROLES.PROJECT_MEMBER,
+                  ROLES.ACCOUNTS_HEAD,
+                  ROLES.ACCOUNTS_MEMBER,
+                ]}
+              >
+                <Events />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/LeaderBoard"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                  ROLES.SUPER_ADMIN,
+                ]}
+              >
+                <LeaderBoard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Artist‑portal items */}
+          <Route
+            path="/ArtistNew"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                  ROLES.SALES_HEAD,
+                  ROLES.SALES_MEMBER,
+                ]}
+              >
+                <ArtistNew />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ArtistAll"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                  ROLES.SALES_HEAD,
+                  ROLES.SALES_MEMBER,
+                ]}
+              >
+                <ArtistAll />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ContentNew"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                  ROLES.CREATIVE_HEAD,
+                  ROLES.CREATIVE_MEMBER,
+                  ROLES.ACCOUNTS_HEAD,
+                  ROLES.ACCOUNTS_MEMBER,
+                ]}
+              >
+                <ContentNew />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ContentManage"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                  ROLES.CREATIVE_HEAD,
+                  ROLES.CREATIVE_MEMBER,
+                  ROLES.ACCOUNTS_HEAD,
+                  ROLES.ACCOUNTS_MEMBER,
+                ]}
+              >
+                <ContentManage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/artistPortal"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                  ROLES.SALES_HEAD,
+                  ROLES.SALES_MEMBER,
+                ]}
+              >
+                <ArtistPortal />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/tvpublishing"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <tvPublishing />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/ArtistKPI"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.OPERATION_HEAD,
+                  ROLES.OPERATION_MEMBER,
+                ]}
+              >
+                <artistKPI />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/timeCalender"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                ]}
+              >
+                <timeCalender />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/AllData"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <Alldata />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ContentAnalysis"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <ContentAnalysis />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ContentRelease"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <ContentRelease />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Notifications"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <Notifications />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/PaymentAll"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <PaymentAll />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/PaymentWithdrawal"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <PaymentWidthdrawal />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Settings"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Tickets"
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  ROLES.SUPER_ADMIN,
+                  ROLES.ADMINISTRATIVE_HEAD,
+                  ROLES.ADMINISTRATIVE_MEMBER,
+                  ROLES.ACCOUNTS_HEAD,
+                  ROLES.ACCOUNTS_MEMBER,
+                ]}
+              >
+                <Tickets />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Dashboards / home views */}
+          {/* <Route
+            path="/Dashboard"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          /> */}
+          {/* <Route
+            path="/home"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          /> */}
+
+          {/* Role‑management page (already SUPER_ADMIN‑only) */}
           <Route
             path="/role_change/:id"
             element={
@@ -51,7 +387,6 @@ function App() {
         </Routes>
       </Router>
     </AuthProvider>
-
   );
 }
 
