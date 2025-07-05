@@ -14,6 +14,7 @@ export const ArtistProvider = ({ children }) => {
   const [ophid, setOphid] = useState(null);
   const [user, setUser] = useState(null);
 
+
   // Decode token and extract artist ID
   useEffect(() => {
     if (token) {
@@ -142,7 +143,7 @@ export const ArtistProvider = ({ children }) => {
   };
 
   return (
-    <ArtistContext.Provider value={{ logout, login, headers, ophid, user }}>
+    <ArtistContext.Provider value={{ logout, login, headers, ophid, user}}>
       {children}
     </ArtistContext.Provider>
   );

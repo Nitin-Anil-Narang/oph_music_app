@@ -35,7 +35,9 @@ const signin = async (req, res) => {
         email: email,
         userData: {
           artist: {
-            id: ophId
+            id: ophId,
+            name: dbUser.full_name,
+            stage_name: dbUser.stage_name
           },
         }
       },

@@ -29,20 +29,15 @@ export default function DateChangeForm() {
             headers: headers,
           }
         );
-
-
+ 
         if (response.data.success) {
+                
           // Extract just the dates from the response
           const dates = response.data.data.map(
-            (item) => item.date.split("T")[0]
+            (item) => item.current_booking_date?.split("T")[0]
           );
+         
           setBlockedDates(dates);
-        }
-
-        if(blockedDates)
-        {
-          console.log(blockedDates);
-          
         }
       } catch (error) {
         console.error("Error fetching blocked dates:", error);
@@ -53,15 +48,18 @@ export default function DateChangeForm() {
   }, []);
 
   const isBlockedDate = (date) => {
-    if (!date) return false;
+    if (!date && blockedDates.length === 0) return false;
 
     const parsedDate = new Date(date);
     if (isNaN(parsedDate.getTime())) return false;
 
-    const formattedDate = parsedDate.toISOString().split("T")[0];
-    console.log(blockedDates);
+    console.log(parsedDate);
     
+
+    const formattedDate = parsedDate.toISOString().split("T")[0];    
     // Exclude the current date being changed from blocked dates check
+ 
+  
     return blockedDates.some(
       (blockedDate) =>
         blockedDate === formattedDate && formattedDate !== formData.oldDate
@@ -70,7 +68,9 @@ export default function DateChangeForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+      
     if (isBlockedDate(formData.newDate)) {
+      toast.error("Date already booked");
       return;
     }
     if (formData.newDate === formData.oldDate) {
@@ -92,7 +92,7 @@ export default function DateChangeForm() {
       //     headers: headers,
       //   }
       // );
-
+ 
       navigate("/auth/payment", {
         state: {
           old_booking_date: formData.oldDate,
@@ -181,7 +181,7 @@ export default function DateChangeForm() {
             {isBlockedDate(formData.newDate) && (
               <span className="text-red-500 text-sm">
                 Selected date is blocked. Please choose another date.
-                <Link to="/time-calendar">
+                <Link to="/dashboard/time-calendar">
                   <span className="underline ms-2">
                     Click to See Available Dates
                   </span>

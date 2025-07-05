@@ -87,21 +87,21 @@ export default function UploadSongs() {
         {/* Action Buttons */}
         <div className="flex flex-col gap-4 pt-4">
           <button
-            onClick={() => handleProjectClick("new")}
+            onClick={() => handleProjectClick("new project")}
             className="w-full px-6 py-3 rounded-full border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 transition-colors"
           >
             New Project
           </button>
 
           <button
-            onClick={() => handleProjectClick("hybrid")}
+            onClick={() => handleProjectClick("hybrid project")}
             className="w-full px-6 py-3 rounded-full border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 transition-colors"
           >
             Hybrid Project
           </button>
 
           <button
-            onClick={() => handleProjectClick("advance")}
+            onClick={() => handleProjectClick("pay in advance")}
             className="w-full px-6 py-3 rounded-full border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 transition-colors"
           >
             Paid in Advance

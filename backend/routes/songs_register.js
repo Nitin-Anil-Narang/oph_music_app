@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const { insertVideoDetails } = require("../controllers/songs_register");
+const { insertSongRegDetails } = require("../controllers/songs_register");
 
 // POST route to add new song
-router.post("/register-song", insertVideoDetails);
+router.post("/register-song", insertSongRegDetails);
 
 module.exports = router;

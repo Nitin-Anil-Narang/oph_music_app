@@ -51,6 +51,8 @@ const PaymentScreen = () => {
 
       const response = await axiosApi.post("/auth/payment", formData);
 
+      console.log(response);
+    
       if (response.data.success && from == "Date booking") {
         {
           const CalenderRes = await axiosApi.post(
@@ -83,6 +85,25 @@ const PaymentScreen = () => {
 
 
           if (CalenderRes.data.success) {
+            navigate("/dashboard/success", {
+              state: {
+                heading: "Your date blocked successfully!",
+                btnText: "View Calendar",
+                redirectTo: "/dashboard/time-calendar",
+              },
+            });
+          }
+        }
+      }
+      else if (response.data.success && from == "new project") {
+        {
+          const RegSongRes = await axiosApi.post(
+            "/register-song",
+            { oph_id: ophid, old_booking_date: location.state.old_booking_date, new_booking_date: location.state.new_booking_date },
+            { headers: headers }
+          );
+     
+          if (RegSongRes.data.success) {
             navigate("/dashboard/success", {
               state: {
                 heading: "Your date blocked successfully!",
