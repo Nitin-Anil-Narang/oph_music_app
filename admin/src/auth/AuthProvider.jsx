@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState ,useEffect} from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
@@ -7,40 +7,56 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setUser(decoded);
-      } catch (error) {
-        console.error("Invalid token", error);
+  const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  const storedToken = localStorage.getItem("token");
+  if (storedToken) {
+    try {
+      const decoded = jwtDecode(storedToken);
+      const currentTime = Date.now() / 1000;
+      if (decoded.exp && decoded.exp < currentTime) {
+        console.log("Token expired on load");
+        localStorage.removeItem("token");
+        setToken(null);
         setUser(null);
+      } else {
+        setToken(storedToken);
+        setUser(decoded);
       }
+    } catch (error) {
+      console.error("Invalid token", error);
+      localStorage.removeItem("token");
+      setToken(null);
+      setUser(null);
     }
-  }, []);
+  }
+  setLoading(false); // ✅ Mark loading as complete
+}, []);
+
 
   const login = (jwtToken) => {
-    console.log(jwtToken);
+    localStorage.setItem("token", jwtToken);
     const decoded = jwtDecode(jwtToken);
-    console.log(decoded);
-
     setToken(jwtToken);
     setUser(decoded);
+
+    if (decoded.exp) {
+      const expirationTime = decoded.exp * 1000 - Date.now();
+      setTimeout(() => {
+        logout();
+      }, expirationTime);
+    }
   };
 
   const logout = () => {
-    console.log("called");
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
   };
 
-  //in frontend send userData -- ophid, name , email, status
-
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
-
+    <AuthContext.Provider value={{ user, token, login, logout,loading }}>
       {children}
     </AuthContext.Provider>
   );
