@@ -13,7 +13,9 @@ const MembershipForm = ({ id }) => {
   const [searchParams] = useSearchParams();
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
+
   const { artist, headers, ophid } = useArtist();
+
   const navigate = useNavigate();
 
   useEffect(() => {
