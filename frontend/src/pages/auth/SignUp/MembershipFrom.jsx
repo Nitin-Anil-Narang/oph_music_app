@@ -13,11 +13,9 @@ import ProfileFormHeader from "./components/ProfileFormHeader";
 
 const MembershipForm = ({ id }) => {
   const [searchParams] = useSearchParams();
-  const ophid = searchParams.get("ophid");
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
   const { artist, headers } = useArtist();
-  const [searchParams] = useSearchParams();
   const ophid = searchParams.get("ophid");
   const navigate = useNavigate();
 
