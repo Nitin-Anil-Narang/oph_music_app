@@ -16,7 +16,7 @@ const artistLinks = [
     children: [
       {
         label: "All",
-        route: "/artist/all",
+        route: "/Artist/All",
       },
       {
         label: "New",

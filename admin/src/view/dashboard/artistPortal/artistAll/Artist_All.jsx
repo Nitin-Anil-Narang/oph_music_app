@@ -1,6 +1,7 @@
 import React from 'react'
 
-const ContentAnalysis = () => {
+
+const Artist_All = () => {
   return (
     <div>
       
@@ -8,4 +9,4 @@ const ContentAnalysis = () => {
   )
 }
 
-export default ContentAnalysis
+export default Artist_All

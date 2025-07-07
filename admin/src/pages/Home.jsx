@@ -9,39 +9,46 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("http://localhost:5000/auth/personal");
+      const res = await axios.get("http://localhost:5000/newsignup");
 
       
-      setTableData(res.data);
+      setTableData(res.data.userDetails);
+      console.log(res.data.userDetails);
     };
 
     fetchData();
   }, []);
 
-  const data = [
-  { ophid: 1, name: "Alice", email: "alice@example.com" },
-  { ophid: 2, name: "Bob", email: "bob@example.com" },
-  { ophid: 3, name: "Charlie", email: "charlie@admin.com" },
-];
+  
+  
+  
 
-const statusData = [
-  { ophid: 1, status: "approved" },
-  { OPH_ID: 2, status: "approved" },
-  { ophid: 3, status: "approved" },
-];
+//   const data = [
+//   { ophid: 1, name: "Alice", email: "alice@example.com" },
+//   { ophid: 2, name: "Bob", email: "bob@example.com" },
+//   { ophid: 3, name: "Charlie", email: "charlie@admin.com" },
+// ];
+
+// const statusData = [
+//   { ophid: 1, status: "approved" },
+//   { OPH_ID: 2, status: "approved" },
+//   { ophid: 3, status: "approved" },
+// ];
 
 
   return (
-     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Users Table</h1>
+    //  <div className="p-6 flex-1">
+    //   testing home
+    //   <h1 className="text-2xl font-bold mb-4">Users Table</h1>
       <SearchableDynamicTable
+        title="New SignUp"
         data={tableData}
         showStatusIndicator={false}
-        excludeColumns = {""}
-        pageSize={10}
-        detailsUrl="/user-details"
+        excludeColumns = {"createdAt,updatedAt,user_pass,step_status,reject_reason,personal_photo,location,current_step,rejected_step"}
+        pageSize={8}
+        detailsUrl="/newsignup"
       />
-    </div>
+    // </div>
   );
 };
 

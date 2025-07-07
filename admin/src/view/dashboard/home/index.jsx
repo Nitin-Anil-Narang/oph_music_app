@@ -11,23 +11,22 @@ import Sidebar from "../../../components/Sidebar";
 
 // Main Dashboard component
 const Dashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const navigate = useNavigate();
-  const [page, setPage] = useState("home"); // 'home' | 'artist'
+
 
   // Sidebar link sets
   const homeLinks = [
     { label: "Artist Portal", route: "/artistPortal" },
     { label: "New SignUp", route: "/New_SignUp" },
     { label: "Website Config", route: "/WebsiteConfig" },
+    { label: "Assign Role", route: "/role_change" },
   ];
 
 
-  const artistLinks = []; // placeholder for future use
 
 
-
-  const links = page === "home" ? homeLinks : artistLinks;
+  
 
   return (
     <div className="h-screen flex overflow-hidden relative bg-gray-50">
@@ -39,7 +38,7 @@ const Dashboard = () => {
 
       {/* Main content */}
       <main className="flex-1 p-10 flex items-center justify-center">
-        {page === "home" ? (
+        { (
           <div className="flex flex-row gap-6">
             {/* Artist Portal button navigates to new view */}
             <button
@@ -57,11 +56,8 @@ const Dashboard = () => {
               Website Config
             </button>
           </div>
-        ) : (
-          <div className="text-gray-400 italic">
-            Select an item from the sidebar…
-          </div>
-        )}
+        ) 
+        }
       </main>
     </div>
   );

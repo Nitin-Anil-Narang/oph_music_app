@@ -1,47 +1,70 @@
-// Editable ArtistAll page with Save button per section and file previews
-import React, { useState, useRef } from "react";
-
-const initialPersonal = {
-  full_name: "Rahul Sharma",
-  stage_name: "DJ Rhythm",
-  email: "rahul@example.com",
-  contact_number: "+91 9876543210",
-  artist_type: "DJ",
-  location: "Mumbai, India",
-};
-
-const initialProfessional = {
-  profession: "Music Producer",
-  bio: "Rahul has been producing music for over 10 years...",
-  video: "https://www.w3schools.com/html/mov_bbb.mp4",
-  photo: "https://via.placeholder.com/150",
-  spotify: "https://spotify.com/artist123",
-  instagram: "https://instagram.com/rahul.music",
-  facebook: "https://facebook.com/rahul.music",
-  apple_music: "https://music.apple.com/artist/rahul",
-  experience_yearly: 5,
-  experience_monthly: 8,
-  songs_planning_count: 12,
-  songs_planning_type: "Albums",
-};
-
-const initialDocument = {
-  aadhar_front: "https://avatars.githubusercontent.com/u/49544693?v=4",
-  aadhar_back: "https://avatars.githubusercontent.com/u/49544693?v=4",
-  pan_front: "https://avatars.githubusercontent.com/u/49544693?v=4",
-  signature: "https://avatars.githubusercontent.com/u/49544693?v=4",
-  bank_name: "State Bank of India",
-  account_holder: "Rahul Sharma",
-  account_number: "123456789012",
-  ifsc_code: "SBIN0001234",
-};
+import React, { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axiosApi from "../../../../conf/axios";
 
 const ArtistAll = () => {
-  const [personal, setPersonal] = useState(initialPersonal);
-  const [professional, setProfessional] = useState(initialProfessional);
-  const [document, setDocument] = useState(initialDocument);
-
+  const { ophid } = useParams();
+  const [personal, setPersonal] = useState({});
+  const [professional, setProfessional] = useState({});
+  const [document, setDocument] = useState({});
   const fileInputRefs = useRef({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axiosApi.get(`/under-review/${ophid}`); 
+        const { userDetails, professionalDetails, documentationDetails } = res.data;
+
+        // Personal details
+        const personalData = {
+          full_name: userDetails.full_name || "",
+          stage_name: userDetails.stage_name || "",
+          email: userDetails.email || "",
+          contact_number: userDetails.contact_num || "",
+          artist_type: userDetails.artist_type || "",
+          location: userDetails.location || "",
+          personal_photo: userDetails.personal_photo || "",
+        };
+
+        // Professional details
+        const professionalData = {
+          profession: professionalDetails.Profession || "",
+          bio: professionalDetails.Bio || "",
+          video: professionalDetails.VideoURL || "",
+          // Using first image from array as main photo preview
+          photo: JSON.parse(professionalDetails.PhotoURLs || "[]")[0] || "",
+          spotify: professionalDetails.SpotifyLink || "",
+          instagram: professionalDetails.InstagramLink || "",
+          facebook: professionalDetails.FacebookLink || "",
+          apple_music: professionalDetails.AppleMusicLink || "",
+          experience_monthly: professionalDetails.ExperienceMonthly || 0,
+          experience_yearly: 0, // Derived, shown read-only
+          songs_planning_count: professionalDetails.SongsPlanningCount || "",
+          songs_planning_type: professionalDetails.SongsPlanningType || "",
+        };
+
+        // Document details
+        const documentData = {
+          aadhar_front: documentationDetails.AadharFrontURL || "",
+          aadhar_back: documentationDetails.AadharBackURL || "",
+          pan_front: documentationDetails.PanFrontURL || "",
+          signature: documentationDetails.SignatureImageURL || "",
+          bank_name: documentationDetails.BankName || "",
+          account_holder: documentationDetails.AccountHolderName || "",
+          account_number: documentationDetails.AccountNumber || "",
+          ifsc_code: documentationDetails.IFSCCode || "",
+        };
+
+        setPersonal(personalData);
+        setProfessional(professionalData);
+        setDocument(documentData);
+      } catch (error) {
+        console.error("Error fetching artist data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChange = (sectionSetter) => (field, value) => {
     sectionSetter((prev) => ({ ...prev, [field]: value }));
@@ -55,7 +78,7 @@ const ArtistAll = () => {
     }
   };
 
-  const renderInput = (key, value, onChange) => {
+  const renderInput = (key, value, onChange, allData = {}) => {
     const lower = key.toLowerCase();
     const isPhoto =
       lower.includes("photo") ||
@@ -66,6 +89,16 @@ const ArtistAll = () => {
       lower.includes("pan");
     const isVideo = lower.includes("video");
 
+    if (key === "experience_yearly") {
+      const months = parseInt(allData.experience_monthly || 0);
+      const years = Math.floor(months / 12);
+      return (
+        <div className="w-full p-2 border rounded-md text-black bg-gray-100">
+          {years}
+        </div>
+      );
+    }
+
     if (isPhoto || isVideo) {
       return (
         <div>
@@ -73,20 +106,21 @@ const ArtistAll = () => {
             className="cursor-pointer"
             onClick={() => fileInputRefs.current[key]?.click()}
           >
-            {isPhoto && (
+            {isPhoto && value && (
               <img
                 src={value}
                 alt={key}
                 className="w-40 h-40 rounded object-cover border mb-2"
               />
             )}
-            {isVideo && (
+            {isVideo && value && (
               <video
                 className="w-full max-w-xs rounded border mb-2"
                 controls
                 src={value}
               />
             )}
+            {!value && <div className="text-gray-400">Click to upload</div>}
           </div>
           <input
             ref={(ref) => (fileInputRefs.current[key] = ref)}
@@ -154,7 +188,7 @@ const Section = ({ title, data, onChange, onSave, renderInput }) => (
           <label className="block text-gray-700 text-sm font-semibold mb-1 capitalize">
             {key.replace(/_/g, " ")}
           </label>
-          {renderInput(key, value, onChange)}
+          {renderInput(key, value, onChange, data)}
         </div>
       ))}
     </div>

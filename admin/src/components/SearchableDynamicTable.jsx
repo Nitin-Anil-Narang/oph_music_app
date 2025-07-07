@@ -10,6 +10,7 @@ const SearchableDynamicTable = ({
   showStatusIndicator = false,
   statusField = "",
   statusData = [],
+  title = "New SignUp"
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState(data);
@@ -34,19 +35,25 @@ const SearchableDynamicTable = ({
   }, [searchQuery, data]);
 
   return (
-    <div>
-      <div className="flex justify-end mb-4">
+    <div className="min-h-screen flex flex-col">
+      {title && (
+        <div className="px-8 py-6 bg-gradient-to-r from-[#0d3c44] to-[#145058] text-white rounded-none shadow-lg mb-4">
+          <h2 className="text-3xl font-extrabold tracking-wide leading-tight drop-shadow-sm">{title}</h2>
+        </div>
+      )}
+
+      <div className="flex justify-end mb-6 px-8">
         <div className="relative w-full max-w-xs">
           <input
             type="text"
             placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 pr-10 bg-[#1f1f1f] border border-gray-600 rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            className="w-full px-5 py-2.5 pr-10 bg-[#0d3c44] border border-transparent rounded-full text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#145058] transition shadow-sm"
           />
           <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
             <svg
-              className="w-5 h-5 text-gray-400"
+              className="w-5 h-5 text-gray-300"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
