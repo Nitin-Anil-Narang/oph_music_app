@@ -15,8 +15,7 @@ exports.createBooking = async (req, res) => {
 
     const response = await bookingModel.insertBooking(oph_id, booking_date)
 
-    if(response)
-    {
+    if (response) {
       return res.status(201).json({
         success: true,
         message: "Release date has been booked successfully"
@@ -28,25 +27,23 @@ exports.createBooking = async (req, res) => {
   }
 };
 
+
 exports.updateBooking = async (req, res) => {
 
-  try
-  {
-    const {oph_id, old_booking_date, new_booking_date} = req.body;
+  try {
+    const { oph_id, old_booking_date, new_booking_date } = req.body;
 
-    if(!oph_id) {
+    if (!oph_id) {
 
-      return res.status(400).json({error: 'oph_id is required'})
+      return res.status(400).json({ error: 'oph_id is required' })
     }
 
-    const getExistingBookingDate = await bookingModel.findBookingByOphIdAndDate(oph_id,old_booking_date)
+    const getExistingBookingDate = await bookingModel.findBookingByOphIdAndDate(oph_id, old_booking_date)
 
-    if(getExistingBookingDate)
-    {
-      const updatedExistingBookingDate = await bookingModel.updateBooking(oph_id,old_booking_date,new_booking_date)
+    if (getExistingBookingDate) {
+      const updatedExistingBookingDate = await bookingModel.updateBooking(oph_id, old_booking_date, new_booking_date)
 
-      if(updatedExistingBookingDate)
-      {
+      if (updatedExistingBookingDate) {
         return res.status(201).json({
           success: true,
           message: "Date Updated successfully"
@@ -55,8 +52,7 @@ exports.updateBooking = async (req, res) => {
     }
 
   }
-  catch(error)
-  {
+  catch (error) {
     res.status(500).json({ error: error.message });
   }
 
@@ -66,10 +62,31 @@ exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await bookingModel.getAllBookings();
     res.status(200).json({
-      success:true,
+      success: true,
       message: "Data fetched successfully",
       data: bookings
     });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getAllBookingsByID = async (req, res) => {
+  try {
+
+    const { ophid } = req.query;
+    console.log(ophid);
+
+    const bookings = await bookingModel.getAllBookingsByID(ophid);
+
+    if (bookings) {
+
+      res.status(200).json({
+        success: true,
+        message: "Data fetched successfully",
+        data: bookings
+      });
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -6,6 +6,8 @@ import { useArtist } from "../../auth/API/ArtistContext";
 import React, { useEffect, useState } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
 import { toast } from "react-hot-toast";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const REGISTER_SONG_STATE_KEY = "registerSongState";
 const SONG_DATA_KEY = "songData"; // New key for storing song data in sessionStorage
@@ -42,14 +44,14 @@ export default function RegisterSongForm() {
   });
 
   useEffect(() => {
-      if (ophid) {
-        setFormData(prev => ({
-          ...prev,
-          oph_id: ophid
-        }));
-      }
-    }, [ophid]);
-  
+    if (ophid) {
+      setFormData(prev => ({
+        ...prev,
+        oph_id: ophid
+      }));
+    }
+  }, [ophid]);
+
 
   const handleTotalPayment = () => {
     if (songReg && lyricalVid) {
@@ -90,7 +92,40 @@ export default function RegisterSongForm() {
     };
 
     fetchBlockedDates();
+
   }, []);
+
+  useEffect(() => {
+    const fetchBlockedDatesByOPHID = async () => {
+
+      try {
+        if (!ophid) return
+
+        const response = await axiosApi.get("/bookings-by-id", {
+          headers: headers,
+          params: { ophid }
+        })
+
+        console.log(response.data.data);
+
+        if (response.data.success) {
+          setIsLoading(false);
+          // Extract just the dates from the response
+          const individualDates = response.data.data.map(
+            (item) => item.current_booking_date?.split("T")[0]
+          );
+
+          setArtistBlockedDates(individualDates);
+        }
+
+      }
+      catch (error) {
+        console.error("Error fetching blocked dates by ophid", error)
+      }
+
+    }
+    fetchBlockedDatesByOPHID()
+  }, [ophid])
 
   // Modified useEffect to handle initial payment plan selection
   // useEffect(() => {
@@ -164,6 +199,24 @@ export default function RegisterSongForm() {
         blockedDate === formattedDate && formattedDate !== formData.oldDate
     );
   };
+
+  const paidInAdvance = async (updatedFormData) => {
+
+    try {
+      const response = await axiosApi.post("/register-hybrid-song",
+        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, available_on_music_platforms: updatedFormData.available_on_music_platforms },
+        { headers: headers })
+      console.log(response);
+      if (response.data.success) {
+        navigate(`/dashboard/upload-song/audio-metadata/${ophid}`);
+      }
+    }
+    catch (error) {
+      console.error("Error booking date", error)
+    }
+
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -176,7 +229,7 @@ export default function RegisterSongForm() {
     const updatedFormData = {
       ...formData,
       song_reg: songReg,
-      lyricalVid:lyricalVid,
+      lyricalVid: lyricalVid,
       cp_line: `${artistName} - ${stageName}`,
       p_line: `${artistName} - ${stageName}`,
       available_on_music_platforms:
@@ -187,13 +240,17 @@ export default function RegisterSongForm() {
     // Remove `c_line` and `isAvailableOnMusicPlatform`
     // const { c_line, ...payload } = updatedFormData;
     // delete updatedFormData.isAvailableOnMusicPlatform;    
-    console.log(updatedFormData);
-    
-    return
-    navigate("/auth/payment",{
-      state:{
-        form: formData,
-        from: formData.project_type
+
+
+    if (projectType === "pay in advance") {
+      paidInAdvance(updatedFormData)
+    }
+
+
+    navigate("/auth/payment", {
+      state: {
+        form: updatedFormData,
+        from: updatedFormData.project_type
       }
     })
     // if (updatedFormData.available_on_music_platforms) {
@@ -245,89 +302,89 @@ export default function RegisterSongForm() {
     // }
   };
 
-  const handleContentCreation = async (paymentData) => {
-    // Add a flag in sessionStorage to prevent double submission
-    const isSubmitting = sessionStorage.getItem("isSubmitting");
-    if (isSubmitting) return;
+  // const handleContentCreation = async (paymentData) => {
+  //   // Add a flag in sessionStorage to prevent double submission
+  //   const isSubmitting = sessionStorage.getItem("isSubmitting");
+  //   if (isSubmitting) return;
 
-    try {
-      sessionStorage.setItem("isSubmitting", "true");
-      const token = getToken();
+  //   try {
+  //     sessionStorage.setItem("isSubmitting", "true");
+  //     const token = getToken();
 
-      // Get form data either from saved state or current state
-      let contentFormData = formData;
+  //     // Get form data either from saved state or current state
+  //     let contentFormData = formData;
 
-      // If we're coming back from the payment screen, use saved state
-      if (paymentData.newPaymentIds?.length > 0) {
-        const savedState = sessionStorage.getItem(REGISTER_SONG_STATE_KEY);
-        if (savedState) {
-          const parsedState = JSON.parse(savedState);
-          contentFormData = parsedState.formData;
-        }
-      }
+  //     // If we're coming back from the payment screen, use saved state
+  //     if (paymentData.newPaymentIds?.length > 0) {
+  //       const savedState = sessionStorage.getItem(REGISTER_SONG_STATE_KEY);
+  //       if (savedState) {
+  //         const parsedState = JSON.parse(savedState);
+  //         contentFormData = parsedState.formData;
+  //       }
+  //     }
 
-      // Remove agreement from form data
-      const { agreement, ...contentDataWithoutAgreement } = contentFormData;
+  //     // Remove agreement from form data
+  //     const { agreement, ...contentDataWithoutAgreement } = contentFormData;
 
-      // Set payment_ids based on project type
-      const paymentIds =
-        projectType === "advance"
-          ? ["0"] // For "Paid in Advance", include null as a placeholder
-          : [...(paymentData.newPaymentIds || [])];
+  //     // Set payment_ids based on project type
+  //     const paymentIds =
+  //       projectType === "pay in advance"
+  //         ? ["0"] // For "Paid in Advance", include null as a placeholder
+  //         : [...(paymentData.newPaymentIds || [])];
 
-      const contentData = {
-        ...contentDataWithoutAgreement,
-        payment_ids: paymentIds,
-        project_type: projectType,
-      };
+  //     const contentData = {
+  //       ...contentDataWithoutAgreement,
+  //       payment_ids: paymentIds,
+  //       project_type: projectType,
+  //     };
 
-      console.log("Submitting content data:", contentData);
+  //     console.log("Submitting content data:", contentData);
 
-      const response = await axiosApi.post("/content/initial", contentData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  //     const response = await axiosApi.post("/content/initial", contentData, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
 
-      if (response.data.success) {
-        // Store song data in sessionStorage instead of Redux
-        const songData = {
-          contentID: response.data.data.id,
-          name: response.data.data.name,
-        };
-        sessionStorage.setItem(SONG_DATA_KEY, JSON.stringify(songData));
+  //     if (response.data.success) {
+  //       // Store song data in sessionStorage instead of Redux
+  //       const songData = {
+  //         contentID: response.data.data.id,
+  //         name: response.data.data.name,
+  //       };
+  //       sessionStorage.setItem(SONG_DATA_KEY, JSON.stringify(songData));
 
-        // Clean up register song state
-        sessionStorage.removeItem(REGISTER_SONG_STATE_KEY);
-        sessionStorage.removeItem("isSubmitting");
-        console.log(
-          response.data.data.available_on_music_platforms,
-          "response.data"
-        );
-        if (response.data.data.available_on_music_platforms) {
-          navigate(
-            `/dashboard/upload-song/video-metadata/${response.data.data.id}`,
-            { state: { projectType } }
-          );
-        } else {
-          navigate(
-            `/dashboard/upload-song/audio-metadata/${response.data.data.id}`,
-            { state: { projectType } }
-          );
-        }
-      }
-    } catch (error) {
-      console.error("Error creating content:", error);
-      alert("Failed to create content. Please try again.");
-    } finally {
-      // Clean up the submission flag in case of error
-      sessionStorage.removeItem("isSubmitting");
-    }
-  };
+  //       // Clean up register song state
+  //       sessionStorage.removeItem(REGISTER_SONG_STATE_KEY);
+  //       sessionStorage.removeItem("isSubmitting");
+  //       console.log(
+  //         response.data.data.available_on_music_platforms,
+  //         "response.data"
+  //       );
+  //       if (response.data.data.available_on_music_platforms) {
+  //         navigate(
+  //           `/dashboard/upload-song/video-metadata/${response.data.data.id}`,
+  //           { state: { projectType } }
+  //         );
+  //       } else {
+  //         navigate(
+  //           `/dashboard/upload-song/audio-metadata/${response.data.data.id}`,
+  //           { state: { projectType } }
+  //         );
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error creating content:", error);
+  //     alert("Failed to create content. Please try again.");
+  //   } finally {
+  //     // Clean up the submission flag in case of error
+  //     sessionStorage.removeItem("isSubmitting");
+  //   }
+  // };
 
   // Modify the release date input field based on project type
   const renderReleaseDateField = () => {
-    if (projectType === "advance") {
+    if (projectType === "pay in advance") {
       return (
         <div className="space-y-2">
           <label className="block">
@@ -352,6 +409,7 @@ export default function RegisterSongForm() {
     }
 
     return (
+      
       <div className="space-y-2">
         <label className="block">
           Release Date <span className="text-red-500">*</span>
@@ -441,7 +499,7 @@ export default function RegisterSongForm() {
             </div>
 
             {/* Toggle Button for Hybrid Projects */}
-            {projectType !== "new" && (
+            {projectType !== "new project" && (
               <div className="space-y-2">
                 <span className="text-gray-400">
                   *This song is Available on Music platform or the song is free

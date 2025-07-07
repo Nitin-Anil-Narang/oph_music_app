@@ -7,8 +7,6 @@ import { useParams } from "react-router-dom";
 
 const PaymentScreen = () => {
   const { logout, headers, ophid } = useArtist();
-  console.log(ophid);
-  
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -16,6 +14,7 @@ const PaymentScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const from = location.state.from;
+  console.log(from);
   const [oph_id, setoph_id] = useState("")
 
   const {
@@ -27,11 +26,10 @@ const PaymentScreen = () => {
   } = location.state || {};
 
   useEffect(() => {
-    if(ophid)
-      {
-        setoph_id(ophid)
-      }  
-  },[ophid])
+    if (ophid) {
+      setoph_id(ophid)
+    }
+  }, [ophid])
 
   const handlePaymentSuccess = async (e) => {
     e.preventDefault();
@@ -51,8 +49,7 @@ const PaymentScreen = () => {
 
       const response = await axiosApi.post("/auth/payment", formData);
 
-      console.log(response);
-    
+
       if (response.data.success && from == "Date booking") {
         {
           const CalenderRes = await axiosApi.post(
@@ -60,7 +57,7 @@ const PaymentScreen = () => {
             { oph_id: ophid, booking_date: location.state.date },
             { headers: headers }
           );
-          console.log(CalenderRes);
+       
 
 
           if (CalenderRes.data.success) {
@@ -81,8 +78,6 @@ const PaymentScreen = () => {
             { oph_id: ophid, old_booking_date: location.state.old_booking_date, new_booking_date: location.state.new_booking_date },
             { headers: headers }
           );
-          console.log(CalenderRes);
-
 
           if (CalenderRes.data.success) {
             navigate("/dashboard/success", {
@@ -95,22 +90,48 @@ const PaymentScreen = () => {
           }
         }
       }
-      else if (response.data.success && from == "new project") {
+      else if (response.data.success && from === "new project") {
         {
           const RegSongRes = await axiosApi.post(
-            "/register-song",
-            { oph_id: ophid, old_booking_date: location.state.old_booking_date, new_booking_date: location.state.new_booking_date },
+            "/register-new-song",
+            { oph_id: ophid, project_type: location.state.from, name: location.state.form.name, release_date: location.state.form.release_date, lyricalVid: location.state.form.lyricalVid },
             { headers: headers }
           );
-     
+
           if (RegSongRes.data.success) {
-            navigate("/dashboard/success", {
-              state: {
-                heading: "Your date blocked successfully!",
-                btnText: "View Calendar",
-                redirectTo: "/dashboard/time-calendar",
-              },
-            });
+
+            const CalendarRes = await axiosApi.post("/booking",
+              { oph_id: ophid, booking_date: location.state.form.release_date },
+              { headers: headers }
+            )
+
+            
+
+            if (CalendarRes.data.success) {
+              console.log("success in");
+              navigate(`/dashboard/upload-song/audio-metadata/${ophid}`);
+            }
+          }
+        }
+      }
+      else if (response.data.success && from === "hybrid project") {
+        {
+          const RegSongRes = await axiosApi.post(
+            "/register-hybrid-song",
+            { oph_id: ophid, project_type: location.state.from, name: location.state.form.name, release_date: location.state.form.release_date, lyricalVid: location.state.form.lyricalVid, available_on_music_platforms: location.state.form.available_on_music_platforms },
+            { headers: headers }
+          );
+
+          if (RegSongRes.data.success) {
+
+            const CalendarRes = await axiosApi.post("/booking",
+              { oph_id: ophid, booking_date: location.state.form.release_date },
+              { headers: headers }
+            )
+
+            if (CalendarRes.data.success) {
+              navigate(`/dashboard/upload-song/audio-metadata/${ophid}`);
+            }
           }
         }
       }

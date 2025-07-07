@@ -42,10 +42,18 @@ const getAllBookings = async () => {
   return rows;
 };
 
+const getAllBookingsByID = async (ophid) => {
+  const [rows] = await db.execute('SELECT * FROM calender WHERE oph_id = ?', [ophid]);
+
+  
+  return rows;
+};
+
 module.exports = {
   insertBooking,
   findBookingByDate,
   findBookingByOphIdAndDate,
   updateBooking,
   getAllBookings,
+  getAllBookingsByID
 };
