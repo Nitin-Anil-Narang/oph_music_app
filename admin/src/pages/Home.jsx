@@ -37,17 +37,18 @@ const Home = () => {
 
 
   return (
-     <div className="p-6">
-      testing home
-      <h1 className="text-2xl font-bold mb-4">Users Table</h1>
+    //  <div className="p-6 flex-1">
+    //   testing home
+    //   <h1 className="text-2xl font-bold mb-4">Users Table</h1>
       <SearchableDynamicTable
+        title="New SignUp"
         data={tableData}
         showStatusIndicator={false}
         excludeColumns = {"createdAt,updatedAt,user_pass,step_status,reject_reason,personal_photo,location,current_step,rejected_step"}
-        pageSize={10}
+        pageSize={8}
         detailsUrl="/newsignup"
       />
-    </div>
+    // </div>
   );
 };
 

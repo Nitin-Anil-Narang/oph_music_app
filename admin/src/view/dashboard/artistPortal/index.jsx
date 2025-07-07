@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import { useAuth } from "../../../auth/AuthProvider";
 import ArtistSidebar from "../../../components/ArtistSidebar";

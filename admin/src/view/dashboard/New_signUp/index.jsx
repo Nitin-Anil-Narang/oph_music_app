@@ -1,33 +1,57 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import axiosApi from "../../../conf/axios";
 
 const NewSignupDetails = () => {
   const { ophid } = useParams();
   const [artist, setArtist] = useState(null);
+  const [txnList, setTxnList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reason, setReason] = useState("");
+  const [showAllTxns, setShowAllTxns] = useState(false);
+  const [copiedTxnId, setCopiedTxnId] = useState(null);
 
   useEffect(() => {
-    const fetchArtist = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/user-details/${ophid}`);
+        const res = await axiosApi.get(`/user-details/${ophid}`);
         setArtist(res.data.userDetails);
+
+        const txnRes = await axiosApi.get(`/transaction-details/${ophid}`);
+        let txnArray = txnRes.data.transactions || [];
+        txnArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        setTxnList(txnArray);
       } catch (error) {
-        console.error("Error fetching artist:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchArtist();
+    fetchData();
   }, [ophid]);
-  console.log(artist);
-  
 
   const handleReject = () => {
     alert(`Rejected with reason: ${reason || "No reason provided"}`);
     setReason("");
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    setCopiedTxnId(text);
+    setTimeout(() => {
+      setCopiedTxnId(null);
+    }, 2000);
+  };
+
+  const formatDateTime = (dateStr) => {
+    const date = new Date(dateStr);
+    return `${date.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })} — ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
   };
 
   if (loading) {
@@ -38,8 +62,7 @@ const NewSignupDetails = () => {
     return <div className="min-h-screen flex items-center justify-center text-lg">Artist not found.</div>;
   }
 
-  console.log(artist.personal_photo);
-  
+  const displayedTxns = showAllTxns ? txnList : txnList.slice(0, 1);
 
   return (
     <div className="min-h-screen bg-blue-50 p-6">
@@ -76,7 +99,7 @@ const NewSignupDetails = () => {
             <div className="sm:col-span-2">
               <label className="block text-gray-700 text-sm font-semibold mb-1">Personal Photo</label>
               <img
-                src={artist.personal_photo}
+                src={artist.personal_photo ? artist.personal_photo : "https://avatars.githubusercontent.com/u/49544693?v=4"}
                 alt="Artist"
                 className="mt-2 w-40 h-40 object-cover rounded-xl border"
               />
@@ -84,6 +107,59 @@ const NewSignupDetails = () => {
           </div>
         </div>
 
+        {/* Transactions Section */}
+        <div className="border rounded-xl p-6 bg-gray-50 shadow-inner">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-semibold text-gray-700">Transactions</h3>
+            {txnList.length > 1 && (
+              <button
+                onClick={() => setShowAllTxns(!showAllTxns)}
+                className="text-blue-600 text-sm font-medium hover:underline"
+              >
+                {showAllTxns ? "Hide" : "Show all"}
+              </button>
+            )}
+          </div>
+          {txnList.length > 0 ? (
+            <ul className="space-y-2">
+              {displayedTxns.map((txn, index) => (
+                <li
+                  key={index}
+                  className="bg-white p-4 rounded-lg border border-gray-200"
+                >
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="text-gray-800 font-medium break-words flex items-center gap-2">
+                      ID: {txn.transactionId}
+                      {index === 0 && (
+                        <span className="bg-green-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+                          Recent
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => copyToClipboard(txn.transactionId)}
+                        className="text-blue-600 text-sm border border-blue-500 px-2 py-0.5 rounded hover:bg-blue-50"
+                      >
+                        Copy
+                      </button>
+                      {copiedTxnId === txn.transactionId && (
+                        <span className="text-green-600 text-sm font-medium">Copied!</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-gray-600 text-sm mt-1">
+                    Time: {formatDateTime(txn.createdAt)}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-gray-500">No transactions available</div>
+          )}
+        </div>
+
+        {/* Reject Section */}
         <div className="border-t pt-6 space-y-4">
           <h3 className="text-xl font-semibold text-gray-700">Reject Artist</h3>
           <textarea

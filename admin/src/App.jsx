@@ -36,6 +36,7 @@ import PaymentWidthdrawal from "./view/dashboard/artistPortal/paymentsWithdrawal
 import Settings from "./view/dashboard/artistPortal/Settings";
 import Tickets from "./view/dashboard/artistPortal/Tickets";
 import timeCalender from "./view/dashboard/artistPortal/timeCalender";
+import Artist_new from "./view/dashboard/artistPortal/artistNew/Artist_new";
 
 
 function App() {
@@ -49,15 +50,16 @@ function App() {
           <Route path="/WebsiteConfig" element={<WebsiteConfig />} />
 
 
-          {/* <Route path="/home" element={<Dashboard />} /> */}
-          <Route path="/ArtistNew" element={<ArtistNew />} />
-          <Route path="/ArtistAll" element={<ArtistAll />} />
+          <Route path="/home" element={<Dashboard />} />
+          <Route path="/ArtistNew/:ophid" element={<ArtistNew />} />
+          <Route path="/ArtistAll/:ophid" element={<ArtistAll />} />
           <Route path="/ContentNew" element={<ContentNew />} />
           <Route path="/ContentManage" element={<ContentManage />} />
           <Route path="/artistPortal" element={<ArtistPortal />} />
           <Route path="/newsignup/:ophid" element={<NewSignupDetails />} />
+          <Route path="/New_SignUp" element={<Home/>} />
 
-          <Route path="/home" element={<ProtectedRoute allowedRoles={Object.values(ROLES)}><Home /></ProtectedRoute>} />
+          {/* <Route path="/home" element={<ProtectedRoute allowedRoles={Object.values(ROLES)}><Home /></ProtectedRoute>} /> */}
 
           {/* ---------- PROTECTED (SUPER_ADMIN) ---------- */}
           <Route
@@ -163,7 +165,7 @@ function App() {
 
           {/* Artist‑portal items */}
           <Route
-            path="/ArtistNew"
+            path="/artist/new"
             element={
               <ProtectedRoute
                 allowedRoles={[
@@ -174,12 +176,12 @@ function App() {
                   ROLES.SALES_MEMBER,
                 ]}
               >
-                <ArtistNew />
+                <Artist_new />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/ArtistAll"
+            path="/Artist/All"
             element={
               <ProtectedRoute
                 allowedRoles={[
@@ -377,7 +379,7 @@ function App() {
 
           {/* Role‑management page (already SUPER_ADMIN‑only) */}
           <Route
-            path="/role_change/:id"
+            path="/role_change"
             element={
               <ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]}>
                 <AssignRoles />

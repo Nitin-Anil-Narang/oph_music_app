@@ -4,18 +4,24 @@ const db = require('../../DB/connect');
 
 const getUniqueOphIdsWithRegistration = async () => {
   const [rows] = await db.execute(
-        `SELECT t.OPH_ID
+    `SELECT t.OPH_ID
      FROM sign_up_payment t
      INNER JOIN (
-       SELECT OPH_ID, MAX(CreatedAt) as max_created
+       SELECT OPH_ID, MAX(CreatedAt) AS max_created
        FROM sign_up_payment
-       WHERE \`From\` = ? AND OPH_ID IS NOT NULL AND OPH_ID != ''
+       WHERE \`From\` = ? 
+         AND OPH_ID IS NOT NULL 
+         AND OPH_ID != ''
+         AND (Status = 'Under Revi' OR Status = 'Under Review')
        GROUP BY OPH_ID
      ) latest 
-     ON t.OPH_ID = latest.OPH_ID AND t.CreatedAt = latest.max_created
-     WHERE t.\`From\` = ? AND t.OPH_ID IS NOT NULL AND t.OPH_ID != ''`,
+     ON t.OPH_ID = latest.OPH_ID 
+        AND t.CreatedAt = latest.max_created
+     WHERE t.\`From\` = ? 
+       AND t.OPH_ID IS NOT NULL 
+       AND t.OPH_ID != ''
+       AND (t.Status = 'Under Revi' OR t.Status = 'Under Review')`,
     ["Registeration", "Registeration"]
-
   );
   return rows;
 };
@@ -45,5 +51,15 @@ const getUserDetailsByOphId = async (ophId) => {
   return rows[0] || null;
 };
 
+const getTransactionsByOphId = async (ophid) => {
+  const [rows] = await db.execute(
+    `SELECT Transaction_ID, CreatedAt
+     FROM sign_up_payment
+     WHERE OPH_ID = ? AND \`From\` = 'Registeration'
+     ORDER BY CreatedAt DESC`,
+    [ophid]
+  );
+  return rows;
+};
 
-module.exports = {getUniqueOphIdsWithRegistration,getUserDetailsByOphIds,getUserDetailsByOphId};
+module.exports = {getUniqueOphIdsWithRegistration,getUserDetailsByOphIds,getUserDetailsByOphId, getTransactionsByOphId};

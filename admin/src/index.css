@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-*,
+/* *,
 body {
   margin: 0;
   padding: 0;
@@ -66,4 +66,4 @@ body::before {
   border: none;
   background-color: white;
   border-radius: 5px;
-}
+} */

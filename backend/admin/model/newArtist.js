@@ -1,0 +1,50 @@
+const db = require('../../DB/connect');
+
+const getUserDetailsByOphId = async (ophid) => {
+  const [rows] = await db.execute(
+    "SELECT * FROM user_details WHERE ophid = ? AND step_status = 'under review'",
+    [ophid]
+  );
+  return rows[0]; // Only one row since ophid is PK
+};
+
+const getProfessionalDetailsByOphId = async (ophid) => {
+  const [rows] = await db.execute(
+    "SELECT * FROM professional_details WHERE OPH_ID = ? AND step_status = 'under review'",
+    [ophid]
+  );
+  return rows[0];
+};
+
+const getDocumentationDetailsByOphId = async (ophid) => {
+  const [rows] = await db.execute(
+    "SELECT * FROM documentation_details WHERE OPH_ID = ? AND step_status = 'under review'",
+    [ophid]
+  );
+  return rows[0];
+};
+
+
+const getAllUserDetailsWithAnyStepUnderReview = async () => {
+  const [rows] = await db.execute(
+    `
+    SELECT *
+    FROM user_details
+    WHERE ophid IN (
+      SELECT ophid FROM user_details WHERE step_status = 'under review'
+      UNION
+      SELECT OPH_ID FROM professional_details WHERE step_status = 'under review'
+      UNION
+      SELECT OPH_ID FROM documentation_details WHERE step_status = 'under review'
+    )
+    `
+  );
+  return rows;
+};
+
+module.exports = {
+  getUserDetailsByOphId,
+  getProfessionalDetailsByOphId,
+  getDocumentationDetailsByOphId,
+  getAllUserDetailsWithAnyStepUnderReview
+};

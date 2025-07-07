@@ -10,12 +10,13 @@ const DynamicTable = ({
   showStatusIndicator = false,
   statusField = "",
   statusData = [],
+  
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
   if (!data || data.length === 0) {
-    return <p className="text-gray-400">No data available.</p>;
+    return <p className="text-gray-400 italic">No data available.</p>;
   }
 
   let columns = Object.keys(data[0]);
@@ -43,7 +44,7 @@ const DynamicTable = ({
       return <video src={value} controls className="w-32 h-20 rounded" />;
     } else if (lowerVal.startsWith("http")) {
       return (
-        <a href={value} target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">
+        <a href={value} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
           {value}
         </a>
       );
@@ -64,110 +65,87 @@ const DynamicTable = ({
   };
 
   return (
-    <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-700">
-      <table className="min-w-full bg-[#1f1f1f] text-white">
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <th
-                key={col}
-                className="px-4 py-3 border-b border-gray-600 bg-[#2c2c2c] text-left font-semibold"
-              >
-                {col}
-              </th>
-            ))}
-            {showStatusIndicator && statusField && (
-              <th className="px-4 py-3 border-b border-gray-600 bg-[#2c2c2c] text-left font-semibold">
-                Status
-              </th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {currentData.map((row, idx) => (
-            <tr
-              key={idx}
-              className="hover:bg-[#333333] transition cursor-pointer"
-              onClick={() => {
-                if (detailsUrl) {
-                  const idValue = row.ophid || row.OPH_ID;
-                  if (idValue) {
-                    navigate(`${detailsUrl}/${idValue}`);
-                  }
-                }
-              }}
-            >
+    <div className="min-h-screen flex flex-col">
+      <div className="flex-1 h-full overflow-x-auto rounded-2xl shadow-lg border border-gray-300 bg-white text-gray-800 flex flex-col">
+        
+        <table className="min-w-full flex-grow">
+          <thead>
+            <tr>
               {columns.map((col) => (
-                <td key={col} className="px-4 py-3 border-b border-gray-700">
-                  {renderValue(row[col])}
-                </td>
+                <th
+                  key={col}
+                  className="px-4 py-3 border-b border-gray-300 bg-gray-100 text-left font-semibold uppercase"
+                >
+                  {col}
+                </th>
               ))}
               {showStatusIndicator && statusField && (
-                <td className="px-4 py-3 border-b border-gray-700">
-                  <span
-                    className={`inline-block w-3 h-3 rounded-full ${
-                      getStatusForRow(row)?.toLowerCase() === "approved"
-                        ? "bg-green-500"
-                        : getStatusForRow(row)?.toLowerCase() === "rejected"
-                        ? "bg-red-500"
-                        : "bg-gray-500"
-                    }`}
-                  ></span>
-                </td>
+                <th className="px-4 py-3 border-b border-gray-300 bg-gray-100 text-left font-semibold uppercase">
+                  Status
+                </th>
               )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentData.map((row, idx) => (
+              <tr
+                key={idx}
+                className="hover:bg-gray-100 transition cursor-pointer"
+                onClick={() => {
+                  if (detailsUrl) {
+                    const idValue = row.ophid || row.OPH_ID;
+                    if (idValue) {
+                      navigate(`${detailsUrl}/${idValue}`);
+                    }
+                  }
+                }}
+              >
+                {columns.map((col) => (
+                  <td key={col} className="px-4 py-3 border-b border-gray-200">
+                    {renderValue(row[col])}
+                  </td>
+                ))}
+                {showStatusIndicator && statusField && (
+                  <td className="px-4 py-3 border-b border-gray-200">
+                    <span
+                      className={`inline-block w-3 h-3 rounded-full ${
+                        getStatusForRow(row)?.toLowerCase() === "approved"
+                          ? "bg-green-500"
+                          : getStatusForRow(row)?.toLowerCase() === "rejected"
+                          ? "bg-red-500"
+                          : "bg-gray-500"
+                      }`}
+                    ></span>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-      {/* Pagination */}
-      <div className="flex justify-center items-center gap-4 py-4 bg-[#1f1f1f] border-t border-gray-700">
-        <button
-          onClick={handlePrev}
-          disabled={currentPage === 1}
-          className="px-3 py-1 bg-gray-700 text-gray-300 rounded hover:bg-gray-600 disabled:opacity-50 transition"
-        >
-          Prev
-        </button>
-        <span className="text-gray-300">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages}
-          className="px-3 py-1 bg-gray-700 text-gray-300 rounded hover:bg-gray-600 disabled:opacity-50 transition"
-        >
-          Next
-        </button>
+        {/* Pagination */}
+        <div className="flex justify-center items-center gap-4 py-4 bg-white border-t border-gray-300 rounded-b-2xl">
+          <button
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+            className="px-4 py-2 text-gray-800 bg-gray-100 rounded-xl shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 disabled:opacity-50 transition-transform hover:scale-105"
+          >
+            Prev
+          </button>
+          <span className="text-gray-600 text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 text-gray-800 bg-gray-100 rounded-xl shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 disabled:opacity-50 transition-transform hover:scale-105"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
 export default DynamicTable;
-
-
-//Test Data
-
-// const mainData = [
-//   { ophid: 1, name: "Alice", email: "alice@example.com" },
-//   { OPH_ID: 2, name: "Bob", email: "bob@example.com" },
-//   { ophid: 3, name: "Charlie", email: "charlie@example.com" },
-// ];
-
-// const statusData = [
-//   { ophid: 1, status: "approved" },
-//   { OPH_ID: 2, status: "rejected" },
-//   { ophid: 3, status: "approved" },
-// ];
-
-// <DynamicTable
-//   data={mainData}
-//   statusData={statusData}
-//   showStatusIndicator={true}
-//   statusField="status"
-//   pageSize={3}
-//   detailsUrl="/user-details"
-// />
-
-

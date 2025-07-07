@@ -51,7 +51,30 @@ const getSingleUserDetails = async (req, res) => {
   }
 };
 
+const getTransactionDetails = async (req, res) => {
+  const { ophid } = req.params;
+
+  try {
+    const transactions = await newSignUp.getTransactionsByOphId(ophid);
+
+    if (transactions.length === 0) {
+      return res.status(404).json({ message: "No transactions found for this OPH_ID from Registeration." });
+    }
+
+    res.status(200).json({
+      ophid,
+      transactions: transactions.map((txn) => ({
+        transactionId: txn.Transaction_ID,
+        createdAt: txn.CreatedAt,
+      })),
+    });
+  } catch (error) {
+    console.error("Error fetching transaction details:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 
 
-module.exports = { getAllOphIdsWithRegistration ,getSingleUserDetails};
+
+module.exports = { getAllOphIdsWithRegistration ,getSingleUserDetails, getTransactionDetails};
