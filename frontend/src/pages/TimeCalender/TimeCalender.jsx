@@ -47,6 +47,8 @@ export default function TimeCalendar() {
               artist: item.artist,
             };
 
+            console.log(localDateStr);
+
             // const date = item.current_booking_date.split("T")[0];
             // dateMap[date] = {
             //   content: item.content,
@@ -99,6 +101,9 @@ export default function TimeCalendar() {
       2,
       "0"
     )}-${String(d.getDate()).padStart(2, "0")}`;
+
+    console.log(dateStr);
+
     return blockedDatesInfo.hasOwnProperty(dateStr);
 
     // const dateStr = new Date(Date.UTC(year, month, day))

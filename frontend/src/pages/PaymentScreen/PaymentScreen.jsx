@@ -14,7 +14,6 @@ const PaymentScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const from = location.state.from;
-  console.log(from);
   const [oph_id, setoph_id] = useState("")
 
   const {
@@ -109,7 +108,9 @@ const PaymentScreen = () => {
 
             if (CalendarRes.data.success) {
               console.log("success in");
-              navigate(`/dashboard/upload-song/audio-metadata/${ophid}`);
+              navigate(`/dashboard/upload-song/audio-metadata/${ophid}`, {state:{
+                songName: location.state.form.name  
+              }});
             }
           }
         }
