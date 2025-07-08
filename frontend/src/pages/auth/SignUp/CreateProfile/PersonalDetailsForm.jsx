@@ -46,17 +46,16 @@ const indianStates = [
 
 const PersonalDetailsForm = () => {
   const navigate = useNavigate();
-  const { headers } = useArtist();
+  const { headers, ophid } = useArtist();
   // const [isPlaying, setIsPlaying] = useState(false); // Track video play state
   // const videoRef = useRef(null);
   // const [video, setVideo] = useState(null);
   const [rejectReason, setRejectReason] = useState(null);
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const ophid = searchParams.get("ophid");
 
   const inputRef = useRef(null);
-
+  console.log(ophid);
   // const fetchVideo = async () => {
   //   try {
   //     const response = await axiosApi.get(
@@ -91,22 +90,21 @@ const PersonalDetailsForm = () => {
     profileImage: null,
   });
 
-  const fetchRejectReason = async () => {
-    try {
-      // const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-      const response = await getPersonalDetails(headers, ophid);;
-      if (response.data) {
-        setRejectReason(response.data.reject_reason || "");
-      }
-    } catch (error) {
-      console.error("Error fetching reject reason:", error);
-      toast.error("Failed to fetch reject reason.");
-    }
-  };
+  const [checkSimilarData, setcheckSimilarData] = useState({
+    legalName: "",
+    stageName: "",
+    contactNumber: "",
+    location: "",
+    email: "",
+    profileImage: null,
+  });
+
   useEffect(() => {
-    fetchRejectReason();
-    fetchPersonalDetails();
-  }, [headers]);
+    if(ophid)
+    {
+      fetchPersonalDetails();
+    }
+  }, [ophid]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -130,17 +128,12 @@ const PersonalDetailsForm = () => {
 
   const fetchPersonalDetails = async () => {
     try {
-      // Ensure headers are available
-      // if (!headers || !headers.Authorization) {
-      //   throw new Error("Authentication token missing");
-      // }
       if (!headers || !headers.Authorization) {
         console.warn("Headers not ready yet");
         return;
       }
 
       const response = await getPersonalDetails(headers, ophid);
-      console.log(response);
 
       if (response.success) {
         setFormData({
@@ -156,8 +149,22 @@ const PersonalDetailsForm = () => {
           current_step: response.data.current_step || ""
         });
 
+        setcheckSimilarData({
+          profileImage: response.data.profile_pic || null,
+          legalName: response.data.full_name || "",
+          stageName: response.data.stage_name || "",
+          contactNumber:
+            response.data.contact_num.split("+91")[1] ||
+            response.data.contact_num,
+          email: response.data.email || "",
+          location: response.data.location || "",
+          step_status: response.data.step_status || "",
+          current_step: response.data.current_step || ""
+        });
 
-
+        if (response.data.reject_reason != null) {
+          setRejectReason(response.data.reject_reason);
+        }
       } else {
         throw new Error(response.message || "Failed to fetch personal details");
       }
@@ -193,7 +200,25 @@ const PersonalDetailsForm = () => {
       reader.readAsDataURL(file);
     }
   };
-  console.log(formData.current_step);
+
+  const checkSimilarity = () => {
+    let isSimilarity = false;
+
+    if(formData.legalName === checkSimilarData.legalName &&
+      formData.stageName === checkSimilarData.stageName &&
+      formData.contactNumber === checkSimilarData.contactNumber &&
+      formData.location === checkSimilarData.location &&  
+      formData.email === checkSimilarData.email &&
+      formData.profileImage === checkSimilarData.profileImage 
+      )
+      {
+        toast.error("Please check rejection reason and make update");
+        isSimilarity = true;
+      }
+      return isSimilarity;
+      
+  }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -236,6 +261,16 @@ const PersonalDetailsForm = () => {
       return;
     }
 
+    if(formData.step_status === "rejected")
+    {
+      const result = checkSimilarity()
+      if(result)
+      {
+        setLoading(false);
+        return
+      }
+    }
+
     try {
       const formDataToSend = new FormData();
 
@@ -250,12 +285,12 @@ const PersonalDetailsForm = () => {
       let stepPath;
 
       if (formData.step_status === "under review") {
-        
+
         stepPath = "/auth/create-profile/professional-details";
       } else if (formData.step_status === "rejected") {
-        stepPath = "/auth/profile-status";
+        stepPath = `/auth/membership-form`;
       } else {
-        stepPath = formData.current_step;
+        stepPath = "/auth/create-profile/professional-details" ;
       }
       formDataToSend.append(
         "step",
@@ -271,14 +306,12 @@ const PersonalDetailsForm = () => {
       formDataToSend.forEach((value, key) => {
         debugData[key] = value;
       });
-      console.log(debugData);
 
       const response = await updatePersonalDetails(formDataToSend, headers);
-      console.log(response);
 
       if (response.success) {
         toast.success("Personal details updated successfully");
-        const path = `${response.step}?ophid=${ophid}`;
+        const path = `${response.step}`;
         navigate(path);
       }
     } catch (error) {

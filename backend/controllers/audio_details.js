@@ -1,4 +1,4 @@
-const { insertSongDetails } = require("../model/song_details");
+const { insertSongDetails } = require("../model/audio_details");
 const { uploadToS3 } = require("../utils"); 
 
 const insertSongDetailsController = async (req, res) => {

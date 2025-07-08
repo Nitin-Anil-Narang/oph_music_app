@@ -18,9 +18,17 @@ const dateBookingRoute = require("./routes/date_booking")
 const songResgisterRoute= require("./routes/songs_register")
 const songDetailsRoute= require("./routes/song_details")
 const personalDetails = require("./routes/personal_details")
-const membership = require('./routes/membership')
 const forgotPassword = require("./routes/forgot_password")
 const resetPassword = require("./routes/reset_password")
+const membership = require("./routes/membership");
+const secondaryArtist = require("./routes/secondary_artist")
+const videoDetail = require("./routes/video_details");
+
+//Admin route assignment
+const adminSignUp = require("./admin/routes/adminSignUp")
+const adminSignIn = require("./admin/routes/adminSignIn")
+const newSignUp = require("./admin/routes/newSignUp")
+const newArtist = require("./admin/routes/newArtist")
 
 // ✅ Middleware order is important
 app.use(cors({
@@ -41,8 +49,18 @@ app.use("/", songResgisterRoute);
 app.use("/", songDetailsRoute);
 app.use("/", forgotPassword);
 app.use("/", resetPassword);
-app.use("/",personalDetails);
+app.use("/", personalDetails);
 app.use("/",membership);
+app.use("/", secondaryArtist);
+app.use("/", videoDetail);
+
+
+//Admin Routes
+
+app.use("/",adminSignUp);
+app.use("/",adminSignIn);
+app.use("/",newSignUp);
+app.use("/",newArtist);
 
 // ✅ Start server
 app.listen(port, () => {

@@ -30,9 +30,8 @@ const banking = [
 
 const DocumentationDetailsForm = () => {
   const [searchParams] = useSearchParams();
-  const ophid = searchParams.get("ophid");
   const navigate = useNavigate();
-  const { headers } = useArtist();
+  const { headers, ophid } = useArtist();
 
   const [loading, setLoading] = useState(true);
 
@@ -79,6 +78,23 @@ const DocumentationDetailsForm = () => {
     accountNumber: "",
     ifscCode: "",
     agreementAccepted: false,
+    step_status: "",
+    reject_reason: ""
+  });
+
+  const [checkSimilarData, setcheckSimilarData] = useState({
+    aadharFront: null,
+    aadharBack: null,
+    panFront: null,
+    panBack: null,
+    signature: null,
+    bankName: "",
+    accountHolder: "",
+    accountNumber: "",
+    ifscCode: "",
+    agreementAccepted: false,
+    step_status: "",
+    reject_reason: ""
   });
   const [videoUrl, setVideoUrl] = useState(null);
 
@@ -89,22 +105,22 @@ const DocumentationDetailsForm = () => {
   //   };
   //   loadVideo();
   // }, []);
-  // const fetchRejectReason = async () => {
-  //   try {
-  //     const artistId = localStorage.getItem("artist_id"); // Get artist ID from localStorage
-  //     const response = await axiosApi.get(`/artists/${artistId}`);
-  //     if (response.data) {
-  //       setRejectReason(response.data.data.reject_reason || "");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching reject reason:", error);
-  //     toast.error("Failed to fetch reject reason.");
-  //   }
-  // };
+
   useEffect(() => {
-    // fetchRejectReason();
-    fetchDocumentationDetails();
-  }, [headers]);
+    if (ophid) {
+      fetchDocumentationDetails();
+    }
+  }, [ophid]);
+
+
+  const parseString = (accept) => {
+    if (accept === "false") {
+      return 0
+    }
+    else {
+      return 1
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -161,52 +177,94 @@ const DocumentationDetailsForm = () => {
       signature: null,
     }));
   };
+  const urlToFile = async (url, filename) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type });
+  };
+
+  const checkSimilarity = () => {
+    let isSimilarity = false;
+
+    if (formData.aadharFront?.file === checkSimilarData.aadharFront?.file &&
+      formData.aadharFront?.preview === checkSimilarData.aadharFront?.preview &&
+      formData.aadharBack?.file === checkSimilarData.aadharBack?.file &&
+      formData.aadharBack?.preview === checkSimilarData.aadharBack?.preview &&
+      formData.panFront?.file === checkSimilarData.panFront?.file &&
+      formData.panFront?.preview === checkSimilarData.panFront?.preview &&
+      formData.signature?.file === checkSimilarData.signature?.file &&
+      formData.signature?.preview === checkSimilarData.signature?.preview &&
+      formData.bankName === checkSimilarData.bankName &&
+      formData.accountHolder === checkSimilarData.accountHolder &&
+      formData.accountNumber === checkSimilarData.accountNumber &&
+      formData.ifscCode === checkSimilarData.ifscCode &&
+      formData.agreementAccepted === checkSimilarData.agreementAccepted
+    ) {
+
+      toast.error("Please check rejection reason and make update");
+      isSimilarity = true;
+    }
+    return isSimilarity;
+
+  }
 
   const fetchDocumentationDetails = async () => {
     try {
-
-       if (!headers || !headers.Authorization) {
+      if (!headers || !headers.Authorization) {
         console.warn("Headers not ready yet");
         return;
       }
 
       const response = await getDocumentationDetails(headers, ophid);
-      if (response.success) {
-        // const { documents, bankDetails, banks } = response.data[0];
+      console.log(response);
+      if (response.success && response.data.length > 0) {
         const doc = response.data[0];
-        setBanks(banks);
-        setFormData({
-          aadharFront: doc.AadharFrontURL
-            ? {
-                file: doc.AadharFrontURL,
-                preview: doc.AadharFrontURL,
-              }
-            : null,
-          aadharBack: doc.AadharBackURL
-            ? {
-                file: doc.AadharBackURL,
-                preview: doc.AadharBackURL,
-              }
-            : null,
-          panFront: doc.PanFrontURL
-            ? {
-                file: doc.PanFrontURL,
-                preview: doc.PanFrontURL,
-              }
-            : null,
+        const bankname = parseInt(doc.BankName); // Convert from string to number
+        const BankName = banking.find((b) => b.id === bankname)?.bank_name;
 
-          signature: doc.SignatureImageURL
-            ? {
-                file: doc.SignatureImageURL,
-                preview: doc.SignatureImageURL,
-              }
+        setBanks(BankName);
+
+        const aadharFrontFile = doc.AadharFrontURL
+          ? await urlToFile(doc.AadharFrontURL, "aadhar-front.png")
+          : null;
+        const aadharBackFile = doc.AadharBackURL
+          ? await urlToFile(doc.AadharBackURL, "aadhar-back.png")
+          : null;
+        const panFrontFile = doc.PanFrontURL
+          ? await urlToFile(doc.PanFrontURL, "pan-front.png")
+          : null;
+        const signatureFile = doc.SignatureImageURL
+          ? await urlToFile(doc.SignatureImageURL, "signature.png")
+          : null;
+
+        const baseForm = {
+          aadharFront: aadharFrontFile
+            ? { file: aadharFrontFile, preview: doc.AadharFrontURL }
             : null,
-          bankName: doc.BankName || "",
+          aadharBack: aadharBackFile
+            ? { file: aadharBackFile, preview: doc.AadharBackURL }
+            : null,
+          panFront: panFrontFile
+            ? { file: panFrontFile, preview: doc.PanFrontURL }
+            : null,
+          signature: signatureFile
+            ? { file: signatureFile, preview: doc.SignatureImageURL }
+            : null,
+          bankName: BankName || "",
           accountHolder: doc.AccountHolderName || "",
           accountNumber: doc.AccountNumber || "",
           ifscCode: doc.IFSCCode || "",
-          agreementAccepted: false,
-        });
+          agreementAccepted: doc.AgreementAccepted,
+          step_status: doc.step_status,
+          reject_reason: doc.reject_reason
+        };
+
+        setFormData(baseForm);
+        setcheckSimilarData(baseForm);
+
+        if (response.data[0].reject_reason != null) {
+          setRejectReason(response.data[0].reject_reason);
+        }
       }
     } catch (error) {
       toast.error("Failed to fetch documentation details");
@@ -266,25 +324,44 @@ const DocumentationDetailsForm = () => {
       return;
     }
 
+    if (formData.step_status === "rejected") {
+
+      const result = checkSimilarity()
+      if (result) {
+        setLoading(false);
+        return
+      }
+    }
+
     try {
       const formDataToSend = new FormData();
 
       // Handle signature separately
       if (formData.signature) {
-        if (typeof formData.signature === "string") {
-          // If it's a data URL (drawn signature)
-          const blob = await fetch(formData.signature).then((res) =>
-            res.blob()
-          );
-          formDataToSend.append("SignatureImageURL", blob, "signature.png");
-        } else if (formData.signature.file) {
-          // If it's a file object
-          formDataToSend.append("SignatureImageURL", formData.signature.file);
-        } else if (formData.signature.preview) {
-          // If it's a URL (previously uploaded signature)
-          const response = await fetch(formData.signature.preview);
-          const blob = await response.blob();
-          formDataToSend.append("SignatureImageURL", blob, "signature.png");
+        try {
+          if (typeof formData.signature === "string") {
+            // 🟢 Case 1: Drawn signature (data URL)
+            const blob = await fetch(formData.signature).then((res) =>
+              res.blob()
+            );
+
+            const randomString = Math.random().toString(36).substring(2, 10);
+            const fileName = `signature_${randomString}.png`;
+
+            formDataToSend.append("SignatureImageURL", blob, fileName);
+          } else if (formData.signature?.file instanceof File) {
+            // 🟢 Case 2: Uploaded File
+            formDataToSend.append("SignatureImageURL", formData.signature.file);
+          } else if (typeof formData.signature?.preview === "string") {
+            // 🟢 Case 3: URL — append URL string directly
+            formDataToSend.append(
+              "SignatureImageURL",
+              formData.signature.preview
+            );
+          }
+
+        } catch (error) {
+          console.error("Error appending signature to FormData:", error);
         }
       }
 
@@ -296,19 +373,24 @@ const DocumentationDetailsForm = () => {
         PanBackURL: formData.panBack,
       };
 
+
+
       for (const [field, data] of Object.entries(documentFields)) {
         if (data?.file) {
+
           formDataToSend.append(field, data.file);
         } else if (
           data?.preview &&
           typeof data.preview === "string" &&
           data.preview.startsWith("http")
         ) {
+
           const response = await fetch(data.preview);
           const blob = await response.blob();
           formDataToSend.append(field, blob, `${field}.png`);
         }
       }
+
 
       // Get the selected bank's ID
       const selectedBank = banking.find(
@@ -325,21 +407,28 @@ const DocumentationDetailsForm = () => {
       formDataToSend.append("AccountHolderName", formData.accountHolder);
       formDataToSend.append("AccountNumber", formData.accountNumber);
       formDataToSend.append("IFSCCode", formData.ifscCode);
+      formDataToSend.append("AgreementAccepted", formData.agreementAccepted);
+      formDataToSend.append("step", '/auth/membership-form');
+
+      const formDataObj = {};
+      formDataToSend.forEach((value, key) => {
+        formDataObj[key] = value;
+      });
 
       const response = await updateDocumentationDetails(
         formDataToSend,
         headers
       );
-      
+
       if (response.success) {
         toast.success("Documentation details updated successfully");
-        navigate(`/auth/membership-form?ophid=${ophid}`)
+        navigate('/auth/membership-form');
         // setShowMembershipForm(true); // Show MembershipForm
       }
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "Failed to update documentation details"
+        "Failed to update documentation details"
       );
     } finally {
       setLoading(false);
@@ -391,11 +480,11 @@ const DocumentationDetailsForm = () => {
           <h2 className="text-cyan-400 uppercase text-2xl mt-4 font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
             Documentation Details
           </h2>
-          {/* {rejectReason && (
+          {rejectReason && (
             <div className="text-red-500">
               <strong>Reject Reason:</strong> {rejectReason}
             </div>
-          )} */}
+          )}
 
           {/* Aadhar Card Upload */}
           <div className="flex flex-col lg:px-[300px] md:px-[300px] sm:px-[50px] xl:px-[300px]">
@@ -616,7 +705,7 @@ const DocumentationDetailsForm = () => {
                 type="checkbox"
                 id="agreement"
                 name="agreementAccepted"
-                checked={formData.AgreementAccepted}
+                checked={formData.agreementAccepted ? parseString(formData.agreementAccepted) : false}
                 onChange={handleInputChange}
                 className="w-4 h-4 rounded border-gray-600 text-cyan-400 focus:ring-cyan-400"
                 required

@@ -1,19 +1,21 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import axiosApi from "../../conf/axios";
 import getToken from "../../utils/getToken";
-import {useArtist} from "../auth/API/ArtistContext";
+import { useArtist } from "../auth/API/ArtistContext";
+import { use } from "react";
 export default function BlockDateForm() {
-  const {headers}=useArtist();
+  const { headers, ophid } = useArtist();
   const location = useLocation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    oph_id: "OPH-CAN-IA-014",
+    oph_id: ophid,
     numberOfSongs: "",
     selectedDate: location.state?.selectedDate || "",
   });
   const [isProcessing, setIsProcessing] = useState(false);
+<<<<<<< HEAD
 
   // useEffect(() => {
   //   const userData = JSON.parse(localStorage.getItem('userData'));
@@ -23,6 +25,25 @@ export default function BlockDateForm() {
   //       oph_id: userData.artist.oph_id
   //     }));
   //   }
+=======
+  useEffect(() => {
+    if (ophid) {
+      setFormData(prev => ({
+        ...prev,
+        oph_id: ophid
+      }));
+    }
+  }, [ophid]);
+
+  // useEffect(() => {
+  //   // const userData = JSON.parse(localStorage.getItem('userData'));
+  //   // if (userData?.artist.oph_id) {
+  //   //   setFormData(prev => ({
+  //   //     ...prev,
+  //   //     oph_id: userData.artist.oph_id
+  //   //   }));
+  //   // }
+>>>>>>> e4fb8c13346adff1c0d56cc100ad6e4fec0e2e0f
 
   //   // Handle payment return
   //   if (location.state?.status === "success") {
@@ -34,10 +55,16 @@ export default function BlockDateForm() {
   //     }
   //   }
   // }, [location.state]);
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> e4fb8c13346adff1c0d56cc100ad6e4fec0e2e0f
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Save form data to sessionStorage before navigation
     // sessionStorage.setItem('blockDateFormData', JSON.stringify({
     //   selectedDate: formData.selectedDate,
@@ -47,8 +74,7 @@ export default function BlockDateForm() {
     // Navigate to payment screen with form data
     navigate("/dashboard/payment", {
       state: {
-        artist_id:formData.oph_id,
-        planIds: [2], // Date blocking plan ID
+        date: formData.selectedDate,
         returnPath: "/dashboard/block-date",
         heading: "Date Blocking Fee",
         from: "Date booking",
@@ -62,6 +88,7 @@ export default function BlockDateForm() {
   //   try {
   //     setIsProcessing(true);
 
+<<<<<<< HEAD
   //     const response = await axiosApi.post("/date-block/block", {
   //       expected_songs: parseInt(dateBlockData.numberOfSongs),
   //       date: new Date(dateBlockData.selectedDate),
@@ -86,6 +113,15 @@ export default function BlockDateForm() {
   //     setIsProcessing(false);
   //   }
   // };
+=======
+      const response = await axiosApi.post("/date-block/block", {
+        expected_songs: parseInt(dateBlockData.numberOfSongs),
+        date: new Date(dateBlockData.selectedDate),
+        payment_id: paymentData.newPaymentIds[0]
+      }, {
+        headers: headers
+      });
+>>>>>>> e4fb8c13346adff1c0d56cc100ad6e4fec0e2e0f
 
 
   const handleChange = (e) => {
@@ -153,12 +189,12 @@ export default function BlockDateForm() {
           </div>
 
           <button
-  type="submit"
-  disabled={isProcessing}
-  className="w-full bg-cyan-400 text-gray-900 rounded-full py-3 font-semibold hover:bg-cyan-300 transition-colors mt-8 disabled:opacity-50"
->
-  {isProcessing ? "Processing..." : "Pay & Block"}
-</button>
+            type="submit"
+            disabled={isProcessing}
+            className="w-full bg-cyan-400 text-gray-900 rounded-full py-3 font-semibold hover:bg-cyan-300 transition-colors mt-8 disabled:opacity-50"
+          >
+            {isProcessing ? "Processing..." : "Pay & Block"}
+          </button>
         </form>
       </div>
     </div>

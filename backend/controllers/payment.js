@@ -5,6 +5,7 @@ const {setCurrentStep} = require("../model/common/set_step.js")
 const payment = async (req, res) => {
   try {
     const { OPH_ID, Transaction_ID, Review, Status,step, from } = req.body;
+    const ophid = OPH_ID    
     
     const dbResponse = await paymentInfo.insertPayment(
       OPH_ID,
@@ -15,13 +16,12 @@ const payment = async (req, res) => {
     );
 
     if (dbResponse) {
-
-      await setCurrentStep(step, OPH_ID)
+      await setCurrentStep(step, ophid)
 
       return res.status(200).json({
-        id: OPH_ID,
         success: true,
-        message: "Payment ID sent for verification"
+        message: "Payment ID sent for verification",
+        step:step
       });
     }
 

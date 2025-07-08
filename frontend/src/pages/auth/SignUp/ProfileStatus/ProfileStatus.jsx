@@ -8,7 +8,7 @@ import Elipse from "../../../../../public/assets/images/elipse2.png";
 import axiosApi from "../../../../conf/axios"; // Assuming axiosApi is set up to point to your API
 
 const ProfileStatus = () => {
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(null); // Error state
   const [artistData, setArtistData] = useState(null); // To store artist data from the API
   const location = useLocation();
@@ -52,7 +52,7 @@ const ProfileStatus = () => {
       }
     };
   
-    fetchData(); // Call the async function when component mounts
+    // fetchData(); // Call the async function when component mounts
   }, [id, navigate]); // Dependency array: runs when `id` or `navigate` changes
   // Show a loading message while the request is in progress
   if (loading) {
@@ -96,7 +96,7 @@ const ProfileStatus = () => {
           {/* Back to Home Button */}
           <button
             onClick={() => {
-              window.location.href = import.meta.env.VITE_WEBSITE_URL;
+              window.location.href = import.meta.env.VITE_PORTAL_URL;
             }}
             className="mt-8 z-[1000] px-16 py-3 bg-[#5DC9DE] hover:font-bold hover:cursor-pointer text-black rounded-full font-medium  transition-colors duration-200"
           >

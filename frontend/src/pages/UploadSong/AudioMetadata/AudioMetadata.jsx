@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Camera, ChevronDown } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import PrimaryBtn from "../../../components/Button/PrimaryBtn";
 import axiosApi from "../../../conf/axios";
 import { useArtist } from "../../auth/API/ArtistContext";
@@ -201,10 +201,7 @@ function SecondaryArtistForm({ artistType, onClose, onArtistAdd }) {
 }
 export default function AudioMetadataForm() {
   const checkProjectType = localStorage.getItem("projectType");
-  console.log(checkProjectType);
-
   const navigate = useNavigate();
-  const { headers } = useArtist();
   const { contentId } = useParams();
   const fileInputRef = useRef(null);
 
@@ -216,12 +213,14 @@ export default function AudioMetadataForm() {
   const [mood, setMood] = useState("");
   const [lyrics, setLyrics] = useState("");
   const [primary, setPrimary] = useState("");
-  const [languages, setLanguages] = useState([]);
+  const [languages, setLanguages] = useState([{ name: "english", id: 1}, {name: "hindi", id: 2}, {name: "marathi", id: 3}]);
   const [audioFileUrl, setAudioFileUrl] = useState(null);
-  const [songName, setSongName] = useState("");
+  const location = useLocation()
+  const [songName, setSongName] = useState(location.state.songName);
   const [showSecondaryForm, setShowSecondaryForm] = useState(false);
   const [selectedArtistType, setSelectedArtistType] = useState("");
   const [rejectReason, setRejectReason] = useState(null);
+  const { headers, artist, user, ophid } = useArtist();
 
   const [featuringArtists, setFeaturingArtists] = useState([]);
   const [lyricistArtists, setLyricistArtists] = useState([]);
@@ -230,7 +229,7 @@ export default function AudioMetadataForm() {
 
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // const [subgenre, setSubgenre] = useState("");
 
   const genres = [
@@ -392,12 +391,11 @@ export default function AudioMetadataForm() {
       formData.append("genre", genre);
       formData.append("sub_genre", subGenre);
       console.log(subGenre, "sub genre");
-      formData.append("project_type",checkProjectType)
-      
+      formData.append("project_type", checkProjectType)
+
       formData.append(
         "primary_artist",
-        `${JSON.parse(localStorage.getItem("userData")).artist.name} - ${
-          JSON.parse(localStorage.getItem("userData")).artist.stage_name
+        `${user?.userData?.artist.name} - ${user?.userData?.artist.stage_name
         }`
       );
       formData.append("mood", mood);
@@ -512,8 +510,8 @@ export default function AudioMetadataForm() {
             setPrimary(audio_metadata.primary_artist || "");
             setLanguages(languages || []);
             setRejectReason(audio_metadata.reject_reason || "");
-            console.log(languages,"languages")  ;
-            
+            console.log(languages, "languages");
+
 
             // Set audio file feedback
             if (audio_metadata.audio_file_url) {
@@ -593,34 +591,33 @@ export default function AudioMetadataForm() {
     setAudioFileUrl(URL.createObjectURL(file)); // Preview the uploaded file
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  // if (error) {
+  //   return <div>Error: {error}</div>;
+  // }
 
-  if (isSubmitting) {
-    return <Loading />;
-  }
+  // if (isSubmitting) {
+  //   return <Loading />;
+  // }
 
   return (
     <div className="min-h-[calc(100vh-70px)] text-gray-100 px-8 p-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Primary Artist Form */}
         <div
-          className={`max-w-xl col-span-1 ${
-            showSecondaryForm ? "hidden lg:block" : ""
-          }`}
+          className={`max-w-xl col-span-1 ${showSecondaryForm ? "hidden lg:block" : ""
+            }`}
         >
           <div className="">
             <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
               Audio Metadata
             </h1>
             {
-            rejectReason && <p className="text-red-700">Reason: {rejectReason}</p>
-          }
+              rejectReason && <p className="text-red-700">Reason: {rejectReason}</p>
+            }
             <div className="space-y-2 my-2">
               <label className="block">
                 Song Name <span className="text-red-500">*</span>
@@ -632,11 +629,11 @@ export default function AudioMetadataForm() {
                 className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
               />
             </div>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Language Dropdown */}
               <div className="space-y-2">
-                
+
                 <label className="block">
                   Language <span className="text-red-500">*</span>
                 </label>
@@ -731,12 +728,10 @@ export default function AudioMetadataForm() {
                 </label>
                 <input
                   type="text"
-                  value={`${
-                    JSON.parse(localStorage.getItem("userData")).artist.name
-                  } - ${
-                    JSON.parse(localStorage.getItem("userData")).artist
+                  value={`${user?.userData?.artist.name
+                    } - ${user?.userData?.artist
                       .stage_name
-                  }`}
+                    }`}
                   onChange={(e) => setPrimary(e.target.value)}
                   className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
                   required
@@ -790,7 +785,7 @@ export default function AudioMetadataForm() {
                 ))}
               </div>
 
-             
+
               {/* Audio File Upload */}
               <div className="space-y-2">
                 <label className="block">

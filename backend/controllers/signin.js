@@ -17,6 +17,8 @@ const signin = async (req, res) => {
     }
 
     const dbUser = user[0];
+   
+    const ophId = user[0].ophid;
     const isPasswordValid = await bcrypt.compare(password, dbUser.user_pass);
 
     if (!isPasswordValid) {
@@ -25,9 +27,23 @@ const signin = async (req, res) => {
         .json({ success: false, message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ email }, process.env.SECRET_KEY, {
-      expiresIn: "1h",
-    });
+    // const token = jwt.sign({ email }, process.env.SECRET_KEY, {
+    //   expiresIn: "1h",
+    // });
+    const token = jwt.sign(
+      {
+        email: email,
+        userData: {
+          artist: {
+            id: ophId,
+            name: dbUser.full_name,
+            stage_name: dbUser.stage_name
+          },
+        }
+      },
+      process.env.SECRET_KEY,
+      { expiresIn: "1h" });
+    
 
     const result = await user_details.checkRejectedStep(dbUser.ophid);
 
@@ -43,8 +59,9 @@ const signin = async (req, res) => {
       navTo = dbUser.current_step;
     }
 
-    console.log(navTo);
-
+    console.log(token);
+    
+    
     return res.status(200).json({
       success: true,
       message: "Login successful",

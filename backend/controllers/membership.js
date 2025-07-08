@@ -3,8 +3,13 @@ const personal_details = require("../model/personal_details");
 const prof_details = require("../model/professional_details");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
-const { uploadToS3 } = require("../utils");
+const { uploadToS3, uploadToS3Form } = require("../utils");
 const { log } = require("console");
+
+const { S3Client, DeleteObjectCommand, HeadObjectCommand } = require("@aws-sdk/client-s3");
+
+const s3 = new S3Client({ region: process.env.AWS_REGION }); // replace with your region
+const bucketName = process.env.S3_BUCKET; 
 
 const membershipForm = async (req, res) => {
   {
@@ -33,7 +38,7 @@ const membershipForm = async (req, res) => {
       ];
       const { ophid } = req.query;
       const OPH_ID = ophid;
-      console.log(ophid);
+
 
       // Fetch artist data
       // const artist = await DB.knex('artists as a')
@@ -45,17 +50,11 @@ const membershipForm = async (req, res) => {
       const artistProf = await prof_details.getProfessionalByOphId(OPH_ID);
       const artistDoc = await docs.getDocumentationDetailsByOphId(ophid);
 
-      console.log(artist);
-      console.log(artistProf);
-      console.log(artistDoc);
-
       const formattedDate = artist[0].createdAt.toISOString().split("T")[0];
       const aadharFrontUrl = artistDoc[0].AadharFrontURL;
       const aadharBackUrl = artistDoc[0].AadharBackURL;
 
       const panFrontUrl = artistDoc[0].PanFrontURL;
-      console.log("pan", panFrontUrl);
-      console.log(artistProf[0]?.VideoURL);
 
       const bankname = parseInt(artistDoc[0].BankName); // Convert from string to number
       const BankName = banking.find((b) => b.id === bankname)?.bank_name;
@@ -72,9 +71,6 @@ const membershipForm = async (req, res) => {
       const professionName = professionOptions.find(
         (p) => p.id === professionId
       )?.name;
-
-      console.log(artistProf[0].ExperienceMonthly % 12);
-      console.log(artistProf[0].ExperienceMonthly % 12);
 
       if (!artist) {
         return res.status(404).send("Artist not found");
@@ -1752,15 +1748,37 @@ Agreement shall be subject to arbitration in accordance with the Arbitration and
         });
 
         await browser.close();
+
         const fileName = `${artist[0].full_name.replace(/\s+/g, "_")}.pdf`;
+        const s3Key = `pdfs/${fileName}`;
+
+        // Check if file exists
+        try {
+          await s3.send(new HeadObjectCommand({
+            Bucket: bucketName,
+            Key: s3Key,
+          }));
+
+          // If no error, file exists — delete it
+          await s3.send(new DeleteObjectCommand({
+            Bucket: bucketName,
+            Key: s3Key,
+          }));
+        } catch (err) {
+          if (err.name !== "NotFound") {
+            console.error("Error checking/deleting existing file:", err.message);
+            throw err;
+          }
+          // If NotFound, ignore — file does not exist
+        }
         const file = {
           originalname: fileName,
           buffer: pdfBuffer,
           mimetype: "application/pdf",
         };
         try {
-          const s3Url = await uploadToS3(file, "pdfs");
-          console.log("✅ PDF uploaded to:", s3Url);
+          const s3Url = await uploadToS3Form(file, "pdfs");
+
         } catch (err) {
           console.error("Upload failed:", err.message);
         }

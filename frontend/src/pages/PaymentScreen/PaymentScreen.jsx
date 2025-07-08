@@ -6,17 +6,14 @@ import Loading from "../../components/Loading";
 import { useParams } from "react-router-dom";
 
 const PaymentScreen = () => {
-  const { logout } = useArtist();
+  const { logout, headers, ophid } = useArtist();
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const ophid = queryParams.get("ophid");
   const [trans, setTrans] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { headers } = useArtist();
   const from = location.state.from;
-  const selectedDate = location.state.selectedDate;
 
   const {
     amount = 0,
@@ -26,6 +23,12 @@ const PaymentScreen = () => {
     heading = "Payment Required",
   } = location.state || {};
 
+  useEffect(() => {
+    if (ophid) {
+      setoph_id(ophid)
+    }
+  }, [ophid])
+
   const handlePaymentSuccess = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -33,41 +36,26 @@ const PaymentScreen = () => {
 
     try {
       const formData = {
-        OPH_ID: "OPH-CAN-IA-014",
+        OPH_ID: ophid,
         Transaction_ID: trans,
         Review: 0,
         Status: "Under Review",
-        step: "/auth/create-profile/personal-details",
-        from: from,
-        booking_date: selectedDate,
+        step: '/auth/create-profile/personal-details',
+        from : from
+        // plan_ids: planIds,
       };
 
       const response = await axiosApi.post("/auth/payment", formData);
 
-      if (response.data.success) {
-        console.log("hello");
-
-        if (from === "Date booking") {
-          const CalenderRes = await axiosApi.post(
-            "/booking",
-            { oph_id: formData.OPH_ID, booking_date: formData.booking_date },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                ...headers,
-              },
-            }
-          );
-
-          if (CalenderRes.data.success) {
-            navigate("/dashboard");
-          }
-        } else if (from === "Registration") {
-          navigate(
-            `/auth/create-profile/personal-details?ophid=${formData.OPH_ID}`
-          );
-        }
+      if(response.data.success)
+      {
+        const path = `/auth/create-profile/personal-details?ophid=${ophid}`
+        navigate(path)
       }
+      
+
+      const CalenderRes = axiosApi.post("/")
+      
     } catch (err) {
       console.error("Payment error:", err);
       setError("Payment processing failed. Please try again.");

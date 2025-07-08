@@ -1,37 +1,70 @@
-const { insertSong } = require("../model/songs_register");
+const songRegModel = require("../model/songs_register");
 
-const insertSongController = async (req, res) => {
+exports.insertNewSongRegDetails = async (req, res) => {
   try {
-    const {
-      OPH_ID,
-      project_type,
-      Song_name,
-      release_date,
-      payment,
-      Lyrics_services
-    } = req.body;
+    const { oph_id, project_type, name, release_date, lyricalVid } = req.body;
 
-    let { Video_type } = req.body;
-    if (Array.isArray(Video_type)) {
-      Video_type = Video_type.join(", "); // e.g., "music video, lyrics video"
+    console.log(req.body);
+
+    if (!oph_id || !project_type || !name || !release_date) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+      });
     }
 
-    const songData = {
-      OPH_ID,
+    const RegSongRes = await songRegModel.insertNewSong(
+      oph_id,
       project_type,
-      Song_name,
+      name,
       release_date,
-      payment,
-      Video_type,
-      Lyrics_services: Lyrics_services ? 1 : 0
-    };
+      lyricalVid === false ? "base" : "base + lyrics",
+      lyricalVid === false ? 0 : 1
+    );
 
-    const result = await insertSong(songData);
-    res.status(201).json({ message: "Song registered successfully", result });
-  } catch (error) {
-    console.error("Insert song error:", error);
-    res.status(500).json({ error: error.message });
+    if (RegSongRes) {
+      return res.status(201).json({
+        success: true,
+        message: "Song Registered Successfully",
+      });
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-module.exports = { insertSongController };
+exports.insertHybridSongRegDetails = async (req, res) => {
+  try {
+    const { oph_id, project_type, name, release_date, lyricalVid, available_on_music_platforms } = req.body;
+
+    console.log(req.body);
+
+    if (!oph_id || !project_type || !name || !release_date) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+      });
+    }
+
+    const RegSongRes = await songRegModel.insertHybridSong(
+      oph_id,
+      project_type,
+      name,
+      release_date,
+      lyricalVid === false ? "base" : "base + lyrics",
+      lyricalVid === false ? 0 : 1,
+      available_on_music_platforms
+    );
+
+    if (RegSongRes) {
+      return res.status(201).json({
+        success: true,
+        message: "Song Registered Successfully",
+      });
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};

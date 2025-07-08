@@ -47,29 +47,11 @@ const insertPersonalDetails = async (req, res) => {
     if (profile_image) {
       const storeImgIntoBucket = await bucket.uploadToS3(
         profile_image,
-        "profile_image"
+        `allUsers/${ophid}/profile_image`
       );
       if (storeImgIntoBucket) {
         storageLocation = storeImgIntoBucket;
       }
-    }
-
-    // Compare all fields including new image
-    const isSameData =
-      existingUser.full_name === legal_name &&
-      existingUser.stage_name === stage_name &&
-      existingUser.email === email &&
-      existingUser.contact_num === contact_num &&
-      existingUser.location === location &&
-      existingUser.personal_photo === storageLocation;
-
-    if (isSameData) {
-      await setCurrentStep(step, ophid);
-      return res.status(200).json({
-        success: true,
-        message: "Data already exists and is unchanged. Proceeding to next step.",
-        step: step,
-      });
     }
 
     // 🟢 Update in DB if data changed or new photo provided
@@ -149,4 +131,13 @@ const mapPersonalDetails = async (req, res) => {
   }
 };
 
-module.exports = { mapPersonalDetails, insertPersonalDetails };
+const getAllPersonal = async (req, res) => {
+  try {
+    const bookings = await user_details.getFullPersonal()
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { mapPersonalDetails, insertPersonalDetails,getAllPersonal };

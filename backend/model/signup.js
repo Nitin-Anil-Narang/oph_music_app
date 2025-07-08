@@ -15,7 +15,7 @@ const getEmailAndNumber = async (email,contactNumber) => {
 
 const storeArtistType = async (artistType) => {
   const [rows] = await db.execute(
-    'SELECT artist_type, COUNT(artist_type) AS cnt FROM user_details WHERE artist_type = ? GROUP BY artist_type',
+    'SELECT ophid FROM user_details WHERE artist_type = ?',
     [artistType]
   );
 

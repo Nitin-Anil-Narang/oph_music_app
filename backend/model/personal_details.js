@@ -34,4 +34,12 @@ const getFullPersonalDetails = async (ophid) => {
   return rows;
 };
 
-module.exports = { setPersonalDetails, getPersonalDetails ,getFullPersonalDetails};
+const getFullPersonal = async () => {
+  const [rows] = await db.execute("SELECT * FROM user_details;");
+
+  // If you want to return as JSON explicitly (usually it already is an array of objects)
+  return rows;
+};
+
+
+module.exports = { setPersonalDetails, getPersonalDetails ,getFullPersonalDetails,getFullPersonal};

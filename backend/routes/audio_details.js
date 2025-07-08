@@ -5,6 +5,6 @@ const { insertSongDetailsController } = require("../controllers/song_details");
 
 const upload = multer({ storage: multer.memoryStorage() }); // For S3 upload
 
-router.post("/song-details", insertSongDetailsController);
+router.post("/audio-details", insertSongDetailsController);
 
 module.exports = router;

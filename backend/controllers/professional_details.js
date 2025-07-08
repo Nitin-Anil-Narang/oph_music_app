@@ -13,11 +13,13 @@ const insertProfessionalDetails = async (req, res) => {
       InstagramLink,
       FacebookLink,
       AppleMusicLink,
-      ExperienceYearly,
+      ExperienceYearly = 0,
       ExperienceMonthly,
       SongsPlanningCount,
       SongsPlanningType,
       step,
+      VideoURL,
+      photoURLs = [],
     } = req.body;
 
     const user = await user_details.getProfessionalDetails(OPH_ID);
@@ -29,56 +31,37 @@ const insertProfessionalDetails = async (req, res) => {
       });
     }
 
-    // const result = user[0];
-    // console.log(result);
-    
-
-    // if (result.step_status === "rejected") {
-    //  const response = await user_details.updateProfessionalDetails(
-    //     OPH_ID,
-    //     Profession,
-    //     Bio,
-    //     videoURL,
-    //     JSON.stringify(photoURLs),
-    //     SpotifyLink,
-    //     InstagramLink,
-    //     FacebookLink,
-    //     AppleMusicLink,
-    //     parseInt(ExperienceYearly),
-    //     parseInt(ExperienceMonthly),
-    //     parseInt(SongsPlanningCount),
-    //     SongsPlanningType
-    //   );
-
-    //   if(response)
-    //   {
-    //     return res.status(201).json({success: true, message : "Data updated successfully"})
-    //   }
-    // }
-
     const videoFile = req.files?.video?.[0];
     const photoFiles = req.files?.photos || [];
+  
+    let videoFinalURL = null;
+    let allPhotoURLs = [];
 
-    let videoURL = null;
-    let photoURLs = [];
-
+    // Video logic
     if (videoFile) {
-      videoURL = await uploadToS3(videoFile, "videos");
+      videoFinalURL = await uploadToS3(videoFile, `allUsers/${OPH_ID}/videos`);
+    } else if (VideoURL) {
+      videoFinalURL = VideoURL;
     }
 
+    // Photos logic
     if (photoFiles.length > 0) {
       for (const file of photoFiles) {
-        const url = await uploadToS3(file, "images");
-        photoURLs.push(url);
+        const url = await uploadToS3(file, `allUsers/${OPH_ID}/images`);
+        allPhotoURLs.push(url);
       }
+    }
+
+    if (photoURLs && Array.isArray(photoURLs)) {
+      allPhotoURLs.push(...photoURLs); // append old URLs
     }
 
     const dbResponse = await professional.insertProfessionalDetails(
       OPH_ID,
       Profession,
       Bio,
-      videoURL,
-      JSON.stringify(photoURLs),
+      videoFinalURL,
+      JSON.stringify(allPhotoURLs),
       SpotifyLink,
       InstagramLink,
       FacebookLink,
@@ -91,6 +74,7 @@ const insertProfessionalDetails = async (req, res) => {
 
     if (dbResponse) {
       await setCurrentStep(step, OPH_ID);
+      
       return res.status(200).json({
         success: true,
         message: "Professional details inserted successfully",
@@ -104,17 +88,18 @@ const insertProfessionalDetails = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    return res
-      .status(500)
-      .json({ success: false, message: "Server error", error: err.message });
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message,
+    });
   }
 };
 
 const getProfessionalByOphId = async (req, res) => {
   try {
     const { ophid } = req.query;
-    const data = await user_details.getProfessionalDetails(ophid);
-    console.log(data);
+    const data = await user_details.getProfessionalByOphId(ophid);
 
     if (!data) {
       return res.status(404).json({
