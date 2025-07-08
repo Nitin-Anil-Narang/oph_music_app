@@ -14,12 +14,14 @@ const PaymentScreen = () => {
   const [trans, setTrans] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { headers } = useArtist();
   const from = location.state.from;
+  const selectedDate = location.state.selectedDate;
 
   const {
     amount = 0,
     planIds = [],
-    paymentIds = [], 
+    paymentIds = [],
     returnPath = "/create-profile/personal-details",
     heading = "Payment Required",
   } = location.state || {};
@@ -35,23 +37,37 @@ const PaymentScreen = () => {
         Transaction_ID: trans,
         Review: 0,
         Status: "Under Review",
-        step: '/auth/create-profile/personal-details',
-        from : from
-        // plan_ids: planIds,
+        step: "/auth/create-profile/personal-details",
+        from: from,
+        booking_date: selectedDate,
       };
-      console.log("Submitting payment form data:", formData);
 
       const response = await axiosApi.post("/auth/payment", formData);
 
-      if(response.data.success)
-      {
-        const path = `/auth/create-profile/personal-details?ophid=${ophid}`
-        navigate(path)
-      }
-      
+      if (response.data.success) {
+        console.log("hello");
 
-      const CalenderRes = axiosApi.post("/")
-      
+        if (from === "Date booking") {
+          const CalenderRes = await axiosApi.post(
+            "/booking",
+            { oph_id: formData.OPH_ID, booking_date: formData.booking_date },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                ...headers,
+              },
+            }
+          );
+
+          if (CalenderRes.data.success) {
+            navigate("/dashboard");
+          }
+        } else if (from === "Registration") {
+          navigate(
+            `/auth/create-profile/personal-details?ophid=${formData.OPH_ID}`
+          );
+        }
+      }
     } catch (err) {
       console.error("Payment error:", err);
       setError("Payment processing failed. Please try again.");

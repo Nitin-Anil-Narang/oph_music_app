@@ -40,6 +40,9 @@ export default function TimeCalendar() {
               artist: item.artist,
             };
           });
+
+          console.log(dateMap);
+          
           setBlockedDatesInfo(dateMap);
         } else {
           console.error("API did not return success:", response.data);
@@ -242,11 +245,11 @@ export default function TimeCalendar() {
     <div className="flex items-center gap-2 mb-2">
       {/* Circle with Initial */}
       <div className="sm:w-8 sm:h-8  w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold sm:text-md text-xs">
-        {artist.artist.name.charAt(0).toUpperCase()}
+        {artist?.artist?.name.charAt(0).toUpperCase()}
       </div>
 
       {/* Full name only on larger screens */}
-      <span className="text-sm hidden lg:block">{artist.artist.name}</span>
+      <span className="text-sm hidden lg:block">{artist?.artist?.name}</span>
     </div>
   );
 
@@ -291,8 +294,11 @@ export default function TimeCalendar() {
     );
     const dateStr = new Date(Date.UTC(currentYear, currentMonthIndex, day))
       .toISOString()
-      .split("T")[0];
+      .split("T")[0]; 
+
     const artist = blockedDatesInfo[dateStr];
+
+    
     return (
       <div
         key={index}

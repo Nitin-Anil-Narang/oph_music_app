@@ -15,34 +15,34 @@ export default function BlockDateForm() {
   });
   const [isProcessing, setIsProcessing] = useState(false);
 
-  useEffect(() => {
-    // const userData = JSON.parse(localStorage.getItem('userData'));
-    // if (userData?.artist.oph_id) {
-    //   setFormData(prev => ({
-    //     ...prev,
-    //     oph_id: userData.artist.oph_id
-    //   }));
-    // }
+  // useEffect(() => {
+  //   const userData = JSON.parse(localStorage.getItem('userData'));
+  //   if (userData?.artist.oph_id) {
+  //     setFormData(prev => ({
+  //       ...prev,
+  //       oph_id: userData.artist.oph_id
+  //     }));
+  //   }
 
-    // Handle payment return
-    if (location.state?.status === "success") {
-      const savedFormData = JSON.parse(sessionStorage.getItem('blockDateFormData'));
-      if (savedFormData) {
-        handleBlockDate(location.state.paymentData, savedFormData);
-        // Clean up after successful processing
-        sessionStorage.removeItem('blockDateFormData');
-      }
-    }
-  }, [location.state]);
+  //   // Handle payment return
+  //   if (location.state?.status === "success") {
+  //     const savedFormData = JSON.parse(sessionStorage.getItem('blockDateFormData'));
+  //     if (savedFormData) {
+  //       handleBlockDate(location.state.paymentData, savedFormData);
+  //       // Clean up after successful processing
+  //       sessionStorage.removeItem('blockDateFormData');
+  //     }
+  //   }
+  // }, [location.state]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
     // Save form data to sessionStorage before navigation
-    sessionStorage.setItem('blockDateFormData', JSON.stringify({
-      selectedDate: formData.selectedDate,
-      numberOfSongs: formData.numberOfSongs
-    }));
+    // sessionStorage.setItem('blockDateFormData', JSON.stringify({
+    //   selectedDate: formData.selectedDate,
+    //   numberOfSongs: formData.numberOfSongs
+    // }));
 
     // Navigate to payment screen with form data
     navigate("/dashboard/payment", {
@@ -51,40 +51,42 @@ export default function BlockDateForm() {
         planIds: [2], // Date blocking plan ID
         returnPath: "/dashboard/block-date",
         heading: "Date Blocking Fee",
-        from: "Date booking"
+        from: "Date booking",
+        selectedDate: formData.selectedDate
       }
     });
   };
 
-  const handleBlockDate = async (paymentData, dateBlockData) => {
-    console.log("handleBlockDate called with:", { paymentData, dateBlockData });
-    try {
-      setIsProcessing(true);
+  // const handleBlockDate = async (paymentData, dateBlockData) => {
+  //   console.log("handleBlockDate called with:", { paymentData, dateBlockData });
+  //   try {
+  //     setIsProcessing(true);
 
-      const response = await axiosApi.post("/date-block/block", {
-        expected_songs: parseInt(dateBlockData.numberOfSongs),
-        date: new Date(dateBlockData.selectedDate),
-        payment_id: paymentData.newPaymentIds[0]
-      }, {
-        headers:headers
-      });
+  //     const response = await axiosApi.post("/date-block/block", {
+  //       expected_songs: parseInt(dateBlockData.numberOfSongs),
+  //       date: new Date(dateBlockData.selectedDate),
+  //       payment_id: paymentData.newPaymentIds[0]
+  //     }, {
+  //       headers:headers
+  //     });
 
-      if (response.data.success) {
-        navigate("/dashboard/success", {
-          state: {
-            heading: "Your date blocked successfully!",
-            btnText: "View Calendar",
-            redirectTo: "/dashboard/time-calendar"
-          }
-        });
-      }
-    } catch (error) {
-      console.error("Error blocking date:", error);
-      // Handle error appropriately
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  //     if (response.data.success) {
+  //       navigate("/dashboard/success", {
+  //         state: {
+  //           heading: "Your date blocked successfully!",
+  //           btnText: "View Calendar",
+  //           redirectTo: "/dashboard/time-calendar"
+  //         }
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error blocking date:", error);
+  //     // Handle error appropriately
+  //   } finally {
+  //     setIsProcessing(false);
+  //   }
+  // };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
