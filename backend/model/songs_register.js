@@ -1,5 +1,14 @@
 const db = require("../DB/connect");
 
+
+const getSongID = async (name) => {
+
+  const [rows] = await db.execute("SELECT song_id FROM songs_register WHERE Song_name = ?", [name])
+  
+  return rows
+}
+
+
 // INSERT song record
 const insertNewSong = async (OPH_ID,
   project_type,
@@ -53,4 +62,4 @@ const insertHybridSong = async (OPH_ID,
 };
 
 
-module.exports = { insertNewSong,insertHybridSong };
+module.exports = { insertNewSong,insertHybridSong, getSongID };

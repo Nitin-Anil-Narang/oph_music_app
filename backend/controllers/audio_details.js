@@ -6,6 +6,7 @@ const insertSongDetailsController = async (req, res) => {
   try {
     const {
       OPH_ID,
+      song_id,
       Song_name,
       language,
       genre,
@@ -33,6 +34,7 @@ const insertSongDetailsController = async (req, res) => {
 
     const result = await insertSongDetails(
       OPH_ID,
+      song_id,
       Song_name,
       language,
       genre,

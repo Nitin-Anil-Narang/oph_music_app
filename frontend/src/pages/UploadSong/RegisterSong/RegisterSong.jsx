@@ -200,6 +200,47 @@ export default function RegisterSongForm() {
     );
   };
 
+  const newProject = async (updatedFormData) => {
+
+    try {
+      const response = await axiosApi.post("/register-new-song",
+        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid},
+        { headers: headers })
+      console.log(response);
+      if (response.data.success) {
+        navigate(`/dashboard/upload-song/audio-metadata/${response.data.contentID}`, {
+          state: {
+            songName : updatedFormData.name,
+          }
+        });
+      }
+    }
+    catch (error) {
+      console.error("Error booking date", error)
+    }
+
+  }
+
+  const hybridProject = async (updatedFormData) => {
+
+    try {
+      const response = await axiosApi.post("/register-hybrid-song",
+        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, available_on_music_platforms: updatedFormData.available_on_music_platforms },
+        { headers: headers })
+      if (response.data.success) {
+        navigate(`/dashboard/upload-song/audio-metadata/${response.data.contentID}`, {
+          state: {
+            songName : updatedFormData.name,
+          }
+        });
+      }
+    }
+    catch (error) {
+      console.error("Error booking date", error)
+    }
+
+  }
+
   const paidInAdvance = async (updatedFormData) => {
 
     try {
@@ -208,7 +249,11 @@ export default function RegisterSongForm() {
         { headers: headers })
       console.log(response);
       if (response.data.success) {
-        navigate(`/dashboard/upload-song/audio-metadata/${ophid}`);
+        navigate(`/dashboard/upload-song/audio-metadata/${response.data.contentID}`, {
+          state: {
+            songName : updatedFormData.name,
+          }
+        });
       }
     }
     catch (error) {
@@ -216,6 +261,7 @@ export default function RegisterSongForm() {
     }
 
   }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -242,16 +288,18 @@ export default function RegisterSongForm() {
     // delete updatedFormData.isAvailableOnMusicPlatform;    
 
 
+
     if (projectType === "pay in advance") {
       paidInAdvance(updatedFormData)
     }
-
-    navigate(`/dashboard/upload-song/audio-metadata/${ophid}`, {
-      state: {
-        songName: updatedFormData.name
-      }
-    });
-
+    else if(projectType === "new project")
+    {
+      newProject(updatedFormData)
+    }
+    else if(projectType === "hyrbid project")
+    {
+      hybridProject(updatedFormData)
+    }
     // if (updatedFormData.available_on_music_platforms) {
     //   toast.success("Song Registered Successfully !!!!");
     //   navigate(`/dashboard/upload-song/video-metadata/${response.data.data.id}`);

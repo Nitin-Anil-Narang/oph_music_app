@@ -22,29 +22,29 @@ function SecondaryArtistForm({ artistType, onClose, onArtistAdd }) {
     e.preventDefault();
 
     // Regex for Instagram and Spotify URLs
-    const instagramRegex =
-      /^(https?:\/\/)?(www\.)?instagram\.com\/([a-zA-Z0-9._]+)\/?/;
-    // const spotifyRegex = /^(https?:\/\/)?(open\.)?spotify\.com\/[a-zA-Z0-9._%+-]+\/?$/;
-    const spotifyRegex =
-      /(?:https:\/\/open\.spotify\.com\/artist\/)([A-Za-z0-9]+)/;
-    // Validate URL fields
-    const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]*)*\/?$/;
-    if (spotify && !spotifyRegex.test(spotify)) {
-      toast.error("Invalid Spotify URL");
-      return;
-    }
-    if (facebook && !urlPattern.test(facebook)) {
-      toast.error("Invalid Facebook URL");
-      return;
-    }
-    if (instagram && !instagramRegex.test(instagram)) {
-      toast.error("Invalid Instagram URL");
-      return;
-    }
-    if (apple && !urlPattern.test(apple)) {
-      toast.error("Invalid Apple Music URL");
-      return;
-    }
+    // const instagramRegex =
+    //   /^(https?:\/\/)?(www\.)?instagram\.com\/([a-zA-Z0-9._]+)\/?/;
+    // // const spotifyRegex = /^(https?:\/\/)?(open\.)?spotify\.com\/[a-zA-Z0-9._%+-]+\/?$/;
+    // const spotifyRegex =
+    //   /(?:https:\/\/open\.spotify\.com\/artist\/)([A-Za-z0-9]+)/;
+    // // Validate URL fields
+    // const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]*)*\/?$/;
+    // if (spotify && !spotifyRegex.test(spotify)) {
+    //   toast.error("Invalid Spotify URL");
+    //   return;
+    // }
+    // if (facebook && !urlPattern.test(facebook)) {
+    //   toast.error("Invalid Facebook URL");
+    //   return;
+    // }
+    // if (instagram && !instagramRegex.test(instagram)) {
+    //   toast.error("Invalid Instagram URL");
+    //   return;
+    // }
+    // if (apple && !urlPattern.test(apple)) {
+    //   toast.error("Invalid Apple Music URL");
+    //   return;
+    // }
 
     const data = {
       name,
@@ -381,7 +381,7 @@ export default function AudioMetadataForm() {
     ;
     e.preventDefault();
 
-    setIsLoading(true);
+    // setIsLoading(true);
     if (isSubmitting) return;
 
     try {
@@ -389,6 +389,7 @@ export default function AudioMetadataForm() {
 
       const formData = new FormData();
       formData.append("OPH_ID", ophid);
+      formData.append("song_id", contentId);
       formData.append("Song_name", songName);
       formData.append("language", langID);
       formData.append("genre", genre);
@@ -451,6 +452,9 @@ export default function AudioMetadataForm() {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}:`, value);
       }
+
+      return
+
       const response = await axiosApi.post(
         `/audio-details`,
         formData,

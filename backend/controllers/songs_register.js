@@ -1,10 +1,9 @@
 const songRegModel = require("../model/songs_register");
 
+
 exports.insertNewSongRegDetails = async (req, res) => {
   try {
     const { oph_id, project_type, name, release_date, lyricalVid } = req.body;
-
-    console.log(req.body);
 
     if (!oph_id || !project_type || !name || !release_date) {
       return res.status(400).json({
@@ -23,9 +22,13 @@ exports.insertNewSongRegDetails = async (req, res) => {
     );
 
     if (RegSongRes) {
+
+      const song_id = await songRegModel.getSongID(name)
+      
       return res.status(201).json({
         success: true,
         message: "Song Registered Successfully",
+        contentID : song_id[0].song_id
       });
     }
   } catch (err) {
@@ -58,9 +61,13 @@ exports.insertHybridSongRegDetails = async (req, res) => {
     );
 
     if (RegSongRes) {
+
+      const song_id = await songRegModel.getSongID(name)
+
       return res.status(201).json({
         success: true,
         message: "Song Registered Successfully",
+        contentID : song_id[0].song_id
       });
     }
   } catch (err) {
