@@ -15,17 +15,6 @@ export default function BlockDateForm() {
     selectedDate: location.state?.selectedDate || "",
   });
   const [isProcessing, setIsProcessing] = useState(false);
-<<<<<<< HEAD
-
-  // useEffect(() => {
-  //   const userData = JSON.parse(localStorage.getItem('userData'));
-  //   if (userData?.artist.oph_id) {
-  //     setFormData(prev => ({
-  //       ...prev,
-  //       oph_id: userData.artist.oph_id
-  //     }));
-  //   }
-=======
   useEffect(() => {
     if (ophid) {
       setFormData(prev => ({
@@ -43,7 +32,6 @@ export default function BlockDateForm() {
   //   //     oph_id: userData.artist.oph_id
   //   //   }));
   //   // }
->>>>>>> e4fb8c13346adff1c0d56cc100ad6e4fec0e2e0f
 
   //   // Handle payment return
   //   if (location.state?.status === "success") {
@@ -55,21 +43,18 @@ export default function BlockDateForm() {
   //     }
   //   }
   // }, [location.state]);
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> e4fb8c13346adff1c0d56cc100ad6e4fec0e2e0f
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Save form data to sessionStorage before navigation
-    // sessionStorage.setItem('blockDateFormData', JSON.stringify({
-    //   selectedDate: formData.selectedDate,
-    //   numberOfSongs: formData.numberOfSongs
-    // }));
+    sessionStorage.setItem('blockDateFormData', JSON.stringify({
+      selectedDate: formData.selectedDate,
+      numberOfSongs: formData.numberOfSongs
+    }));
 
     // Navigate to payment screen with form data
     navigate("/dashboard/payment", {
@@ -77,43 +62,16 @@ export default function BlockDateForm() {
         date: formData.selectedDate,
         returnPath: "/dashboard/block-date",
         heading: "Date Blocking Fee",
-        from: "Date booking",
-        selectedDate: formData.selectedDate
+        from: "Date booking"
       }
     });
   };
 
-  // const handleBlockDate = async (paymentData, dateBlockData) => {
-  //   console.log("handleBlockDate called with:", { paymentData, dateBlockData });
-  //   try {
-  //     setIsProcessing(true);
+  const handleBlockDate = async (paymentData, dateBlockData) => {
+    console.log("handleBlockDate called with:", { paymentData, dateBlockData });
+    try {
+      setIsProcessing(true);
 
-<<<<<<< HEAD
-  //     const response = await axiosApi.post("/date-block/block", {
-  //       expected_songs: parseInt(dateBlockData.numberOfSongs),
-  //       date: new Date(dateBlockData.selectedDate),
-  //       payment_id: paymentData.newPaymentIds[0]
-  //     }, {
-  //       headers:headers
-  //     });
-
-  //     if (response.data.success) {
-  //       navigate("/dashboard/success", {
-  //         state: {
-  //           heading: "Your date blocked successfully!",
-  //           btnText: "View Calendar",
-  //           redirectTo: "/dashboard/time-calendar"
-  //         }
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error blocking date:", error);
-  //     // Handle error appropriately
-  //   } finally {
-  //     setIsProcessing(false);
-  //   }
-  // };
-=======
       const response = await axiosApi.post("/date-block/block", {
         expected_songs: parseInt(dateBlockData.numberOfSongs),
         date: new Date(dateBlockData.selectedDate),
@@ -121,8 +79,23 @@ export default function BlockDateForm() {
       }, {
         headers: headers
       });
->>>>>>> e4fb8c13346adff1c0d56cc100ad6e4fec0e2e0f
 
+      if (response.data.success) {
+        navigate("/dashboard/success", {
+          state: {
+            heading: "Your date blocked successfully!",
+            btnText: "View Calendar",
+            redirectTo: "/dashboard/time-calendar"
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error blocking date:", error);
+      // Handle error appropriately
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
