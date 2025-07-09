@@ -1,5 +1,6 @@
 const { insertSongDetails } = require("../model/audio_details");
-const { uploadToS3 } = require("../utils"); 
+const { uploadToS3 } = require("../utils");
+const bucket = require("../utils.js");
 
 const insertSongDetailsController = async (req, res) => {
   try {
@@ -12,16 +13,25 @@ const insertSongDetailsController = async (req, res) => {
       mood,
       lyrics,
       primary_artist,
-      featuring,
-      lyricist,
-      composer,
-      producer,
-      audio_url
     } = req.body;
 
- 
-  
-    const result = await insertSongDetails({
+    const audio_file = req.file
+
+    let audioPath = ''
+
+    if (audio_file) {
+      const fileURL = await bucket.uploadToS3(
+        audio_file,
+        `audio-meta/${OPH_ID}/audio-url`
+      )
+      if (fileURL) {
+        audioPath = fileURL
+      }
+    }
+
+    console.log(audioPath);
+
+    const result = await insertSongDetails(
       OPH_ID,
       Song_name,
       language,
@@ -30,14 +40,13 @@ const insertSongDetailsController = async (req, res) => {
       mood,
       lyrics,
       primary_artist,
-      featuring,
-      lyricist,
-      composer,
-      producer,
-      audio_url
-    });
+      audioPath
+    );
 
-    res.status(201).json({ message: "Song details saved", result });
+    if (result) {
+      res.status(201).json({ message: "Song details saved", result });
+    }
+
   } catch (error) {
     console.error("Insert song detail error:", error);
     res.status(500).json({ error: error.message });

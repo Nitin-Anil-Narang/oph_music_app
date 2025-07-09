@@ -14,6 +14,7 @@ const PaymentScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const from = location.state.from;
+  const [oph_id, setoph_id] = useState("")
 
   const {
     amount = 0,
@@ -40,22 +41,105 @@ const PaymentScreen = () => {
         Transaction_ID: trans,
         Review: 0,
         Status: "Under Review",
-        step: '/auth/create-profile/personal-details',
-        from : from
-        // plan_ids: planIds,
+        step: "/auth/create-profile/personal-details",
+        from: from,
       };
+      console.log("Submitting payment form data:", formData);
 
       const response = await axiosApi.post("/auth/payment", formData);
 
-      if(response.data.success)
-      {
-        const path = `/auth/create-profile/personal-details?ophid=${ophid}`
-        navigate(path)
-      }
-      
 
-      const CalenderRes = axiosApi.post("/")
-      
+      if (response.data.success && from == "Date booking") {
+        {
+          const CalenderRes = await axiosApi.post(
+            "/booking",
+            { oph_id: ophid, booking_date: location.state.date },
+            { headers: headers }
+          );
+       
+
+
+          if (CalenderRes.data.success) {
+            navigate("/dashboard/success", {
+              state: {
+                heading: "Your date blocked successfully!",
+                btnText: "View Calendar",
+                redirectTo: "/dashboard/time-calendar",
+              },
+            });
+          }
+        }
+      }
+      else if (response.data.success && from == "Release date change") {
+        {
+          const CalenderRes = await axiosApi.post(
+            "/change-release-date",
+            { oph_id: ophid, old_booking_date: location.state.old_booking_date, new_booking_date: location.state.new_booking_date },
+            { headers: headers }
+          );
+
+          if (CalenderRes.data.success) {
+            navigate("/dashboard/success", {
+              state: {
+                heading: "Your date blocked successfully!",
+                btnText: "View Calendar",
+                redirectTo: "/dashboard/time-calendar",
+              },
+            });
+          }
+        }
+      }
+      else if (response.data.success && from === "new project") {
+        {
+          const RegSongRes = await axiosApi.post(
+            "/register-new-song",
+            { oph_id: ophid, project_type: location.state.from, name: location.state.form.name, release_date: location.state.form.release_date, lyricalVid: location.state.form.lyricalVid },
+            { headers: headers }
+          );
+
+          if (RegSongRes.data.success) {
+
+            const CalendarRes = await axiosApi.post("/booking",
+              { oph_id: ophid, booking_date: location.state.form.release_date },
+              { headers: headers }
+            )
+
+            
+
+            if (CalendarRes.data.success) {
+              console.log("success in");
+              navigate(`/dashboard/upload-song/audio-metadata/${ophid}`, {state:{
+                songName: location.state.form.name  
+              }});
+            }
+          }
+        }
+      }
+      else if (response.data.success && from === "hybrid project") {
+        {
+          const RegSongRes = await axiosApi.post(
+            "/register-hybrid-song",
+            { oph_id: ophid, project_type: location.state.from, name: location.state.form.name, release_date: location.state.form.release_date, lyricalVid: location.state.form.lyricalVid, available_on_music_platforms: location.state.form.available_on_music_platforms },
+            { headers: headers }
+          );
+
+          if (RegSongRes.data.success) {
+
+            const CalendarRes = await axiosApi.post("/booking",
+              { oph_id: ophid, booking_date: location.state.form.release_date },
+              { headers: headers }
+            )
+
+            if (CalendarRes.data.success) {
+              navigate(`/dashboard/upload-song/audio-metadata/${ophid}`);
+            }
+          }
+        }
+      }
+      else if (response.data.success) {
+        const path = `/auth/create-profile/personal-details`;
+        navigate(path);
+      }
     } catch (err) {
       console.error("Payment error:", err);
       setError("Payment processing failed. Please try again.");

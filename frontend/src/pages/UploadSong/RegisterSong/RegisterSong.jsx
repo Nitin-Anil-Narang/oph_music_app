@@ -17,7 +17,7 @@ export default function RegisterSongForm() {
   const location = useLocation();
   const [blockedDates, setBlockedDates] = useState([]); // Add state for blocked dates
   const [artistBlockedDates, setArtistBlockedDates] = useState([]); // Add state for blocked dates
-  const [songReg, setSongReg] = useState(false);
+  const [songReg, setSongReg] = useState(true);
   const [lyricalVid, setLyricalVid] = useState(false);
   const [selectedPlans, setSelectedPlans] = useState([]);
   const [payableAmount, setPayableAmount] = useState(0);
@@ -246,13 +246,12 @@ export default function RegisterSongForm() {
       paidInAdvance(updatedFormData)
     }
 
-
-    navigate("/auth/payment", {
+    navigate(`/dashboard/upload-song/audio-metadata/${ophid}`, {
       state: {
-        form: updatedFormData,
-        from: updatedFormData.project_type
+        songName: updatedFormData.name
       }
-    })
+    });
+
     // if (updatedFormData.available_on_music_platforms) {
     //   toast.success("Song Registered Successfully !!!!");
     //   navigate(`/dashboard/upload-song/video-metadata/${response.data.data.id}`);
@@ -409,7 +408,7 @@ export default function RegisterSongForm() {
     }
 
     return (
-      
+
       <div className="space-y-2">
         <label className="block">
           Release Date <span className="text-red-500">*</span>
@@ -640,6 +639,7 @@ export default function RegisterSongForm() {
                       checked={songReg}
                       onChange={() => setSongReg(!songReg)}
                       className="text-cyan-400 bg-gray-800 border-gray-700 focus:ring-cyan-400"
+                      disabled={songReg}
                     />
                     <span>799 - Song Registration fees </span>
                   </label>

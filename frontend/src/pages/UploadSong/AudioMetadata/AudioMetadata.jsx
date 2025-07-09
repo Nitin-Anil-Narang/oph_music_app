@@ -213,7 +213,7 @@ export default function AudioMetadataForm() {
   const [mood, setMood] = useState("");
   const [lyrics, setLyrics] = useState("");
   const [primary, setPrimary] = useState("");
-  const [languages, setLanguages] = useState([{ name: "english", id: 1}, {name: "hindi", id: 2}, {name: "marathi", id: 3}]);
+  const [languages, setLanguages] = useState([{ name: "english", id: 1 }, { name: "hindi", id: 2 }, { name: "marathi", id: 3 }]);
   const [audioFileUrl, setAudioFileUrl] = useState(null);
   const location = useLocation()
   const [songName, setSongName] = useState(location.state.songName);
@@ -381,16 +381,18 @@ export default function AudioMetadataForm() {
     ;
     e.preventDefault();
 
+    setIsLoading(true);
     if (isSubmitting) return;
 
     try {
       setIsSubmitting(true);
 
       const formData = new FormData();
-      formData.append("language_id", langID);
+      formData.append("OPH_ID", ophid);
+      formData.append("Song_name", songName);
+      formData.append("language", langID);
       formData.append("genre", genre);
       formData.append("sub_genre", subGenre);
-      console.log(subGenre, "sub genre");
       formData.append("project_type", checkProjectType)
 
       formData.append(
@@ -446,8 +448,11 @@ export default function AudioMetadataForm() {
         return;
       }
 
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
       const response = await axiosApi.post(
-        `/content/${contentId}/audio-metadata`,
+        `/audio-details`,
         formData,
         {
           headers: {
@@ -457,12 +462,12 @@ export default function AudioMetadataForm() {
         }
       );
 
-      if (response.status === 200) {
-        navigate(`/dashboard/upload-song/video-metadata/${contentId}`);
+      if (response.status === 201) {
+        setIsLoading(false);
+        navigate(`/dashboard/upload-song/video-metadata/${ophid}`);
       }
     } catch (error) {
       console.error("Error submitting audio metadata:", error);
-      alert("Failed to submit audio metadata. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -604,243 +609,251 @@ export default function AudioMetadataForm() {
   // }
 
   return (
+
     <div className="min-h-[calc(100vh-70px)] text-gray-100 px-8 p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Primary Artist Form */}
-        <div
-          className={`max-w-xl col-span-1 ${showSecondaryForm ? "hidden lg:block" : ""
-            }`}
-        >
-          <div className="">
-            <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
-              Audio Metadata
-            </h1>
-            {
-              rejectReason && <p className="text-red-700">Reason: {rejectReason}</p>
-            }
-            <div className="space-y-2 my-2">
-              <label className="block">
-                Song Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                disabled
-                type="text"
-                value={songName}
-                className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
+      {isLoading && (
+        <div className="text-center py-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto"></div>
+          <p className="mt-2 text-cyan-400">Loading Analytics...</p>
+        </div>
+      )}
+      {!isLoading && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Primary Artist Form */}
+          <div
+            className={`max-w-xl col-span-1 ${showSecondaryForm ? "hidden lg:block" : ""
+              }`}
+          >
+            <div className="">
+              <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
+                Audio Metadata
+              </h1>
+              {
+                rejectReason && <p className="text-red-700">Reason: {rejectReason}</p>
+              }
+              <div className="space-y-2 my-2">
+                <label className="block">
+                  Song Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  value={songName}
+                  className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
+                />
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Language Dropdown */}
+                <div className="space-y-2">
+
+                  <label className="block">
+                    Language <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={langID || ""}
+                    onChange={handleLanguageChange}
+                    className="w-full bg-black border text-white border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
+                    required
+                  >
+                    <option value="">Select Language</option>
+                    {languages.map((lang) => (
+                      <option key={lang.name} value={lang.id}>
+                        {lang.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Genre Dropdown */}
+                <div className="space-y-2">
+                  <label className="block">
+                    Genre <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={genre}
+                    onChange={handleGenreChange}
+                    className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
+                    required
+                  >
+                    <option value="">Select Genre</option>
+                    {genres.map((g, index) => (
+                      <option key={index} value={g}>
+                        {g}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Subgenre Dropdown - depends on Genre selection */}
+
+                <div className="space-y-2">
+                  <label className="block">
+                    Subgenre <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={subGenre}
+                    onChange={handleSubgenreChange}
+                    className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
+                    required
+                  >
+                    <option value="">Select Subgenre</option>
+                    {subGenres.map((sub, index) => (
+                      <option key={index} value={sub}>
+                        {sub}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Mood Dropdown */}
+                <div className="space-y-2">
+                  <label className="block">
+                    Mood <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={mood}
+                    onChange={handleMoodChange}
+                    className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
+                    required
+                  >
+                    <option value="">Select Mood</option>
+                    {moods.map((m, index) => (
+                      <option key={index} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {/* Lyrics */}
+                <div className="space-y-2">
+                  <label className="block">Lyrics</label>
+                  <textarea
+                    value={lyrics}
+                    onChange={(e) => setLyrics(e.target.value)}
+                    className="w-full bg-gray-800/50 border border-gray-700 rounded-lg p-3 focus:outline-none focus:border-cyan-400 min-h-[150px]"
+                  />
+                </div>
+                {/* Primary Artist */}
+                <div className="space-y-2">
+                  <label className="block">
+                    Primary Artist <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={`${user?.userData?.artist.name
+                      } - ${user?.userData?.artist
+                        .stage_name
+                      }`}
+                    onChange={(e) => setPrimary(e.target.value)}
+                    className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
+                    required
+                  />
+                </div>
+                {/* Secondary Artists */}
+                <div className="space-y-6">
+                  {[
+                    { type: "Featuring Artist", artists: featuringArtists },
+                    { type: "Lyricist Artist", artists: lyricistArtists },
+                    { type: "Composer Artist", artists: composerArtists },
+                    { type: "Producer Artist", artists: producerArtists },
+                  ].map(({ type, artists }) => (
+                    <div key={type} className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-semibold">{type}s</h3>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedArtistType(type);
+                            setShowSecondaryForm(true);
+                          }}
+                          className="bg-none border border-cyan-400 text-cyan-400 px-4 py-2 rounded-full hover:bg-cyan-300 hover:text-black transition-colors"
+                        >
+                          Add {type}
+                        </button>
+                      </div>
+                      {artists.map((artist, index) => (
+                        <div
+                          key={index}
+                          className="p-4 bg-gray-800/50 rounded-lg"
+                        >
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <p className="font-medium">{artist.name}</p>
+                              <p className="text-sm text-gray-400">
+                                {artist.legal_name}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleArtistRemove(type, index)}
+                              className="text-red-500 hover:text-red-400"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+
+
+                {/* Audio File Upload */}
+                <div className="space-y-2">
+                  <label className="block">
+                    Audio File <span className="text-red-500">*</span>
+                  </label>
+                  <div
+                    onClick={handleDivClick}
+                    className="p-6 border-2 border-dashed border-gray-700 rounded-lg cursor-pointer hover:border-cyan-400 transition-colors"
+                  >
+                    {uploadedFileName ? (
+                      <div className="text-center">
+                        <p className="text-cyan-400 font-medium">
+                          {uploadedFileName}
+                        </p>
+                        <p className="text-sm text-gray-400">
+                          Click to change the file
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-center text-gray-400">
+                        {audioFileUrl
+                          ? "Audio file uploaded"
+                          : "Click to upload audio file"}
+                      </p>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="audio/*"
+                    onChange={handleFileChange}
+                  />
+                </div>
+                {/* Submit Button */}
+                <div className="flex justify-start">
+                  <PrimaryBtn type="submit" className="w-full h-16">
+                    Save and Continue
+                  </PrimaryBtn>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {/* Secondary Artist Form */}
+          {showSecondaryForm && (
+            <div className="col-span-1">
+              <SecondaryArtistForm
+                artistType={selectedArtistType}
+                onClose={() => setShowSecondaryForm(false)}
+                onArtistAdd={handleArtistAdd}
               />
             </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Language Dropdown */}
-              <div className="space-y-2">
-
-                <label className="block">
-                  Language <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={langID || ""}
-                  onChange={handleLanguageChange}
-                  className="w-full bg-black border text-white border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
-                  required
-                >
-                  <option value="">Select Language</option>
-                  {languages.map((lang) => (
-                    <option key={lang.name} value={lang.id}>
-                      {lang.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Genre Dropdown */}
-              <div className="space-y-2">
-                <label className="block">
-                  Genre <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={genre}
-                  onChange={handleGenreChange}
-                  className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
-                  required
-                >
-                  <option value="">Select Genre</option>
-                  {genres.map((g, index) => (
-                    <option key={index} value={g}>
-                      {g}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Subgenre Dropdown - depends on Genre selection */}
-
-              <div className="space-y-2">
-                <label className="block">
-                  Subgenre <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={subGenre}
-                  onChange={handleSubgenreChange}
-                  className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
-                  required
-                >
-                  <option value="">Select Subgenre</option>
-                  {subGenres.map((sub, index) => (
-                    <option key={index} value={sub}>
-                      {sub}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Mood Dropdown */}
-              <div className="space-y-2">
-                <label className="block">
-                  Mood <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={mood}
-                  onChange={handleMoodChange}
-                  className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
-                  required
-                >
-                  <option value="">Select Mood</option>
-                  {moods.map((m, index) => (
-                    <option key={index} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {/* Lyrics */}
-              <div className="space-y-2">
-                <label className="block">Lyrics</label>
-                <textarea
-                  value={lyrics}
-                  onChange={(e) => setLyrics(e.target.value)}
-                  className="w-full bg-gray-800/50 border border-gray-700 rounded-lg p-3 focus:outline-none focus:border-cyan-400 min-h-[150px]"
-                />
-              </div>
-              {/* Primary Artist */}
-              <div className="space-y-2">
-                <label className="block">
-                  Primary Artist <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={`${user?.userData?.artist.name
-                    } - ${user?.userData?.artist
-                      .stage_name
-                    }`}
-                  onChange={(e) => setPrimary(e.target.value)}
-                  className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
-                  required
-                />
-              </div>
-              {/* Secondary Artists */}
-              <div className="space-y-6">
-                {[
-                  { type: "Featuring Artist", artists: featuringArtists },
-                  { type: "Lyricist Artist", artists: lyricistArtists },
-                  { type: "Composer Artist", artists: composerArtists },
-                  { type: "Producer Artist", artists: producerArtists },
-                ].map(({ type, artists }) => (
-                  <div key={type} className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-semibold">{type}s</h3>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedArtistType(type);
-                          setShowSecondaryForm(true);
-                        }}
-                        className="bg-none border border-cyan-400 text-cyan-400 px-4 py-2 rounded-full hover:bg-cyan-300 hover:text-black transition-colors"
-                      >
-                        Add {type}
-                      </button>
-                    </div>
-                    {artists.map((artist, index) => (
-                      <div
-                        key={index}
-                        className="p-4 bg-gray-800/50 rounded-lg"
-                      >
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <p className="font-medium">{artist.name}</p>
-                            <p className="text-sm text-gray-400">
-                              {artist.legal_name}
-                            </p>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => handleArtistRemove(type, index)}
-                            className="text-red-500 hover:text-red-400"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-
-
-              {/* Audio File Upload */}
-              <div className="space-y-2">
-                <label className="block">
-                  Audio File <span className="text-red-500">*</span>
-                </label>
-                <div
-                  onClick={handleDivClick}
-                  className="p-6 border-2 border-dashed border-gray-700 rounded-lg cursor-pointer hover:border-cyan-400 transition-colors"
-                >
-                  {uploadedFileName ? (
-                    <div className="text-center">
-                      <p className="text-cyan-400 font-medium">
-                        {uploadedFileName}
-                      </p>
-                      <p className="text-sm text-gray-400">
-                        Click to change the file
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-center text-gray-400">
-                      {audioFileUrl
-                        ? "Audio file uploaded"
-                        : "Click to upload audio file"}
-                    </p>
-                  )}
-                </div>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  accept="audio/*"
-                  onChange={handleFileChange}
-                />
-              </div>
-              {/* Submit Button */}
-              <div className="flex justify-start">
-                <PrimaryBtn type="submit" className="w-full h-16">
-                  Save and Continue
-                </PrimaryBtn>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        {/* Secondary Artist Form */}
-        {showSecondaryForm && (
-          <div className="col-span-1">
-            <SecondaryArtistForm
-              artistType={selectedArtistType}
-              onClose={() => setShowSecondaryForm(false)}
-              onArtistAdd={handleArtistAdd}
-            />
-          </div>
-        )}
-      </div>
+          )}
+        </div>)}
       <ToastContainer />
     </div>
   );
