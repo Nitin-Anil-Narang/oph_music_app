@@ -95,6 +95,7 @@ export default function RegisterSongForm() {
 
   }, []);
 
+
   useEffect(() => {
     const fetchBlockedDatesByOPHID = async () => {
 
@@ -204,7 +205,7 @@ export default function RegisterSongForm() {
 
     try {
       const response = await axiosApi.post("/register-new-song",
-        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid},
+        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, next_step : updatedFormData.next_step},
         { headers: headers })
       console.log(response);
       if (response.data.success) {
@@ -225,7 +226,7 @@ export default function RegisterSongForm() {
 
     try {
       const response = await axiosApi.post("/register-hybrid-song",
-        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, available_on_music_platforms: updatedFormData.available_on_music_platforms },
+        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, available_on_music_platforms: updatedFormData.available_on_music_platforms, next_step : updatedFormData.next_step },
         { headers: headers })
       if (response.data.success) {
         navigate(`/dashboard/upload-song/audio-metadata/${response.data.contentID}`, {
@@ -245,7 +246,7 @@ export default function RegisterSongForm() {
 
     try {
       const response = await axiosApi.post("/register-hybrid-song",
-        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, available_on_music_platforms: updatedFormData.available_on_music_platforms },
+        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, available_on_music_platforms: updatedFormData.available_on_music_platforms, next_step : updatedFormData.next_step },
         { headers: headers })
       console.log(response);
       if (response.data.success) {
@@ -280,6 +281,7 @@ export default function RegisterSongForm() {
       p_line: `${artistName} - ${stageName}`,
       available_on_music_platforms:
         formData.available_on_music_platforms || false, // This line adds it
+      next_step: '/dashboard/upload-song/audio-metadata/'
     };
     // console.log(updatedFormData, "updatedFormData");
 

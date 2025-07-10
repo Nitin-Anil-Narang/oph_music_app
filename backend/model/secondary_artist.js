@@ -5,7 +5,7 @@ const db = require("../DB/connect");
  * Insert a new secondary artist row
  */
 const insertSecondaryArtist = async (
-  OPH_ID,
+  song_id,
   artist_type,
   artist_name,
   Legal_name,
@@ -17,18 +17,18 @@ const insertSecondaryArtist = async (
 ) => {
   const [result] = await db.execute(
     `INSERT INTO secondary_artist (
-  OPH_ID,
-  artist_type,
-  artist_name,
-  Legal_name,
-  artistPictureUrl,
-  SpotifyLink,
-  InstagramLink,
-  FacebookLink,
-  AppleMusicLink
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      song_id,
+      artist_type,
+      artist_name,
+      Legal_name,
+      artistPictureUrl,
+      SpotifyLink,
+      InstagramLink,
+      FacebookLink,
+      AppleMusicLink
+     ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)`,
     [
-      OPH_ID,
+      song_id,
       artist_type,
       artist_name,
       Legal_name,
@@ -43,6 +43,16 @@ const insertSecondaryArtist = async (
   return result;
 };
 
+
+const removeSecondaryArtist = async (song_id, artist_type, artist_name, legal_name) => 
+{
+    const [rows] = await db.execute(
+      "DELETE FROM secondary_artist WHERE song_id = ? AND artist_type = ? AND artist_name = ? AND Legal_name = ?",[song_id,artist_type,artist_name,legal_name]
+    )
+
+    return rows;
+}
+
 /**
  * Update an existing secondary artist (keyed by OPH_ID + artist_type)
  */
@@ -56,7 +66,7 @@ const updateSecondaryArtist = async (
   InstagramLink,
   FacebookLink,
   AppleMusicLink
- )  => {
+) => {
   const [result] = await db.execute(
     `UPDATE secondary_artist
      SET artist_name = ?, Legal_name = ?, artistPictureUrl = ?,
@@ -109,6 +119,7 @@ const getSecondaryArtistsByOphId = async (OPH_ID) => {
 module.exports = {
   insertSecondaryArtist,
   updateSecondaryArtist,
+  removeSecondaryArtist,
   getByOphIdAndType,
   getSecondaryArtistsByOphId,
 };

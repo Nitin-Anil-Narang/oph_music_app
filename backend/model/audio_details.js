@@ -42,4 +42,24 @@ const insertSongDetails = async (
   return result;
 };
 
-module.exports = { insertSongDetails };
+
+const getAudioMeta = async (song_id) =>
+{
+  const [rows] = await db.execute(
+    "SELECT * FROM audio_details WHERE song_id = ?", [song_id]
+  )
+
+  return rows
+} 
+
+const getSecondaryArtist = async (song_id) => {
+
+  const [rows] = await db.execute(
+    "SELECT * FROM secondary_artist WHERE song_id = ?", [song_id]
+  )
+
+  return rows
+
+}
+
+module.exports = { insertSongDetails,getAudioMeta,getSecondaryArtist };

@@ -17,14 +17,17 @@ import Income from "../../../public/assets/images/income.png";
 import Key from "../../../public/assets/images/key.png";
 import Logout from "../../../public/assets/images/logout.png";
 import { X } from "lucide-react";
+import axiosApi from "../../conf/axios";
 
 const SidebarNav = ({ onClose }) => {
   const navigate = useNavigate();
-  const { logout } = useArtist();
+  const { logout, ophid, headers } = useArtist();
   const [userData, setUserData] = useState(null);
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(false); // State to check if screen width is narrow
-
+  const [currentPageSongReg, setCurrentPageSongReg] = useState('')
+  const [data, setData] = useState([]);
+  
   useEffect(() => {
     const storedData = localStorage.getItem("userData");
     if (storedData) {
@@ -48,6 +51,33 @@ const SidebarNav = ({ onClose }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const getSongRegistrationStatus = async () => {
+
+      try {
+        const response = await axiosApi.get("/get-song-registration-status",
+          {
+            headers: headers,
+            params : {ophid}
+          }
+        )
+
+        if(response.data.success)
+        { 
+          const responseData = response.data.data[0]
+          setData(responseData)
+          const path = `${responseData.current_page}${responseData.song_id}`
+          setCurrentPageSongReg(path)
+        }
+      }
+      catch (error) {
+        console.error("Error fetching data");
+      }
+
+    }
+    getSongRegistrationStatus()
+  }, [ophid, headers])
+
   const handleLogout = async () => {
     await logout();
     toast.success("Logged Out Successfully!");
@@ -56,6 +86,16 @@ const SidebarNav = ({ onClose }) => {
   };
 
   const handleNavigation = (path) => {
+    if(path.includes("audio-metadata"))
+    {
+      navigate(path, {
+        state:{
+          songName : data.Song_name
+        }
+      })
+
+      return
+    }
     navigate(path);
     onClose?.();
   };
@@ -70,7 +110,7 @@ const SidebarNav = ({ onClose }) => {
     {
       icon: <img src={SongUp} className="w-[24px] h-[24px]" />,
       label: "Songs Registration",
-      to: "/dashboard/upload-song",
+      to: currentPageSongReg || '/dashboard/upload-song',
     },
     {
       icon: <img src={Tv} className="w-[24px] h-[24px]" />,
@@ -142,11 +182,10 @@ const SidebarNav = ({ onClose }) => {
           {menuItems.map((item, index) => (
             <li key={index}>
               <button
-                className={`w-full flex items-center px-4 py-2 hover:bg-gray-800 hover:text-cyan-400 transition-colors duration-200 justify-start text-[#666B76] ${
-                  location.pathname === item.to
+                className={`w-full flex items-center px-4 py-2 hover:bg-gray-800 hover:text-cyan-400 transition-colors duration-200 justify-start text-[#666B76] ${location.pathname === item.to
                     ? "bg-gray-800 text-cyan-400"
                     : ""
-                }`}
+                  }`}
                 onClick={() => handleNavigation(item.to)}
               >
                 <span className="inline-flex items-center justify-center w-6 mr-3">

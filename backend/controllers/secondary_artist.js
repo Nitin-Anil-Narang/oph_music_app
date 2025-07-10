@@ -1,68 +1,113 @@
 // controllers/secondaryArtistController.js
 const secondaryArtist = require("../model/secondary_artist.js"); // ⬅︎ create this model next
-const user_details    = require("../model/professional_details.js");
-const { uploadToS3 }  = require("../utils");
-
-// -----------------------------------------------------------------------------
-// POST /secondary-artists           ➜ create a new secondary artist row
-// -----------------------------------------------------------------------------
-
+const user_details = require("../model/professional_details.js");
+const { uploadToS3 } = require("../utils");
 
 const insertSecondaryArtist = async (req, res) => {
+
   try {
     const {
-      OPH_ID,
+      song_id,
       artist_type,
       artist_name,
-      Legal_name,
-      artistPictureUrl,
-      SpotifyLink,
-      InstagramLink,
-      FacebookLink,
-      AppleMusicLink
-    } = req.body;
+      legal_name,
+      spotify_url,
+      facebook_url,
+      instagram_url,
+      apple_music_url
+    } = req.body
 
-    /* 1 ▸ make sure the parent OPH user exists (same guard you already use) */
-    const user = await user_details.getProfessionalDetails(OPH_ID);
-    if (user.length === 0) {
-      return res.status(404).json({ success: false, message: "User not found" });
-      }
-      
-    /* 2 ▸ optional picture upload */
-    const pictureFile     = req.files?.artistPicture?.[0];
-    // const artistPictureUrl = pictureFile
-    //   ? await uploadToS3(pictureFile, "images")
-    //   : null;
+    const profileImg = req.file
 
-    /* 3 ▸ write to DB */
-    const dbResponse = await secondaryArtist.insertSecondaryArtist(
-      OPH_ID,
-      artist_type,
-      artist_name,
-      Legal_name,
-      artistPictureUrl,
-      SpotifyLink,
-      InstagramLink,
-      FacebookLink,
-      AppleMusicLink
-    );
+    if (!song_id || !artist_type || !artist_name || !legal_name || !spotify_url || !facebook_url || !instagram_url || !apple_music_url) {
 
-    if (dbResponse) {
-      return res
-        .status(200)
-        .json({ success: true, message: "Secondary artist inserted successfully" });
+      return res.status(400).json({
+        success: false,
+        message: "Missing Details"
+      })
     }
 
-    return res
-      .status(500)
-      .json({ success: false, message: "Failed to insert secondary artist" });
-  } catch (err) {
-    console.error(err);
-    return res
-      .status(500)
-      .json({ success: false, message: "Server error", error: err.message });
+    let imageURL = ''
+
+    if (profileImg) {
+      const storeImgBucket = await uploadToS3(profileImg, `secondary-artist/${song_id}/profile_image`)
+
+      if (storeImgBucket) {
+        imageURL = storeImgBucket
+      }
+    }
+
+    const response = await secondaryArtist.insertSecondaryArtist(
+      song_id,
+      artist_type,
+      artist_name,
+      legal_name,
+      imageURL,
+      spotify_url,
+      facebook_url,
+      instagram_url,
+      apple_music_url
+    )
+
+    if (response) {
+      return res.status(201).json({
+        success: true,
+        message: "Data inserted successfully"
+      })
+    }
   }
+  catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    })
+  }
+
 };
+
+const removeSecondaryArtist = async (req, res) => {
+
+  try {
+    const {
+      song_id,
+      artist_type,
+      artist_name,
+      legal_name
+    } = req.body
+
+
+    if (!song_id || !artist_type || !artist_name || !legal_name) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing requied fields"
+      })
+    }
+
+    const response = await secondaryArtist.removeSecondaryArtist(
+      song_id,
+      artist_type,
+      artist_name,
+      legal_name
+    )
+
+    if(response)
+    {
+      return res.status(201).json({
+        success: true,
+        message: "Secondary artist removed successfully"
+      })
+    }
+
+  }
+  catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    })
+
+  }
+
+}
 
 // -----------------------------------------------------------------------------
 // PUT /secondary-artists            ➜ update an existing secondary artist row
@@ -148,7 +193,7 @@ const getSecondaryArtistsByOphId = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, error: error.message });
-      
+
   }
 };
 
@@ -165,5 +210,6 @@ const getSecondaryArtistsByOphId = async (req, res) => {
 module.exports = {
   insertSecondaryArtist,
   updateSecondaryArtist,
+  removeSecondaryArtist,
   getSecondaryArtistsByOphId,
 };
