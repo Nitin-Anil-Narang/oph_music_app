@@ -1,4 +1,4 @@
-const { insertSongDetails, getAudioMeta, getSecondaryArtist } = require("../model/audio_details");
+const { insertSongDetails, getAudioMeta, getSecondaryArtist, setNextPage } = require("../model/audio_details");
 const { uploadToS3 } = require("../utils");
 const bucket = require("../utils.js");
 
@@ -14,7 +14,15 @@ const insertSongDetailsController = async (req, res) => {
       mood,
       lyrics,
       primary_artist,
+      next_step
     } = req.body;
+
+    if (!OPH_ID || !song_id || !Song_name || !languages || !genre || !sub_genre || !mood || !lyrics || !primary_artist || !next_step) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields"
+      })
+    }
 
     const audio_file = req.file
 
@@ -30,8 +38,6 @@ const insertSongDetailsController = async (req, res) => {
       }
     }
 
-    console.log(audioPath);
-
     const result = await insertSongDetails(
       OPH_ID,
       song_id,
@@ -42,11 +48,12 @@ const insertSongDetailsController = async (req, res) => {
       mood,
       lyrics,
       primary_artist,
-      audioPath
+      audioPath,
     );
 
     if (result) {
-      res.status(201).json({ message: "Song details saved", result });
+      await setNextPage(next_step, OPH_ID, song_id)
+      res.status(201).json({ message: "Song details saved", result, song_id: song_id });
     }
 
   } catch (error) {
@@ -59,7 +66,7 @@ const getSongDetailsController = async (req, res) => {
 
   try {
 
-    const { contentId } = req.query
+    const { contentId, ophid } = req.query
 
 
     if (!contentId) {
@@ -69,7 +76,7 @@ const getSongDetailsController = async (req, res) => {
       })
     }
 
-    const audioMeta = await getAudioMeta(contentId)
+    const audioMeta = await getAudioMeta(contentId, ophid)
 
     const secondaryArtist = await getSecondaryArtist(contentId)
 

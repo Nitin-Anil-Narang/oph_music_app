@@ -473,6 +473,7 @@ export default function AudioMetadataForm() {
       );
       formData.append("mood", mood);
       formData.append("lyrics", lyrics);
+      formData.append("next_step", "/dashboard/upload-song/video-metadata/")
 
       // Add secondary artists as objects
       // const addArtistsWithImages = (artists, type) => {
@@ -532,7 +533,7 @@ export default function AudioMetadataForm() {
 
       if (response.status === 201) {
         setIsLoading(false);
-        navigate(`/dashboard/upload-song/video-metadata/${ophid}`);
+        navigate(`/dashboard/upload-song/video-metadata/${response.data.song_id}`);
       }
     } catch (error) {
       console.error("Error submitting audio metadata:", error);
@@ -552,7 +553,7 @@ export default function AudioMetadataForm() {
           `/audio-and-secondary-artist`,
           {
             headers: headers,
-            params: { contentId }
+            params: { contentId, ophid }
           }
         );
 

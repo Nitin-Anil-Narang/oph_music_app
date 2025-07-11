@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import { useArtist } from "../auth/API/ArtistContext";
 
 export default function TimeCalendar() {
-  const { headers } = useArtist();
+  const { headers, ophid } = useArtist();
   const [currentMonthIndex, setCurrentMonthIndex] = useState(
     new Date().getMonth()
   );
@@ -17,6 +17,7 @@ export default function TimeCalendar() {
   const navigate = useNavigate();
   const location = useLocation();
   const toastShownRef = useRef(false); // Ref to track if toast has been shown
+  const [data, setData] = useState([])
 
   useEffect(() => {
     const fetchBlockedDates = async () => {
@@ -35,8 +36,7 @@ export default function TimeCalendar() {
 
         if (response.data.status=200) {
           const dateMap = {};
-          console.log(response.data.data);
-          
+          setData(response.data.data)
           response.data.data.forEach((item) => {
             const d = new Date(item.current_booking_date);
             const localDateStr = `${d.getFullYear()}-${String(
@@ -104,8 +104,6 @@ export default function TimeCalendar() {
       2,
       "0"
     )}-${String(d.getDate()).padStart(2, "0")}`;
-
-    console.log(dateStr);
 
     return blockedDatesInfo.hasOwnProperty(dateStr);
 
@@ -285,13 +283,19 @@ export default function TimeCalendar() {
       2,
       "0"
     )}-${String(d.getDate()).padStart(2, "0")}`;
-    const dateInfo = blockedDatesInfo[dateStr];
+
+    const isCurrentOwnerOfDate = data.find((da) => {
+      if(da.current_booking_date === dateStr)
+      {
+        return da
+      } 
+    })
+
+    const dateInfo = blockedDatesInfo[dateStr]
 
     if (dateInfo) {
-      // Date is blocked
-      const currentArtistId = JSON.parse(localStorage.getItem("userData")); // Assuming you store current artist ID
       // if (dateInfo.artist.id === currentArtistId.artist.id) {
-      if (1 === 1) {
+      if (isCurrentOwnerOfDate.oph_id === ophid) {
         // It's the current artist's date - navigate to date change
         // const artistId = currentArtistId.artist.id;
 
