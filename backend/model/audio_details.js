@@ -10,13 +10,22 @@ const insertSongDetails = async (
   mood,
   lyrics,
   primary_artist,
-  audioPath) => {
-  
+  audioPath
+) => {
   const [result] = await db.execute(
     `INSERT INTO audio_details (
       OPH_ID, Song_name, language, genre, sub_genre, mood,
       lyrics, primary_artist, audio_url, song_id
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      Song_name = VALUES(Song_name),
+      language = VALUES(language),
+      genre = VALUES(genre),
+      sub_genre = VALUES(sub_genre),
+      mood = VALUES(mood),
+      lyrics = VALUES(lyrics),
+      primary_artist = VALUES(primary_artist),
+      audio_url = VALUES(audio_url)`,
     [
       OPH_ID,
       Song_name,
@@ -35,22 +44,22 @@ const insertSongDetails = async (
 };
 
 
+
 const setNextPage = async (next_step, ophid, song_id) => {
 
-  const [rows] = await db.execute("UPDATE songs_register SET current_page = ? WHERE OPH_ID = ? AND song_id = ?", [next_step, ophid,song_id])
+  const [rows] = await db.execute("UPDATE songs_register SET current_page = ? WHERE OPH_ID = ? AND song_id = ?", [next_step, ophid, song_id])
 
   return rows
 
 }
 
-const getAudioMeta = async (song_id, ophid) =>
-{
+const getAudioMeta = async (song_id, ophid) => {
   const [rows] = await db.execute(
     "SELECT * FROM audio_details WHERE song_id = ? AND OPH_ID = ?", [song_id, ophid]
   )
 
   return rows
-} 
+}
 
 const getSecondaryArtist = async (song_id) => {
 
@@ -62,4 +71,4 @@ const getSecondaryArtist = async (song_id) => {
 
 }
 
-module.exports = { insertSongDetails,getAudioMeta,getSecondaryArtist, setNextPage };
+module.exports = { insertSongDetails, getAudioMeta, getSecondaryArtist, setNextPage };

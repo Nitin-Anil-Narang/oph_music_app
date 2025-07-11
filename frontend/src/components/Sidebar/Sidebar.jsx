@@ -86,7 +86,7 @@ const SidebarNav = ({ onClose }) => {
   };
 
   const handleNavigation = (path) => {
-    if(path.includes("audio-metadata"))
+    if(path.includes("metadata"))
     {
       navigate(path, {
         state:{

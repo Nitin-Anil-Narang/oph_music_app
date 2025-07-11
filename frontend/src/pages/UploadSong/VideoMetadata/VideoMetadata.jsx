@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Camera, Plus, X } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosApi from "../../../conf/axios";
 import { useArtist } from "../../auth/API/ArtistContext";
 import Loading from "../../../components/Loading";
@@ -9,10 +9,11 @@ import { toast, ToastContainer } from "react-toastify";
 export default function VideoMetadataForm() {
   const navigate = useNavigate();
   const { contentId } = useParams();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [songName, setSongName] = useState('');
-  const { headers } = useArtist();
+  const location = useLocation();
+  const [songName, setSongName] = useState(location.state.songName);
+  const { headers, ophid } = useArtist();
   const [formData, setFormData] = useState({
     credits: "",
     thumbnails: [],
@@ -25,64 +26,14 @@ export default function VideoMetadataForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasPaidForLyricalVideo, setHasPaidForLyricalVideo] = useState(false); // Add state for lyrical video payment
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    let isFirstMount = true;
 
-    const fetchVideoMetadata = async () => {
-      if (!contentId) {
-        setError('No content ID provided');
-        setIsLoading(false);
-        return;
-      }
 
-      try {
-        const response = await axiosApi.get(`/content/${contentId}/video-metadata`, {
-          headers: headers,
-          signal: abortController.signal
-        });
 
-        if (abortController.signal.aborted) return;
-
-        if (response.data.success) {
-          const { video_metadata } = response.data.data;
-          setSongName(video_metadata.content_name);
-          
-          setFormData(prev => ({
-            ...prev,
-            credits: video_metadata.credits || '',
-            existing_thumbnails: video_metadata.thumbnails || [],
-            existing_video_url: video_metadata.video_file_url || null,
-            reject_reason: video_metadata.reject_reason || null
-          }));
-
-          // Check if the user has paid for a lyrical video
-          const paymentInfo = JSON.parse(sessionStorage.getItem('paymentInfo'));
-          if (paymentInfo && paymentInfo.hasPaidForLyricalVideo) {
-            setHasPaidForLyricalVideo(true);
-          }
-        }
-      } catch (err) {
-        if (!abortController.signal.aborted) {
-          console.error('Error fetching video metadata:', err);
-          setError('Failed to load video metadata');
-        }
-      } finally {
-        if (!abortController.signal.aborted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    if (isFirstMount) {
-      fetchVideoMetadata();
-      isFirstMount = false;
-    }
-
-    return () => {
-      abortController.abort();
-    };
-  }, [contentId, headers]);
+  const urlToFile = async (url, fileName, mimeType) => {
+    const res = await fetch(url);
+    const buffer = await res.blob();
+    return new File([buffer], fileName, { type: mimeType });
+  };
 
   const handlePhotoUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -131,7 +82,7 @@ export default function VideoMetadataForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (isSubmitting) return;
 
     if (formData.thumbnails.length === 0 && formData.existing_thumbnails.length === 0) {
@@ -149,8 +100,10 @@ export default function VideoMetadataForm() {
       setIsLoading(true);
 
       const formDataToSend = new FormData();
+      formDataToSend.append("song_id", contentId)
+      formDataToSend.append("ophid", ophid)
       formDataToSend.append("credits", formData.credits);
-      
+
       if (formData.video_file) {
         formDataToSend.append("video_file", formData.video_file);
       }
@@ -159,17 +112,21 @@ export default function VideoMetadataForm() {
         formDataToSend.append('thumbnails', thumbnail);
       });
 
-      const response = await axiosApi.post(`/content/video-metadata/${contentId}`, formDataToSend, {
+      const response = await axiosApi.post(`/video-details`, formDataToSend, {
         headers: {
           ...headers,
           "Content-Type": "multipart/form-data",
         },
       });
-      
-      
+
+
 
       if (response.data.success) {
-        navigate("/dashboard/success");
+        navigate("/auth/payment",{
+          state:{
+            from : "Song Registration"
+          }
+        });
       }
     } catch (error) {
       console.error("Error uploading video metadata:", error);
@@ -183,15 +140,72 @@ export default function VideoMetadataForm() {
   if (error) {
     return <div className="text-red-500">{error}</div>;
   }
-  console.log(formData,"formData");
+
+  useEffect(() => {
+    const fetchVideoMetadata = async () => {
+      if (!contentId) {
+        setError('No content ID provided');
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axiosApi.get(`/video-details`, {
+          headers,
+          params: { contentId }
+        });
+
+        if (response.data.success) {
+          const { video_metadata } = response?.data?.data;
+          const data = video_metadata?.[0];
+
+          if (!data) return;
+
+          // Parse existing image URLs
+          const imageUrls = data.image_url ? JSON.parse(data.image_url) : [];
+
+          // Convert image URLs to File[]
+          const imageFiles = await Promise.all(
+            imageUrls.map(async (url, index) => {
+              const fileName = url.split('/').pop() || `image_${index}.jpg`;
+              return await urlToFile(url, fileName, 'image/jpeg');
+            })
+          );
+
+          // Convert video URL to File (if exists)
+          let videoFile = null;
+          if (data.video_url) {
+            const fileName = data.video_url.split('/').pop() || 'video.mp4';
+            videoFile = await urlToFile(data.video_url, fileName, 'video/mp4');
+          }
+
+          // ✅ Replace thumbnails and video_file (not append)
+          setFormData({
+            credits: data.credits || '',
+            existing_thumbnails: imageUrls,
+            thumbnails: imageFiles,
+            video_file: videoFile,
+            existing_video_url: data.video_url || null,
+            reject_reason: data.reject_reason || null
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching video metadata:', err);
+        setError('Failed to load video metadata');
+      }
+    };
+
+    fetchVideoMetadata();
+  }, [contentId, headers]);
+
 
   return (
     <div className="min-h-[calc(100vh-70px)] text-gray-100 px-8 p-6">
       <div className="max-w-xl space-y-8">
         <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)]">VIDEO METADATA</h1>
-          {
-            formData.reject_reason && <p className="text-red-700">Reason: {formData.reject_reason}</p>
-          }
+        {
+          formData.reject_reason && <p className="text-red-700">Reason: {formData.reject_reason}</p>
+        }
 
         {(isLoading || isRemoving || isUploading) && <Loading />}
 
@@ -199,7 +213,7 @@ export default function VideoMetadataForm() {
           {/* Song Name Display */}
           <div className="space-y-2">
             <label className="block text-gray-400">Song Name:</label>
-                        <input
+            <input
               disabled
               value={songName}
               className="w-full p-3 bg-gray-800/50 rounded-lg border border-gray-700"
@@ -251,7 +265,7 @@ export default function VideoMetadataForm() {
               ))}
 
               {/* Existing thumbnails from server */}
-              {formData.existing_thumbnails?.map((url, index) => (
+              {/* {formData.existing_thumbnails?.map((url, index) => (
                 <div key={`existing-${index}`} className="relative aspect-square">
                   <img
                     src={url}
@@ -266,7 +280,7 @@ export default function VideoMetadataForm() {
                     <X className="w-4 h-4" />
                   </button>
                 </div>
-              ))}
+              ))} */}
 
               {/* Upload Button */}
               {formData.thumbnails.length + formData.existing_thumbnails.length < 3 && (
@@ -329,8 +343,8 @@ export default function VideoMetadataForm() {
                     <div className="flex flex-col items-center gap-2">
                       <Plus className="w-8 h-8 text-gray-500" />
                       <span className="text-gray-500">
-                        {formData.existing_video_url 
-                          ? 'Upload New Video File' 
+                        {formData.existing_video_url
+                          ? 'Upload New Video File'
                           : 'Upload Video File'}
                       </span>
                     </div>

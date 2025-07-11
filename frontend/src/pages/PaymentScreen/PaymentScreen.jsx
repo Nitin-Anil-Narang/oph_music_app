@@ -56,7 +56,7 @@ const PaymentScreen = () => {
             { oph_id: ophid, booking_date: location.state.date },
             { headers: headers }
           );
-       
+
 
 
           if (CalenderRes.data.success) {
@@ -89,53 +89,19 @@ const PaymentScreen = () => {
           }
         }
       }
-      else if (response.data.success && from === "new project") {
+
+      if (response.data.success && from == "Song Registration") {
         {
-          const RegSongRes = await axiosApi.post(
-            "/register-new-song",
-            { oph_id: ophid, project_type: location.state.from, name: location.state.form.name, release_date: location.state.form.release_date, lyricalVid: location.state.form.lyricalVid },
-            { headers: headers }
-          );
-
-          if (RegSongRes.data.success) {
-
-            const CalendarRes = await axiosApi.post("/booking",
-              { oph_id: ophid, booking_date: location.state.form.release_date },
-              { headers: headers }
-            )
-
-            
-
-            if (CalendarRes.data.success) {
-              console.log("success in");
-              navigate(`/dashboard/upload-song/audio-metadata/${ophid}`, {state:{
-                songName: location.state.form.name  
-              }});
-            }
-          }
+          navigate("/dashboard/success", {
+            state: {
+              heading: "Your date blocked successfully!",
+              btnText: "View Calendar",
+              redirectTo: "/dashboard/time-calendar",
+            },
+          });
         }
       }
-      else if (response.data.success && from === "hybrid project") {
-        {
-          const RegSongRes = await axiosApi.post(
-            "/register-hybrid-song",
-            { oph_id: ophid, project_type: location.state.from, name: location.state.form.name, release_date: location.state.form.release_date, lyricalVid: location.state.form.lyricalVid, available_on_music_platforms: location.state.form.available_on_music_platforms },
-            { headers: headers }
-          );
 
-          if (RegSongRes.data.success) {
-
-            const CalendarRes = await axiosApi.post("/booking",
-              { oph_id: ophid, booking_date: location.state.form.release_date },
-              { headers: headers }
-            )
-
-            if (CalendarRes.data.success) {
-              navigate(`/dashboard/upload-song/audio-metadata/${ophid}`);
-            }
-          }
-        }
-      }
       else if (response.data.success) {
         const path = `/auth/create-profile/personal-details`;
         navigate(path);

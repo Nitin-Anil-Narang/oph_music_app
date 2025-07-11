@@ -533,7 +533,11 @@ export default function AudioMetadataForm() {
 
       if (response.status === 201) {
         setIsLoading(false);
-        navigate(`/dashboard/upload-song/video-metadata/${response.data.song_id}`);
+        navigate(`/dashboard/upload-song/video-metadata/${response.data.song_id}`,{
+          state:{
+            SongName : songName
+          }
+        });
       }
     } catch (error) {
       console.error("Error submitting audio metadata:", error);
