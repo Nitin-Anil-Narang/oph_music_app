@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from "./Sidebar"; // adjust path if needed
 import { ROLES } from "../utils/roles";
 import { useAuth } from "../auth/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const artistLinks = [
   {
@@ -105,11 +106,22 @@ const artistLinks = [
 ];
 
 const ArtistSidebar = ({ children }) => {
+  const navigate = useNavigate();
+  const handleTitleClick = () =>{
+    navigate("/home");
+  }
   const { user } = useAuth();
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-50 relative">
-      <Sidebar title="Artist Portal" links={artistLinks} userRole={user.role} />
+      <Sidebar  title={
+                    <button
+                        onClick={handleTitleClick}
+                        // className="text-blue-600 hover:underline focus:outline-none"
+                    >
+                       Artist Portal
+                    </button>
+                } links={artistLinks} userRole={user.role} />
       <main className="flex-1 p-10 overflow-y-auto">
         {children || (
           <div className="text-gray-400 italic flex justify-center items-center h-full">

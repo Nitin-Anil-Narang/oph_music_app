@@ -35,8 +35,9 @@ import PaymentAll from "./view/dashboard/artistPortal/paymentAll";
 import PaymentWidthdrawal from "./view/dashboard/artistPortal/paymentsWithdrawals";
 import Settings from "./view/dashboard/artistPortal/Settings";
 import Tickets from "./view/dashboard/artistPortal/Tickets";
-import timeCalender from "./view/dashboard/artistPortal/timeCalender";
 import Artist_new from "./view/dashboard/artistPortal/artistNew/Artist_new";
+import Artist_All from './view/dashboard/artistPortal/artistAll/Artist_All'
+import TimeCalender from "./view/dashboard/artistPortal/timeCalender";
 
 
 function App() {
@@ -109,7 +110,7 @@ function App() {
                 allowedRoles={[
                   ROLES.SUPER_ADMIN,
                   ROLES.ADMINISTRATIVE_HEAD,
-                  ROLES.ADMINISTRATIVE_MEMBER,
+                  ROLES.ADMINISTRATIVE_MEMBER,  
                 ]}
               >
                 <HomePage />
@@ -192,7 +193,7 @@ function App() {
                   ROLES.SALES_MEMBER,
                 ]}
               >
-                <ArtistAll />
+                <Artist_All />
               </ProtectedRoute>
             }
           />
@@ -282,7 +283,7 @@ function App() {
                   ROLES.ADMINISTRATIVE_MEMBER,
                 ]}
               >
-                <timeCalender />
+                <TimeCalender/>
               </ProtectedRoute>
             }
           />

@@ -42,9 +42,42 @@ const getAllUserDetailsWithAnyStepUnderReview = async () => {
   return rows;
 };
 
+const updateUserDetailsStatus = async (ophid, status, reason) => {
+  const [rows] = await db.execute(`
+    UPDATE user_details 
+    SET step_status = ?, reject_reason = ?
+    WHERE ophid = ?
+    `,[status,reason,ophid]);
+    
+  return [rows]    
+};
+
+const updateDocumentationStatus = async (ophid, status, reason) => {
+  const [rows] = await db.execute(`
+    UPDATE documentation_details 
+    SET step_status = ?, reject_reason = ?
+    WHERE OPH_ID = ?
+    `,[status,reason,ophid]);
+    
+  return [rows]    
+};
+
+const updateProfessionalStatus = async (ophid, status, reason) => {
+  const [rows] = await db.execute(`
+    UPDATE professional_details 
+    SET step_status = ?, reject_reason = ?
+    WHERE OPH_ID = ?
+    `,[status,reason,ophid]);
+    
+  return [rows]    
+};
+
 module.exports = {
   getUserDetailsByOphId,
   getProfessionalDetailsByOphId,
   getDocumentationDetailsByOphId,
-  getAllUserDetailsWithAnyStepUnderReview
+  getAllUserDetailsWithAnyStepUnderReview,
+  updateUserDetailsStatus,
+  updateProfessionalStatus,
+  updateDocumentationStatus
 };

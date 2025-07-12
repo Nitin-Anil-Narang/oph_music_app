@@ -10,9 +10,9 @@ const DynamicTable = ({
   showStatusIndicator = false,
   statusField = "",
   statusData = [],
-  
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortColumns, setSortColumns] = useState([]);
   const navigate = useNavigate();
 
   if (!data || data.length === 0) {
@@ -27,9 +27,50 @@ const DynamicTable = ({
     columns = columns.filter((col) => !excludeColumns.includes(col));
   }
 
-  const totalPages = Math.ceil(data.length / pageSize);
+  const handleSort = (col) => {
+    setCurrentPage(1); // Reset page
+
+    const existing = sortColumns.find((s) => s.column === col);
+
+    if (!existing) {
+      // Add new column ascending
+      setSortColumns([...sortColumns, { column: col, order: "asc" }]);
+    } else if (existing.order === "asc") {
+      // Toggle to descending
+      setSortColumns(
+        sortColumns.map((s) =>
+          s.column === col ? { ...s, order: "desc" } : s
+        )
+      );
+    } else {
+      // Remove from sort
+      setSortColumns(sortColumns.filter((s) => s.column !== col));
+    }
+  };
+
+  const sortedData = [...data].sort((a, b) => {
+    for (const { column, order } of sortColumns) {
+      const valA = a[column] ?? "";
+      const valB = b[column] ?? "";
+
+      let comparison = 0;
+
+      if (typeof valA === "number" && typeof valB === "number") {
+        comparison = valA - valB;
+      } else {
+        comparison = String(valA).localeCompare(String(valB));
+      }
+
+      if (comparison !== 0) {
+        return order === "asc" ? comparison : -comparison;
+      }
+    }
+    return 0; // All columns equal
+  });
+
+  const totalPages = Math.ceil(sortedData.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
-  const currentData = data.slice(startIndex, startIndex + pageSize);
+  const currentData = sortedData.slice(startIndex, startIndex + pageSize);
 
   const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const handleNext = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -67,18 +108,26 @@ const DynamicTable = ({
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex-1 h-full overflow-x-auto rounded-2xl shadow-lg border border-gray-300 bg-white text-gray-800 flex flex-col">
-        
         <table className="min-w-full flex-grow">
           <thead>
             <tr>
-              {columns.map((col) => (
-                <th
-                  key={col}
-                  className="px-4 py-3 border-b border-gray-300 bg-gray-100 text-left font-semibold uppercase"
-                >
-                  {col}
-                </th>
-              ))}
+              {columns.map((col) => {
+                const sortInfo = sortColumns.find((s) => s.column === col);
+                return (
+                  <th
+                    key={col}
+                    onClick={() => handleSort(col)}
+                    className="px-4 py-3 border-b border-gray-300 bg-gray-100 text-left font-semibold uppercase cursor-pointer select-none"
+                  >
+                    {col}
+                    {sortInfo && (
+                      <span className="ml-1 text-xs">
+                        {sortInfo.order === "asc" ? "▲" : "▼"}
+                      </span>
+                    )}
+                  </th>
+                );
+              })}
               {showStatusIndicator && statusField && (
                 <th className="px-4 py-3 border-b border-gray-300 bg-gray-100 text-left font-semibold uppercase">
                   Status

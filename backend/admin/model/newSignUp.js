@@ -41,6 +41,7 @@ const getUniqueOphIdsWithRegistration = async () => {
 
   return rows;
 };
+
 const getUserDetailsByOphId = async (ophId) => {
   const [rows] = await db.execute(
     `SELECT *
