@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
-
 import {useNavigate } from "react-router-dom";
-
-
-import Sidebar from "../../../components/Sidebar";
+import DashBoardSidebar from "../../../components/DashBoardSidebar";
 // Dashboard with two views: Home & Artist Portal
 // Tailwind‑only styling – brand colour #0d3c44
 
@@ -16,12 +13,7 @@ const Dashboard = () => {
 
 
   // Sidebar link sets
-  const homeLinks = [
-    { label: "Artist Portal", route: "/artistPortal" },
-    { label: "New SignUp", route: "/New_SignUp" },
-    { label: "Website Config", route: "/WebsiteConfig" },
-    { label: "Assign Role", route: "/role_change" },
-  ];
+ 
 
 
 
@@ -34,7 +26,8 @@ const Dashboard = () => {
     
 
      
-    <Sidebar title="DashBoard" links={homeLinks} /> 
+    
+    <DashBoardSidebar>
 
       {/* Main content */}
       <main className="flex-1 p-10 flex items-center justify-center">
@@ -59,6 +52,7 @@ const Dashboard = () => {
         ) 
         }
       </main>
+    </DashBoardSidebar>
     </div>
   );
 };

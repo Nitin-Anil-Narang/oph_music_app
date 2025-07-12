@@ -41,7 +41,43 @@ const getAllUserDetailsIfAnyStepUnderReview = async (req, res) => {
   }
 };
 
+
+const updateStatus = async (req, res) => {
+  const { ophid, Personal, Professional, Documentation } = req.body;
+
+  try {
+    if (Personal) {
+      const status = Personal.status === "Accepted" ? "completed" : "rejected";
+      const reason = Personal.status === "Rejected" ? Personal.reason : null;
+      const rejectedStep = Personal.status === "Rejected" ? "Personal" : null;
+
+      await userDetailsModel.updateUserDetailsStatus(ophid, status, reason, rejectedStep);
+    }
+
+    if (Professional) {
+      const status = Professional.status === "Accepted" ? "completed" : "rejected";
+      const reason = Professional.status === "Rejected" ? Professional.reason : null;
+
+      await userDetailsModel.updateProfessionalStatus(ophid, status, reason);
+    }
+
+    if (Documentation) {
+      const status = Documentation.status === "Accepted" ? "completed" : "rejected";
+      const reason = Documentation.status === "Rejected" ? Documentation.reason : null;
+
+      await userDetailsModel.updateDocumentationStatus(ophid, status, reason);
+    }
+
+    res.status(200).json({ message: "Statuses updated successfully" });
+
+  } catch (error) {
+    console.error("Error updating statuses:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getAllDetailsUnderReview,
-  getAllUserDetailsIfAnyStepUnderReview
+  getAllUserDetailsIfAnyStepUnderReview,
+  updateStatus
 };

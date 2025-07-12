@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import axiosApi from '../../../../conf/axios';
 import SearchableDynamicTable from '../../../../components/SearchableDynamicTable';
-
+import ArtistSidebar from '../../../../components/ArtistSidebar';
 const Artist_new = () => {
     const [tableData, setTableData] = useState([]);
 
@@ -18,7 +18,9 @@ const Artist_new = () => {
   }, []);
   return (
     <div>
-         <SearchableDynamicTable
+      <ArtistSidebar>
+
+        <SearchableDynamicTable
         title="New Artist"
         data={tableData}
         showStatusIndicator={false}
@@ -26,6 +28,7 @@ const Artist_new = () => {
         pageSize={10}
         detailsUrl="/ArtistNew"
       />
+      </ArtistSidebar>
       
     </div>
   )

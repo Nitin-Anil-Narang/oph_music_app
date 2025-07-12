@@ -24,11 +24,13 @@ const membership = require("./routes/membership");
 const secondaryArtist = require("./routes/secondary_artist")
 const videoDetail = require("./routes/video_details");
 
+
 //Admin route assignment
 const adminSignUp = require("./admin/routes/adminSignUp")
 const adminSignIn = require("./admin/routes/adminSignIn")
 const newSignUp = require("./admin/routes/newSignUp")
 const newArtist = require("./admin/routes/newArtist")
+const allArtist = require("./admin/routes/allArtist")
 
 // ✅ Middleware order is important
 app.use(cors({
@@ -61,6 +63,7 @@ app.use("/",adminSignUp);
 app.use("/",adminSignIn);
 app.use("/",newSignUp);
 app.use("/",newArtist);
+app.use("/",allArtist);
 
 // ✅ Start server
 app.listen(port, () => {
