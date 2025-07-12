@@ -17,7 +17,7 @@ export default function RegisterSongForm() {
   const location = useLocation();
   const [blockedDates, setBlockedDates] = useState([]); // Add state for blocked dates
   const [artistBlockedDates, setArtistBlockedDates] = useState([]); // Add state for blocked dates
-  const [songReg, setSongReg] = useState(false);
+  const [songReg, setSongReg] = useState(true);
   const [lyricalVid, setLyricalVid] = useState(false);
   const [selectedPlans, setSelectedPlans] = useState([]);
   const [payableAmount, setPayableAmount] = useState(0);
@@ -94,6 +94,7 @@ export default function RegisterSongForm() {
     fetchBlockedDates();
 
   }, []);
+
 
   useEffect(() => {
     const fetchBlockedDatesByOPHID = async () => {
@@ -200,15 +201,19 @@ export default function RegisterSongForm() {
     );
   };
 
-  const paidInAdvance = async (updatedFormData) => {
+  const newProject = async (updatedFormData) => {
 
     try {
-      const response = await axiosApi.post("/register-hybrid-song",
-        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, available_on_music_platforms: updatedFormData.available_on_music_platforms },
+      const response = await axiosApi.post("/register-new-song",
+        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, next_step : updatedFormData.next_step},
         { headers: headers })
       console.log(response);
       if (response.data.success) {
-        navigate(`/dashboard/upload-song/audio-metadata/${ophid}`);
+        navigate(`/dashboard/upload-song/audio-metadata/${response.data.contentID}`, {
+          state: {
+            songName : updatedFormData.name,
+          }
+        });
       }
     }
     catch (error) {
@@ -216,6 +221,48 @@ export default function RegisterSongForm() {
     }
 
   }
+
+  const hybridProject = async (updatedFormData) => {
+
+    try {
+      const response = await axiosApi.post("/register-hybrid-song",
+        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, available_on_music_platforms: updatedFormData.available_on_music_platforms, next_step : updatedFormData.next_step },
+        { headers: headers })
+      if (response.data.success) {
+        navigate(`/dashboard/upload-song/audio-metadata/${response.data.contentID}`, {
+          state: {
+            songName : updatedFormData.name,
+          }
+        });
+      }
+    }
+    catch (error) {
+      console.error("Error booking date", error)
+    }
+
+  }
+
+  const paidInAdvance = async (updatedFormData) => {
+
+    try {
+      const response = await axiosApi.post("/register-hybrid-song",
+        { oph_id: ophid, project_type: projectType, name: updatedFormData.name, release_date: updatedFormData.release_date, lyricalVid: updatedFormData.lyricalVid, available_on_music_platforms: updatedFormData.available_on_music_platforms, next_step : updatedFormData.next_step },
+        { headers: headers })
+      console.log(response);
+      if (response.data.success) {
+        navigate(`/dashboard/upload-song/audio-metadata/${response.data.contentID}`, {
+          state: {
+            songName : updatedFormData.name,
+          }
+        });
+      }
+    }
+    catch (error) {
+      console.error("Error booking date", error)
+    }
+
+  }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -234,6 +281,7 @@ export default function RegisterSongForm() {
       p_line: `${artistName} - ${stageName}`,
       available_on_music_platforms:
         formData.available_on_music_platforms || false, // This line adds it
+      next_step: '/dashboard/upload-song/audio-metadata/'
     };
     // console.log(updatedFormData, "updatedFormData");
 
@@ -242,17 +290,18 @@ export default function RegisterSongForm() {
     // delete updatedFormData.isAvailableOnMusicPlatform;    
 
 
+
     if (projectType === "pay in advance") {
       paidInAdvance(updatedFormData)
     }
-
-
-    navigate("/auth/payment", {
-      state: {
-        form: updatedFormData,
-        from: updatedFormData.project_type
-      }
-    })
+    else if(projectType === "new project")
+    {
+      newProject(updatedFormData)
+    }
+    else if(projectType === "hyrbid project")
+    {
+      hybridProject(updatedFormData)
+    }
     // if (updatedFormData.available_on_music_platforms) {
     //   toast.success("Song Registered Successfully !!!!");
     //   navigate(`/dashboard/upload-song/video-metadata/${response.data.data.id}`);
@@ -409,7 +458,7 @@ export default function RegisterSongForm() {
     }
 
     return (
-      
+
       <div className="space-y-2">
         <label className="block">
           Release Date <span className="text-red-500">*</span>
@@ -640,6 +689,7 @@ export default function RegisterSongForm() {
                       checked={songReg}
                       onChange={() => setSongReg(!songReg)}
                       className="text-cyan-400 bg-gray-800 border-gray-700 focus:ring-cyan-400"
+                      disabled={songReg}
                     />
                     <span>799 - Song Registration fees </span>
                   </label>

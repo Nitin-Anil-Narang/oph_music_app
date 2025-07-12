@@ -23,7 +23,7 @@ exports.createBooking = async (req, res) => {
     }
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false ,error: error.message });
   }
 };
 
@@ -58,18 +58,35 @@ exports.updateBooking = async (req, res) => {
 
 }
 
+const moment = require("moment-timezone");
+
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await bookingModel.getAllBookings();
+
+    const formattedBookings = bookings.map(booking => ({
+      ...booking,
+      current_booking_date: booking.current_booking_date
+        ? moment(booking.current_booking_date).tz("Asia/Kolkata").format("YYYY-MM-DD")
+        : null,
+      original_booking_date: booking.original_booking_date
+        ? moment(booking.original_booking_date).tz("Asia/Kolkata").format("YYYY-MM-DD")
+        : null,
+      previous_booking_date: booking.previous_booking_date
+        ? moment(booking.previous_booking_date).tz("Asia/Kolkata").format("YYYY-MM-DD")
+        : null,
+    }));
+
     res.status(200).json({
       success: true,
       message: "Data fetched successfully",
-      data: bookings
+      data: formattedBookings
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.getAllBookingsByID = async (req, res) => {
   try {
@@ -88,6 +105,6 @@ exports.getAllBookingsByID = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false ,error: error.message });
   }
 };

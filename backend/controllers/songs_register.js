@@ -1,12 +1,11 @@
 const songRegModel = require("../model/songs_register");
 
+
 exports.insertNewSongRegDetails = async (req, res) => {
   try {
-    const { oph_id, project_type, name, release_date, lyricalVid } = req.body;
+    const { oph_id, project_type, name, release_date, lyricalVid, next_step } = req.body;
 
-    console.log(req.body);
-
-    if (!oph_id || !project_type || !name || !release_date) {
+    if (!oph_id || !project_type || !name || !release_date || !next_step) {
       return res.status(400).json({
         success: false,
         message: "Missing required fields",
@@ -19,13 +18,18 @@ exports.insertNewSongRegDetails = async (req, res) => {
       name,
       release_date,
       lyricalVid === false ? "base" : "base + lyrics",
-      lyricalVid === false ? 0 : 1
+      lyricalVid === false ? 0 : 1,
+      next_step
     );
 
     if (RegSongRes) {
+
+      const song_id = await songRegModel.getSongID(name)
+      
       return res.status(201).json({
         success: true,
         message: "Song Registered Successfully",
+        contentID : song_id[0].song_id
       });
     }
   } catch (err) {
@@ -58,9 +62,13 @@ exports.insertHybridSongRegDetails = async (req, res) => {
     );
 
     if (RegSongRes) {
+
+      const song_id = await songRegModel.getSongID(name)
+
       return res.status(201).json({
         success: true,
         message: "Song Registered Successfully",
+        contentID : song_id[0].song_id
       });
     }
   } catch (err) {
@@ -68,3 +76,40 @@ exports.insertHybridSongRegDetails = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+exports.getSongRegistrationStatus = async (req, res) => {
+
+  try{
+    const {
+      ophid
+    } = req.query
+
+    if(!ophid)
+    {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields"
+      })
+    }
+
+    const response = await songRegModel.getSongRegDetailsByOPHID(ophid)
+
+    if(response)
+    {
+      return res.status(200).json({
+        success:true,
+        message:"Data fetched successfully",
+        data: response
+      })
+    }
+
+  }
+  catch(error)
+  {
+    return res.status(500).json({
+      success: false,
+      message : error.message
+    })
+  }
+
+}

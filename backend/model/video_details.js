@@ -5,42 +5,49 @@ const db = require("../DB/connect");
  * Insert a new video‑details row
  */
 const insertVideoDetails = async (
-  OPH_ID,
-  Song_name,
+  song_id,
   credits,
   image_url,
   video_url
 ) => {
   const [result] = await db.execute(
     `INSERT INTO video_details (
-       OPH_ID,
-       Song_name,
+       song_id,
        credits,
        image_url,
        video_url
-     ) VALUES (?, ?, ?, ?, ?)`,
+     )
+     VALUES (?, ?, ?, ?)
+     ON DUPLICATE KEY UPDATE
+       credits = VALUES(credits),
+       image_url = VALUES(image_url),
+       video_url = VALUES(video_url)`,
     [
-      OPH_ID,
-      Song_name,
+      song_id,
       credits,
       image_url,
       video_url
     ]
   );
 
-  return result; // mysql2 ResultSetHeader
+  return result;
 };
+
+const setJourneyStatus = async (ophid, song_id) => {
+  const [rows] = await db.execute("UPDATE songs_register SET song_register_journey = 'complete', current_page = NULL WHERE OPH_ID = ? AND song_id = ?", [ophid, song_id]);
+
+  return rows
+}
 
 /**
  * Fetch a single video‑details row by composite key (OPH_ID + Song_name)
  */
-const getVideoDetails = async (OPH_ID, Song_name) => {
+const getVideoDetails = async (song_id) => {
   const [rows] = await db.execute(
     `SELECT *
        FROM video_details
-      WHERE OPH_ID   = ?
-        AND Song_name = ?`,
-    [OPH_ID, Song_name]
+      WHERE song_id = ?`,
+    [song_id]
   );
 
   return rows; // array; 0 or 1 row expected
@@ -49,4 +56,5 @@ const getVideoDetails = async (OPH_ID, Song_name) => {
 module.exports = {
   insertVideoDetails,
   getVideoDetails,
+  setJourneyStatus
 };

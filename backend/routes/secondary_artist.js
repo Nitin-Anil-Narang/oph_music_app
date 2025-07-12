@@ -5,19 +5,20 @@ const multer = require("multer");
 const controller = require("../controllers/secondary_artist");
 
 const upload = multer({ storage: multer.memoryStorage() });
+const authMiddleware = require("../middleware/authenticate")
 
 // POST - Create secondary artist
 router.post(
-    "/secondary-artists",
-  upload.fields([{ name: "artistPictureUrl", maxCount: 1 }]),
+  "/secondary-artist",
+  authMiddleware,
+  upload.single("profile_image"),
   controller.insertSecondaryArtist
 );
 
-// PUT - Update secondary artist
-router.put(
-  "/secondary-artists",
-  upload.fields([{ name: "artistPictureUrl", maxCount: 1 }]),
-  controller.updateSecondaryArtist
+router.post(
+  "/remove-secondary-artist",
+  authMiddleware,
+  controller.removeSecondaryArtist
 );
 
 // GET - Fetch all secondary artists by OPH_ID
