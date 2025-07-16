@@ -8,51 +8,185 @@ import axiosApi from "../../conf/axios";
 import { useArtist } from "../auth/API/ArtistContext";
 
 export default function Events() {
-  const { headers, artist } = useArtist();
-  const [isLoading, setIsLoading] = useState(true);
+  const { headers, artist, ophid } = useArtist();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [id, setID] = useState(null);
-  const eventID = useSelector((state) => state.event.selectedEvent);
+  // const eventID = useSelector((state) => state.event.selectedEvent);
   const location = useLocation();
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const allEvents = useSelector((state) => state.event.allEvents);
+  // const allEvents = useSelector((state) => state.event.allEvents);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [artistBookEvents, setArtistBookEvents] = useState([])
+
+  const musicEvents = [
+    {
+      event_id: 1,
+      hashtags: ["#Competition", "#Music", "#Winners"],
+      competitionName: "Live Stage Singing Competition",
+      dateTime: "28 December, 2025 – 09:00 PM",
+      location: "Purplish Club, Bandra, Mumbai",
+      description:
+        "An exciting live stage performance where talented singers battle it out for the top spot.",
+      registrationFees: {
+        normal: "150",
+        specialOffer: {
+          availableFor: "OPH Creators",
+          discount: "50%",
+        },
+      },
+      registrationPeriod: {
+        start: "15 Dec, 2025",
+        end: "18 Dec, 2025",
+      },
+      winnerReward: "10,000",
+      image: "https://events.com/wp-content/uploads/2022/09/BLOG-How-To-Plan-a-Music-Festival-A-Complete-Guide.png",
+      is_register: true,
+    },
+    {
+      event_id: 2,
+      hashtags: ["#MusicFest", "#TalentHunt", "#SoloSinging"],
+      competitionName: "Voice of the City",
+      dateTime: "12 August, 2025 – 06:30 PM",
+      location: "Echo Auditorium, Pune",
+      description:
+        "Showcase your singing skills at one of the city's most prestigious solo singing contests.",
+      registrationFees: {
+        normal: "200",
+        specialOffer: {
+          availableFor: "Students",
+          discount: "30%",
+        },
+      },
+      registrationPeriod: {
+        start: "01 August, 2025",
+        end: "10 August, 2025",
+      },
+      winnerReward: "15,000",
+      image: "https://cdn.evbstatic.com/s3-build/fe/build/images/75d81eed66f040a590ed5744b3367d8c-music.webp",
+      is_register: true
+    },
+    {
+      event_id: 3,
+      hashtags: ["#DuetBattle", "#SingersUnite", "#LiveEvent"],
+      competitionName: "Duet Singing Showdown",
+      dateTime: "5 February, 2025 – 08:00 PM",
+      location: "Rhythm House, Delhi",
+      description:
+        "Calling all duet singers! Participate in this exciting competition to win hearts and prizes.",
+      registrationFees: {
+        normal: "300 per duo",
+        specialOffer: {
+          availableFor: "Early Birds",
+          discount: "20%",
+        },
+      },
+      registrationPeriod: {
+        start: "20 Jan, 2025",
+        end: "02 Feb, 2025",
+      },
+      winnerReward: "20,000",
+      image: "https://blogmedia.evbstatic.com/wp-content/uploads/rally-legacy/2018/03/12071132/twenty20_e20435f0-557d-4778-b264-988fce1ac53d-2.jpg",
+      is_register: false
+    },
+    {
+      event_id: 4,
+      hashtags: ["#Music", "#BattleOfBands", "#RockNight"],
+      competitionName: "Battle of the Bands",
+      dateTime: "22 March, 2025 – 07:00 PM",
+      location: "The Soundbox, Bengaluru",
+      description:
+        "Join us for a night of electrifying band performances competing for the ultimate title.",
+      registrationFees: {
+        normal: "500 per band",
+        specialOffer: {
+          availableFor: "College Bands",
+          discount: "40%",
+        },
+      },
+      registrationPeriod: {
+        start: "01 Mar, 2025",
+        end: "18 Mar, 2025",
+      },
+      winnerReward: "25,000",
+      image: "https://freerangestock.com/sample/120648/singer-performing-at-a-live-concert.jpg",
+      is_register: false
+    }
+  ];
+
+
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       setIsLoading(true);
+  //       setError(null);
+  //       await dispatch(fetchAllEvents(headers));
+  //     } catch (err) {
+  //       setError("Failed to load events");
+  //       console.error(err);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [dispatch, headers]);
 
   useEffect(() => {
+
     const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        await dispatch(fetchAllEvents(headers));
-      } catch (err) {
-        setError("Failed to load events");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+
+      try{
+        const response = await axiosApi.get("/event/get-event",{
+          headers
+        })
+
+        if(response.data.success)
+        {
+          setArtistBookEvents(response.data.data)
+        }
       }
-    };
 
-    fetchData();
-  }, [dispatch, headers]);
+      catch(err)
+      {
+        console.error(err)
+      }
 
-  const handleReg = async (data) => {
-    ;
-    
-    if (location.state?.state === "success") {
-    } else {
-      dispatch(changeSelectedEvent({ data: data }));
-      await navigate("/dashboard/payment", {
-        state: {
-          artist_id: artist.id,
-          amount: (data.fees / 2).toFixed(0),
-          planIds: [data.payment_plan_id],
-          returnPath: "/dashboard/events",
-          heading: "Complete Event Registration",
-        },
-      });
     }
+
+    fetchData()
+
+  },[])
+
+  const handleReg = (data) => {
+    navigate("/auth/payment", {
+      state: {
+        artist_id: ophid,
+        amount: (parseInt(data.registrationFees.normal) / 2).toFixed(0),
+        event_id: data.event_id,
+        // planIds: [data.payment_plan_id],
+        returnPath: "/dashboard/events",
+        heading: "Complete Event Registration",
+        from: "Event Registeration"
+      },
+    });
+
+    // if (location.state?.state === "success") {
+    // } else {
+    //   // dispatch(changeSelectedEvent({ data: data }));
+    //   await navigate("/dashboard/payment", {
+    //     state: {
+    //       artist_id: ophid,
+    //       amount: (parseInt(data.registrationFees.normal) / 2).toFixed(0),
+    //       // planIds: [data.payment_plan_id],
+    //       returnPath: "/dashboard/events",
+    //       heading: "Complete Event Registration",
+    //     },
+    //   });
+    // }
   };
 
   const checkRegValid = (reg_date) => {
@@ -106,10 +240,19 @@ export default function Events() {
     );
   }
 
+  // if (
+  //   !allEvents ||
+  //   (!allEvents.upcoming_events && !allEvents.previous_events)
+  // ) {
+  //   return (
+  //     <div className="min-h-screen text-gray-100 p-6 flex items-center justify-center">
+  //       <div className="text-gray-400">No events found</div>
+  //     </div>
+  //   );
+  // }
+
   if (
-    !allEvents ||
-    (!allEvents.upcoming_events && !allEvents.previous_events)
-  ) {
+    !musicEvents.length > 0) {
     return (
       <div className="min-h-screen text-gray-100 p-6 flex items-center justify-center">
         <div className="text-gray-400">No events found</div>
@@ -125,18 +268,18 @@ export default function Events() {
         </h1>
 
         <div className="space-y-6">
-          {allEvents.upcoming_events?.length > 0 ? (
-            allEvents.upcoming_events.map((event, ind) => (
-              <div
+          {musicEvents.length > 0 ? (
+            musicEvents.map((event, ind) => (
+              event.is_register && (<div
                 key={ind}
                 className="flex md:mb-0 hover:bg-gray-900 transition-colors mb-5 hover:cursor-pointer gap-6 flex-col md:flex-row  rounded-lg p-2 md:p-4"
-                // onClick={() => window.open(import.meta.env.VITE_WEBSITE_URL + 'events' + `/${event.id}`, '_blank')}
+              // onClick={() => window.open(import.meta.env.VITE_WEBSITE_URL + 'events' + `/${event.id}`, '_blank')}
               >
                 {/* Event Image */}
                 <div className="md:w-[340px] px-6 md:px-0 w-[96vw] h-[250px] flex-shrink-0">
                   <img
-                    src={event.thumbnail_url}
-                    alt={event.name}
+                    src={event.image}
+                    alt={event.competitionName}
                     className="md:w-full w-[100vw] h-full object-cover rounded-lg"
                   />
                 </div>
@@ -155,42 +298,42 @@ export default function Events() {
                   )}
                   {/* Title */}
                   <h2 className="text-2xl font-semibold uppercase">
-                    {event.name}
+                    {event.competitionName}
                   </h2>
 
                   {/* Date and Venue */}
-                  {formatDateTime(event.event_date_time) && (
+                  {formatDateTime(event.dateTime) && (
                     <div className="text-gray-400 text-sm">
-                      {formatDateAndAdjustMonth(event.event_date_time)} -{" "}
+                      {formatDateAndAdjustMonth(event.dateTime)} -{" "}
                       {event.location}
                     </div>
                   )}
 
                   {/* Subtitle */}
-                  {event.subtitle && (
-                    <div className="text-cyan-400">{event.short_desc}</div>
+                  {event.description && (
+                    <div className="text-cyan-400">{event.description}</div>
                   )}
 
                   {/* Description */}
-                  {event.long_desc && (
+                  {event.description && (
                     <p className="text-gray-400 text-sm">
-                      {event.long_desc.length > 50
-                        ? `${event.long_desc.substring(0, 100)}...`
-                        : event.long_desc}
+                      {event.description.length > 50
+                        ? `${event.description.substring(0, 100)}...`
+                        : event.description}
                     </p>
                   )}
                   {/* Registration Details */}
                   <div className="space-y-1 text-sm">
-                  <div className="flex flex-wrap items-center gap-2">
-  <span className="text-gray-400">Registration fees:</span>
-  <span className="text-red-400 line-through">₹{event.fees}</span>
-  <span className="text-cyan-400 font-semibold">
-    ₹{(event.fees / 2).toFixed(0)}
-  </span>
-  <span className="text-green-400 text-sm font-medium">
-    (50% off for OPH Creators)
-  </span>
-</div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-gray-400">Registration fees:</span>
+                      <span className="text-red-400 line-through">₹{event.registrationFees.normal}</span>
+                      <span className="text-cyan-400 font-semibold">
+                        ₹{(parseInt(event.registrationFees.normal) / 2).toFixed(0)}
+                      </span>
+                      <span className="text-green-400 text-sm font-medium">
+                        (50% off for OPH Creators)
+                      </span>
+                    </div>
 
                     <div>
                       <span className="text-gray-400">
@@ -198,24 +341,24 @@ export default function Events() {
                       </span>
 
                       <span className="text-cyan-400">
-                        {formatDateAndAdjustMonth(event.regn_start)} -{" "}
-                        {formatDateAndAdjustMonth(event.regn_end)}
+                        {formatDateAndAdjustMonth(event.registrationPeriod.start)} -{" "}
+                        {formatDateAndAdjustMonth(event.registrationPeriod.end)}
                       </span>
                     </div>
                     <div className="text-green-400 font-bold">
                       Winner rewards:{" "}
                       <span className="text-cyan-400">
-                        ₹{event.winnerReward}
+                        ₹{event.registrationPeriod.winnerReward}
                       </span>
                     </div>
                   </div>
 
                   {/* Action Button */}
                   <div>
-                    {checkRegValid(event.regn_end) ? (
-                      event.is_registered == true ? (
+                    {checkRegValid(event.registrationPeriod.end) ? (
+                      event.is_register == true ? (
                         <button
-                          disabled={true}
+
                           onClick={(e) => {
                             e.preventDefault();
                             handleReg(event);
@@ -243,8 +386,8 @@ export default function Events() {
                   </div>
                 </div>
               </div>
-            ))
-          ) : (
+              ))
+            )) : (
             <div className="text-gray-400">No upcoming events</div>
           )}
         </div>
@@ -255,17 +398,17 @@ export default function Events() {
         </h1>
 
         <div className="space-y-6">
-          {allEvents.previous_events?.length > 0 ? (
-            allEvents.previous_events.map((event) => (
-              <div
+          {musicEvents.length > 0 ? (
+            musicEvents.map((event) => (
+              !event.is_register && (<div
                 key={event.id}
                 className="flex flex-col md:flex-row gap-6 opacity-[0.5]  rounded-lg p-4"
               >
                 {/* Event Image */}
                 <div className="md:w-[340px] w-[90vw] h-[250px] flex-shrink-0">
                   <img
-                    src={event.thumbnail_url || "/placeholder.svg"}
-                    alt={event.name}
+                    src={event.image || "/placeholder.svg"}
+                    alt={event.competitionName}
                     className="md:w-full w-[80vw] h-full object-cover rounded-lg"
                   />
                 </div>
@@ -284,20 +427,20 @@ export default function Events() {
                   )}
                   {/* Title */}
                   <h2 className="text-2xl font-semibold uppercase">
-                    {event.name}
+                    {event.competitionName}
                   </h2>
 
                   {/* Date and Venue */}
-                  {formatDateTime(event.event_date_time) && (
+                  {formatDateTime(event.dateTime) && (
                     <div className="text-gray-400 text-sm">
-                      {formatDateAndAdjustMonth(event.event_date_time)} -{" "}
+                      {formatDateAndAdjustMonth(event.dateTime)} -{" "}
                       {event.location}
                     </div>
                   )}
 
                   {/* Subtitle */}
-                  {event.subtitle && (
-                    <div className="text-cyan-400">{event.short_desc}</div>
+                  {event.description && (
+                    <div className="text-cyan-400">{event.description}</div>
                   )}
 
                   {/* Description */}
@@ -307,7 +450,7 @@ export default function Events() {
                   <div className="space-y-1 text-sm">
                     <div>
                       <span className="text-gray-400">Registration fees:</span>{" "}
-                      <span className="text-cyan-400">₹ {event.fees}</span>{" "}
+                      <span className="text-cyan-400">₹ {event.registrationFees.normal}</span>{" "}
                       <span className="text-red-400">
                         (Special offer only for OPH Creators - 50% off)
                       </span>
@@ -318,8 +461,8 @@ export default function Events() {
                       </span>
 
                       <span className="text-cyan-400">
-                        {formatDateAndAdjustMonth(event.regn_start)} -{" "}
-                        {formatDateAndAdjustMonth(event.regn_end)}
+                        {formatDateAndAdjustMonth(event.registrationPeriod.start)} -{" "}
+                        {formatDateAndAdjustMonth(event.registrationPeriod.end)}
                       </span>
                     </div>
                     <div className="text-green-400 font-bold">
@@ -332,7 +475,7 @@ export default function Events() {
 
                   {/* Action Button */}
                   <div>
-                    {checkRegValid(event.regn_end) ? (
+                    {checkRegValid(event.registrationPeriod.end) ? (
                       <button
                         onClick={(e) => {
                           e.preventDefault();
@@ -351,8 +494,8 @@ export default function Events() {
                   </div>
                 </div>
               </div>
-            ))
-          ) : (
+              ))
+            )) : (
             <div className="text-gray-400">No previous events</div>
           )}
         </div>
