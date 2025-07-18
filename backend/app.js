@@ -23,6 +23,7 @@ const resetPassword = require("./routes/reset_password")
 const membership = require("./routes/membership");
 const secondaryArtist = require("./routes/secondary_artist")
 const videoDetail = require("./routes/video_details");
+const eventEnrollments = require("./routes/enroll_event");
 
 
 //Admin route assignment
@@ -36,7 +37,7 @@ const payments = require("./admin/routes/payments")
 
 // ✅ Middleware order is important
 app.use(cors({
-  origin: ["http://localhost:5173","http://localhost:5174"],
+  origin: ["http://localhost:5173", "http://localhost:5174"],
   credentials: true
 }));
 app.use(express.json());
@@ -57,6 +58,7 @@ app.use("/", personalDetails);
 app.use("/",membership);
 app.use("/", secondaryArtist);
 app.use("/", videoDetail);
+app.use("/", eventEnrollments);
 
 
 //Admin Routes

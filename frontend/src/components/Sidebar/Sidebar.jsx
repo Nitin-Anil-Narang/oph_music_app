@@ -27,6 +27,7 @@ const SidebarNav = ({ onClose }) => {
   const [isMobile, setIsMobile] = useState(false); // State to check if screen width is narrow
   const [currentPageSongReg, setCurrentPageSongReg] = useState('')
   const [data, setData] = useState([]);
+  const [activeDir, setActiveDir] = useState("")
   
   useEffect(() => {
     const storedData = localStorage.getItem("userData");
@@ -76,7 +77,7 @@ const SidebarNav = ({ onClose }) => {
 
     }
     getSongRegistrationStatus()
-  }, [ophid, headers])
+  }, [ophid, headers,activeDir])
 
   const handleLogout = async () => {
     await logout();
@@ -86,6 +87,7 @@ const SidebarNav = ({ onClose }) => {
   };
 
   const handleNavigation = (path) => {
+    setActiveDir(path)
     if(path.includes("metadata"))
     {
       navigate(path, {
