@@ -160,9 +160,13 @@ export default function Events() {
           const isPrevious = sectionTitle === "Previous Events";
           return (
             <div
-              key={ind}
-              className="flex md:mb-0 hover:bg-gray-900 transition-colors mb-5 hover:cursor-pointer gap-6 flex-col md:flex-row rounded-lg p-2 md:p-4"
-            >
+  key={ind}
+  className={`flex md:mb-0 mb-5 gap-6 flex-col md:flex-row rounded-lg p-2 md:p-4 transition-colors ${
+    isPrevious
+      ? "bg-gray-800 opacity-50 cursor-not-allowed grayscale"
+      : "hover:bg-gray-900 hover:cursor-pointer"
+  }`}
+>
               <div className="md:w-[340px] px-6 md:px-0 w-[96vw] h-[250px] flex-shrink-0">
                 <img
                   src={event.image}
