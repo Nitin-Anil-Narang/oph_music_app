@@ -18,47 +18,57 @@ AND NOT (
 
 const getSongsByOphIdUnderReview = async (ophId,songId) => {
    const [rows] = await db.execute(`
-   SELECT 
-        sr.OPH_ID,
-        sr.project_type,
-        sr.Song_name AS register_song_name,
-        sr.release_date,
-        sr.payment,
-        sr.Lyrics_services,
-        sr.availability_on_music_platform,
-        sr.song_id,
-        sr.current_page,
-        sr.song_register_journey,
-        
-        ad.Song_name AS audio_song_name,
-        ad.language,
-        ad.genre,
-        ad.sub_genre,
-        ad.mood,
-        ad.lyrics,
-        ad.primary_artist,
-        ad.featuring,
-        ad.lyricist,
-        ad.composer,
-        ad.producer,
-        ad.audio_url,
-        ad.reject_reason AS audio_reject_reason,
-        ad.status AS audio_status,
-        
-        vd.credits,
-        vd.image_url,
-        vd.video_url,
-        vd.created_at,
-        vd.reject_reason AS video_reject_reason,
-        vd.status AS video_status
+    SELECT 
+    sr.OPH_ID,
+    sr.project_type,
+    sr.Song_name AS register_song_name,
+    sr.release_date,
+    sr.payment,
+    sr.Lyrics_services,
+    sr.availability_on_music_platform,
+    sr.song_id,
+    sr.current_page,
+    sr.reject_reason AS register_reject_reason,
+    sr.status AS register_status,
 
-    FROM songs_register sr
-    LEFT JOIN audio_details ad ON sr.song_id = ad.song_id
-    LEFT JOIN video_details vd ON sr.song_id = vd.song_id
-    WHERE sr.OPH_ID = ?
-      AND sr.song_id = ?
-      AND (ad.status = 'under review' OR vd.status = 'under review');
-  `, [ophId,songId]);
+    ad.Song_name AS audio_song_name,
+    ad.language,
+    ad.genre,
+    ad.sub_genre,
+    ad.mood,
+    ad.lyrics,
+    ad.primary_artist,
+    ad.audio_url,
+    ad.reject_reason AS audio_reject_reason,
+    ad.status AS audio_status,
+
+    vd.credits,
+    vd.image_url,
+    vd.video_url,
+    vd.created_at,
+    vd.reject_reason AS video_reject_reason,
+    vd.status AS video_status,
+
+    -- Secondary artist details
+    GROUP_CONCAT(sa.artist_type SEPARATOR ', ') AS secondary_artist_types,
+    GROUP_CONCAT(sa.artist_name SEPARATOR ', ') AS secondary_artist_names,
+    GROUP_CONCAT(sa.Legal_name SEPARATOR ', ') AS secondary_legal_names
+
+FROM songs_register sr
+LEFT JOIN audio_details ad ON sr.song_id = ad.song_id
+LEFT JOIN video_details vd ON sr.song_id = vd.song_id
+LEFT JOIN secondary_artist sa ON sr.song_id = sa.song_id
+
+WHERE sr.OPH_ID = ?
+  AND sr.song_id = ?
+  AND (
+        sr.status = 'Pending'
+     OR ad.status = 'under review'
+     OR vd.status = 'under review'
+  )
+
+GROUP BY sr.song_id;
+`, [ophId,songId]);
 
   return rows;
 }
@@ -75,7 +85,6 @@ const getAllApprovedSongs = async () => {
         sr.availability_on_music_platform,
         sr.song_id,
         sr.current_page,
-        sr.song_register_journey,
         
         ad.Song_name AS audio_song_name,
         ad.language,
@@ -84,10 +93,6 @@ const getAllApprovedSongs = async () => {
         ad.mood,
         ad.lyrics,
         ad.primary_artist,
-        ad.featuring,
-        ad.lyricist,
-        ad.composer,
-        ad.producer,
         ad.audio_url,
         ad.reject_reason AS audio_reject_reason,
         ad.status AS audio_status,

@@ -1,4 +1,4 @@
-## Tasks
+ Tasks
 
     ☐ Fix routes in Sign-in/Sign-up, route to dashboard after full accepted.
     ☐ Make the home in dashboard with videos,events,top 5 songs and more.
@@ -17,12 +17,6 @@
     ☐ Also check if the reject reason is being emptied after re submission of all forms(Registration and song register)
     ☐ Add all the itratable data to DB and give admin the power to add new data(Bank name , profession , song language , genre etc etc )
     ☐ Re test and fix all the after reject cases.
-
-
-
-
-
-    
-
-    
-
+    ☐ Add Counter for form updates so i can be arragned by priority.
+    ☐ Also add complete and in-complete fields for user form and not send it until completed.
+    ☐ Professinal form required (Profession,text bio,photo, experence , number of songs).

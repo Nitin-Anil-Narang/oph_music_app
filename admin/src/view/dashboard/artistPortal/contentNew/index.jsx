@@ -32,15 +32,42 @@ const ContentNew = () => {
       try {
         const res = await axiosApi.get(`/songs-under-review/${ophid}/${songId}`);
         const song = res.data.song;
-        console.log(song);
 
+        // Set Content
         setContent({
           project_type: song.project_type || "",
           CP_Line: song.primary_artist || "",
           PLine: song.primary_artist || "",
-          release_date: song.release_date ? song.release_date.slice(0, 10) : "",
+          release_date: song.release_date
+            ? new Date(song.release_date).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })
+            : "",
         });
 
+        // Parse secondary artists
+        const secondaryArtists = [];
+        if (
+          song.secondary_artist_types &&
+          song.secondary_artist_names &&
+          song.secondary_legal_names
+        ) {
+          const types = song.secondary_artist_types.split(",").map((s) => s.trim());
+          const names = song.secondary_artist_names.split(",").map((s) => s.trim());
+          const legalNames = song.secondary_legal_names.split(",").map((s) => s.trim());
+
+          for (let i = 0; i < types.length; i++) {
+            secondaryArtists.push({
+              artist_type: types[i] || "",
+              artist_name: names[i] || "",
+              legal_name: legalNames[i] || "",
+            });
+          }
+        }
+
+        // Set Audio
         setAudio({
           song_name: song.audio_song_name || "",
           language: song.language || "",
@@ -49,13 +76,14 @@ const ContentNew = () => {
           mood: song.mood || "",
           lyrics: song.lyrics || "",
           primary_artist: song.primary_artist || "",
-          featuring: song.featuring || "",
           lyricist: song.lyricist || "",
           composer: song.composer || "",
           producer: song.producer || "",
           audio_url: song.audio_url || "",
+          secondary_artists: secondaryArtists,
         });
 
+        // Set Video
         let parsedImages = [];
         if (song.image_url) {
           if (typeof song.image_url === "string" && song.image_url.startsWith("[")) {
@@ -84,24 +112,22 @@ const ContentNew = () => {
           video: song.video_url || "",
         });
 
-        // ✅ Set statuses from API values with lowercase a/r
+        // Set statuses
         setStatuses({
           Content: null,
-          Audio:
-            song.audio_status === "approved"
-              ? "accepted"
-              : song.audio_status === "rejected"
-              ? "rejected"
-              : null,
-          Video:
-            song.video_status === "approved"
-              ? "accepted"
-              : song.video_status === "rejected"
-              ? "rejected"
-              : null,
+          Audio: song.audio_status === "approved"
+            ? "accepted"
+            : song.audio_status === "rejected"
+            ? "rejected"
+            : null,
+          Video: song.video_status === "approved"
+            ? "accepted"
+            : song.video_status === "rejected"
+            ? "rejected"
+            : null,
         });
 
-        // ✅ Set reject reasons from API
+        // Set reasons
         setReasons({
           Content: "",
           Audio: song.audio_reject_reason || "",
@@ -139,11 +165,9 @@ const ContentNew = () => {
       status: type === "Reject" ? "rejected" : "approved",
       reason: type === "Reject" ? reason : null,
     };
-    console.log("Action Log:", logObj);
 
     try {
-      const update = await axiosApi.put("/songs/update-status", logObj);
-      console.log(update);
+      await axiosApi.put("/songs/update-status", logObj);
 
       if (type === "Reject") {
         toast.error(`Rejected ${section} with reason: ${reason || "No reason provided"}`);
@@ -188,7 +212,7 @@ const ContentNew = () => {
           data={audio}
           fields={[
             "song_name", "language", "genre", "sub_genre", "mood", "lyrics", "primary_artist",
-            "featuring", "lyricist", "composer", "producer", "audio_url",
+            "audio_url",
           ]}
           statuses={statuses}
           reasons={reasons}
@@ -197,6 +221,25 @@ const ContentNew = () => {
           confirmAction={confirmAction}
           confirmAndHandle={confirmAndHandle}
           setConfirmAction={setConfirmAction}
+          renderExtra={() => (
+            <div className="mt-4 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-800">Secondary Artists</h3>
+              {audio.secondary_artists?.length > 0 ? (
+                audio.secondary_artists.map((artist, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3 border rounded-lg bg-gray-100 text-sm space-y-1"
+                  >
+                    <div><strong>Type:</strong> {artist.artist_type}</div>
+                    <div><strong>Artist Name:</strong> {artist.artist_name}</div>
+                    <div><strong>Legal Name:</strong> {artist.legal_name}</div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-gray-600">No secondary artists.</p>
+              )}
+            </div>
+          )}
         />
 
         <SectionBlock
@@ -296,29 +339,31 @@ const SectionBlock = ({
         </div>
       )}
 
-      {fields.map((field) => (
-        <Field key={field} label={field}>
-          {field === "lyrics" || field === "credits" ? (
-            <textarea
-              value={data[field]}
-              readOnly
-              className="w-full p-2 border rounded-md text-black bg-gray-100"
-            />
-          ) : field.includes("audio_url") ? (
-            <audio controls className="w-full max-w-xs rounded border mb-2">
-              <source src={data[field]} type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </audio>
-          ) : (
-            <input
-              type={field === "release_date" ? "date" : "text"}
-              value={data[field]}
-              readOnly
-              className="w-full p-2 border rounded-md text-black bg-gray-100"
-            />
-          )}
-        </Field>
-      ))}
+      {fields
+        .filter((field) => data[field] !== null && data[field] !== undefined)
+        .map((field) => (
+          <Field key={field} label={field}>
+            {field === "lyrics" || field === "credits" ? (
+              <textarea
+                value={data[field]}
+                readOnly
+                className="w-full p-2 border rounded-md text-black bg-gray-100"
+              />
+            ) : field.includes("audio_url") ? (
+              <audio controls className="w-full max-w-xs rounded border mb-2">
+                <source src={data[field]} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+            ) : (
+              <input
+                type="text" // ← forces DD MMM YYYY to show properly
+                value={data[field]}
+                readOnly
+                className="w-full p-2 border rounded-md text-black bg-gray-100"
+              />
+            )}
+          </Field>
+        ))}
 
       {renderExtra && renderExtra()}
 
