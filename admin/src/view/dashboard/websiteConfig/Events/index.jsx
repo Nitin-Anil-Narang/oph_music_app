@@ -1,103 +1,16 @@
-// import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import SearchableDynamicTable from "../../../../components/SearchableDynamicTable";
-
-// const Events = () => {
-//   const [events, setEvents] = useState([]);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     // Manually map static event data to match your table format
-//     const rawEvents = [
-//       {
-//         id: "EVT001",
-//         name: "Music Concert",
-//         date: "2025-08-01",
-//         location: "Mumbai",
-//         organizer: "XYZ Inc"
-//       },
-//       {
-//         id: "EVT002",
-//         name: "Art Exhibition",
-//         date: "2025-09-10",
-//         location: "Delhi",
-//         organizer: "Art House"
-//       }
-//     ];
-
-//     const formatted = rawEvents.map((event, i) => ({
-//       ophid: event.id,
-//       full_name: event.name,
-//       stage_name: event.organizer,
-//       email: "event@example.com", // placeholder
-//       contact_num: "0000000000",  // placeholder
-//       user_pass: "N/A",
-//       createdAt: new Date().toISOString(),
-//       updatedAt: new Date().toISOString(),
-//       artist_type: "Event",
-//       personal_photo: null,
-//       location: event.location,
-//       step_status: "scheduled",
-//       reject_reason: null,
-//       current_step: "/events/details"
-//     }));
-
-//     setEvents(formatted);
-//   }, []);
-
-//   return (
-//     <div className="min-h-screen bg-gray-50 px-4 md:px-8 py-6">
-//       {/* Header Section */}
-//       <div className="flex justify-between items-center mb-6">
-//         <h1 className="text-3xl font-bold text-gray-800">Event List</h1>
-//         <button
-//           onClick={() => navigate("/add-event")}
-//           className="px-5 py-2.5 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition"
-//         >
-//           + Add Event
-//         </button>
-//       </div>
-
-//       {/* Event Table */}
-//       <>
-//       <SearchableDynamicTable
-//         data={events}
-//         pageSize={5}
-//         title="All Events"
-//         detailsUrl="/event-details"
-//         excludeColumns={["user_pass", "email", "contact_num", "personal_photo", "reject_reason", "current_step"]}
-//       />
-//       <SearchableDynamicTable
-//         data={events}
-//         pageSize={5}
-//         title="All Events"
-//         detailsUrl="/event-details"
-//         excludeColumns={["user_pass", "email", "contact_num", "personal_photo", "reject_reason", "current_step"]}
-//       />
-//       </>
-//     </div>
-
-//   );
-// };
-
-// export default Events;
-
-
 import React, { useState } from "react";
-import axios from "axios";
+import axiosApi from "../../../../../../frontend/src/conf/axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const EventAdminForm = () => {
   const [formData, setFormData] = useState({
-    competitionName: "",
+    EventName: "",
     dateTime: null,
     location: "",
     description: "",
     hashtags: "",
     registrationFee_normal: "",
-    registrationFee_offer_availableFor: "",
-    registrationFee_offer_discount: "",
     registrationStart: null,
     registrationEnd: null,
     winnerReward: "",
@@ -134,7 +47,7 @@ const EventAdminForm = () => {
     console.log("Submitting Form:", Object.fromEntries(form.entries()));
 
     try {
-      const res = await axios.post("http://localhost:4000/admin/events", form, {
+      const res = await axiosApi.post("/post-events", form, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -155,8 +68,6 @@ const EventAdminForm = () => {
     </button>
   ));
 
-
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-10">
       <form
@@ -166,9 +77,9 @@ const EventAdminForm = () => {
         <h2 className="text-2xl font-bold text-[#0d3c44]">Create New Event</h2>
 
         <input
-          name="competitionName"
+          name="EventName"
           type="text"
-          placeholder="Competition Name"
+          placeholder="Event Name"
           onChange={handleChange}
           className="w-full border border-gray-300 px-4 py-2 rounded-xl focus:ring-2 focus:ring-[#0d3c44] focus:outline-none"
           required
@@ -193,7 +104,6 @@ const EventAdminForm = () => {
             popperClassName="!z-50"
           />
         </div>
-
 
         <input
           name="location"
@@ -227,7 +137,6 @@ const EventAdminForm = () => {
           className="w-full border border-gray-300 px-4 py-2 rounded-xl focus:ring-2 focus:ring-[#0d3c44] focus:outline-none"
         />
 
-
         <DatePicker
           selected={formData.registrationStart}
           onChange={(date) =>
@@ -236,7 +145,7 @@ const EventAdminForm = () => {
           dateFormat="dd/MM/yyyy"
           placeholderText="Registration Start"
           customInput={<CustomDateInput placeholder="Registration Start" />}
-          className="w-full border px-4 py-2 rounded-xl bg-[#0d3c44] text-white placeholder-white focus:ring-2 focus:ring-[#0b3239] focus:outline-none"
+          className="w-full border px-4 py-2 rounded-xl bg-[#0d3c44] text-white"
           todayButton="Today"
           isClearable
         />
@@ -249,11 +158,10 @@ const EventAdminForm = () => {
           dateFormat="dd/MM/yyyy"
           placeholderText="Registration End"
           customInput={<CustomDateInput placeholder="Registration End" />}
-          className="w-full border px-4 py-2 rounded-xl bg-[#0d3c44] text-white placeholder-white focus:ring-2 focus:ring-[#0b3239] focus:outline-none"
+          className="w-full border px-4 py-2 rounded-xl bg-[#0d3c44] text-white"
           todayButton="Today"
           isClearable
         />
-
 
         <input
           name="winnerReward"
@@ -306,4 +214,3 @@ const EventAdminForm = () => {
 };
 
 export default EventAdminForm;
-

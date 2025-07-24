@@ -33,6 +33,7 @@ const newSignUp = require("./admin/routes/newSignUp")
 const newArtist = require("./admin/routes/newArtist")
 const allArtist = require("./admin/routes/allArtist")
 const songs = require("./admin/routes/songs")
+const events = require("./admin/routes/events")
 const payments = require("./admin/routes/payments")
 
 // ✅ Middleware order is important
@@ -69,6 +70,7 @@ app.use("/",newSignUp);
 app.use("/",newArtist);
 app.use("/",allArtist);
 app.use("/",songs);
+app.use("/",events);
 app.use("/",payments);
 
 // ✅ Start server

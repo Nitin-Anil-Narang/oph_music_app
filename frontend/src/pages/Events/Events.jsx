@@ -15,85 +15,85 @@ export default function Events() {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [artistBookEvents, setArtistBookEvents] = useState([]);
+  const [musicEvents, setMusicEvents] = useState([]);
 
-  const musicEvents = [
-    {
-      event_id: 1,
-      hashtags: "#Competition, #Music, #Winners",
-      competitionName: "Live Stage Singing Competition",
-      dateTime: "28/12/2025 – 09:00 PM",
-      location: "Purplish Club, Bandra, Mumbai",
-      description: "An exciting performance.",
-      registrationFee_normal: "150",
-      registrationFee_offer_availableFor: "OPH Creators",
-      registrationFee_offer_discount: "50%",
-      registrationStart: "15/12/2025",
-      registrationEnd: "18/12/2025",
-      winnerReward: "10,000",
-      image:
-        "https://events.com/wp-content/uploads/2022/09/BLOG-How-To-Plan-a-Music-Festival-A-Complete-Guide.png",
-      is_register: true,
-    },
-    {
-      event_id: 2,
-      hashtags: "#Competition, #Music, #Winners",
-      competitionName: "Live Stage Singing Competition",
-      dateTime: "28/12/2023 – 09:00 PM",
-      location: "Purplish Club, Bandra, Mumbai",
-      description: "An exciting performance.",
-      registrationFee_normal: "150",
-      registrationFee_offer_availableFor: "OPH Creators",
-      registrationFee_offer_discount: "50%",
-      registrationStart: "15/2/2023",
-      registrationEnd: "18/5/2023",
-      winnerReward: "10,000",
-      image:
-        "https://events.com/wp-content/uploads/2022/09/BLOG-How-To-Plan-a-Music-Festival-A-Complete-Guide.png",
-      is_register: true,
-    },{
-      event_id: 3,
-      hashtags: "#Competition, #Music, #Winners",
-      competitionName: "Live Stage Singing Competition",
-      dateTime: "28/08/2025 – 09:00 PM",
-      location: "Purplish Club, Bandra, Mumbai",
-      description: "An exciting performance.",
-      registrationFee_normal: "150",
-      registrationFee_offer_availableFor: "OPH Creators",
-      registrationFee_offer_discount: "50%",
-      registrationStart: "22/08/2025",
-      registrationEnd: "27/08/2025",
-      winnerReward: "10,000",
-      image:
-        "https://events.com/wp-content/uploads/2022/09/BLOG-How-To-Plan-a-Music-Festival-A-Complete-Guide.png",
-      is_register: false,
-    },
-  ];
+  // const musicEvents = [
+  //   {
+  //     event_id: 1,
+  //     hashtags: "#Competition, #Music, #Winners",
+  //     competitionName: "Live Stage Singing Competition",
+  //     dateTime: "28/12/2025 – 09:00 PM",
+  //     location: "Purplish Club, Bandra, Mumbai",
+  //     description: "An exciting performance.",
+  //     registrationFee_normal: "150",
+  //     registrationFee_offer_availableFor: "OPH Creators",
+  //     registrationFee_offer_discount: "50%",
+  //     registrationStart: "15/12/2025",
+  //     registrationEnd: "18/12/2025",
+  //     winnerReward: "10,000",
+  //     image:
+  //       "https://events.com/wp-content/uploads/2022/09/BLOG-How-To-Plan-a-Music-Festival-A-Complete-Guide.png",
+  //     is_register: true,
+  //   },
+  //   {
+  //     event_id: 2,
+  //     hashtags: "#Competition, #Music, #Winners",
+  //     competitionName: "Live Stage Singing Competition",
+  //     dateTime: "28/12/2023 – 09:00 PM",
+  //     location: "Purplish Club, Bandra, Mumbai",
+  //     description: "An exciting performance.",
+  //     registrationFee_normal: "150",
+  //     registrationFee_offer_availableFor: "OPH Creators",
+  //     registrationFee_offer_discount: "50%",
+  //     registrationStart: "15/2/2023",
+  //     registrationEnd: "18/5/2023",
+  //     winnerReward: "10,000",
+  //     image:
+  //       "https://events.com/wp-content/uploads/2022/09/BLOG-How-To-Plan-a-Music-Festival-A-Complete-Guide.png",
+  //     is_register: true,
+  //   },{
+  //     event_id: 3,
+  //     hashtags: "#Competition, #Music, #Winners",
+  //     competitionName: "Live Stage Singing Competition",
+  //     dateTime: "28/08/2025 – 09:00 PM",
+  //     location: "Purplish Club, Bandra, Mumbai",
+  //     description: "An exciting performance.",
+  //     registrationFee_normal: "150",
+  //     registrationFee_offer_availableFor: "OPH Creators",
+  //     registrationFee_offer_discount: "50%",
+  //     registrationStart: "22/08/2025",
+  //     registrationEnd: "27/08/2025",
+  //     winnerReward: "10,000",
+  //     image:
+  //       "https://events.com/wp-content/uploads/2022/09/BLOG-How-To-Plan-a-Music-Festival-A-Complete-Guide.png",
+  //     is_register: false,
+  //   },
+  // ];
 
-  const parseEventDateTime = (dateTimeStr) => {
-    if (!dateTimeStr || typeof dateTimeStr !== "string") return null;
-    const [datePart, timePart] = dateTimeStr.split("–").map(part => part.trim());
-    if (!datePart || !timePart) return null;
 
-    const [day, month, year] = datePart.split("/").map(Number);
-    let [time, modifier] = timePart.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
+  useEffect(() => {
+    const getEvents = async () => {
+      const events = await axiosApi.get('/events')
+      console.log(events.data.data);
+      setMusicEvents(events.data.data)
+    }
 
-    if (modifier === "PM" && hours < 12) hours += 12;
-    if (modifier === "AM" && hours === 12) hours = 0;
+    getEvents()
 
-    return new Date(year, month - 1, day, hours, minutes);
-  };
+  }, [])
+  console.log(JSON.stringify(musicEvents));
+  
 
-  const now = new Date();
   const upcomingEvents = musicEvents.filter((event) => {
-    const eventDate = parseEventDateTime(event.dateTime);
-    return eventDate && eventDate > new Date();
-  });
+  const eventDate = new Date(event.dateTime);
+  return eventDate > new Date();
+});
 
-  const previousEvents = musicEvents.filter((event) => {
-    const eventDate = parseEventDateTime(event.dateTime);
-    return eventDate && eventDate <= new Date();
-  });
+const previousEvents = musicEvents.filter((event) => {
+  const eventDate = new Date(event.dateTime);
+  return eventDate <= new Date();
+});
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -123,31 +123,45 @@ export default function Events() {
     //   },
     // });
     navigate("/dashboard/success", {
-          state: {
-            heading: "Your Event Spot has been booked Successfully.",
-            btnText: "Check Out More Events",
-            redirectTo: "/dashboard/events",
-          },
-          replace: true,
-        });
+      state: {
+        heading: "Your Event Spot has been booked Successfully.",
+        btnText: "Check Out More Events",
+        redirectTo: "/dashboard/events",
+      },
+      replace: true,
+    });
   };
 
-  const parseDDMMYYYY = (dateStr) => {
-    const [day, month, year] = dateStr.split("/").map(Number);
-    return new Date(year, month - 1, day);
-  };
+  // const parseDDMMYYYY = (dateStr) => {
+  //   const [day, month, year] = dateStr.split("/").map(Number);
+  //   return new Date(year, month - 1, day);
+  // };
 
-  const checkRegValid = (reg_date) => {
-    const today = new Date();
-    const reg = parseDDMMYYYY(reg_date);
-    return today <= reg;
-  };
+  // const checkRegValid = (reg_date) => {
+  //   const today = new Date();
+  //   const reg = parseDDMMYYYY(reg_date);
+  //   return today <= reg;
+  // };
 
-  const formatDateInline = (dateStr) => {
-    if (!dateStr) return "";
-    const [day, month, year] = dateStr.split("/");
-    return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
-  };
+  const checkRegValid = (regDateISO) => {
+  return new Date() <= new Date(regDateISO);
+};
+
+
+  // const formatDateInline = (dateStr) => {
+  //   if (!dateStr) return "";
+  //   const [day, month, year] = dateStr.split("/");
+  //   return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+  // };
+
+  const formatDateInline = (isoDate) => {
+  const date = new Date(isoDate);
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+};
 
   const renderEventsSection = (events, sectionTitle) => (
     <>
@@ -160,13 +174,12 @@ export default function Events() {
           const isPrevious = sectionTitle === "Previous Events";
           return (
             <div
-  key={ind}
-  className={`flex md:mb-0 mb-5 gap-6 flex-col md:flex-row rounded-lg p-2 md:p-4 transition-colors ${
-    isPrevious
-      ? "bg-gray-800 opacity-50 cursor-not-allowed grayscale"
-      : "hover:bg-gray-900 hover:cursor-pointer"
-  }`}
->
+              key={ind}
+              className={`flex md:mb-0 mb-5 gap-6 flex-col md:flex-row rounded-lg p-2 md:p-4 transition-colors ${isPrevious
+                  ? "bg-gray-800 opacity-50 cursor-not-allowed grayscale"
+                  : "hover:bg-gray-900 hover:cursor-pointer"
+                }`}
+            >
               <div className="md:w-[340px] px-6 md:px-0 w-[96vw] h-[250px] flex-shrink-0">
                 <img
                   src={event.image}
@@ -186,7 +199,8 @@ export default function Events() {
                   {event.competitionName}
                 </h2>
                 <div className="text-gray-400 text-sm">
-                  {event.dateTime} - {event.location}
+                  {new Date(event.dateTime).toLocaleString("en-GB")} - {event.location}
+
                 </div>
                 <div className="text-cyan-400">{event.description}</div>
                 <p className="text-gray-400 text-sm">
@@ -294,7 +308,7 @@ export default function Events() {
 
 
 ('OPH-CAN-IA-07', 1, 'under review'),
-('OPH-CAN-IA-07', 1, 'accepted'),
-('OPH-CAN-IA-07', 1, 'rejected'),
-('OPH-XYZ-22', 1, 'accepted'),
-('OPH-USER-99', 1, 'rejected');
+  ('OPH-CAN-IA-07', 1, 'accepted'),
+  ('OPH-CAN-IA-07', 1, 'rejected'),
+  ('OPH-XYZ-22', 1, 'accepted'),
+  ('OPH-USER-99', 1, 'rejected');
