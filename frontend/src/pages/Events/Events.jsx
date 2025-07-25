@@ -16,59 +16,9 @@ export default function Events() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [artistBookEvents, setArtistBookEvents] = useState([]);
   const [musicEvents, setMusicEvents] = useState([]);
+  const test = ophid;
 
-  // const musicEvents = [
-  //   {
-  //     event_id: 1,
-  //     hashtags: "#Competition, #Music, #Winners",
-  //     competitionName: "Live Stage Singing Competition",
-  //     dateTime: "28/12/2025 – 09:00 PM",
-  //     location: "Purplish Club, Bandra, Mumbai",
-  //     description: "An exciting performance.",
-  //     registrationFee_normal: "150",
-  //     registrationFee_offer_availableFor: "OPH Creators",
-  //     registrationFee_offer_discount: "50%",
-  //     registrationStart: "15/12/2025",
-  //     registrationEnd: "18/12/2025",
-  //     winnerReward: "10,000",
-  //     image:
-  //       "https://events.com/wp-content/uploads/2022/09/BLOG-How-To-Plan-a-Music-Festival-A-Complete-Guide.png",
-  //     is_register: true,
-  //   },
-  //   {
-  //     event_id: 2,
-  //     hashtags: "#Competition, #Music, #Winners",
-  //     competitionName: "Live Stage Singing Competition",
-  //     dateTime: "28/12/2023 – 09:00 PM",
-  //     location: "Purplish Club, Bandra, Mumbai",
-  //     description: "An exciting performance.",
-  //     registrationFee_normal: "150",
-  //     registrationFee_offer_availableFor: "OPH Creators",
-  //     registrationFee_offer_discount: "50%",
-  //     registrationStart: "15/2/2023",
-  //     registrationEnd: "18/5/2023",
-  //     winnerReward: "10,000",
-  //     image:
-  //       "https://events.com/wp-content/uploads/2022/09/BLOG-How-To-Plan-a-Music-Festival-A-Complete-Guide.png",
-  //     is_register: true,
-  //   },{
-  //     event_id: 3,
-  //     hashtags: "#Competition, #Music, #Winners",
-  //     competitionName: "Live Stage Singing Competition",
-  //     dateTime: "28/08/2025 – 09:00 PM",
-  //     location: "Purplish Club, Bandra, Mumbai",
-  //     description: "An exciting performance.",
-  //     registrationFee_normal: "150",
-  //     registrationFee_offer_availableFor: "OPH Creators",
-  //     registrationFee_offer_discount: "50%",
-  //     registrationStart: "22/08/2025",
-  //     registrationEnd: "27/08/2025",
-  //     winnerReward: "10,000",
-  //     image:
-  //       "https://events.com/wp-content/uploads/2022/09/BLOG-How-To-Plan-a-Music-Festival-A-Complete-Guide.png",
-  //     is_register: false,
-  //   },
-  // ];
+
 
 
   useEffect(() => {
@@ -82,54 +32,69 @@ export default function Events() {
 
   }, [])
   console.log(JSON.stringify(musicEvents));
-  
+
 
   const upcomingEvents = musicEvents.filter((event) => {
-  const eventDate = new Date(event.dateTime);
-  return eventDate > new Date();
-});
+    const eventDate = new Date(event.dateTime);
+    return eventDate > new Date();
+  });
 
-const previousEvents = musicEvents.filter((event) => {
-  const eventDate = new Date(event.dateTime);
-  return eventDate <= new Date();
-});
+  const previousEvents = musicEvents.filter((event) => {
+    const eventDate = new Date(event.dateTime);
+    return eventDate <= new Date();
+  });
 
 
   useEffect(() => {
+    if (!ophid) return; // wait for ophid to be defined
+
     const fetchData = async () => {
       try {
-        const response = await axiosApi.get("/event/get-event", {
+        console.log("Fetching event_part for:", ophid);
+
+        const response = await axiosApi.get(`/event_part/${ophid}`, {
           headers,
         });
-        if (response.data.success) {
-          setArtistBookEvents(response.data.data);
+
+        console.log(response);
+
+        if (response.status === 200) {
+          const participantData = response.data;
+          const normalizedData = Array.isArray(participantData)
+            ? participantData
+            : [participantData]; // wrap single object into array
+
+          console.log("✅ Normalized artist registrations:", normalizedData);
+          setArtistBookEvents(normalizedData);
         }
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching event_part:", err);
+        setError(err.message);
       }
     };
+
     fetchData();
-  }, []);
+  }, [ophid]);
 
   const handleReg = (data) => {
-    // navigate("/auth/payment", {
-    //   state: {
-    //     artist_id: ophid,
-    //     amount: (parseInt(data.registrationFee_normal) / 2).toFixed(0),
-    //     event_id: data.event_id,
-    //     returnPath: "/dashboard/events",
-    //     heading: "Complete Event Registration",
-    //     from: "Event Registeration",
-    //   },
-    // });
-    navigate("/dashboard/success", {
+    navigate("/auth/payment", {
       state: {
-        heading: "Your Event Spot has been booked Successfully.",
-        btnText: "Check Out More Events",
-        redirectTo: "/dashboard/events",
+        OPH_ID: ophid,
+        amount: (parseInt(data.registrationFee_normal) / 2).toFixed(0),
+        event_id: data.event_id,
+        returnPath: "/dashboard/events",
+        heading: "Complete Event Registration",
+        from: "Event Registeration",
       },
-      replace: true,
     });
+    // navigate("/dashboard/success", {
+    //   state: {
+    //     heading: "Your Event Spot has been booked Successfully.",
+    //     btnText: "Check Out More Events",
+    //     redirectTo: "/dashboard/events",
+    //   },
+    //   replace: true,
+    // });
   };
 
   // const parseDDMMYYYY = (dateStr) => {
@@ -144,8 +109,8 @@ const previousEvents = musicEvents.filter((event) => {
   // };
 
   const checkRegValid = (regDateISO) => {
-  return new Date() <= new Date(regDateISO);
-};
+    return new Date() <= new Date(regDateISO);
+  };
 
 
   // const formatDateInline = (dateStr) => {
@@ -155,13 +120,27 @@ const previousEvents = musicEvents.filter((event) => {
   // };
 
   const formatDateInline = (isoDate) => {
-  const date = new Date(isoDate);
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-};
+    const date = new Date(isoDate);
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+
+  const isArtistRegistered = (eventId) => {
+    return artistBookEvents.some(
+      (entry) =>
+        Number(entry.event_id) === Number(eventId) &&
+        (entry.status === "under review" || entry.status === "accepted")
+    );
+  };
+
+
+
+
+
 
   const renderEventsSection = (events, sectionTitle) => (
     <>
@@ -176,8 +155,8 @@ const previousEvents = musicEvents.filter((event) => {
             <div
               key={ind}
               className={`flex md:mb-0 mb-5 gap-6 flex-col md:flex-row rounded-lg p-2 md:p-4 transition-colors ${isPrevious
-                  ? "bg-gray-800 opacity-50 cursor-not-allowed grayscale"
-                  : "hover:bg-gray-900 hover:cursor-pointer"
+                ? "bg-gray-800 opacity-50 cursor-not-allowed grayscale"
+                : "hover:bg-gray-900 hover:cursor-pointer"
                 }`}
             >
               <div className="md:w-[340px] px-6 md:px-0 w-[96vw] h-[250px] flex-shrink-0">
@@ -199,10 +178,18 @@ const previousEvents = musicEvents.filter((event) => {
                   {event.competitionName}
                 </h2>
                 <div className="text-gray-400 text-sm">
-                  {new Date(event.dateTime).toLocaleString("en-GB")} - {event.location}
+                  {new Date(event.dateTime).toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  })} - {event.location}
 
                 </div>
-                <div className="text-cyan-400">{event.description}</div>
+                {event.event_id}
+                <div className="text-cyan-400">{event.EventName}</div>
                 <p className="text-gray-400 text-sm">
                   {event.description.length > 50
                     ? `${event.description.substring(0, 100)}...`
@@ -238,9 +225,9 @@ const previousEvents = musicEvents.filter((event) => {
                     <button className="px-6 py-2 bg-gray-700 text-gray-300 rounded-full text-sm font-medium cursor-not-allowed">
                       Closed
                     </button>
-                  ) : event.is_register ? (
+                  ) : isArtistRegistered(event.event_id) ? (
                     <button
-                      className="px-6 py-2 bg-cyan-400 text-gray-900 hover:bg-cyan-100 rounded-full text-sm font-medium cursor-not-allowed"
+                      className="px-6 py-2 bg-cyan-400 text-gray-900 hover:bg-cyan-200 rounded-full text-sm font-medium cursor-not-allowed"
                       disabled
                     >
                       Registered
@@ -251,7 +238,7 @@ const previousEvents = musicEvents.filter((event) => {
                         e.preventDefault();
                         handleReg(event);
                       }}
-                      className="px-6 py-2 bg-cyan-400 text-gray-900 rounded-full text-sm font-medium hover:bg-cyan-100 transition-colors"
+                      className="px-6 py-2 bg-cyan-400 text-gray-900 rounded-full text-sm font-medium hover:bg-cyan-200 transition-colors"
                     >
                       Register
                     </button>
