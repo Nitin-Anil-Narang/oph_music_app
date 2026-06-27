@@ -29,11 +29,11 @@ const NavLayout = ({ children }) => {
   return (
     <div>
       <WebsiteNavbar />
-      <main>
+      <main className={isHomePage ? "" : "pb-20 lg:pb-0"}>
         <Outlet />
       </main>
       {!isHomePage && <MobileNavbar />}
-      <Footer />
+      <Footer className={!isHomePage ? "pb-24 lg:pb-0" : ""} />
     </div>
   );
 };

@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 /* Remove number input spinners/arrows globally */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
@@ -25,6 +30,7 @@ body {
   color: #fff;
   background-color: #000;
   overflow-x: hidden;
+  /* width: 100%; */
   position: relative;
 }
 
@@ -41,7 +47,7 @@ body::before {
 }
 
 .truncate {
-  overflow: hidden;
+  /* overflow: hidden; */
   text-overflow: ellipsis;
   white-space: nowrap;
 }

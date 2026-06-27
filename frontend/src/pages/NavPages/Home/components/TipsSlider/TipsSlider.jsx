@@ -244,18 +244,18 @@ const TipsSlider = () => {
           onClick={closeModal}
         >
           <div
-            className="relative bg-black rounded-lg shadow-lg max-w-md w-full mx-4"
+            className="relative bg-black rounded-lg shadow-lg w-[80%] md:max-w-md mx-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button - Mobile Only */}
             <button
-              className="md:hidden absolute -top-20 right-12 w-12 h-12 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white text-3xl font-bold z-[70] hover:bg-white/30 transition-all border border-white/30"
+              className="md:hidden absolute top-1 right-0 w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white text-2xl font-bold z-[70] hover:bg-white/30 transition-all border border-white/30"
               onClick={closeModal}
             >
               &times;
             </button>
 
-            <div className="relative aspect-[9/16]">
+            <div className="relative w-full aspect-[9/16]">
               <CustomVideoPlayer
                 ref={modalVideoRef}
                 src={selectedVideo}

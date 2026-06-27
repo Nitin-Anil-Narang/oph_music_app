@@ -107,15 +107,11 @@ function Leaderboard() {
   const [uniqueLocations, setUniqueLocations] = useState([]);
   const [uniqueStageNames, setUniqueStageNames] = useState([]);
   const [uniqueRanks, setUniqueRanks] = useState([]);
-  const getCurrentYear = new Date().getFullYear();
-
-  const leaderboardMonthEntries = useMemo(() => {
-    const data = asMonthArtistMap(artistsData);
-    const entries = Object.entries(data).filter(([, artists]) =>
-      Array.isArray(artists),
-    );
-    return sortMonthEntriesLatestFirst(entries);
-  }, [artistsData]);
+  // const [uniqueProfessions, setUniqueProfessions] = useState([]);
+  const leaderboardMonthEntries = useMemo(
+    () => flattenLeaderboardHistory(artistsData),
+    [artistsData],
+  );
 
   useEffect(() => {
     const fetchArtist = async () => {
@@ -143,11 +139,14 @@ function Leaderboard() {
   }, []);
 
   const handleSearch = (artist_name) => {
+    console.log(artist_name);
+
     if (artist_name.trim() === "") {
       setArtistExists([]);
       return;
     }
     const normalizedArtistName = artist_name.toLowerCase();
+    console.log(normalizedArtistName);
 
     setSearchArtist(normalizedArtistName);
     const data = asMonthArtistMapFromHistory(artistsData);
@@ -286,26 +285,23 @@ function Leaderboard() {
           content="Find top-ranked independent artists epk on India’s top music networking platform for creators. Use filters by location and profession to connect and collaborate."
         />
       </Helmet>
-
       {loading && (
         <div className="text-center h-[90vh] w-full py-32">
           <div className="animate-spin rounded-full w-12 h-12 border-b-2 border-[#5DC9DE] mx-auto"></div>
           <p className="mt-2 text-[#5DC9DE]">Warming up... Almost there!</p>
         </div>
       )}
-
       {!loading && (
         <div className="scroll-smooth min-h-screen bg-black text-white">
           <HeroSection
             handleSearch={handleSearch}
             setArtistExists={setArtistExists}
             artistExists={artistExists}
-            handleFilter={() => setShowFilterModal(true)}
+            handleFilter={() => setShowFilterModal(true)} // Pass handleFilter as a prop
           />
           <div className="lg:px-10 px-6 xl:px-16">
             <div className="container w-full mb-8 h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
           </div>
-
           {leaderboardMonthEntries.length === 0 && (
             <div className="px-6 lg:px-10 xl:px-16 pb-24 text-center">
               <p className="text-gray-400 text-lg max-w-xl mx-auto">
@@ -314,7 +310,6 @@ function Leaderboard() {
               </p>
             </div>
           )}
-
           {/* ================= DESKTOP VIEW ================= */}
           {leaderboardMonthEntries.map(([title, artists]) => {
             const topArtists = getTopArtistsForMonth(artists);
@@ -550,7 +545,7 @@ function Leaderboard() {
                 name="location"
                 isMulti
                 options={uniqueLocations.map((location) => ({
-                  value: location,
+                  value: location,  
                   label: location,
                 }))}
                 className="basic-multi-select"

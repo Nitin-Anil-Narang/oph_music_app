@@ -5,6 +5,7 @@ import { Home, Trophy, Music, BarChart3, Play, Phone } from "lucide-react";
 export default function MobileNavbar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const isHomePage = pathname === "/home" || pathname === "/";
 
   const navItems = [
     { icon: Home, path: "/home", label: "Home" },
@@ -42,9 +43,17 @@ export default function MobileNavbar() {
     navigate(path);
   };
 
+  const containerClass = isHomePage
+    ? "lg:hidden w-full px-6 py-4 flex justify-center bg-black/40 border-y border-gray-800/80 my-4 relative z-50"
+    : "lg:hidden fixed bottom-0 left-0 w-full px-6 py-2 flex justify-center bg-black/40 border-t border-gray-800/80 z-50 overflow-hidden";
+
+  const innerDivClass = isHomePage
+    ? "flex justify-around items-center w-full max-w-md bg-[#13161C] border border-gray-800 rounded-2xl py-4 px-3 shadow-2xl relative z-50"
+    : "flex justify-around items-center w-full max-w-md bg-[#13161C] border border-gray-800 rounded-2xl py-3 px-3 shadow-2xl overflow-hidden";
+
   return (
-    <div className="lg:hidden w-full px-6 py-4 flex justify-center bg-black/40 border-y border-gray-800/80 my-4 relative z-50">
-      <div className="flex justify-around items-center w-full max-w-md bg-[#13161C] border border-gray-800 rounded-2xl py-4 px-3 shadow-2xl relative z-50">
+    <div className={containerClass}>
+      <div className={innerDivClass}>
         {navItems.map((item, index) => {
           const Icon = item.icon;
           // Determine if path is active

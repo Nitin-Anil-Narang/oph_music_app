@@ -24,16 +24,23 @@ const WhatWeProvide = () => {
 
   return (
     <div className="bg-black relative text-white h-full pt-10 ps-8">
-      <img src={Struggle} className="absolute sm:w-[100vh] -rotate-12 sm:right-[-57px]" alt="" />
+      <img
+        src={Struggle}
+        className="absolute sm:w-[100vh] -rotate-12 sm:right-[-57px]"
+        alt=""
+      />
       <div className="container mx-auto pb-10 grid grid-cols-1 lg:pb-20 xl:pb-0 lg:grid-cols-2 gap-12 items-start">
         {/* Left Content */}
         <div className="space-y-6 mt-8">
           <h2 className="text-4xl lg:text-5xl font-bold">
-          THE VALUE <span className="text-[#5DC9DE]">WE PROVIDE</span>
+            THE VALUE <span className="text-[#5DC9DE]">WE PROVIDE</span>
           </h2>
 
           <p className="text-gray-400">
-          OPH Community is a unique platform that relieves artists burden of juggling to multiple services. We empowers artists by providing them with essential tools, exposure, and opportunities, ensuring their growth and success without unnecessary obstacles.
+            OPH Community is a unique platform that relieves artists burden of
+            juggling to multiple services. We empowers artists by providing them
+            with essential tools, exposure, and opportunities, ensuring their
+            growth and success without unnecessary obstacles.
           </p>
 
           {/* <p className="text-gray-400">
@@ -51,8 +58,21 @@ const WhatWeProvide = () => {
           </ul>
         </div>
 
-        {/* Right Image Grid */}
-        <img className="object-cover z-30 hidden lg:block w-full xl:h-[900px] md:h-[500px] lg:h-[650px] xl:mt-[-150px] mt-0 " src={whatWePro} alt="Free Music Distribution" />
+        {/* Right Image Grid - Desktop */}
+        <img
+          className="object-cover z-30 hidden lg:block w-full xl:h-[900px] md:h-[500px] lg:h-[650px] xl:mt-[-150px] mt-0 "
+          src={whatWePro}
+          alt="Free Music Distribution"
+        />
+      </div>
+
+      {/* Mobile Image - Below Content */}
+      <div className="lg:hidden relative h-[420px]">
+        <img
+          className="object-cover z-30 absolute left-[40%] top-[50%] -translate-x-1/2 -translate-y-1/2 w-[90%] h-[600px]"
+          src={whatWePro}
+          alt="Free Music Distribution"
+        />
       </div>
     </div>
   );
