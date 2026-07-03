@@ -17,7 +17,7 @@ import {Helmet} from "react-helmet";
 function Home() {
 
   return (
-    <div className="relative ">
+    <div className="relative w-full overflow-hidden">
       <Helmet>
         <title>Independent Artist Platform in India for Music - OPH Community</title>
         <meta name="description" content="Join OPH Community - an open-source, artist management platform offers 100% ownership, a powerful music collaboration platform and free music distribution." />

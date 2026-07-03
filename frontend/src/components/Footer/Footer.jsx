@@ -5,11 +5,11 @@ import { AiFillInstagram } from "react-icons/ai";
 import { FaLinkedin } from "react-icons/fa";
 import { BsTwitterX } from "react-icons/bs";
 
-function Footer() {
+function Footer({ className = "" }) {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-auto lg:px-16 px-2 flex flex-col bg-[url('/assets/images/contact/footer.png')] bg-cover bg-center relative">
+    <div className={`w-full h-auto lg:px-16 px-2 flex flex-col bg-[url('/assets/images/contact/footer.png')] bg-cover bg-center relative ${className}`}>
       <div className="flex h-full flex-col justify-between w-full container mx-auto gap-6 sm:gap-0 sm:mt-12 mt-4">
         {/* Top Section */}
         <div className="flex flex-col lg:flex-row w-full items-center lg:items-start">
@@ -55,9 +55,9 @@ function Footer() {
         <div className="w-full flex flex-col sm:flex-row sm:justify-between items-center sm:items-start gap-4 sm:gap-0 sm:my-8 text-center sm:text-left">
           <ul className="flex flex-wrap justify-center sm:justify-start gap-x-6 gap-y-2 text-white text-sm">
             <li><Link className="hover:text-gray-300" to="/privacy-policy">Privacy Policy</Link></li>
-            <li><Link className="hover:text-gray-300" to="/terms-and-conditions">Terms & Conditions</Link></li>
+            <li><Link className="hover:text-gray-300 whitespace-nowrap" to="/terms-and-conditions">Terms & Conditions</Link></li>
             <li><Link className="hover:text-gray-300" to="/refund-policy">Refund Policy</Link></li>
-            <li><Link className="hover:text-gray-300" to="/cancellation-policy">Cancellation Policy</Link></li>
+            <li><Link className="hover:text-gray-300 whitespace-nowrap" to="/cancellation-policy">Cancellation Policy</Link></li>
             <li><Link className="hover:text-gray-300" to="/disclaimer">Disclaimer</Link></li>
           </ul>
 
