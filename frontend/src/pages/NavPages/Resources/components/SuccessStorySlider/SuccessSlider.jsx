@@ -168,7 +168,7 @@ function SuccessSlider({ searchText, title }) {
   // Handle no matching content
   if (filteredSuccess.length === 0) {
     return (
-      <div className="bg-black text-white py-7 text-center">
+      <div className="bg-black text-white py-[16px] lg:py-7 text-center">
         <div className="container mx-auto px-4 lg:px-16">
           <h2 className="text-xl lg:text-4xl font-bold uppercase mt-2">
             No Success Stories Found
@@ -184,7 +184,7 @@ function SuccessSlider({ searchText, title }) {
   }
 
   return (
-    <div id="stories-section" className="bg-black text-white py-7">
+    <div id="stories-section" className="bg-black text-white py-[16px] lg:py-7">
       <div className="container mx-auto mb-12 px-4 lg:px-16">
         {title ? (
           <h2 className="text-[#5DC9DE] text-2xl font-bold uppercase drop-shadow-[0_0_20px_white] text-center">

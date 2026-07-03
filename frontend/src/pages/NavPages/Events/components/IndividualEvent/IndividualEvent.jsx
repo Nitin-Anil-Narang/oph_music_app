@@ -117,8 +117,16 @@ function EventRegistrationModal({
       <div className="relative bg-gray-800 rounded-lg w-[90%] sm:w-full sm:max-w-md max-h-[85vh] overflow-y-auto mx-auto">
         <form onSubmit={handleSubmit} className="space-y-3 p-5">
           <div className="flex justify-between items-center">
-            <h2 className="text-sm sm:text-xl font-bold text-white">Register for Event</h2>
-            <button type="button" onClick={onClose} className="text-gray-400 hover:text-white text-sm">✕</button>
+            <h2 className="text-sm sm:text-xl font-bold text-white">
+              Register for Event
+            </h2>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              ✕
+            </button>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <input
@@ -182,12 +190,24 @@ function EventRegistrationModal({
             >
               <option value="">Select profession</option>
               {professions?.map((profession, ind) => (
-                <option key={profession.id ?? ind} value={profession.id}>{profession.name}</option>
+                <option key={profession.id ?? ind} value={profession.id}>
+                  {profession.name}
+                </option>
               ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <svg
+                className="w-4 h-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </div>
           </div>
@@ -418,26 +438,109 @@ const IndividualEvent = () => {
             {/* Timer */}
             <div className="flex sm:flex-row flex-col gap-4 mb-6">
               <div className="flex gap-4">
-                <div className="bg-white/5 backdrop-blur-none border p-4 rounded-lg text-center">
+                <div
+                  className="
+  bg-gradient-to-b from-[#3A3A3A] via-[#1F1F1F] to-[#050505]
+  border border-[#4A4A4A]
+  shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
+  rounded-2xl
+  p-4
+  text-center
+
+  md:bg-none
+  md:bg-white/5
+  md:border-white/10
+  md:shadow-none
+  md:rounded-lg
+"
+                >
                   <div className="text-3xl font-bold">{timers.days}</div>
                   <div className="text-sm text-gray-300">Days</div>
                 </div>
-                <div className="bg-white/5 backdrop-blur-none border p-4 rounded-lg text-center">
+                <div
+                  className="
+  bg-gradient-to-b from-[#3A3A3A] via-[#1F1F1F] to-[#050505]
+  border border-[#4A4A4A]
+  shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
+  rounded-2xl
+  p-4
+  text-center
+
+  md:bg-none
+  md:bg-white/5
+  md:border-white/10
+  md:shadow-none
+  md:rounded-lg
+"
+                >
                   <div className="text-3xl font-bold">{timers.hours}</div>
                   <div className="text-sm text-gray-300">Hours</div>
                 </div>
-                <div className="bg-white/5 backdrop-blur-none border p-4 rounded-lg text-center">
+                <div
+                  className="
+  bg-gradient-to-b from-[#3A3A3A] via-[#1F1F1F] to-[#050505]
+  border border-[#4A4A4A]
+  shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
+  rounded-2xl
+  p-4
+  text-center
+
+  md:bg-none
+  md:bg-white/5
+  md:border-white/10
+  md:shadow-none
+  md:rounded-lg
+"
+                >
                   <div className="text-3xl  font-bold">{timers.minutes}</div>
                   <div className="text-sm text-gray-300">Minute</div>
                 </div>
-                <div className="bg-white/5 backdrop-blur-none border p-4 rounded-lg text-center">
+                <div
+                  className="
+  bg-gradient-to-b from-[#3A3A3A] via-[#1F1F1F] to-[#050505]
+  border border-[#4A4A4A]
+  shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
+  rounded-2xl
+  p-4
+  text-center
+
+  md:bg-none
+  md:bg-white/5
+  md:border-white/10
+  md:shadow-none
+  md:rounded-lg
+"
+                >
                   <div className="text-3xl font-bold">{timers.seconds}</div>
                   <div className="text-sm text-gray-300">Second</div>
                 </div>
               </div>
 
               {/* Prize Amount */}
-              <div className="sm:ml-auto backdrop-blur-sm border px-3 sm:px-6 rounded-lg bg-transparent w-[100%] lg:w-auto  p-6 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg">
+              <div
+                className="
+    sm:ml-auto
+    w-full lg:w-auto
+    p-6
+    px-3 sm:px-6
+    transition-colors
+
+    backdrop-blur-sm
+    bg-transparent
+    border
+    border-white/20
+    rounded-lg
+    shadow-lg
+
+    max-md:bg-gradient-to-b
+    max-md:from-[#3A3A3A]
+    max-md:via-[#1F1F1F]
+    max-md:to-[#050505]
+    max-md:border-[#4A4A4A]
+    max-md:rounded-2xl
+    max-md:shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
+  "
+              >
                 <span className="text-xl lg:text-sm text-gray-300">
                   CHANCE TO WIN
                 </span>
@@ -448,7 +551,7 @@ const IndividualEvent = () => {
             </div>
 
             {/* Tags */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-2 mb-4 flex-wrap">
               {singleEvent.hashtags?.map((tag, index) => (
                 <span key={index} className="text-gray-400">
                   {tag}

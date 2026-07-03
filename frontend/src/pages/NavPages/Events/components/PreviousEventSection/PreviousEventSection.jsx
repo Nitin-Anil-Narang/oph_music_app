@@ -97,8 +97,8 @@ function PreviousEventSection() {
         `}
       </style>
 
-      <div className="px-8 py-12 md:px-10 xl:px-16 container mx-auto">
-        <div className="w-full uppercase font-extrabold text-[55px] py-8">
+      <div className="px-[16px] lg:px-8 py-[12px] lg:py-12 md:px-10 xl:px-16 container mx-auto">
+        <div className="w-full uppercase font-extrabold text-[32px] lg:text-[55px] py-[8px] lg:py-8">
           Previous Events
         </div>
 

@@ -194,7 +194,7 @@ function PodcastSlider({ searchText, title }) {
   }
 
   return (
-    <div className="bg-black text-white py-7">
+    <div className="bg-black text-white py-[16px] lg:py-7">
       <div className="container mx-auto mb-12 px-4 lg:px-16">
         {title ? (
           <h2 className="text-[#5DC9DE] text-2xl font-bold uppercase drop-shadow-[0_0_20px_white] text-center">

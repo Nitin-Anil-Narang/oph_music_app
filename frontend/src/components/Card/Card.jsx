@@ -15,7 +15,7 @@ const Card = ({ img, title, date }) => {
       <img
         src={img}
         alt={title}
-        className="w-[450px] h-[270px] object-cover rounded-md"
+        className="w-full lg:w-[450px] h-[270px] object-cover rounded-md"
       />
       <div className="absolute bottom-2 left-2 text-white px-4 py-2 rounded">
         <h3 className="font-bold text-[28px] uppercase">{title}</h3>

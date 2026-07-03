@@ -352,7 +352,7 @@ const MusicPlayerProfile2 = ({
   }
 
   return (
-    <div className="toppicks-section xl:px-16 pt-20 pb-14 bg-black z-20 relative text-white lg:px-10 px-6">
+    <div className="toppicks-section xl:px-16 pt-[30px] pt-20 pb-14 bg-black z-20 relative text-white lg:px-10 px-[16px]">
       <div className="mx-auto">
         <div className="flex flex-col">
           <h2 className="text-4xl font-bold text-left mb-2">
@@ -403,7 +403,7 @@ const MusicPlayerProfile2 = ({
             return (
               <div
                 key={artist.oph_id || index}
-                className="lg:px-4 px-5 py-5 max-w-full sm:max-w-[95%]"
+                className="lg:px-4 px-[16px] py-5 max-w-full sm:max-w-[95%]"
               >
                 <div className="relative overflow-visible rounded-xl">
                   <div

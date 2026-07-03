@@ -17,7 +17,7 @@ function HeroSection() {
     }
   }, []);
   return (
-    <div className="w-full relative sm:pt-0 py-10 md:py-20 flex items-center justify-center sm:justify-start bg-cover bg-center px-6 sm:px-8 md:px-16 min-h-screen">
+    <div className="w-full relative sm:pt-0 py-10 md:py-20 flex items-center justify-center sm:justify-start bg-cover bg-center px-6 sm:px-8 md:px-16 min-h-[unset] lg:min-h-screen">
       {/* Backdrop should be here */}
       <span className="absolute inset-0 z-0">
         <img

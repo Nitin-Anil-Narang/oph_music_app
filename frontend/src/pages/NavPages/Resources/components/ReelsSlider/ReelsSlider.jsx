@@ -160,8 +160,8 @@ function ReelsSlider({ searchText, title }) {
   }
 
   return (
-    <div id="reels-section" className="bg-black text-white py-12">
-      <div className="container mx-auto mb-16 px-4 lg:px-16">
+    <div id="reels-section" className="bg-black text-white py-[16px] lg:py-12">
+      <div className="container mx-auto mb-[16px] lg:mb-16 px-4 lg:px-16">
         {title ? (
           <h2 className="text-[#5DC9DE] text-3xl md:text-4xl font-bold uppercase drop-shadow-[0_0_20px_white] text-center">
             {title}

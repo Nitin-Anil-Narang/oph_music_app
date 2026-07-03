@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const MusicTasteSection = () => {
   const navigate = useNavigate();
   return (
-    <div className="bg-black pt-16 pb-16">
+    <div className="bg-black pt-[16px] lg:pt-16 pb-[16px] lg:pb-16">
       <div
         className="mx-auto px-4 sm:px-6 lg:px-8"
         style={{ maxWidth: "135rem" }}

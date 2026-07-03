@@ -351,7 +351,7 @@ const TopPicksSection = () => {
         </div>
 
         {/* Mobile - Horizontal Scroll */}
-        <div className="block md:hidden px-4 mb-16 overflow-visible">
+        <div className="block md:hidden px-4 mb-[16px] lg:mb-16 overflow-visible">
           <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide overflow-visible">
             {Array.isArray(artistData) &&
               artistData.map((artist, index) => {

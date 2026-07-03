@@ -1,9 +1,77 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import ReactDOM from "react-dom";
 import searchIc from "/assets/images/artists/searchIc.svg";
 import { ChevronDown } from "lucide-react";
 
-const selectClass =
-  "w-full max-w-full appearance-none rounded-full border border-white/20 bg-gray-100/20 backdrop-blur-sm py-3 pl-4 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#5DC9DE]/60 cursor-pointer truncate";
+const btnClass =
+  "w-full rounded-full border border-white/20 bg-gray-100/20 backdrop-blur-sm py-3 pl-4 pr-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#5DC9DE]/60 cursor-pointer flex items-center justify-between gap-2";
+
+const FilterSelect = ({ value, onChange, options, placeholder, ariaLabel }) => {
+  const [open, setOpen] = useState(false);
+  const [dropdownStyle, setDropdownStyle] = useState({});
+  const btnRef = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (btnRef.current && !btnRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const handleOpen = () => {
+    if (btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect();
+      setDropdownStyle({
+        position: "fixed",
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+        zIndex: 9999,
+      });
+    }
+    setOpen((o) => !o);
+  };
+
+  return (
+    <div ref={btnRef} className="relative w-full sm:flex-1 min-w-0">
+      <button
+        type="button"
+        aria-label={ariaLabel}
+        onClick={handleOpen}
+        className={btnClass}
+      >
+        <span className="truncate">{value || placeholder}</span>
+        <ChevronDown className="h-4 w-4 shrink-0 text-white/70" />
+      </button>
+
+      {open &&
+        ReactDOM.createPortal(
+          <ul
+            style={dropdownStyle}
+            className="max-h-48 overflow-y-auto rounded-xl border border-white/20 bg-gray-900 text-white text-sm shadow-lg"
+          >
+            <li
+              className="px-4 py-2 cursor-pointer hover:bg-white/10"
+              onClick={() => { onChange(""); setOpen(false); }}
+            >
+              {placeholder}
+            </li>
+            {options.map((opt) => (
+              <li
+                key={opt}
+                className="px-4 py-2 cursor-pointer hover:bg-white/10 truncate"
+                onClick={() => { onChange(opt); setOpen(false); }}
+              >
+                {opt}
+              </li>
+            ))}
+          </ul>,
+          document.body
+        )}
+    </div>
+  );
+};
 
 const HeroSection = ({
   onSearchQueryChange,
@@ -20,7 +88,6 @@ const HeroSection = ({
     const delayDebounceFn = setTimeout(() => {
       onSearchQueryChange?.(inputName.trim());
     }, 300);
-
     return () => clearTimeout(delayDebounceFn);
   }, [inputName, onSearchQueryChange]);
 
@@ -45,7 +112,7 @@ const HeroSection = ({
           here.
         </p>
 
-        <div className="flex flex-col items-center gap-4 mt-8 relative px-4">
+        <div className="flex flex-col items-center gap-4 mt-8 px-4 py-8">
           <div className="relative flex w-full max-w-[600px] bg-gray-100/20 rounded-full backdrop-blur-sm py-2">
             <input
               type="text"
@@ -70,56 +137,21 @@ const HeroSection = ({
             </button>
           </div>
 
-          <div className="flex flex-col sm:flex-row w-full max-w-[600px] gap-3 justify-center overflow-hidden">
-            <div className="relative w-full sm:flex-1 min-w-0">
-              <select
-                className={selectClass}
-                value={profession}
-                onChange={(e) => onProfessionChange?.(e.target.value)}
-                aria-label="Filter by profession"
-              >
-                <option value="" className="bg-gray-900 text-white">
-                  All professions
-                </option>
-                {professionOptions.map((p) => (
-                  <option key={p} value={p} className="bg-gray-900 text-white">
-                    {p}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70"
-                aria-hidden
-              />
-            </div>
-            <div className="relative w-full sm:flex-1 min-w-0">
-              <select
-                className={selectClass}
-                value={location}
-                onChange={(e) => onLocationChange?.(e.target.value)}
-                aria-label="Filter by location"
-              >
-                <option
-                  value=""
-                  className="bg-gray-900 text-white font-sans text-base p-3"
-                >
-                  All locations
-                </option>
-                {locationOptions.map((loc) => (
-                  <option
-                    key={loc}
-                    value={loc}
-                    className="bg-gray-900 text-white  "
-                  >
-                    {loc}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70"
-                aria-hidden
-              />
-            </div>
+          <div className="flex flex-col sm:flex-row w-full max-w-[600px] gap-3 justify-center">
+            <FilterSelect
+              value={profession}
+              onChange={(v) => onProfessionChange?.(v)}
+              options={professionOptions}
+              placeholder="All professions"
+              ariaLabel="Filter by profession"
+            />
+            <FilterSelect
+              value={location}
+              onChange={(v) => onLocationChange?.(v)}
+              options={locationOptions}
+              placeholder="All locations"
+              ariaLabel="Filter by location"
+            />
           </div>
         </div>
       </div>
