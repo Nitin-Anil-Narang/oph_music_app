@@ -7,20 +7,18 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosApi from "../../../../../conf/axios";
-import { isRegistrationOpenByDateTime, isRegistrationNotStartedYetByDateTime } from "../../../../../utils/date";
+import {
+  isRegistrationOpenByDateTime,
+  isRegistrationNotStartedYetByDateTime,
+} from "../../../../../utils/date";
 
-// Accept either Instagram username or full profile URL (same as Contact / secondary artist)
-// URL regex allows optional query params (e.g. ?igsh=...) from share links
 const instagramUsernameRegex = /^[a-zA-Z0-9](?:[a-zA-Z0-9._]{0,29})$/;
-const instagramUrlRegex = /^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?(?:\?[^#\s]*)?$/;
+const instagramUrlRegex =
+  /^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?(?:\?[^#\s]*)?$/;
 
 export default function HeroSection({ professions = [] }) {
   const navigate = useNavigate();
   const location = useLocation();
-  // Optional: show only on home-like paths; remove this if you always want it visible
-  const showOnPaths = ["/", "/home"];
-  // if you want the hero visible everywhere, remove next line:
-  // if (!showOnPaths.includes(location.pathname)) return null;
 
   const sliderRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -31,7 +29,6 @@ export default function HeroSection({ professions = [] }) {
   const [loading, setLoading] = useState(true);
   const [timers, setTimers] = useState([]);
 
-  // Validation helpers
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isValidPhoneNumber = (phone) => /^\d{10}$/.test(phone);
 
@@ -49,25 +46,21 @@ export default function HeroSection({ professions = [] }) {
     afterChange: () => setIsDragging(false),
   };
 
-
   useEffect(() => {
     let cancelled = false;
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        
         const res = await axiosApi.get("/events_status");
-
         const raw = Array.isArray(res.data.data)
           ? res.data.data
           : (res.data?.events ?? []);
         const mapped = raw
           .filter((e) => e?.event_type === "upcoming")
           .map((e) => ({
-            
             id: e.event_id,
             name: e.EventName,
-            event_date_time: e.dateTime, 
+            event_date_time: e.dateTime,
             location: (e.location || "").trim(),
             description: e.description,
             hashtags: e.hashtags,
@@ -105,7 +98,6 @@ export default function HeroSection({ professions = [] }) {
     };
   }, []);
 
-  // Timers: compute countdown for each listed event
   useEffect(() => {
     if (!upcomingEvents || upcomingEvents.length === 0) {
       setTimers([]);
@@ -115,7 +107,6 @@ export default function HeroSection({ professions = [] }) {
     const updateTimers = () => {
       const now = new Date();
       const newTimers = upcomingEvents.map((event) => {
-        // Some APIs may already provide timezone-normalized ISO; new Date(...) handles ISO Z correctly.
         const eventDate = new Date(event.event_date_time);
         const diff = eventDate - now;
         if (isNaN(eventDate) || diff <= 0) {
@@ -137,7 +128,6 @@ export default function HeroSection({ professions = [] }) {
     }
   }, [upcomingEvents, isModalOpen]);
 
-  // Booking modal triggers - only allow when registration is open
   const handleBookSpot = (event, eventId) => {
     if (!isRegistrationOpenByDateTime(event)) {
       if (isRegistrationNotStartedYetByDateTime(event)) {
@@ -173,7 +163,6 @@ export default function HeroSection({ professions = [] }) {
     });
   };
 
-  /* ===== Registration Modal Component ===== */
   const RegistrationModal = () => {
     const [form, setForm] = useState({
       first_name: "",
@@ -192,7 +181,6 @@ export default function HeroSection({ professions = [] }) {
       ev.preventDefault();
       if (isSubmitting) return;
 
-      // Basic validations - Instagram: username or profile URL (same as secondary artist on AudioMetadata)
       const isValidInstagram =
         instagramUsernameRegex.test(form.instagram_handle?.trim()) ||
         instagramUrlRegex.test(form.instagram_handle?.trim());
@@ -204,7 +192,7 @@ export default function HeroSection({ professions = [] }) {
             autoClose: 4000,
             theme: "dark",
             transition: Bounce,
-          }
+          },
         );
         return;
       }
@@ -226,7 +214,7 @@ export default function HeroSection({ professions = [] }) {
           isRegistrationNotStartedYetByDateTime(current)
             ? "Registration has not started yet for this event."
             : "Registration has closed for this event.",
-          { position: "top-right", theme: "dark", transition: Bounce }
+          { position: "top-right", theme: "dark", transition: Bounce },
         );
         return;
       }
@@ -240,7 +228,6 @@ export default function HeroSection({ professions = [] }) {
         });
         setIsModalOpen(false);
 
-        // Navigate to payment screen - booking_details creates event_bookings only on payment submit
         navigate("/auth/payment", {
           state: {
             OPH_ID: `${form.first_name} ${form.last_name}`.trim(),
@@ -275,10 +262,17 @@ export default function HeroSection({ professions = [] }) {
         <div className="relative bg-gray-800 rounded-lg w-[90%] sm:w-full sm:max-w-md max-h-[85vh] overflow-y-auto mx-auto">
           <form onSubmit={onSubmit} className="space-y-3 p-5">
             <div className="flex justify-between items-center">
-              <h3 className="text-white text-sm sm:text-lg font-semibold">Register for Event</h3>
-              <button type="button" onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white text-sm">✕</button>
+              <h3 className="text-white text-sm sm:text-lg font-semibold">
+                Register for Event
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-400 hover:text-white text-sm"
+              >
+                ✕
+              </button>
             </div>
-
             <div className="grid grid-cols-2 gap-3">
               <input
                 name="first_name"
@@ -297,7 +291,6 @@ export default function HeroSection({ professions = [] }) {
                 className="w-full px-3 py-2 text-sm rounded-md bg-[#2d3748] text-white border border-gray-600"
               />
             </div>
-
             <input
               name="email"
               value={form.email}
@@ -315,7 +308,6 @@ export default function HeroSection({ professions = [] }) {
               placeholder="username or https://instagram.com/username"
               className="w-full px-3 py-2 text-sm rounded-md bg-[#2d3748] text-white border border-gray-600"
             />
-
             <div className="flex gap-2">
               <select className="w-16 px-2 py-2 text-sm rounded-md bg-[#2d3748] text-white border border-gray-600 appearance-none text-center">
                 <option>+91</option>
@@ -329,7 +321,6 @@ export default function HeroSection({ professions = [] }) {
                 className="flex-1 px-3 py-2 text-sm rounded-md bg-[#2d3748] text-white border border-gray-600"
               />
             </div>
-
             <div className="relative w-full">
               <select
                 name="profession_id"
@@ -340,19 +331,30 @@ export default function HeroSection({ professions = [] }) {
               >
                 <option value="">Select Profession</option>
                 {professions.map((p) => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
                 ))}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <svg
+                  className="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </div>
             </div>
-
             <button
               disabled={isSubmitting}
-              className="w-full bg-cyan-400 text-black py-2 text-sm rounded-md font-medium"
+              className="w-full bg-[#5DC9DE] text-black py-2 text-sm rounded-md font-medium"
             >
               {isSubmitting ? "Submitting..." : "Submit"}
             </button>
@@ -362,7 +364,6 @@ export default function HeroSection({ professions = [] }) {
     );
   };
 
-  /* ===== Render ===== */
   return (
     <>
       <ToastContainer />
@@ -380,8 +381,7 @@ export default function HeroSection({ professions = [] }) {
       )}
 
       {!loading && upcomingEvents.length > 0 && (
-        <div className="relative">
-          {/* Prev / Next */}
+        <div className="relative w-full overflow-hidden bg-black">
           <button
             className="absolute top-1/2 left-4 z-50 transform -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-3 rounded-full hidden sm:block"
             onClick={() => sliderRef.current && sliderRef.current.slickPrev()}
@@ -400,29 +400,30 @@ export default function HeroSection({ professions = [] }) {
 
           <Slider ref={sliderRef} {...settings}>
             {upcomingEvents.map((event, idx) => (
-              <div key={event.id ?? idx} className="relative h-screen">
+              <div key={event.id ?? idx} className="relative h-screen w-full">
                 <img
                   src={event.thumbnail_url}
                   alt={event.name}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/90" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-black/95" />
 
                 <div
-                  className="absolute inset-0 flex sm:items-end items-center sm:pb-24 pb-10 cursor-pointer"
+                  className="absolute inset-0 flex items-center pb-12 sm:pb-20 cursor-pointer"
                   onClick={() => {
-                    // prevent navigation if user was dragging the slider
                     if (!isDragging) navigate(`/events/${event.id}`);
                   }}
                 >
-                  <div className="container mx-auto px-4 xl:px-16 w-full flex flex-col lg:flex-row justify-between items-center">
-                    <div className="flex flex-col">
-                      <div className="text-sm lg:text-lg text-[#5DC9DE] mb-2">
-                        {dateFormat(event.event_date_time)} - {event.location}
+                  {/* Unified single parent wrapper matching Figma layout */}
+                  <div className="container mx-auto px-5 max-w-[430px] sm:max-w-[600px] lg:max-w-[1200px] w-full flex flex-col items-start gap-5">
+                    {/* Meta info & Event Title */}
+                    <div className="w-full text-left">
+                      <div className="text-xs sm:text-sm font-semibold text-[#5DC9DE] mb-1 tracking-wide">
+                        {dateFormat(event.event_date_time)} – {event.location}
                       </div>
 
                       <h1
-                        className="uppercase font-extrabold text-3xl lg:text-6xl text-white hover:text-[#5DC9DE]"
+                        className="uppercase font-black text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (!isDragging) navigate(`/events/${event.id}`);
@@ -430,60 +431,60 @@ export default function HeroSection({ professions = [] }) {
                       >
                         {event.name}
                       </h1>
-
-                      <div className="flex gap-3 mt-4">
-                        {timers[idx] && (
-                          <>
-                            <CountdownBox
-                              value={timers[idx].days}
-                              label="Days"
-                            />
-                            <CountdownBox
-                              value={timers[idx].hours}
-                              label="Hours"
-                            />
-                            <CountdownBox
-                              value={timers[idx].minutes}
-                              label="Minutes"
-                            />
-                            <CountdownBox
-                              value={timers[idx].seconds}
-                              label="Seconds"
-                            />
-                          </>
-                        )}
-                      </div>
                     </div>
 
-                    <div className="mt-6 lg:mt-0">
-                      <div className="flex flex-col items-center bg-gradient-to-b from-[#FFFFFF26] to-[#FFFFFF00] w-[285px] h-[118px] rounded-xl py-5 backdrop-blur-[12px] mb-6 sm:mb-0">
-                        <span className="text-[18px] uppercase text-white">
-                          Chance to Win
-                        </span>
-                        <span className="text-[#2DDA89] text-[40px] font-extrabold">
-                          ₹{event.reward_amount ?? 0}
-                        </span>
+                    {/* Countdown Timer Row */}
+                    <div className="flex gap-2 w-full justify-start mt-1">
+                      {timers[idx] && (
+                        <>
+                          <CountdownBox value={timers[idx].days} label="Days" />
+                          <CountdownBox
+                            value={timers[idx].hours}
+                            label="Hours"
+                          />
+                          <CountdownBox
+                            value={timers[idx].minutes}
+                            label="Minute"
+                          />
+                          <CountdownBox
+                            value={timers[idx].seconds}
+                            label="Second"
+                          />
+                        </>
+                      )}
+                    </div>
 
-                        <div
-                          className={`mt-4 px-6 py-2 rounded-3xl text-black text-lg font-semibold ${
-                            isRegistrationOpenByDateTime(event)
-                              ? "bg-[#5DC9DE] cursor-pointer hover:bg-[#4db8cc]"
-                              : "bg-gray-500 cursor-not-allowed opacity-70"
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleBookSpot(event, event.id);
-                          }}
-                          title={
-                            isRegistrationNotStartedYetByDateTime(event)
-                              ? "Registration has not started yet"
-                              : !isRegistrationOpenByDateTime(event)
-                                ? "Registration has closed"
-                                : undefined
-                          }
-                        >
-                          Book Your Spot Now
-                        </div>
+                    {/* FIXED: Chance to Win Inline Badge Container */}
+                    <div className="w-full flex items-center justify-center bg-gradient-to-r from-gray-900/90 to-[#0C0D27]/90 border border-white/10 rounded-xl py-3 px-4 shadow-xl backdrop-blur-md">
+                      <span className="text-xs sm:text-sm tracking-widest font-bold uppercase text-white mr-2">
+                        CHANCE TO WIN
+                      </span>
+                      <span className="text-[#2DDA89] text-base sm:text-lg font-black tracking-wide">
+                        ₹{event.reward_amount ?? 0}
+                      </span>
+                    </div>
+
+                    {/* FIXED: Primary Book Spot Button - Cyan desktop, Black mobile */}
+                    <div className="w-full">
+                      <div
+                        className={`w-full py-3.5 rounded-full text-sm sm:text-base font-extrabold tracking-wide text-center transition-all duration-300 ${
+                          isRegistrationOpenByDateTime(event)
+                            ? "bg-[#5DC9DE] sm:bg-[#5DC9DE] md:bg-[#5DC9DE] text-black cursor-pointer hover:bg-[#4cb5c8] active:scale-[0.98] shadow-lg"
+                            : "bg-gray-600 text-white cursor-not-allowed opacity-60"
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBookSpot(event, event.id);
+                        }}
+                        title={
+                          isRegistrationNotStartedYetByDateTime(event)
+                            ? "Registration has not started yet"
+                            : !isRegistrationOpenByDateTime(event)
+                              ? "Registration has closed"
+                              : undefined
+                        }
+                      >
+                        Book Your Spot Now
                       </div>
                     </div>
                   </div>
@@ -499,12 +500,13 @@ export default function HeroSection({ professions = [] }) {
   );
 }
 
-/* ===== CountdownBox subcomponent ===== */
 function CountdownBox({ value, label }) {
   return (
-    <div className="border rounded-md p-3 bg-gradient-to-b from-[#FFFFFF33] to-[#FFFFFF00] w-[80px] sm:w-[92px]">
-      <div className="text-white text-2xl lg:text-4xl text-center">{value}</div>
-      <div className="text-[#9BA3B7] text-center text-sm lg:text-base">
+    <div className="border border-white/5 rounded-xl p-2.5 bg-black/40 backdrop-blur-md w-[72px] sm:w-[84px] shadow-lg flex flex-col items-center">
+      <div className="text-white text-xl sm:text-2xl font-black text-center leading-none">
+        {String(value).padStart(2, "0")}
+      </div>
+      <div className="text-[#9BA3B7] text-[10px] sm:text-xs font-semibold uppercase tracking-wider mt-1 text-center">
         {label}
       </div>
     </div>
