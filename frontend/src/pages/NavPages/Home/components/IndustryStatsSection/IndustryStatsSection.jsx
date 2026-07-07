@@ -42,7 +42,7 @@ const IndustryStats = () => {
   }, []);
 
   return (
-    <div className="bg-black relative px-4 lg:px-16 xl:px-16 text-white py-24 w-full">
+    <div className="bg-black relative px-4 lg:px-16 text-white py-[20px] lg:py-24 w-full">
       {/* Glow Effect */}
       <svg
         className="absolute h-[800px] -top-[400px] right-0"
@@ -80,9 +80,9 @@ const IndustryStats = () => {
         </defs>
       </svg>
 
-      <div className="container mx-auto">
+      <div className="lg:container lg:mx-auto">
         <div>
-          <h2 className="text-3xl lg:text-6xl font-bold mb-8">
+          <h2 className="text-3xl lg:text-6xl font-bold mb-[20px] lg:mb-8">
             SUPPORTING ARTISTS
             <br />
             GROWTH <span className="text-[#5DC9DE]">WITH THESE NUMBERS.</span>
@@ -101,15 +101,15 @@ const IndustryStats = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="lg:grid flex flex-col items-center lg:grid-cols-3 gap-6">
+        <div className="w-full lg:w-[unset] lg:grid flex flex-col items-center lg:grid-cols-3 gap-6">
           {stats.map((stat, index) =>
             stat.id <= 3 ? (
               <div
                 key={index}
                 className={
                   index === 1
-                    ? "bg-transparent w-[80%] lg:w-auto rounded-xl p-6 transition-colors bg-gradient-to-b from-cyan-800/50 to-white/5 border-b-2 border-l border-r border-cyan-700 shadow-lg"
-                    : "bg-transparent w-[80%] lg:w-auto rounded-xl p-6 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
+                    ? "bg-transparent w-[100%] lg:w-[80%] lg:w-auto rounded-xl p-6 transition-colors bg-gradient-to-b from-cyan-800/50 to-white/5 border-b-2 border-l border-r border-cyan-700 shadow-lg"
+                    : "bg-transparent w-[100%] lg:w-[80%] lg:w-auto rounded-xl p-6 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
                 }
               >
                 <h3

@@ -6,7 +6,7 @@ const MusicTasteSection = () => {
   return (
     <div className="bg-black pt-[16px] lg:pt-16 pb-[16px] lg:pb-16">
       <div
-        className="mx-auto px-4 sm:px-6 lg:px-8"
+        className="mx-auto px-[12px] lg:px-8"
         style={{ maxWidth: "135rem" }}
       >
         {/* Desktop Layout */}
@@ -53,7 +53,7 @@ const MusicTasteSection = () => {
         </div>
 
         {/* Mobile Layout - Fixed with Image Parent Sizing Container */}
-        <div className="block md:hidden max-w-md mx-auto w-full px-2">
+        <div className="block md:hidden lg:max-w-md lg:mx-auto w-full px-2">
           <div className="bg-[#0c0d27] rounded-2xl overflow-hidden shadow-xl border border-white/5 flex flex-col">
             {/* Parent Container for Sizing the Image Section */}
             <div className="w-full h-64 overflow-hidden relative bg-black flex items-center justify-center">

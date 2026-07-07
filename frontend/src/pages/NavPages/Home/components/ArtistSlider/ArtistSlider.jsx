@@ -213,10 +213,10 @@ const ArtistSlider = ({
         className="absolute h-[600px] object-cover left-[0] -top-[150px] z-0"
         alt=""
       />
-      <div className="relative container mx-auto">
+      <div className="relative lg:container lg:mx-auto">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-8 sm:mb-16">
-          <div className="text-center sm:text-left p-4 lg:px-6 max-w-2xl">
+          <div className="text-center sm:text-left p-0 lg:px-6 max-w-2xl">
             <h2 className="text-2xl lg:text-5xl font-black mb-3 uppercase tracking-tight text-white leading-tight">
               THESE ARTISTS ARE <span className="text-[#5DC9DE]">INDUSTRY BANGERS.</span>
             </h2>
@@ -224,7 +224,7 @@ const ArtistSlider = ({
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took
             </p>
           </div>
-          <div className="hidden sm:flex pe-4 py-4 lg:py-0 sm:mt-8 lg:pe-6 xl:pe-16 relative z-50 items-center gap-2">
+          <div className="hidden sm:flex pe-0 py-4 lg:py-0 sm:mt-8 lg:pe-6 xl:pe-16 relative z-50 items-center gap-2">
             {/* Prev Button */}
             <button
               onClick={(e) => {
@@ -382,7 +382,7 @@ const ArtistSlider = ({
         </div>
 
         {/* Mobile Arrow buttons (below the slider) */}
-        <div className="flex sm:hidden justify-center items-center gap-4 mt-2 mb-8 relative z-50">
+        <div className="flex sm:hidden justify-center items-center gap-4 mt-2 lg:mb-8 relative z-50">
           <button
             onClick={(e) => {
               e.stopPropagation();

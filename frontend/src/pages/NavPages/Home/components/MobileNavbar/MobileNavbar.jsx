@@ -43,9 +43,7 @@ export default function MobileNavbar() {
     navigate(path);
   };
 
-  const containerClass = isHomePage
-    ? "lg:hidden w-full px-6 py-4 flex justify-center bg-black/40 border-y border-gray-800/80 my-4 relative z-50"
-    : "lg:hidden fixed bottom-0 left-0 w-full px-6 py-2 flex justify-center bg-black/40 border-t border-gray-800/80 z-50 overflow-hidden";
+  const containerClass = "lg:hidden fixed bottom-0 left-0 w-full px-6 py-2 flex justify-center bg-black/40 border-t border-gray-800/80 z-50 overflow-hidden";
 
   const innerDivClass = isHomePage
     ? "flex justify-around items-center w-full max-w-md bg-[#13161C] border border-gray-800 rounded-2xl py-4 px-3 shadow-2xl relative z-50"
@@ -67,7 +65,7 @@ export default function MobileNavbar() {
               {/* Active text label above the icon */}
               {isActive && (
                 <div className="absolute -top-9 bg-black border border-gray-800 text-[#5DC9DE] text-[10px] font-semibold px-2 py-0.5 rounded shadow-md whitespace-nowrap">
-                  {item.label}
+                  {/* {item.label} */}
                   {/* Small arrow bubble pointer */}
                   <div className="absolute left-1/2 -bottom-[4px] -translate-x-1/2 w-1.5 h-1.5 bg-black border-r border-b border-gray-800 rotate-45"></div>
                 </div>

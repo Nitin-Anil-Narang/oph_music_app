@@ -63,7 +63,7 @@ function Navbar() {
 
   return (
     <nav className="absolute w-full top-0 left-0 z-[99999]">
-      <div className="container mx-auto px-4 lg:px-6 xl:px-16 pt-8 py-3 flex justify-between items-center">
+      <div className="w-full lg:container lg:mx-auto px-[16px] py-[16px] lg:px-16 lg:pt-8 flex justify-between items-center">
         {/* Logo */}
         <div className="text-xl font-bold text-gray-800">
           <a href={import.meta.env.VITE_WEBSITE_URL}>

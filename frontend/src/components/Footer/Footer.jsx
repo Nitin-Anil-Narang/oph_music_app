@@ -10,17 +10,17 @@ function Footer({ className = "" }) {
 
   return (
     <div className={`w-full h-auto py-[16px] lg:py-0 lg:px-16 px-2 flex flex-col bg-[url('/assets/images/contact/footer.png')] bg-cover bg-center relative ${className}`}>
-      <div className="flex h-full flex-col justify-between w-full container mx-auto gap-6 sm:gap-0 sm:mt-12 mt-4">
+      <div className="flex h-full flex-col justify-between w-full lg:container lg:mx-auto gap-6 lg:gap-0 sm:mt-12 mt-4 mb-[95px] lg:mb-0 ">
         {/* Top Section */}
         <div className="flex flex-col lg:flex-row w-full items-center lg:items-start">
-          <div className="xl:text-[55px] text-[30px] md:text-[40px] text-center lg:text-left w-full lg:w-1/2 uppercase font-bold leading-[3rem] sm:leading-[4rem]">
+          <div className="xl:text-[55px] text-[30px] md:text-[40px] text-center lg:text-left w-full lg:w-1/2 uppercase font-bold lg:leading-[3rem] sm:leading-[4rem]">
             Your Music
             <br />
             Your Rights
             <br />
             <span className="text-[#5DC9DE]">Your Stage</span>
           </div>
-          <div className="w-full flex justify-center lg:justify-end pt-3 sm:pt-12">
+          <div className="w-full flex justify-center lg:justify-end pt-3 lg:pt-12">
             <button
               onClick={() => {
                 navigate("/auth/signup");
@@ -49,7 +49,7 @@ function Footer({ className = "" }) {
         
 
         {/* Divider */}
-        <div className="container w-full h-[1px] opacity-30 mx-auto bg-white sm:my-8 my-2"></div>
+        <div className="lg:container w-full h-[1px] opacity-30 mx-auto bg-white sm:my-8 my-2"></div>
 
         {/* Bottom Policies + Socials */}
         <div className="w-full flex flex-col sm:flex-row sm:justify-between items-center sm:items-start gap-4 sm:gap-0 sm:my-8 text-center sm:text-left">

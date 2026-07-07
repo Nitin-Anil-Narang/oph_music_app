@@ -17,7 +17,7 @@ function HeroSection() {
     }
   }, []);
   return (
-    <div className="w-full relative sm:pt-0 py-10 md:py-20 flex items-center justify-center sm:justify-start bg-cover bg-center px-6 sm:px-8 md:px-16 min-h-[unset] lg:min-h-screen">
+    <div className="w-full relative px-[12px] py-[12px]  lg:py-10 lg:px-6 flex items-center justify-center sm:justify-start bg-cover bg-center min-h-[unset] lg:min-h-screen">
       {/* Backdrop should be here */}
       <span className="absolute inset-0 z-0">
         <img
@@ -28,8 +28,8 @@ function HeroSection() {
       </span>
 
       {/* Content container */}
-      <div className="container pt-5 mx-auto mt-16 sm:mt-24 mb-16 sm:mb-24 relative z-10">
-        <div className="max-w-2xl w-full text-center sm:text-left pt-4 md:pt-0">
+      <div className="md:container pt-[40px] md:pt-[45px] lg:pt-5 lg:mx-auto mt-16 lg:mt-24 mb-16 lg:mb-24 relative z-10 w-full">
+        <div className="md:max-w-2xl w-full text-left pt-4 md:pt-0">
           <p className="text-sm sm:text-base md:text-lg opacity-75 text-[#9BA3B7] mb-2 tracking-wide uppercase">
             We support independent artists.
           </p>
@@ -42,15 +42,15 @@ function HeroSection() {
             </h1>
           </div>
 
-          <p className="text-sm sm:text-base md:text-lg opacity-90 text-[#9BA3B7] mb-8 max-w-lg mx-auto sm:mx-0">
+          <p className="text-sm sm:text-base md:text-lg opacity-90 text-[#9BA3B7] mb-8  lg:mx-auto sm:mx-0">
             We are a community that supports independent artists to grow,
             collaborate, and turn their music dreams into reality.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 relative z-10 w-full max-w-md mx-auto sm:mx-0">
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 relative z-10 w-full md:max-w-md mx-auto md:mx-0">
             <button
               onClick={() => navigate("/find-your-collaborator")}
-              className="bg-[#5DC9DE] hover:bg-[#4db8cc] hover:scale-105 active:scale-95 transition-all duration-300 w-full sm:w-auto px-8 py-3.5 text-sm sm:text-base text-black font-bold rounded-full text-center shadow-lg"
+              className="bg-[#5DC9DE] hover:bg-[#4db8cc] hover:scale-105 active:scale-95 transition-all duration-300 w-full md:w-auto px-8 py-3.5 text-sm sm:text-base text-black font-bold rounded-full text-center shadow-lg"
             >
               Grab the Opportunity Now
             </button>
@@ -58,7 +58,7 @@ function HeroSection() {
               onClick={() => {
                 window.location.href = "/auth/signup";
               }}
-              className="bg-[#22252A] hover:bg-[#2c3037] border border-gray-700 hover:scale-105 active:scale-95 transition-all duration-300 w-full sm:w-auto px-8 py-3.5 text-sm sm:text-base text-white font-bold rounded-full text-center shadow-lg"
+              className="bg-[#22252A] hover:bg-[#2c3037] border border-gray-700 hover:scale-105 active:scale-95 transition-all duration-300 w-full md:w-auto px-8 py-3.5 text-sm sm:text-base text-white font-bold rounded-full text-center shadow-lg"
             >
               Sign Up
             </button>

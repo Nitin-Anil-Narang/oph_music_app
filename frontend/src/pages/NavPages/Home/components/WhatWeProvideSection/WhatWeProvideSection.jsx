@@ -18,18 +18,17 @@ const WhatWeProvide = () => {
     "Artists EPK",
     "Artists Management",
     "Artists Revenue Tools",
-    "All-in-one Music Business Tool"
+    "All-in-one Music Business Tool",
   ];
 
-
   return (
-    <div className="bg-black relative text-white h-full pt-10 ps-8">
+    <div className="bg-black relative text-white h-full px-[16px] py-[12px] lg:pt-10 lg:ps-8">
       <img
         src={Struggle}
         className="absolute sm:w-[100vh] -rotate-12 sm:right-[-57px]"
         alt=""
       />
-      <div className="container mx-auto pb-10 grid grid-cols-1 lg:pb-20 xl:pb-0 lg:grid-cols-2 gap-12 items-start">
+      <div className="lg:container lg:mx-auto pb-10 grid grid-cols-1 lg:pb-20 xl:pb-0 lg:grid-cols-2 gap-12 items-start">
         {/* Left Content */}
         <div className="space-y-6 mt-8">
           <h2 className="text-4xl lg:text-5xl font-bold">
@@ -67,9 +66,9 @@ const WhatWeProvide = () => {
       </div>
 
       {/* Mobile Image - Below Content */}
-      <div className="lg:hidden relative h-[420px]">
+      <div className="lg:hidden relative h-[420px] mt-[70px] max-[760px]:mt-0 lg:mt-0">
         <img
-          className="object-cover z-30 absolute left-[40%] top-[50%] -translate-x-1/2 -translate-y-1/2 w-[90%] h-[600px]"
+          className="object-cover absolute left-[10px] top-1/2 -translate-y-1/2 w-[90%] h-[600px]"
           src={whatWePro}
           alt="Free Music Distribution"
         />
