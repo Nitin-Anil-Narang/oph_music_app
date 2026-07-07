@@ -110,7 +110,7 @@ const ArtistLayout = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1">
+      <div className="flex-1 min-w-0 overflow-x-hidden">
         {/* <Navbar onMenuClick={() => setIsSidebarOpen(true)} /> */}
         <main>
           <Outlet context={{ contents, setContents, showNav, setShowNav }} />

@@ -4,7 +4,6 @@
 
 html {
   width: 100%;
-  overflow-x: hidden;
 }
 
 /* Remove number input spinners/arrows globally */
@@ -29,7 +28,6 @@ body {
 body {
   color: #fff;
   background-color: #000;
-  overflow-x: hidden;
   /* width: 100%; */
   position: relative;
 }
