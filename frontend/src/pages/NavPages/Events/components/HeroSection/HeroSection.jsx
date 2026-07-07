@@ -375,7 +375,7 @@ export default function HeroSection({ professions = [] }) {
       )}
 
       {!loading && upcomingEvents.length === 0 && (
-        <div className="text-center py-20">
+        <div className="text-center pt-[130px] pb-[65px]  lg:py-20">
           <p className="text-gray-400">No upcoming events right now.</p>
         </div>
       )}

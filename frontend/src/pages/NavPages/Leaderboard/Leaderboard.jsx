@@ -407,7 +407,7 @@ function Leaderboard() {
             return (
               <div
                 key={`${title}-mobile-container`}
-                className="w-full bg-black block sm:hidden p-6 text-white"
+                className="w-full bg-black block sm:hidden pt-6 px-6 text-white"
               >
                 {/* Left aligned header title like LEADERBOARD.jpg */}
                 <div className="mb-6 text-left">

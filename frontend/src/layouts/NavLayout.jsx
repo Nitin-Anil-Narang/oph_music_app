@@ -33,7 +33,7 @@ const NavLayout = ({ children }) => {
         <Outlet />
       </main>
       {!isHomePage && <MobileNavbar />}
-      <Footer className={!isHomePage ? "pb-24 lg:pb-0" : ""} />
+      <Footer  />
     </div>
   );
 };

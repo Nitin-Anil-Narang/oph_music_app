@@ -202,7 +202,7 @@ const ArtistSlider = ({
   };
 
   return (
-    <div className="bg-black relative px-4 lg:px-16 xl:px-16 text-white py-10 w-full">
+    <div className="bg-black relative px-[12px] lg:px-16 text-white py-[20px] lg:py-10 w-full">
       <img
         src={MusicBg}
         className="absolute sm:h-[500px] object-cover w-full -top-[150px] sm:-top-[20px] z-0"

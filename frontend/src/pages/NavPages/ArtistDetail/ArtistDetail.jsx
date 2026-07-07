@@ -370,7 +370,7 @@ const ArtistDetail = () => {
           {/* Solid black overlay for bottom half */}
 
           {/* Content */}
-          <div className="relative z-50 container px-6 xl:px-16 lg:px-10 mx-auto pt-[120px] sm:pt-[200px]">
+          <div className="relative z-50 lg:container px-6 xl:px-16 lg:px-10 lg:mx-auto pt-[120px] lg:pt-[200px]">
             {/* Name Header */}
             <h1 className="text-5xl md:text-7xl text-white font-bold mb-4 ">
               {artist.name}
@@ -564,7 +564,7 @@ const ArtistDetail = () => {
             </div>
 
             {/* Songs Table */}
-            <table className="w-full mb-12 text-xs sm:text-sm lg:text-base table-auto">
+            <table className="w-full mb-[30px] lg:mb-12 text-xs sm:text-sm lg:text-base table-auto">
               <thead>
                 <tr className="text-gray-400 border-b border-gray-800">
                   <th className="pb-3 px-1 text-center">#</th>
@@ -745,7 +745,7 @@ const RelatedArtists = ({ rankedArtists }) => {
     return `${v} Listeners`;
   };
   return (
-    <div className="w-full pb-20 pt-28">
+    <div className="w-full lg:pb-20 lg:pt-28">
       <h2 className="text-white mb-8 text-4xl font-bold">
         RELATED <span className="text-[#5DC9DE]">ARTISTS:</span>
       </h2>

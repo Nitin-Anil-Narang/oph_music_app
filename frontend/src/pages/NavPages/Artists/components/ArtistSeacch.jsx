@@ -94,7 +94,7 @@ const ArtistRankingTable = ({
   return (
     <div
       ref={rootRef}
-      className="bg-black text-white p-6 sm:p-10 xl:px-16 mt-10 scroll-mt-24 sm:scroll-mt-28"
+      className="bg-black text-white p-4 sm:p-10 xl:px-16 lg:mt-10 scroll-mt-24 sm:scroll-mt-28"
     >
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-cyan-400 text-2xl font-bold uppercase">
@@ -102,15 +102,13 @@ const ArtistRankingTable = ({
         </h2>
       </div>
 
-      {/* Header */}
-      <div className="flex items-center text-gray-400 text-xs sm:text-sm uppercase mb-4 px-4 gap-1">
+      {/* Header — desktop only */}
+      <div className="hidden sm:flex items-center text-gray-400 text-xs sm:text-sm uppercase mb-4 px-4 gap-1">
         <div className="flex-1 min-w-0">Artist</div>
         <div className="flex-1 min-w-0">Name</div>
         <div className="flex-1 min-w-0">Stage</div>
         <div className="flex-1 min-w-0 text-center">Reach</div>
-        <div className="flex-1 min-w-0 hidden sm:block text-center">
-          Profile
-        </div>
+        <div className="flex-1 min-w-0 text-center">Profile</div>
       </div>
 
       <div className="space-y-2">
@@ -120,59 +118,99 @@ const ArtistRankingTable = ({
           data.map((artist, index) => {
             const oid = resolveLeaderboardOphId(artist);
             const photo = profilePhoto(artist);
+            const rank = (page - 1) * perPage + index + 1;
+            const rankBg =
+              rank === 1 ? "bg-amber-400 text-black" :
+              rank === 2 ? "bg-green-400 text-black" :
+              rank === 3 ? "bg-cyan-400 text-black" :
+              "bg-[#ECAB43] text-black";
             return (
-            <div
-              key={oid || `row-${index}`}
-              className="flex items-center px-4 py-3 rounded-lg transition-colors cursor-pointer hover:bg-gray-900/30"
-              onClick={(e) => oid && handleProfileClick(e, oid)}
-            >
-              {/* <div className="flex-1 text-gray-300 font-bold">
-                <span
-                  className={`${
-                    index === 0
-                      ? "bg-amber-400 text-black"
-                      : index === 1
-                      ? "bg-green-400 text-black"
-                      : index === 2
-                      ? "bg-cyan-400 text-black"
-                      : "text-white"
-                  } px-3 py-1 rounded-full`}
+              <div key={oid || `row-${index}`}>
+                {/* ── Mobile card ── */}
+                <div
+                  className="sm:hidden py-4 space-y-3 cursor-pointer"
+                  onClick={(e) => oid && handleProfileClick(e, oid)}
                 >
-                  {artist.rank < 10 ? `0${artist.rank}` : artist.rank}
-                </span>
-              </div> */}
+                  {/* Row 1: rank + photo + stage name */}
+                  <div className="flex items-center gap-3">
+                    <span className={`${rankBg} font-bold text-sm px-2 py-1 min-w-[2.2rem] text-center`}>
+                      {rank < 10 ? `0${rank}` : rank}
+                    </span>
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-800 shrink-0">
+                      <img
+                        src={photo || DEFAULT_AVATAR}
+                        alt={displayStageName(artist)}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase">Stage Name</p>
+                      <p className="text-white font-bold text-sm uppercase">{displayStageName(artist)}</p>
+                    </div>
+                  </div>
 
-              <div className="flex-1">
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-800">
-                  <img
-                    src={photo || DEFAULT_AVATAR}
-                    alt={artist.stage_name || "Artist"}
-                    className="w-full h-full object-cover"
-                  />
+                  {/* Row 2: location + songs + reach */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase">Location</p>
+                      <p className="text-white font-bold text-sm uppercase truncate">{artist.location || "—"}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase">Songs</p>
+                      <p className="text-white font-bold text-sm">{artist.song_count ?? "—"}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase">Reach</p>
+                      <p className="text-white font-bold text-sm">{reachCount(artist).toLocaleString()}</p>
+                    </div>
+                  </div>
+
+                  {/* Row 3: View Profile button */}
+                  <button
+                    type="button"
+                    disabled={!oid}
+                    onClick={(e) => handleProfileClick(e, oid)}
+                    className="w-full py-2 text-sm text-cyan-400 border border-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    View Profile
+                  </button>
+                </div>
+
+                {/* ── Desktop row ── */}
+                <div
+                  className="hidden sm:flex items-center px-4 py-3 rounded-lg transition-colors cursor-pointer hover:bg-gray-900/30"
+                  onClick={(e) => oid && handleProfileClick(e, oid)}
+                >
+                  <div className="flex-1">
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-800">
+                      <img
+                        src={photo || DEFAULT_AVATAR}
+                        alt={displayStageName(artist)}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0 text-gray-300 truncate text-sm sm:text-base">
+                    {displayFullName(artist)}
+                  </div>
+                  <div className="flex-1 min-w-0 text-gray-300 truncate text-sm sm:text-base">
+                    {displayStageName(artist)}
+                  </div>
+                  <div className="flex-1 min-w-0 text-center text-gray-300">
+                    {formatListeners(reachCount(artist))}
+                  </div>
+                  <div className="flex-1 flex justify-center">
+                    <button
+                      type="button"
+                      disabled={!oid}
+                      onClick={(e) => handleProfileClick(e, oid)}
+                      className="px-4 py-1 text-sm text-cyan-400 border border-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      View Profile
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <div className="flex-1 min-w-0 text-gray-300 truncate text-sm sm:text-base">
-                {displayFullName(artist)}
-              </div>
-              <div className="flex-1 min-w-0 text-gray-300 truncate text-sm sm:text-base">
-                {displayStageName(artist)}
-              </div>
-
-              <div className="flex-1 min-w-0 text-center text-gray-300">
-                {formatListeners(reachCount(artist))}
-              </div>
-              <div className="flex-1 hidden sm:flex justify-center">
-                <button
-                  type="button"
-                  disabled={!oid}
-                  onClick={(e) => handleProfileClick(e, oid)}
-                  className="px-4 py-1 text-sm text-cyan-400 border border-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  View Profile
-                </button>
-              </div>
-            </div>
             );
           })
         ) : (

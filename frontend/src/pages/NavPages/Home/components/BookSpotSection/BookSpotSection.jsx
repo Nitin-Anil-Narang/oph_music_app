@@ -37,7 +37,7 @@ const BookSpot = () => {
           onClick={() => {
             navigate("/auth/signup");
           }}
-          className="bg-[#5DC9DE] hover:font-bold transition delay-300 text-black font-semibold py-3 px-8 rounded-full "
+          className="w-full lg:w-[unset] bg-[#5DC9DE] hover:font-bold transition delay-300 text-black font-semibold py-3 px-8 rounded-full "
         >
           BECOME A MEMBER
         </button>

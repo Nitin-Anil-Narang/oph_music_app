@@ -100,7 +100,7 @@ const HeroSection = ({ onSearch }) => {
   };
 
   return (
-    <div className="relative min-h-[70vh] w-full flex flex-col items-center justify-center text-white p-8 pt-32 md:pt-0">
+    <div className="relative min-h-[50vh] lg:min-h-[70vh] w-full flex flex-col items-center justify-center text-white p-8 pt-[60px] lg:pt-32 pb-0 md:pt-0">
       {/* Dark overlay with gradient */}
       {/* <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/60 z-10" /> */}
 

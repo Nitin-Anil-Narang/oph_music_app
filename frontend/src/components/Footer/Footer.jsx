@@ -9,7 +9,7 @@ function Footer({ className = "" }) {
   const navigate = useNavigate();
 
   return (
-    <div className={`w-full h-auto py-[16px] lg:py-0 lg:px-16 px-2 flex flex-col bg-[url('/assets/images/contact/footer.png')] bg-cover bg-center relative ${className}`}>
+    <div className={`w-full h-auto py-[16px] lg:py-0 lg:px-16 px-[12px] flex flex-col bg-[url('/assets/images/contact/footer.png')] bg-cover bg-center relative ${className}`}>
       <div className="flex h-full flex-col justify-between w-full lg:container lg:mx-auto gap-6 lg:gap-0 sm:mt-12 mt-4 mb-[95px] lg:mb-0 ">
         {/* Top Section */}
         <div className="flex flex-col lg:flex-row w-full items-center lg:items-start">

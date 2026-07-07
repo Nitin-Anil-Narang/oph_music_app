@@ -418,12 +418,12 @@ function PodcastSlider({ searchText, title }) {
             ))}
           </Slider>
         )}
-        <div className="text-center mt-6 relative z-10 mb-4">
+        <div className="text-center mt-6 relative z-10 lg:mb-4">
           <a
             onClick={() => navigate("/auth/signup")}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#5DC9DE] text-black font-semibold py-3 px-8 rounded-full hover:font-bold transition delay-300 pointer-events-auto"
+            className="w-full lg:w-[unset] bg-[#5DC9DE] text-black font-semibold py-3 px-8 rounded-full hover:font-bold transition delay-300 pointer-events-auto"
           >
             COMMUNITY PLATFORM – SIGN UP
           </a>

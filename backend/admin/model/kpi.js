@@ -206,6 +206,7 @@ const getTopSearchedArtists = async (
       ud.stage_name,
       pd.profession,
       ud.location,
+      kpi.song_count,
       IFNULL(kpi.total_views, 0) AS total_views
     ${fromWhere}
     ORDER BY IFNULL(kpi.total_views, 0) DESC, ud.stage_name ASC

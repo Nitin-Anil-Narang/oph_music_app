@@ -367,7 +367,7 @@ const MusicPlayerProfile2 = ({
           </p>
         </div>
 
-        <div className="sm:pe-4 ms-5 sm:ms-0 py-4 lg:py-0 mb-8 flex justify-end gap-[8px]">
+        <div className="sm:pe-4 ms-5 sm:ms-0 py-4 lg:py-0 lg:mb-8 flex justify-end gap-[8px]">
           <button
             onClick={() => sliderRef.current?.slickPrev()}
             className="flex items-center justify-center 

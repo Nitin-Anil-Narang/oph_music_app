@@ -127,7 +127,7 @@ function HeroSection() {
 
   return (
     <div
-      className="w-full min-h-screen pt-36 pb-12 md:pt-44 md:pb-20 flex items-center justify-center bg-cover bg-center relative box-border"
+      className="w-full min-h-screen pt-[110px] pb-12 lg:pt-44 lg:pb-20 flex items-center justify-center bg-cover bg-center relative box-border"
       style={{ backgroundImage: `url(${ContactBG})` }}
     >
       <img
@@ -136,7 +136,7 @@ function HeroSection() {
         alt=""
       />
 
-      <div className="flex flex-col lg:flex-row items-stretch justify-between w-full h-full px-4 sm:px-8 md:px-16 max-w-7xl mx-auto z-10 gap-10">
+      <div className="flex flex-col lg:flex-row items-stretch justify-between w-full h-full px-4 sm:px-8 md:px-16 max-w-7xl mx-auto z-10 gap-[28px] lg:gap-10">
         {/* Left Side Content Column */}
         <div className="flex flex-col w-full lg:w-1/2 text-left justify-center">
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[36px] text-white uppercase font-black leading-tight tracking-wide">
@@ -177,7 +177,7 @@ function HeroSection() {
         <div className="w-full lg:w-1/2 flex items-center justify-center">
           <form
             onSubmit={handleSubmit}
-            className="w-full max-w-xl flex flex-col gap-4 bg-black/50 backdrop-blur-md p-5 sm:p-8 rounded-2xl border border-white/10 shadow-2xl"
+            className="w-full max-w-xl flex flex-col gap-4 bg-black/50 backdrop-blur-md p-0 sm:p-8 rounded-2xl lg:border lg:border-white/10 shadow-2xl"
           >
             <div>
               <label
