@@ -237,7 +237,7 @@ const MYEPK = () => {
           {/* Solid black overlay for bottom half */}
 
           {/* Content */}
-          <div className="relative z-50 container px-6 xl:px-16 lg:px-10 mx-auto pt-[120px] sm:pt-[200px]">
+          <div className="relative z-50 container px-6 xl:px-16 lg:px-10 mx-auto pt-[120px] sm:pt-[200px] pb-[24px]">
             {/* Name Header */}
             <h1 className="text-5xl md:text-7xl text-white font-bold mb-4 ">
               {artist.name}
@@ -398,7 +398,7 @@ const MYEPK = () => {
               </div>
 
               <button
-                className="absolute right-0 bottom-0 cursor-pointer"
+                className="absolute bottom-[105px] right-0 lg:bottom-0 cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
                   navigate("/dashboard/epk-management", {

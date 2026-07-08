@@ -11,11 +11,19 @@ const db = require("../DB/connect");
  * Determine next step based on application status after personal details submission
  */
 const determineNextStepAfterPersonal = (applicationStatus) => {
+  console.log("application_staus", applicationStatus);
+
   if (!applicationStatus) {
     return "/auth/create-profile/professional-details";
   }
 
-  const { user_status, professional_status, documentation_status, payment_status, overall_status } = applicationStatus;
+  const {
+    user_status,
+    professional_status,
+    documentation_status,
+    payment_status,
+    overall_status,
+  } = applicationStatus;
 
   // If completed, go to dashboard (shouldn't happen after personal submission, but handle it)
   if (overall_status === "completed") {
@@ -23,25 +31,27 @@ const determineNextStepAfterPersonal = (applicationStatus) => {
   }
 
   // PRIORITY 1: Check for rejected steps (user just resubmitted personal, so check others)
+
+  if (payment_status === "rejected") {
+    return "/auth/payment";
+  }
+
   if (professional_status === "rejected") {
     return "/auth/create-profile/professional-details";
   }
   if (documentation_status === "rejected") {
     return "/auth/create-profile/documentation-details";
   }
-  if (payment_status === "rejected") {
+
+  if (!payment_status || payment_status === "pending") {
     return "/auth/payment";
   }
-
   // PRIORITY 2: Continue to next step in sequence
   if (!professional_status || professional_status === "pending") {
     return "/auth/create-profile/professional-details";
   }
   if (!documentation_status || documentation_status === "pending") {
     return "/auth/create-profile/documentation-details";
-  }
-  if (!payment_status || payment_status === "pending") {
-    return "/auth/payment";
   }
 
   // PRIORITY 3: If all steps are approved or under review, go to membership form
@@ -92,7 +102,7 @@ const insertPersonalDetails = async (req, res) => {
     if (profile_image) {
       const storeImgIntoBucket = await bucket.uploadToS3(
         profile_image,
-        `allUsers/${ophid}/profile_image`
+        `allUsers/${ophid}/profile_image`,
       );
       if (storeImgIntoBucket) {
         storageLocation = storeImgIntoBucket;
@@ -109,7 +119,10 @@ const insertPersonalDetails = async (req, res) => {
       await connection.beginTransaction();
 
       // Update user_details table (sets step_status to "under review")
-      console.log("[insertPersonalDetails] Updating user_details table for OPH_ID:", ophid);
+      console.log(
+        "[insertPersonalDetails] Updating user_details table for OPH_ID:",
+        ophid,
+      );
       const updatedData = await user_details.setPersonalDetails(
         ophid,
         legal_name,
@@ -118,13 +131,18 @@ const insertPersonalDetails = async (req, res) => {
         storageLocation,
         location,
         email,
-        connection // Pass connection for transaction
+        connection, // Pass connection for transaction
       );
 
-      console.log("[insertPersonalDetails] user_details update - affectedRows:", updatedData?.affectedRows);
-      
+      console.log(
+        "[insertPersonalDetails] user_details update - affectedRows:",
+        updatedData?.affectedRows,
+      );
+
       if (!updatedData || updatedData.affectedRows === 0) {
-        console.error("[insertPersonalDetails] No rows affected in user_details update");
+        console.error(
+          "[insertPersonalDetails] No rows affected in user_details update",
+        );
         await connection.rollback();
         return res.status(400).json({
           success: false,
@@ -135,28 +153,46 @@ const insertPersonalDetails = async (req, res) => {
       // Verify the update by checking the current step_status
       const [verifyRows] = await connection.execute(
         "SELECT step_status FROM user_details WHERE oph_id = ?",
-        [ophid]
+        [ophid],
       );
-      console.log("[insertPersonalDetails] Verified step_status in user_details:", verifyRows[0]?.step_status);
+      console.log(
+        "[insertPersonalDetails] Verified step_status in user_details:",
+        verifyRows[0]?.step_status,
+      );
 
       // Update application_status table (sets user_status to "under review")
       console.log("[insertPersonalDetails] Updating application_status table");
-      await ApplicationStatusService.updateStepStatus(connection, ophid, "user", "under review");
-      
+      await ApplicationStatusService.updateStepStatus(
+        connection,
+        ophid,
+        "user",
+        "under review",
+      );
+
       // Verify the update in application_status
-      const appStatus = await ApplicationStatusService.getApplicationStatus(connection, ophid);
-      console.log("[insertPersonalDetails] Verified user_status in application_status:", appStatus?.user_status);
-      
+      const appStatus = await ApplicationStatusService.getApplicationStatus(
+        connection,
+        ophid,
+      );
+      console.log(
+        "[insertPersonalDetails] Verified user_status in application_status:",
+        appStatus?.user_status,
+      );
+
       // Determine next step based on application status
-      const applicationStatus = await ApplicationStatusService.getApplicationStatus(connection, ophid);
+      const applicationStatus =
+        await ApplicationStatusService.getApplicationStatus(connection, ophid);
       const nextStep = determineNextStepAfterPersonal(applicationStatus);
-      
+
+      console.log(applicationStatus, "157");
+      console.log(nextStep, "158");
+
       // Commit transaction
       await connection.commit();
-      
+
       // Update current_step (outside transaction as it's not critical)
       await setCurrentStep(nextStep, ophid);
-      
+
       return res.status(201).json({
         success: true,
         message: "Data updated successfully",
@@ -182,7 +218,6 @@ const insertPersonalDetails = async (req, res) => {
   }
 };
 
-
 const mapPersonalDetails = async (req, res) => {
   try {
     const { ophid } = req.query;
@@ -207,12 +242,12 @@ const mapPersonalDetails = async (req, res) => {
           contact_num: userDetails.contact_number || userDetails.contact_num, // Support both for backward compatibility
           contact_number: userDetails.contact_number || userDetails.contact_num,
           email: userDetails.email,
-          profile_pic : userDetails.personal_photo,
+          profile_pic: userDetails.personal_photo,
           location: userDetails.location,
-          step_status:userDetails.step_status,
-          reject_reason:userDetails.reject_reason,
+          step_status: userDetails.step_status,
+          reject_reason: userDetails.reject_reason,
           current_step: userDetails.current_step || null,
-          artist_type: userDetails.artist_type
+          artist_type: userDetails.artist_type,
         },
       });
     }
@@ -229,7 +264,7 @@ const mapPersonalDetails = async (req, res) => {
 
 const getAllPersonal = async (req, res) => {
   try {
-    const bookings = await user_details.getFullPersonal()
+    const bookings = await user_details.getFullPersonal();
     res.status(200).json(bookings);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -257,12 +292,12 @@ const updateProfileImage = async (req, res) => {
 
     const imageUrl = await bucket.uploadToS3(
       profile_image,
-      `allUsers/${ophid}/profile_image`
+      `allUsers/${ophid}/profile_image`,
     );
 
     const [result] = await db.execute(
       "UPDATE user_details SET personal_photo = ? WHERE oph_id = ?",
-      [imageUrl, ophid]
+      [imageUrl, ophid],
     );
 
     return res.status(200).json({
@@ -281,4 +316,9 @@ const updateProfileImage = async (req, res) => {
   }
 };
 
-module.exports = { mapPersonalDetails, insertPersonalDetails, getAllPersonal, updateProfileImage };
+module.exports = {
+  mapPersonalDetails,
+  insertPersonalDetails,
+  getAllPersonal,
+  updateProfileImage,
+};

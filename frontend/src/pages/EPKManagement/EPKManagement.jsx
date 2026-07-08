@@ -483,7 +483,7 @@ hover:bg-[#5A3F85] "
             Agree to terms and conditions{" "}
           </label>
         </div>
-        <button className="w-[374px] mx-auto bg-cyan-400 text-gray-900 rounded-full py-3 font-semibold hover:bg-cyan-300 transition-colors mb-[20px]">
+        <button className="w-full md:w-[374px] mx-auto bg-cyan-400 text-gray-900 rounded-full py-3 font-semibold hover:bg-cyan-300 transition-colors mb-[20px]">
           SUBMIT
         </button>
       </form>
