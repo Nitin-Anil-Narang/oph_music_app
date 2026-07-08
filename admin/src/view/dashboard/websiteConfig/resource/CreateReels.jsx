@@ -69,6 +69,15 @@ const CreateReels = () => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        timeout: 0,
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+        onUploadProgress: (ev) => {
+          if (ev.total) {
+            const pct = Math.round((ev.loaded / ev.total) * 100);
+            console.log(`[CreateReel] uploading to API: ${pct}%`);
+          }
+        },
       });
 
       alert("Reel created successfully!");
