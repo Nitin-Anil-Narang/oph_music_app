@@ -86,10 +86,9 @@ const UpdateReel = () => {
 
     try {
       setUpdating(true);
-      const data = await buildResourceFormData(formData, {
+      const data = buildResourceFormData(formData, {
         videoPreview,
         thumbnailPreview,
-        videoPurpose: "resource-reels",
       });
       await axiosApi.put(`/update_reel/${reelId}`, data, {
         headers: {

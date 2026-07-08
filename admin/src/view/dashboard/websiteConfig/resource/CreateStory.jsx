@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosApi from "../../../../conf/axios";
-import { resolveVideoUrlForUpload } from "../../../../utils/presignedVideoUpload";
 import WebConfigSidebar from "../../../../components/WebConfigSidebar";
 
 const CreateStory = () => {
@@ -53,11 +52,7 @@ const CreateStory = () => {
     setIsLoading(true);
 
     try {
-      const videoUrl = await resolveVideoUrlForUpload(
-        formData.video_url,
-        "resource-stories",
-      );
-      if (!videoUrl) {
+      if (!formData.video_url) {
         alert("Video is required");
         setIsLoading(false);
         return;
@@ -65,9 +60,7 @@ const CreateStory = () => {
 
       const data = new FormData();
       for (const key in formData) {
-        if (key === "video_url") {
-          data.append("video_url", videoUrl);
-        } else {
+        if (formData[key] !== null && formData[key] !== undefined) {
           data.append(key, formData[key]);
         }
       }

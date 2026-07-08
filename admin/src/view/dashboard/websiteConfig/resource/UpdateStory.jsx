@@ -85,10 +85,9 @@ const UpdateStory = () => {
 
     try {
       setUpdating(true);
-      const data = await buildResourceFormData(formData, {
+      const data = buildResourceFormData(formData, {
         videoPreview,
         thumbnailPreview,
-        videoPurpose: "resource-stories",
       });
       await axiosApi.put(`/update_story/${storyId}`, data, {
         headers: {

@@ -87,10 +87,9 @@ const UpdatePodcast = () => {
 
     try {
       setUpdating(true);
-      const data = await buildResourceFormData(formData, {
+      const data = buildResourceFormData(formData, {
         videoPreview,
         thumbnailPreview,
-        videoPurpose: "resource-podcast",
       });
       await axiosApi.put(`/update_podcast/${podcastId}`, data, {
         headers: {
