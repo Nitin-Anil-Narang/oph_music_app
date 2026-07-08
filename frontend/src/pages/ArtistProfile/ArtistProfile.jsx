@@ -636,7 +636,7 @@ export default function ArtistProfile() {
           </div>
 
           {/* Tab content */}
-          <div className="px-4 py-4 space-y-4">
+          <div className="px-0 lg:px-4 py-4 space-y-4">
             {activeTab === "details" ? (
               <>
                 <p className="text-gray-400 text-sm">
@@ -671,7 +671,7 @@ export default function ArtistProfile() {
                             className="w-12 h-12 rounded object-cover flex-shrink-0"
                           />
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs text-gray-500 uppercase">Song</div>
+                            {/* <div className="text-xs text-gray-500 uppercase">Song</div> */}
                             <div className="font-medium text-sm truncate">{song.song_name}</div>
                             <div className="text-xs text-gray-400 truncate">{song.primary_artist}</div>
                             <div className="text-xs text-gray-500">PLAY {song.total_song_views ?? "—"}</div>
@@ -705,7 +705,7 @@ export default function ArtistProfile() {
           </div>
 
           {/* Change Password — always visible below tabs */}
-          <div className="px-4 pb-8">
+          <div className="px-0 lg:px-4 pb-8">
             <hr className="border-gray-700 mb-4" />
             <PasswordForm />
           </div>

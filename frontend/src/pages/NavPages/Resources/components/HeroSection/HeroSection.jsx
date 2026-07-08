@@ -114,7 +114,7 @@ const HeroSection = ({ onSearch }) => {
       />
 
       {/* Content */}
-      <div className="relative z-20 max-w-3xl w-full text-center space-y-6 mx-auto mt-8 md:mt-12 lg:mt-20 xl:mt-24">
+      <div className="relative z-20 max-w-3xl w-full text-center space-y-6 mx-auto mt-8 md:mt-12 lg:mt-20 xl:mt-24 mb-[28px] lg:mb-0 ">
         {/* <div className="relative md:mt-12 z-20 max-w-3xl w-full text-center space-y-6 mx-auto"> */}
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-8 text-center leading-snug">
           FROM LEARNING TO LAUNCH {" "}

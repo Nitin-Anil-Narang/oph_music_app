@@ -289,9 +289,9 @@ const EventsNewReleases = ({ upcomingEvent, artistBookEvents = [] }) => {
 
                       {/* Song info */}
                       <div className="flex-1 min-w-0">
-                        <p className="text-[10px] uppercase text-gray-500">
+                        {/* <p className="text-[10px] uppercase text-gray-500">
                           SONG
-                        </p>
+                        </p> */}
 
                         <h3 className="truncate font-medium text-white">
                           {song.songName}
