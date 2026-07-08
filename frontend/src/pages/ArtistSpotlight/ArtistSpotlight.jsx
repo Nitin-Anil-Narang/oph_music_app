@@ -160,7 +160,7 @@ function Leaderboard({ leaderboardData, artistId }) {
           <div className="flex items-start gap-3 border-b-[1px] border-[#FFFFFF33] px-[12px] py-[16px]">
             {/* Rank */}
             <div className="flex flex-col shrink-0">
-              <span className="text-gray-500 text-sm">#</span>
+              {/* <span className="text-gray-500 text-sm">#</span> */}
 
               <span
                 className={`w-10 h-10 flex items-center justify-center text-lg font-bold ${

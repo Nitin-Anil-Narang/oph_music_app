@@ -74,11 +74,11 @@ function Home() {
         // Only events whose registration window is active (IST day bounds, same as HeroSection buttons)
         const registrationOpenSorted =
           upcomingSorted.filter(isRegistrationOpen);
-        const heroEvent = registrationOpenSorted[0] || false;
+        const heroEvent = registrationOpenSorted[0] || upcomingSorted[0] || false;
         const secondSlotEvent =
           registrationOpenSorted.length >= 2
             ? registrationOpenSorted[1]
-            : registrationOpenSorted[0] || false;
+            : registrationOpenSorted[0] || upcomingSorted[1] || upcomingSorted[0] || false;
         setUpcomingEventHero(heroEvent);
         setUpcomingEventNewReleases(secondSlotEvent);
       }

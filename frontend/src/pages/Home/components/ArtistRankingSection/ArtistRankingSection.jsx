@@ -130,9 +130,9 @@ const ArtistRankingSection = ({ data, selectedMonth }) => {
 
                 {/* Details */}
                 <div className="flex-1 grid grid-cols-2 gap-y-3 text-xs">
-                  <div>
+                  {/* <div>
                     <p className="text-gray-500 uppercase">Artist</p>
-                  </div>
+                  </div> */}
 
                   <div>
                     <p className="text-gray-500 uppercase">Stage Name</p>
@@ -159,19 +159,19 @@ const ArtistRankingSection = ({ data, selectedMonth }) => {
                       )}
                     </p>
                   </div>
-
-                  <div className="flex items-end">
-                    <button
-                      className="px-4 py-2 text-xs text-white rounded-full bg-[#6F4FA0]"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleProfileClick(artist);
-                      }}
-                    >
-                      View Profile
-                    </button>
-                  </div>
                 </div>
+              </div>
+
+              <div className="flex mt-[12px]">
+                <button
+                  className="w-full px-4 py-2 text-xs text-white rounded-full bg-[#6F4FA0]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleProfileClick(artist);
+                  }}
+                >
+                  View Profile
+                </button>
               </div>
             </div>
           ))}

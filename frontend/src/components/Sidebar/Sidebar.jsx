@@ -24,7 +24,13 @@ const LockIcon = pubImg("lock.png");
 import { X } from "lucide-react";
 import axiosApi from "../../conf/axios";
 
-const SidebarNav = ({ onClose, contents, setContents, showNav, setShowNav }) => {
+const SidebarNav = ({
+  onClose,
+  contents,
+  setContents,
+  showNav,
+  setShowNav,
+}) => {
   const navigate = useNavigate();
   const { logout } = useArtist();
   const [loading, setLoading] = useState(false);
@@ -265,18 +271,20 @@ const SidebarNav = ({ onClose, contents, setContents, showNav, setShowNav }) => 
       )}
       <img
         src={Elp}
-        className="lg:block lg:absolute hidden lg:top-0 lg:right-0"
+        className="lg:block lg:absolute hidden lg:top-0 lg:right-0 pointer-events-none"
         alt=""
       />
       <div className="p-4 mb-3">
         <div className="flex mt-3 lg:items-center justify-start space-x-2">
-          <img
-            src={Logo}
-            className="px-1"
-            width="60px"
-            height="60px"
-            alt="Logo"
-          />
+          <button onClick={() => navigate("/dashboard")} >
+            <img
+              src={Logo}
+              className="px-1"
+              width="60px"
+              height="60px"
+              alt="Logo"
+            />
+          </button>
         </div>
       </div>
 

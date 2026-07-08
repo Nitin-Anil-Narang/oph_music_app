@@ -197,10 +197,8 @@ const updateEvent = async (eventId, eventData) => {
 };
 
 const deleteEvent = async (eventId) => {
-  const [result] = await db.execute(
-    `DELETE FROM OphData.events WHERE id = ?`,
-    [eventId]
-  );
+  await db.execute(`DELETE FROM OphData.event_bookings WHERE event_id = ?`, [eventId]);
+  const [result] = await db.execute(`DELETE FROM OphData.events WHERE id = ?`, [eventId]);
   return result;
 };
 
