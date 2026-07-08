@@ -1,5 +1,42 @@
-import axios from "axios";
 import axiosApi from "../conf/axios";
+
+/** PUT file to presigned S3 URL (XHR avoids axios headers that break SigV4). */
+function putFileToPresignedUrl(uploadUrl, file, contentType, onUploadProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", uploadUrl);
+    xhr.setRequestHeader("Content-Type", contentType);
+
+    if (onUploadProgress) {
+      xhr.upload.onprogress = (ev) => {
+        if (ev.lengthComputable) onUploadProgress(ev);
+      };
+    }
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve();
+        return;
+      }
+      const detail = (xhr.responseText || "").slice(0, 200);
+      reject(
+        new Error(
+          `Video upload to storage failed (${xhr.status})${detail ? `: ${detail}` : ""}`,
+        ),
+      );
+    };
+
+    xhr.onerror = () => {
+      reject(
+        new Error(
+          "Video upload to storage failed (network/CORS). Ensure the S3 bucket allows PUT from your admin origin.",
+        ),
+      );
+    };
+
+    xhr.send(file);
+  });
+}
 
 /**
  * Upload a video file via presigned S3 PUT; returns public S3 URL.
@@ -34,13 +71,12 @@ export async function uploadVideoViaPresignedPut(file, options = {}) {
   const contentType =
     pres.data.contentType || file.type || "application/octet-stream";
 
-  await axios.put(pres.data.uploadUrl, file, {
-    headers: { "Content-Type": contentType },
-    timeout: 0,
-    maxBodyLength: Infinity,
-    maxContentLength: Infinity,
+  await putFileToPresignedUrl(
+    pres.data.uploadUrl,
+    file,
+    contentType,
     onUploadProgress,
-  });
+  );
 
   return pres.data.publicUrl;
 }

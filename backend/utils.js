@@ -479,11 +479,12 @@ const getPresignedPutUrlForPrefix = (keyPrefix, originalFilename, contentType) =
   const key = `${keyPrefix}/${Date.now()}-${safeName}`;
   const ct =
     (contentType && String(contentType).trim()) || "application/octet-stream";
+  // Do not bind ContentType into the signature — axios/extra browser headers
+  // cause 403 SignatureDoesNotMatch; client sends Content-Type as unsigned header.
   const params = {
     Bucket: process.env.S3_BUCKET,
     Key: key,
     Expires: 60 * 60,
-    ContentType: ct,
   };
   const uploadUrl = s3.getSignedUrl("putObject", params);
   const region = process.env.AWS_REGION || "ap-south-1";
