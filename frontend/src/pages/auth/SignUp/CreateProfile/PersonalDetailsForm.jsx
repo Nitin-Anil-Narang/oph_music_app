@@ -346,11 +346,11 @@ const PersonalDetailsForm = () => {
 
         <div className="min-h-[calc(100vh-70px)] mt-20 bg-opacity-70 text-white p-6 flex flex-col items-center">
           {video && (
-            <div className="relative flex justify-center mb-6 w-full max-w-[800px] mx-auto">
+            <div className="relative flex justify-center mb-6 w-full max-w-[800px] mx-auto sm:rounded-lg rounded-3xl overflow-hidden">
               <CustomVideoPlayer
                 src={video}
                 poster={thumbnail || undefined}
-                className="w-full h-[50vh] rounded-lg overflow-hidden bg-black"
+                className="w-full h-[50vh] bg-black"
                 pauseOtherVideos={true}
                 allowFullscreen={true}
                 showPlayButtonOverlay
@@ -418,8 +418,7 @@ const PersonalDetailsForm = () => {
                   placeholder="Legal Name"
                   value={formData.legalName}
                   onChange={handleInputChange}
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
-                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
+                  className="w-full lg:w-auto h-12 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
                 />
               </div>
 
@@ -431,8 +430,7 @@ const PersonalDetailsForm = () => {
                   placeholder="Stage Name"
                   value={formData.stageName}
                   onChange={handleInputChange}
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
-                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
+                  className="w-full lg:w-auto h-12 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
                 />
               </div>
 
@@ -448,8 +446,7 @@ const PersonalDetailsForm = () => {
                   placeholder="000000000"
                   value={formData.contactNumber}
                   onChange={handleInputChange}
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
-                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
+                  className="w-full lg:w-auto h-12 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
                 />
               </div>
 
@@ -459,8 +456,7 @@ const PersonalDetailsForm = () => {
                   name="location"
                   value={formData.location}
                   onChange={handleInputChange}
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
-                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
+                  className="w-full lg:w-auto h-12 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
                 >
                   <option value="">Select Your State</option>
                   {indianStates.map((state) => (
@@ -479,8 +475,7 @@ const PersonalDetailsForm = () => {
                   placeholder="abc@gmail.com"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
-                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
+                  className="w-full lg:w-auto h-12 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
                 />
               </div>
 

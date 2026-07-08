@@ -382,7 +382,7 @@ const ArtistSlider = ({
         </div>
 
         {/* Mobile Arrow buttons (below the slider) */}
-        <div className="flex sm:hidden justify-center items-center gap-4 mt-2 lg:mb-8 relative z-50">
+        <div className="flex sm:hidden justify-center items-center gap-4 lg:mb-8 relative z-50">
           <button
             onClick={(e) => {
               e.stopPropagation();

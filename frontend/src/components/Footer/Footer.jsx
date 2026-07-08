@@ -37,7 +37,7 @@ function Footer({ className = "" }) {
           <div className="text-md text-center lg:text-left text-[#9BA3B7] w-full lg:w-1/3 px-8 lg:px-0 py-3">
           OPH COMMUNITY: India&apos;s First Decentralized Music Platform. A Best Platform for Independent Artists 2025
           </div>
-          <ul className="hidden lg:flex space-x-12 justify-end text-white w-1/2">
+          <ul className="hidden lg:flex gap-8 justify-end text-white w-1/2">
             <li><Link to="/" className="hover:text-gray-300">Home</Link></li>
             <li><Link to="/events/online-music-events" className="hover:text-gray-300">Events</Link></li>
             <li><a href="/find-your-collaborator" className="hover:text-gray-300">Artists</a></li>

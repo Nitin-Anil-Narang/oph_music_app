@@ -84,8 +84,7 @@ const SignInForm = () => {
 
   return (
     <div
-      className="py-40 pt-48 flex items-center justify-center bg-[url('/assets/images/music_bg.png')] bg-cover bg-center relative
-              "
+      className="py-15 pt-24 flex items-center justify-center bg-[url('/assets/images/music_bg.png')] bg-cover bg-center relative"
     >
       <div className="w-full max-w-2xl p-8 rounded-lg relative z-10">
         <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">

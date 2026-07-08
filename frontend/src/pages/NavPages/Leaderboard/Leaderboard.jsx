@@ -474,7 +474,6 @@ function Leaderboard() {
                             </span>
                           </div>
                         </div>
-
                         {/* 2. MIDDLE METRICS COMPONENT: 3 Columns Grid View */}
                         <div className="grid grid-cols-3 gap-2 w-full mt-5 pt-4 border-t border-gray-900/50">
                           {/* Location Block */}
@@ -507,7 +506,6 @@ function Leaderboard() {
                             </span>
                           </div>
                         </div>
-
                         {/* 3. BOTTOM FOOTER SECTION: Full width pill button link */}
                         <div className="w-full mt-5">
                           <button
@@ -517,7 +515,7 @@ function Leaderboard() {
                               if (!oid) return;
                               void navigateToArtistDetail(navigate, oid);
                             }}
-                            className="w-full py-2.5 text-center text-xs font-bold tracking-widest text-[#5DC9DE] bg-transparent border border-gray-800 rounded-full active:bg-[#5DC9DE] active:text-black transition-all duration-150 uppercase"
+                            className="w-full py-2.5 text-center text-xs font-bold tracking-widest text-[#5DC9DE] bg-transparent border border-[#5DC9DE] rounded-full active:bg-[#5DC9DE] active:text-black transition-all duration-150 uppercase"
                           >
                             View Profile
                           </button>

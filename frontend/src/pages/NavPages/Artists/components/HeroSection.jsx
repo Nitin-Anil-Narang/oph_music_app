@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 import searchIc from "/assets/images/artists/searchIc.svg";
 import { ChevronDown } from "lucide-react";
 
-const btnClass =
-  "w-full rounded-full border border-white/20 bg-gray-100/20 backdrop-blur-sm py-3 pl-4 pr-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#5DC9DE]/60 cursor-pointer flex items-center justify-between gap-2";
+ const btnClass =
+   "w-full rounded-3xl border border-white/20 bg-[rgb(52,53,55,0.4)] backdrop-blur-sm py-3 pl-4 pr-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#5DC9DE]/60 cursor-pointer flex items-center justify-between gap-2";
 
 const FilterSelect = ({ value, onChange, options, placeholder, ariaLabel }) => {
   const [open, setOpen] = useState(false);
@@ -113,7 +113,7 @@ const HeroSection = ({
         </p>
 
         <div className="flex flex-col items-center gap-4 mt-8 px-4 py-8">
-          <div className="relative flex w-full max-w-[600px] bg-gray-100/20 rounded-full backdrop-blur-sm py-2">
+          <div className="relative flex w-full max-w-[600px] bg-[rgb(52,53,55,0.4)] rounded-3xl backdrop-blur-md py-2 border border-white/5 shadow-lg">
             <input
               type="text"
               placeholder="Search Artists..."

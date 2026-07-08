@@ -31,14 +31,9 @@ function Footer() {
         </div>
 
         {/* Middle Navigation Section */}
-        <div className="w-full flex flex-col lg:flex-row justify-between items-center gap-6 lg:gap-0">
-          <div className="text-md text-center lg:text-left text-[#9BA3B7] w-full lg:w-1/3 px-4 lg:px-0">
-            OPH COMMUNITY: India&apos;s First Decentralized Music Platform. A
-            Best Platform for Independent Artists 2025
-          </div>
-
+        <div className="w-full flex flex-col lg:flex-row justify-between items-center gap-6 lg:gap-8">
           {/* Navigation Links - Visible on Mobile & Desktop */}
-          <ul className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-end items-center gap-3 sm:gap-6 lg:gap-12 text-white w-full lg:w-1/2">
+          <ul className="flex flex-wrap justify-center lg:justify-end gap-4 lg:gap-8 text-white w-full lg:w-auto">
             <li>
               <Link to="/" className="hover:text-gray-300 transition">
                 Home
@@ -83,9 +78,6 @@ function Footer() {
             </li>
           </ul>
         </div>
-       <div className="bg-red-500 text-white text-center py-4">
-  TEST NAVIGATION BLOCK
-</div>
         {/* Divider */}
         <div className="container w-full h-[1px] opacity-30 mx-auto bg-white sm:my-8 my-2"></div>
 
@@ -125,16 +117,13 @@ function Footer() {
               </Link>
             </li>
             <li>
-              <Link
-                className="hover:text-gray-300 transition"
-                to="/disclaimer"
-              >
+              <Link className="hover:text-gray-300 transition" to="/disclaimer">
                 Disclaimer
               </Link>
             </li>
           </ul>
 
-          <div className="flex justify-center gap-3">
+          <div className="flex justify-center gap-3 sm:mt-0 mb-4">
             <a
               href="/facebook"
               className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors"

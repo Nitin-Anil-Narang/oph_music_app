@@ -117,10 +117,9 @@ const HeroSection = ({ onSearch }) => {
       <div className="relative z-20 max-w-3xl w-full text-center space-y-6 mx-auto mt-8 md:mt-12 lg:mt-20 xl:mt-24 mb-[28px] lg:mb-0 ">
         {/* <div className="relative md:mt-12 z-20 max-w-3xl w-full text-center space-y-6 mx-auto"> */}
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-8 text-center leading-snug">
-          FROM LEARNING TO LAUNCH {" "}
-          <br/>
+          FROM LEARNING TO LAUNCH <br />
           <span className="text-cyan-400 block sm:inline">
-           A HOME FOR EVERY ARTISTS
+            A HOME FOR EVERY ARTISTS
           </span>
         </h1>
 
@@ -132,7 +131,7 @@ const HeroSection = ({ onSearch }) => {
 
         {/* Search bar */}
         <div className="flex justify-center mt-8 relative" ref={dropdownRef}>
-          <div className="relative flex items-center w-[300px] sm:w-[450px] md:w-[600px] bg-gray-100/20 rounded-full backdrop-blur-sm py-2 px-2">
+          <div className="relative flex items-center w-[510px] sm:w-[450px] md:w-[600px] max-w-none rounded-3xl p-2 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg" >
             <input
               type="text"
               value={searchTerm}

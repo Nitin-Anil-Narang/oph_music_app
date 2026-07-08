@@ -28,7 +28,7 @@ const ForgotPassword = () => {
 
   return (
     <div
-      className="py-40 pt-48 flex items-center justify-center bg-[url('/assets/images/contact/bg.png')] bg-cover bg-center relative 
+      className="py-8 sm:py-15 pt-16 sm:pt-24 flex items-center justify-center bg-[url('/assets/images/contact/bg.png')] bg-cover bg-center relative 
               before:content-['']
               before:absolute
               before:inset-0
@@ -49,7 +49,7 @@ const ForgotPassword = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label
+            <label 
               htmlFor="email"
               className="block text-sm font-medium text-gray-300 mb-1 ml-4"
             >

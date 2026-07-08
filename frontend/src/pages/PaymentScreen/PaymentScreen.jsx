@@ -683,9 +683,11 @@ const PaymentScreen = () => {
     <div className="relative">
       {loading && <Loading />}
       <div className="bg-black min-h-[100vh] text-white flex flex-col items-center justify-center px-[16px] py-[16px] md:p-8">
-        <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
+        <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center sm:pt-0 pt-8">
           {heading}{" "}
-          <span className="text-cyan-400">₹{Math.round(Number(getDisplayAmount()) || 0)}/-</span>
+          <span className="text-cyan-400">
+            ₹{Math.round(Number(getDisplayAmount()) || 0)}/-
+          </span>
         </h1>
 
         <div className="flex flex-col items-center gap-6 max-w-md w-full">
@@ -711,7 +713,8 @@ const PaymentScreen = () => {
               placeholder="Enter Transaction ID"
               value={trans}
               onChange={(e) => setTrans(e.target.value)}
-              className="w-full bg-gray-800 rounded-md px-4 py-3 text-white"
+              className="w-full rounded-full px-4 py-3 text-white text-center border border-gray-600 sm:bg-gray-800 sm:rounded-md"
+              style={{ backgroundColor: 'rgba(47, 43, 43, 0.577)' }}
               required
               disabled={loading}
             />
