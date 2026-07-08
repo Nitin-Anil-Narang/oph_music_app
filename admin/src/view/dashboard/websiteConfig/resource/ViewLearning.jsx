@@ -88,34 +88,24 @@ const ViewLearning = () => {
           </h2>
 
           {/* learning Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {learning.map((learningItem) => (
               <div
                 key={learningItem.id}
                 onClick={() => navigate(`/update_learning/${learningItem.id}`)}
-                className="bg-gray-50 border border-gray-200 rounded-xl shadow-md p-5 space-y-3 cursor-pointer hover:shadow-lg transition"
+                className="bg-gray-50 border border-gray-200 rounded-xl shadow-md p-5 flex flex-col h-full cursor-pointer hover:shadow-lg transition"
               >
                 {/* Thumbnail */}
                 {learningItem.thumbnail_url && (
                   <img
                     src={learningItem.thumbnail_url}
                     alt={learningItem.title}
-                    className="w-full h-48 object-cover rounded-xl border"
-                  />
-                )}
-
-                {/* Video preview (optional) */}
-                {learningItem.video_url && (
-                  <video
-                    src={learningItem.video_url}
-                    controls
-                    className="w-full h-48 object-cover rounded-xl border"
-                    onClick={(e) => e.stopPropagation()}
+                    className="w-full h-48 object-cover rounded-xl border mb-3"
                   />
                 )}
 
                 {/* Info */}
-                <div className="space-y-1">
+                <div className="space-y-1 flex-1">
                   <h3 className="text-lg font-bold text-[#0d3c44]">
                     {learningItem.title}
                   </h3>
@@ -143,10 +133,10 @@ const ViewLearning = () => {
                 {/* Delete Button */}
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent card click
+                    e.stopPropagation();
                     handleDelete(learningItem.id);
                   }}
-                  className="w-full mt-3 bg-red-500 text-white py-2 px-4 rounded-xl font-semibold hover:bg-red-600 transition-all duration-150"
+                  className="w-full mt-4 bg-red-500 text-white py-2 px-4 rounded-xl font-semibold hover:bg-red-600 transition-all duration-150 shrink-0"
                 >
                   Delete Learning
                 </button>
