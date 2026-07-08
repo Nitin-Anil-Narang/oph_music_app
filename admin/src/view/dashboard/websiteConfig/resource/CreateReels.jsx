@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosApi from "../../../../conf/axios";
-import { resolveVideoUrlForUpload } from "../../../../utils/presignedVideoUpload";
 import WebConfigSidebar from "../../../../components/WebConfigSidebar";
 
 const CreateReels = () => {
@@ -53,11 +52,7 @@ const CreateReels = () => {
     setIsLoading(true);
 
     try {
-      const videoUrl = await resolveVideoUrlForUpload(
-        formData.video_url,
-        "resource-reels",
-      );
-      if (!videoUrl) {
+      if (!formData.video_url) {
         alert("Video is required");
         setIsLoading(false);
         return;
@@ -65,9 +60,7 @@ const CreateReels = () => {
 
       const data = new FormData();
       for (const key in formData) {
-        if (key === "video_url") {
-          data.append("video_url", videoUrl);
-        } else {
+        if (formData[key] !== null && formData[key] !== undefined) {
           data.append(key, formData[key]);
         }
       }
@@ -75,6 +68,15 @@ const CreateReels = () => {
       await axiosApi.post("/createReels", data, {
         headers: {
           "Content-Type": "multipart/form-data",
+        },
+        timeout: 0,
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+        onUploadProgress: (ev) => {
+          if (ev.total) {
+            const pct = Math.round((ev.loaded / ev.total) * 100);
+            console.log(`[CreateReel] uploading to API: ${pct}%`);
+          }
         },
       });
 
@@ -94,7 +96,7 @@ const CreateReels = () => {
       setVideoPreview(null);
     } catch (err) {
       console.error("Error creating Reel:", err);
-      alert("Failed to create Reel.");
+      alert(err?.response?.data?.message || err?.message || "Failed to create Reel.");
     } finally {
       setIsLoading(false);
     }

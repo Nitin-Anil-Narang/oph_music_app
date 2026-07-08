@@ -91,10 +91,9 @@ const UpdateLearning = () => {
 
     try {
       setUpdating(true);
-      const data = await buildResourceFormData(formData, {
+      const data = buildResourceFormData(formData, {
         videoPreview,
         thumbnailPreview,
-        videoPurpose: "resource-learning",
       });
       await axiosApi.put(`/update_learning/${learningId}`, data, {
         headers: {
@@ -183,13 +182,27 @@ const UpdateLearning = () => {
             </div>
             {videoPreview && (
               <div className="mt-3">
-                <video
-                  src={videoPreview}
-                  controls
-                  className="w-full h-64 rounded-xl border border-gray-200 shadow-sm"
-                />
+                {videoPreview.startsWith("blob:") ? (
+                  <video
+                    src={videoPreview}
+                    controls
+                    className="w-full h-64 rounded-xl border border-gray-200 shadow-sm"
+                  />
+                ) : (
+                  <p className="text-sm text-gray-600 rounded-xl border border-gray-200 bg-gray-50 p-4">
+                    Current video stored on S3.{" "}
+                    <a
+                      href={videoPreview}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[#0d3c44] underline"
+                    >
+                      Open link
+                    </a>
+                  </p>
+                )}
                 <p className="mt-2 text-sm text-green-600 font-medium">
-                  ✓ Video file selected
+                  ✓ Video {videoPreview.startsWith("blob:") ? "file selected" : "on record"}
                 </p>
               </div>
             )}
