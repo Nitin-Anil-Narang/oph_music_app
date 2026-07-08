@@ -20,9 +20,13 @@ const learningVisibleForOphid = (row, ophid) => {
   return true;
 };
 
-/** Video must be uploaded via presigned PUT; API receives final S3 URL in body. */
-const resolveUploadedVideoUrl = (req) => {
-  const fromBody = req.body.video_url && String(req.body.video_url).trim();
+/** Video file (multipart) or existing S3 URL string in body. */
+const resolveResourceVideoUrl = async (req, folder) => {
+  const videoFile = req.files?.["video_url"]?.[0];
+  if (videoFile) {
+    return bucket.uploadToS3(videoFile, folder);
+  }
+  const fromBody = req.body?.video_url && String(req.body.video_url).trim();
   return fromBody || null;
 };
 
@@ -67,13 +71,13 @@ const fetchAllPodcast = async (req, res) => {
 
 const insertPodcast = async (req, res) => {
   try {
-    const videoUrl = resolveUploadedVideoUrl(req);
+    const videoUrl = await resolveResourceVideoUrl(req, "Resource/Podcast");
     const thumbnailFile = req.files["thumbnail_url"]?.[0];
 
     if (!videoUrl || !thumbnailFile) {
       return res.status(400).json({
         success: false,
-        message: "Both video (presigned upload) and thumbnail are required",
+        message: "Both video and thumbnail are required",
       });
     }
 
@@ -211,7 +215,8 @@ const updatePodcastById = async (req, res) => {
       updateData.bio =
         bio != null && String(bio).trim() !== "" ? String(bio) : null;
 
-    const newVideoUrl = resolveUploadedVideoUrl(req) || video_url;
+    const newVideoUrl =
+      (await resolveResourceVideoUrl(req, "Resource/Podcast")) || video_url;
     if (newVideoUrl) {
       updateData.video_url = newVideoUrl;
     }
@@ -285,13 +290,13 @@ const fetchAllStories = async (req, res) => {
 
 const insertStories = async (req, res) => {
   try {
-    const videoUrl = resolveUploadedVideoUrl(req);
+    const videoUrl = await resolveResourceVideoUrl(req, "Resource/Stories");
     const thumbnailFile = req.files["thumbnail_url"]?.[0];
 
     if (!videoUrl || !thumbnailFile) {
       return res.status(400).json({
         success: false,
-        message: "Both video (presigned upload) and thumbnail are required",
+        message: "Both video and thumbnail are required",
       });
     }
 
@@ -358,7 +363,8 @@ const updateStroyById = async (req, res) => {
     if (credit_name) updateData.credit_name = credit_name;
     if (keywords) updateData.keywords = keywords;
 
-    const newVideoUrl = resolveUploadedVideoUrl(req) || video_url;
+    const newVideoUrl =
+      (await resolveResourceVideoUrl(req, "Resource/Stories")) || video_url;
     if (newVideoUrl) {
       updateData.video_url = newVideoUrl;
     }
@@ -490,13 +496,13 @@ const fetchAllReels = async (req, res) => {
 
 const insertReels = async (req, res) => {
   try {
-    const videoUrl = resolveUploadedVideoUrl(req);
+    const videoUrl = await resolveResourceVideoUrl(req, "Resource/Reels");
     const thumbnailFile = req.files["thumbnail_url"]?.[0];
 
     if (!videoUrl || !thumbnailFile) {
       return res.status(400).json({
         success: false,
-        message: "Both video (presigned upload) and thumbnail are required",
+        message: "Both video and thumbnail are required",
       });
     }
 
@@ -563,7 +569,8 @@ const updateReelById = async (req, res) => {
     if (credit_name) updateData.credit_name = credit_name;
     if (keywords) updateData.keywords = keywords;
 
-    const newVideoUrl = resolveUploadedVideoUrl(req) || video_url;
+    const newVideoUrl =
+      (await resolveResourceVideoUrl(req, "Resource/Reels")) || video_url;
     if (newVideoUrl) {
       updateData.video_url = newVideoUrl;
     }
@@ -571,7 +578,7 @@ const updateReelById = async (req, res) => {
     if (thumbnailFile) {
       updateData.thumbnail_url = await bucket.uploadToS3(
         thumbnailFile,
-        "Resource/Reel",
+        "Resource/Reels",
       );
     } else if (thumbnail_url) {
       updateData.thumbnail_url = thumbnail_url;
@@ -674,13 +681,13 @@ const getReelBySlug = async (req, res) => {
 
 const insertLearning = async (req, res) => {
   try {
-    const videoUrl = resolveUploadedVideoUrl(req);
+    const videoUrl = await resolveResourceVideoUrl(req, "Resource/Learning");
     const thumbnailFile = req.files["thumbnail_url"]?.[0];
 
     if (!videoUrl || !thumbnailFile) {
       return res.status(400).json({
         success: false,
-        message: "Both video (presigned upload) and thumbnail are required",
+        message: "Both video and thumbnail are required",
       });
     }
 
@@ -752,7 +759,8 @@ const updateLearningById = async (req, res) => {
     if (audience !== undefined && audience !== null && audience !== "")
       updateData.audience = normalizeLearningAudience(audience);
 
-    const newVideoUrl = resolveUploadedVideoUrl(req) || video_url;
+    const newVideoUrl =
+      (await resolveResourceVideoUrl(req, "Resource/Learning")) || video_url;
     if (newVideoUrl) {
       updateData.video_url = newVideoUrl;
     }

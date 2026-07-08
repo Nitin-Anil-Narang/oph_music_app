@@ -40,6 +40,7 @@ function putFileToPresignedUrl(uploadUrl, file, contentType, onUploadProgress) {
 
 /**
  * Upload a video file via presigned S3 PUT; returns public S3 URL.
+ * Used by artist portal / page media — not admin resource create forms.
  */
 export async function uploadVideoViaPresignedPut(file, options = {}) {
   const {
@@ -82,43 +83,25 @@ export async function uploadVideoViaPresignedPut(file, options = {}) {
 }
 
 /**
- * @param {File|string|null|undefined} fileOrUrl
- * @param {string} purpose
- * @param {object} [params]
+ * Build multipart FormData for admin resource create/update.
+ * Video files go to the API (server → S3), avoiding browser→S3 CORS.
  */
-export async function resolveVideoUrlForUpload(fileOrUrl, purpose, params = {}) {
-  if (!fileOrUrl) return null;
-  if (typeof fileOrUrl === "string") {
-    if (fileOrUrl.startsWith("blob:")) return null;
-    return fileOrUrl;
-  }
-  if (fileOrUrl instanceof File) {
-    return uploadVideoViaPresignedPut(fileOrUrl, { purpose, params });
-  }
-  return null;
-}
-
-/** Build multipart FormData for resource create/update (video via presigned PUT). */
-export async function buildResourceFormData(
+export function buildResourceFormData(
   formState,
-  { videoPreview, thumbnailPreview, videoPurpose },
+  { videoPreview, thumbnailPreview } = {},
 ) {
-  const videoUrl = await resolveVideoUrlForUpload(
-    formState.video_url instanceof File ? formState.video_url : null,
-    videoPurpose,
-  );
-  const finalVideoUrl =
-    videoUrl ||
-    (videoPreview &&
-    typeof videoPreview === "string" &&
-    !videoPreview.startsWith("blob:")
-      ? videoPreview
-      : null);
-
   const data = new FormData();
   for (const key in formState) {
     if (key === "video_url") {
-      if (finalVideoUrl) data.append("video_url", finalVideoUrl);
+      if (formState.video_url instanceof File) {
+        data.append("video_url", formState.video_url);
+      } else if (
+        videoPreview &&
+        typeof videoPreview === "string" &&
+        !videoPreview.startsWith("blob:")
+      ) {
+        data.append("video_url", videoPreview);
+      }
       continue;
     }
     if (key === "thumbnail_url") {
