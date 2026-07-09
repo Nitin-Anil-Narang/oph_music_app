@@ -400,7 +400,7 @@ export default function HeroSection({ professions = [] }) {
 
           <Slider ref={sliderRef} {...settings}>
             {upcomingEvents.map((event, idx) => (
-              <div key={event.id ?? idx} className="relative h-screen w-full">
+              <div key={event.id ?? idx} className="relative min-h-[60dvh] md:h-screen w-full">
                 <img
                   src={event.thumbnail_url}
                   alt={event.name}
@@ -409,21 +409,20 @@ export default function HeroSection({ professions = [] }) {
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-black/95" />
 
                 <div
-                  className="absolute inset-0 flex items-center pb-12 sm:pb-20 cursor-pointer"
+                  className="absolute inset-0 flex sm:items-end items-center sm:pb-24 pb-10 pt-[150px] cursor-pointer"
                   onClick={() => {
                     if (!isDragging) navigate(`/events/${event.id}`);
                   }}
                 >
-                  {/* Unified single parent wrapper matching Figma layout */}
-                  <div className="container mx-auto px-5 max-w-[430px] sm:max-w-[600px] lg:max-w-[1200px] w-full flex flex-col items-start gap-5">
-                    {/* Meta info & Event Title */}
-                    <div className="w-full text-left">
-                      <div className="text-xs sm:text-sm font-semibold text-[#5DC9DE] mb-1 tracking-wide">
+                  <div className="container mx-auto px-4 xl:px-16 w-full flex flex-col lg:flex-row justify-between items-center">
+                    {/* Left: date, title, countdown */}
+                    <div className="flex flex-col">
+                      <div className="text-xs sm:text-sm font-semibold text-[#5DC9DE] mb-1 tracking-wide lg:text-lg lg:mb-2">
                         {dateFormat(event.event_date_time)} – {event.location}
                       </div>
 
                       <h1
-                        className="uppercase font-black text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight"
+                        className="uppercase font-black text-2xl sm:text-4xl lg:text-6xl text-white tracking-tight leading-tight"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (!isDragging) navigate(`/events/${event.id}`);
@@ -431,12 +430,9 @@ export default function HeroSection({ professions = [] }) {
                       >
                         {event.name}
                       </h1>
-                    </div>
 
-                    {/* Countdown Timer Row */}
-                    <div className="flex gap-2 w-full justify-start mt-1">
                       {timers[idx] && (
-                        <>
+                        <div className="flex gap-2 mt-4">
                           <CountdownBox value={timers[idx].days} label="Days" />
                           <CountdownBox
                             value={timers[idx].hours}
@@ -450,27 +446,58 @@ export default function HeroSection({ professions = [] }) {
                             value={timers[idx].seconds}
                             label="Second"
                           />
-                        </>
+                        </div>
                       )}
-                    </div>
 
-                    {/* FIXED: Chance to Win Inline Badge Container */}
-                    <div className="w-full flex items-center justify-center bg-gradient-to-r from-gray-900/90 to-[#0C0D27]/90 border border-white/10 rounded-xl py-3 px-4 shadow-xl backdrop-blur-md">
-                      <span className="text-xs sm:text-sm tracking-widest font-bold uppercase text-white mr-2">
-                        CHANCE TO WIN
-                      </span>
-                      <span className="text-[#2DDA89] text-base sm:text-lg font-black tracking-wide">
-                        ₹{event.reward_amount ?? 0}
-                      </span>
-                    </div>
-
-                    {/* FIXED: Primary Book Spot Button - Cyan desktop, Black mobile */}
-                    <div className="w-full">
+                      {/* Mobile-only: Chance to Win badge + Book button */}
+                      <div className="lg:hidden mt-4 w-full flex items-center justify-center bg-gradient-to-r from-gray-900/90 to-[#0C0D27]/90 border border-white/10 rounded-xl py-3 px-4 shadow-xl backdrop-blur-md">
+                        <span className="text-xs sm:text-sm tracking-widest font-bold uppercase text-white mr-2">
+                          CHANCE TO WIN
+                        </span>
+                        <span className="text-[#2DDA89] text-base sm:text-lg font-black tracking-wide">
+                          ₹{event.reward_amount ?? 0}
+                        </span>
+                      </div>
                       <div
-                        className={`w-full py-3.5 rounded-full text-sm sm:text-base font-extrabold tracking-wide text-center transition-all duration-300 ${
+                        className={`lg:hidden mt-3 w-full py-3.5 rounded-full text-sm font-extrabold tracking-wide text-center transition-all duration-300 ${
                           isRegistrationOpenByDateTime(event)
-                            ? "bg-[#5DC9DE] sm:bg-[#5DC9DE] md:bg-[#5DC9DE] text-black cursor-pointer hover:bg-[#4cb5c8] active:scale-[0.98] shadow-lg"
+                            ? "bg-[#5DC9DE] text-black cursor-pointer hover:bg-[#4cb5c8] active:scale-[0.98] shadow-lg"
                             : "bg-gray-600 text-white cursor-not-allowed opacity-60"
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBookSpot(event, event.id);
+                        }}
+                        title={
+                          isRegistrationNotStartedYetByDateTime(event)
+                            ? "Registration has not started yet"
+                            : !isRegistrationOpenByDateTime(event)
+                              ? "Registration has closed"
+                              : undefined
+                        }
+                      >
+                        Book Your Spot Now
+                      </div>
+                    </div>
+
+                    {/* Desktop-only: Chance to Win card + Book button */}
+                    <div
+                      className="hidden lg:flex mt-0 flex-col items-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="bg-gradient-to-b from-[#FFFFFF26] to-[#FFFFFF00] w-[285px] rounded-xl py-5 px-6 backdrop-blur-[12px] text-center">
+                        <span className="text-[18px] uppercase text-white block text-center">
+                          Chance to Win
+                        </span>
+                        <span className="text-[#2DDA89] text-[40px] font-extrabold">
+                          ₹{event.reward_amount ?? 0}
+                        </span>
+                      </div>
+                      <div
+                        className={`mt-4 px-6 py-2 rounded-3xl text-black text-lg font-semibold ${
+                          isRegistrationOpenByDateTime(event)
+                            ? "bg-[#5DC9DE] cursor-pointer hover:bg-[#4db8cc]"
+                            : "bg-gray-500 cursor-not-allowed opacity-70"
                         }`}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -502,11 +529,18 @@ export default function HeroSection({ professions = [] }) {
 
 function CountdownBox({ value, label }) {
   return (
-    <div className="border border-white/5 rounded-xl p-2.5 bg-black/40 backdrop-blur-md w-[72px] sm:w-[84px] shadow-lg flex flex-col items-center">
-      <div className="text-white text-xl sm:text-2xl font-black text-center leading-none">
+    <div
+      className="
+        w-[80px] sm:w-[92px]
+        rounded-md p-3 transition-colors
+        bg-gradient-to-b from-[#3A3A3A] via-[#222222] to-[#111111]
+        lg:bg-gradient-to-b lg:from-[#FFFFFF33] lg:to-[#FFFFFF00]
+      "
+    >
+      <div className="text-white text-2xl lg:text-4xl text-center font-semibold">
         {String(value).padStart(2, "0")}
       </div>
-      <div className="text-[#9BA3B7] text-[10px] sm:text-xs font-semibold uppercase tracking-wider mt-1 text-center">
+      <div className="text-[#9BA3B7] text-center text-sm lg:text-base">
         {label}
       </div>
     </div>
