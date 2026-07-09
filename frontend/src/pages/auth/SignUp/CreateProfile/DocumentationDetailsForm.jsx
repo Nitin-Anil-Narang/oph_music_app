@@ -514,11 +514,11 @@ const DocumentationDetailsForm = () => {
       if (response.success) {
         toast.success("Documentation details updated successfully");
         const path = `${response.step}`;
-        navigate(path ,{
+        navigate(path, {
           state: {
             user_type: user_type,
-            backPath: "/auth/create-profile/documentation-details"
-          }
+            backPath: "/auth/create-profile/documentation-details",
+          },
         });
         // setShowMembershipForm(true); // Show MembershipForm
       }
@@ -553,11 +553,11 @@ const DocumentationDetailsForm = () => {
         <ProfileFormHeader title="DOCUMENTATION DETAILS" />
         <div className="min-h-[calc(100vh-70px)] mt-20  text-white p-6 flex flex-col items-center mx-auto">
           {video && (
-            <div className="relative flex justify-center mb-6 w-full max-w-[800px] mx-auto">
+            <div className="relative flex justify-center mb-6 w-full max-w-[800px] mx-auto sm:rounded-lg rounded-3xl overflow-hidden">
               <CustomVideoPlayer
                 src={video}
                 poster={thumbnail || undefined}
-                className="w-full h-[50vh] rounded-lg overflow-hidden bg-black"
+                className="w-full h-[50vh] bg-black"
                 pauseOtherVideos={true}
                 allowFullscreen={true}
                 showPlayButtonOverlay
@@ -566,7 +566,7 @@ const DocumentationDetailsForm = () => {
             </div>
           )}
 
-          <h2 className="text-cyan-400 uppercase text-2xl mt-4 font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
+          <h2 className="text-cyan-400 uppercase text-xl mt-4 font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
             Documentation Details
           </h2>
           {rejectReason && (
@@ -709,7 +709,7 @@ const DocumentationDetailsForm = () => {
                           : URL.createObjectURL(formData.signature.preview)
                       }
                       alt="Previous Signature"
-                      className="w-full h-32 border border-gray-600 rounded bg-white"
+                      className="w-full h-24 border border-gray-600 rounded-xl bg-white"
                     />
                     <button
                       onClick={() =>
@@ -732,9 +732,10 @@ const DocumentationDetailsForm = () => {
                       ref={signatureCanvasRef}
                       canvasProps={{
                         className:
-                          "block w-full bg-white rounded border border-gray-600",
+                          "block w-full bg-white rounded-xl border border-gray-600",
                         style: {
                           touchAction: "none",
+                          height: "96px",
                         },
                       }}
                       backgroundColor="white"
@@ -761,7 +762,7 @@ const DocumentationDetailsForm = () => {
                 name="bankName"
                 value={formData.bankName}
                 onChange={handleInputChange}
-                className="w-full bg-gray-800 rounded px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full h-10 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
                 required
               >
                 <option value="">Select Bank</option>
@@ -777,7 +778,7 @@ const DocumentationDetailsForm = () => {
                 placeholder="Account Holder Name *"
                 value={formData.accountHolder}
                 onChange={handleInputChange}
-                className="w-full bg-gray-800 rounded px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full h-10 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
                 required
               />
               <input
@@ -786,7 +787,7 @@ const DocumentationDetailsForm = () => {
                 placeholder="Account Number *"
                 value={formData.accountNumber}
                 onChange={handleInputChange}
-                className="w-full bg-gray-800 rounded px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full h-10 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
                 required
               />
               <input
@@ -795,13 +796,13 @@ const DocumentationDetailsForm = () => {
                 placeholder="IFSC Code *"
                 value={formData.ifscCode}
                 onChange={handleInputChange}
-                className="w-full bg-gray-800 rounded px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full h-10 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
                 required
               />
             </div>
 
             {/* Agreement Checkbox */}
-            <div className="flex items-center">
+            <div className="flex items-center gap-4 mt-6">
               <input
                 type="checkbox"
                 id="agreement"
@@ -815,7 +816,7 @@ const DocumentationDetailsForm = () => {
                 className="w-4 h-4 rounded border-gray-600 text-cyan-400 focus:ring-cyan-400"
                 required
               />
-              <label htmlFor="agreement" className="ml-2 text-sm text-gray-400">
+              <label htmlFor="agreement" className="text-sm text-gray-400">
                 I agree to all the Terms & Conditions{" "}
                 <span className="text-red-500">*</span>
               </label>

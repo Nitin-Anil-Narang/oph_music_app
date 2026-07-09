@@ -201,23 +201,47 @@ const SignUpForm = () => {
   return (
     <>
       <div
-        className="min-h-screen pt-40 pb-20 xl:px-16 lg:px-10 px-6   bg-cover bg-center relative
+        className="min-h-screen pb-20 xl:px-16 lg:px-10 px-6 pt-14 lg:pt-40 bg-cover bg-center relative
                   "
       >
         <div className="w-full container mx-auto py-8 relative z-10 flex flex-col lg:flex-row  gap-8">
           {/* Form Section */}
-          <div
-            className="lg:w-1/2 bg-contain bg-no-repeat "
-            style={{ backgroundImage: `url(${Struggle})` }}
-          >
-            <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
-              SIGN UP
-            </h1>
-            <p className="text-gray-400 mb-8 text-sm">
-              OPH Community, along with all artists and fans, warmly welcomes
-              you. Once you sign up, you’ll become a valued member of our music
-              family.
-            </p>
+          <div className="lg:w-1/2">
+            <div
+              className="bg-contain bg-no-repeat flex flex-col items-center text-center"
+              style={{ backgroundImage: `url(${Struggle})` }}
+            >
+              <h1 className="text-cyan-400 text-lg font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
+                SIGN UP
+              </h1>
+              <p className="text-gray-400 mb-8 text-xs">
+                OPH Community, along with all artists and fans, warmly welcomes
+                you. Once you sign up, you’ll become a valued member of our
+                music family.
+              </p>
+            </div>
+
+            {/* Video Section - Mobile Only */}
+            <div className="lg:hidden mx-auto mb-8">
+              <div className="aspect-[1/1] w-full max-w-[370px] sm:max-w-[320px] h-[255px] sm:h-[320px] mx-auto overflow-hidden rounded-lg relative">
+                {thumbnail && (
+                  <img
+                    src={thumbnail}
+                    alt="Sign Up"
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                )}
+
+                {video && (
+                  <button
+                    onClick={() => setVideoModal(true)}
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-transparent focus:outline-none z-10"
+                  >
+                    <img src={PlayBtn} alt="Play" className="w-24 h-24" />
+                  </button>
+                )}
+              </div>
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -229,7 +253,7 @@ const SignUpForm = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-full bg-gray-800/50 border border-gray-700 text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                  className="w-full px-4 py-1.5 rounded-xl bg-transparent border-t border-l border-r border-white/20 border-b-transparent text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors shadow-lg bg-gradient-to-b from-white/20 to-white/5"
                   placeholder="Martin"
                 />
                 {errors.name && (
@@ -246,7 +270,7 @@ const SignUpForm = () => {
                   name="stageName"
                   value={formData.stageName}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-full bg-gray-800/50 border border-gray-700 text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                  className="w-full px-4 py-1.5 rounded-xl bg-transparent border-t border-l border-r border-white/20 border-b-transparent text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors shadow-lg bg-gradient-to-b from-white/20 to-white/5"
                   placeholder="Enter Stage Name"
                 />
                 {errors.stageName && (
@@ -265,7 +289,7 @@ const SignUpForm = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-full bg-gray-800/50 border border-gray-700 text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                  className="w-full px-4 py-1.5 rounded-xl bg-transparent border-t border-l border-r border-white/20 border-b-transparent text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors shadow-lg bg-gradient-to-b from-white/20 to-white/5"
                   placeholder="abc@gmail.com"
                 />
                 {errors.email && (
@@ -280,7 +304,7 @@ const SignUpForm = () => {
                   Contact Number:<span className="text-red-500">*</span>
                 </label>
                 <div className="flex">
-                  <select className="px-4 py-2 rounded-l-full bg-gray-800/50 border border-r-0 border-gray-700 text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400">
+                  <select className="px-4 py-1.5 rounded-l-xl bg-transparent border-t border-l border-r-0 border-white/20 border-b-transparent text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors shadow-lg bg-gradient-to-b from-white/20 to-white/5">
                     <option>IND +91</option>
                   </select>
                   <input
@@ -289,7 +313,7 @@ const SignUpForm = () => {
                     name="contactNumber"
                     value={formData.contactNumber}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-r-full bg-gray-800/50 border border-l-0 border-gray-700 text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                    className="w-full px-4 py-1.5 rounded-r-xl bg-transparent border-t border-l-0 border-r border-white/20 border-b-transparent text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors shadow-lg bg-gradient-to-b from-white/20 to-white/5"
                     placeholder="0000 0000 00"
                   />
                 </div>
@@ -308,7 +332,7 @@ const SignUpForm = () => {
                   id="artistType"
                   value={formData.artistType}
                   onChange={handleChange}
-                  className="w-full px-4  py-2 rounded-full bg-gray-800/50 border border-gray-700 text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                  className="w-full px-4 py-1.5 rounded-xl bg-transparent border-t border-l border-r border-white/20 border-b-transparent text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors shadow-lg bg-gradient-to-b from-white/20 to-white/5"
                 >
                   <option value="">Select Artist Type</option>
                   <option value="Independent artist">Independent artist</option>
@@ -331,7 +355,7 @@ const SignUpForm = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-full bg-gray-800/50 border border-gray-700 text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 pr-10"
+                    className="w-full px-4 py-1.5 rounded-xl bg-transparent border-t border-l border-r border-white/20 border-b-transparent text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 pr-10 transition-colors shadow-lg bg-gradient-to-b from-white/20 to-white/5"
                     placeholder="••••••••••••••"
                   />
                   <button
@@ -350,7 +374,7 @@ const SignUpForm = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M6.58 6.58l10.84 10.84M3 3l18 18"
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M6.58 6.58l10.3194 10.3194M3 3l18 18"
                         />
                       </svg>
                     ) : (
@@ -393,7 +417,7 @@ const SignUpForm = () => {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-full bg-gray-800/50 border border-gray-700 text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 pr-10"
+                    className="w-full px-4 py-1.5 rounded-xl bg-transparent border-t border-l border-r border-white/20 border-b-transparent text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 pr-10 transition-colors shadow-lg bg-gradient-to-b from-white/20 to-white/5"
                     placeholder="••••••••••••••"
                   />
                   <button
@@ -412,7 +436,7 @@ const SignUpForm = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M6.58 6.58l10.84 10.84M3 3l18 18"
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M6.58 6.58l10.3194 10.3194M3 3l18 18"
                         />
                       </svg>
                     ) : (
@@ -454,8 +478,8 @@ const SignUpForm = () => {
             </form>
           </div>
 
-          {/* Image Section */}
-          <div className="lg:w-[45%] mt-[40px] relative">
+          {/* Image Section - Desktop Only */}
+          <div className="hidden lg:block lg:w-[45%] mt-[40px] relative">
             <div className="aspect-[3/4] lg:aspect-[5/6] overflow-hidden rounded-lg relative">
               {thumbnail && (
                 <img
@@ -476,7 +500,7 @@ const SignUpForm = () => {
             </div>
           </div>
         </div>
-        <div className="container w-full h-[1px] mx-auto bg-[#959494] my-10 opacity-30 relative"></div>
+        <div className="container w-full h-[1px] mx-auto bg-[#959494] my-5 opacity-30 relative"></div>
 
         {/* Video Modal */}
         {videoModal && (
@@ -508,10 +532,14 @@ const SignUpForm = () => {
           </div>
         )}
 
-        <img src={Elipse} className="absolute h-[600px] right-0" alt="" />
+        <img
+          src={Elipse}
+          className="hidden lg:block absolute h-[600px] right-0"
+          alt=""
+        />
         <img
           src={Elipse2}
-          className="absolute h-[600px] top-[500px] left-0"
+          className="hidden lg:block absolute h-[600px] top-[500px] left-0"
           alt=""
         />
         <img
@@ -538,98 +566,98 @@ const SignUpForm = () => {
           alt=""
         />
 
-        <h1 className="text-4xl text-center text-white font-bold">
+        <h1 className="text-2xl sm:text-3xl text-left text-white font-bold">
           <span className="text-[#5DC9DE]">ABOUT:</span> WHAT WE PROVIDE TO
           ASSIST
         </h1>
-        <h2 className="text-center mt-4 text-[#9BA3B7]">
+        <h2 className="text-left mt-4 text-xs sm:text-sm text-[#9BA3B7]">
           NOW - NO WORRIES ON ANYTHING JUST MAKE YOUR MUSIC PEACEFULLY - LEAVE
           THE REST TO INDIA'S ONLY REAL MUSIC COMMUNITY.
         </h2>
-        <div className="pt-16">
-          <h2 className="uppercase text-2xl font-semibold">OPH COMMUNITY</h2>
-          <h2 className="uppercase text-lg font-semibold mt-3 text-[#5DC9DE]">
+        <div className="pt-8 sm:pt-12">
+          <h2 className="uppercase text-lg sm:text-xl font-semibold">OPH COMMUNITY</h2>
+          <h2 className="uppercase text-sm sm:text-base font-semibold mt-3 text-[#5DC9DE]">
             One stop solution for artist journey to success.
           </h2>
           <ol className="list-none mt-4 space-y-2 ">
-            <h3 className="before:content-['-']  drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255, 255, 255, 0.319)] before:mr-2 text-xs sm:text-sm">
               Fully Technology Driven Music Community Platform
             </h3>
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               Personal Portal
             </h3>
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               Live Data
             </h3>
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               Live Ranking
             </h3>
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               {" "}
               100% Ownership of Artist
             </h3>
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               Network & Connection Platform
             </h3>
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               {" "}
               Event Direct Access
             </h3>
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               Pre - Booking Platform for Music Releases
             </h3>
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               Key Performance Indicator (KPI) Installed in Platform
             </h3>
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               Leader Board Function
             </h3>
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               Learning & Resources Platform
             </h3>{" "}
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               No Middleman - Direct Access with Collaborators
             </h3>{" "}
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               100% Artist Community Platform
             </h3>{" "}
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               0 Monthly & Yearly Charges
             </h3>{" "}
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               {" "}
               Reward Winning Function Every Month
             </h3>{" "}
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               No Limit on Withdrawals
             </h3>{" "}
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               {" "}
               Call & Chat Support
             </h3>{" "}
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               Every Status Update on Artist Personal Portal
             </h3>{" "}
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               Lifetime Membership
             </h3>{" "}
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               100% Revenue from both Audio & Video will Go to the Artist
             </h3>{" "}
-            <h3 className="before:content-['-'] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] before:mr-2">
+            <h3 className="before:content-['•'] before:text-base sm:before:text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.319)] before:mr-2 text-xs sm:text-sm">
               One Stop Solution for Every Music Artists Journey
             </h3>
           </ol>
           <div className="relative">
-            <h2 className="mt-8 text-[#5DC9DE] text-2xl font-bold">
+            <h2 className="mt-8 text-sm sm:text-lg text-[#5DC9DE] font-bold">
               + Everything Included Mentioned below (Free of Cost by OPH
               COMMUNITY) Only for our Talenteh3Indian Music Artist
             </h2>
           </div>
-          <h2 className="mt-8 text-2xl font-semibold">
+          <h2 className="mt-6 sm:mt-8 text-lg sm:text-2xl font-semibold">
             1. Marketing Functions:
           </h2>
-          <ul className="list-disc px-5 mt-4 text-gray-400  space-y-2">
+          <ul className="list-disc px-3 sm:px-5 mt-4 text-gray-400 space-y-2 text-xs sm:text-sm">
             <h3>100% Google Ads marketing by the OPH Community</h3>
             <h3>100% Facebook Ads marketing by the OPH Community</h3>
             <h3>
@@ -637,10 +665,10 @@ const SignUpForm = () => {
               Community
             </h3>
           </ul>
-          <div className="container w-full h-[1px] mx-auto bg-[#666666] my-10 opacity-30 relative"></div>
+          <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
 
-          <h2 className="mt-8 text-2xl font-semibold">2. Creative Funhion</h2>
-          <ul className="list-disc px-5 mt-4 text-gray-400  space-y-2">
+          <h2 className="mt-6 sm:mt-8 text-lg sm:text-2xl font-semibold">2. Creative Funhion</h2>
+          <ul className="list-disc px-3 sm:px-5 mt-4 text-gray-400 space-y-2 text-xs sm:text-sm">
             <h3>Teaser</h3>
             <h3>Song Reel</h3>
             <h3>Poster</h3>
@@ -648,15 +676,15 @@ const SignUpForm = () => {
             <h3>Thumbnail</h3>
             <h3>Artist Story</h3>
           </ul>
-          <p className="text-gray-400 mt-4">
+          <p className="text-gray-400 mt-4 text-xs sm:text-sm">
             This will be{" "}
             <span className="text-[#5DC9DE]">created by the OPH Community</span>
           </p>
-          <div className="container w-full h-[1px] mx-auto bg-[#666666] my-10 opacity-30 relative"></div>
-          <h2 className="mt-8 text-2xl font-semibold">
+          <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
+          <h2 className="mt-6 sm:mt-8 text-lg sm:text-2xl font-semibold">
             3. Distribution Audio Functions:
           </h2>
-          <ul className="list-disc px-5 mt-4 text-gray-400  space-y-2">
+          <ul className="list-disc px-3 sm:px-5 mt-4 text-gray-400 space-y-2 text-xs sm:text-sm">
             <h3>
               Distribution across all music platforms (including Indian
               platforms)
@@ -673,44 +701,44 @@ const SignUpForm = () => {
               the OPH Community.
             </h3>
           </ul>
-          <div className="container w-full h-[1px] mx-auto bg-[#666666] my-10 opacity-30 relative"></div>
-          <h2 className="mt-8 text-2xl font-semibold">4. Ownership:</h2>
-          <ul className="list-disc px-5 mt-4 text-gray-400  space-y-2">
+          <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
+          <h2 className="mt-6 sm:mt-8 text-lg sm:text-2xl font-semibold">4. Ownership:</h2>
+          <ul className="list-disc px-3 sm:px-5 mt-4 text-gray-400 space-y-2 text-xs sm:text-sm">
             <h3>
               Full ownership will remain with the artist, with no interference.
             </h3>
           </ul>
-          <div className="container w-full h-[1px] mx-auto bg-[#666666] my-10 opacity-30 relative"></div>
+          <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
           <div className="bg-[url('/assets/images/music_bg.png')] bg-contain bg-no-repeat bg-center relative">
-            <h2 className="mt-8 text-2xl font-semibold">5. TV Release:</h2>
-            <ul className="list-disc px-5 mt-4 text-gray-400  space-y-2">
+            <h2 className="mt-6 sm:mt-8 text-lg sm:text-2xl font-semibold">5. TV Release:</h2>
+            <ul className="list-disc px-3 sm:px-5 mt-4 text-gray-400 space-y-2 text-xs sm:text-sm">
               <h3>
                 The artist's music video will have the opportunity to be
                 released on TV platforms across various channels.
               </h3>
             </ul>
-            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-10 opacity-30 relative"></div>
-            <h2 className="mt-8 text-2xl font-semibold">6. Revenue Model:</h2>
-            <ul className="list-disc px-5 mt-4 text-gray-400  space-y-2">
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
+            <h2 className="mt-6 sm:mt-8 text-lg sm:text-2xl font-semibold">6. Revenue Model:</h2>
+            <ul className="list-disc px-3 sm:px-5 mt-4 text-gray-400 space-y-2 text-xs sm:text-sm">
               <h3>
                 100% of the revenue from both audio and video will go to the
                 artist.
               </h3>
             </ul>
-            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-10 opacity-30 relative"></div>
-            <h2 className="mt-8 text-2xl font-semibold">
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
+            <h2 className="mt-6 sm:mt-8 text-lg sm:text-2xl font-semibold">
               7. Withdrawal Threshold:
             </h2>
-            <ul className="list-disc px-5 mt-4 text-gray-400  space-y-2">
+            <ul className="list-disc px-3 sm:px-5 mt-4 text-gray-400 space-y-2 text-xs sm:text-sm">
               <h3>
                 No limit or threshold on the withdrawal amount. Artists can
                 withdraw any amount, even as low as ₹100.
               </h3>
             </ul>
-            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-10 opacity-30 relative"></div>
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
 
-            <h2 className="mt-8 text-2xl font-semibold">8. Exposure:</h2>
-            <ul className="list-disc px-5 mt-4 text-gray-400  space-y-2">
+            <h2 className="mt-6 sm:mt-8 text-lg sm:text-2xl font-semibold">8. Exposure:</h2>
+            <ul className="list-disc px-3 sm:px-5 mt-4 text-gray-400 space-y-2 text-xs sm:text-sm">
               <h3>
                 The artist's EPK and profile will be displayed on the official
                 OPH Community website, providing connections and networking
@@ -718,43 +746,49 @@ const SignUpForm = () => {
               </h3>
             </ul>
 
-            <h2 className="mt-8 text-2xl font-semibold">9. Support:</h2>
-            <ul className="list-disc px-5 mt-4 text-gray-400  space-y-2 ">
+            <h2 className="mt-6 sm:mt-8 text-lg sm:text-2xl font-semibold">9. Support:</h2>
+            <ul className="list-disc px-3 sm:px-5 mt-4 text-gray-400 space-y-2 text-xs sm:text-sm">
               <h3>Call Support</h3>
               <h3>Chat Support</h3>
               <h3>Ticket Raising System</h3>
               <h3>Access To a Personal Port</h3>
             </ul>
-            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-10 opacity-30 relative"></div>
-            <p className="underline text-[#5DC9DE] font-bold text-2xl ">
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
+            <p className="underline text-[#5DC9DE] font-bold text-lg sm:text-xl before:text-base sm:before:text-lg before:mr-2 w-full px-2 sm:px-3">
               First Time Ever in India – Only for Limited Thousand Artist
             </p>
-            <p className="mt-6">
+            <p className="mt-4 sm:mt-6 text-xs sm:text-sm font-medium before:content-['•'] before:text-base sm:before:text-lg before:mr-2 w-full px-2 sm:px-3">
               One Time Artist Documentation Registration fees –{" "}
-              <span className="text-[#5DC9DE]">2,999 for lifetime Access</span>
+              <span className="text-[#5DC9DE] font-black">
+                2,999 for lifetime Access
+              </span>
             </p>
-            <p className="mt-2">
-              Only Per Song Registration fees{" "}
-              <span className="text-[#5DC9DE]">– 799</span>
+            <p className="mt-2 text-xs sm:text-sm font-medium before:content-['•'] before:text-base sm:before:text-lg before:mr-2 w-full px-2 sm:px-3">
+              Pay as You Go Per{" "}
+              <span className="text-[#5DC9DE] font-black">
+                {" "}
+                Song Registration Documentation fees – 799
+              </span>
             </p>
-            <h1 className="text-center mt-16 font-bold px-4 lg:px-48 text-[25px] uppercase max-w-[1300px] w-full mx-auto">
+            <h1 className="text-center mt-12 sm:mt-16 font-medium px-4 lg:px-48 text-base sm:text-xl uppercase max-w-[1300px] w-full mx-auto">
               Now – No hassle for Anything just Make your Music Peacefully –
               Rest live on India's Only Real Music Community
             </h1>
           </div>
-          <div className="container w-full h-[1px] mx-auto bg-[#666666] my-10 opacity-30 relative"></div>
-          <h2 className="mt-20 text-center text-xl font-bold text-[44px]">
+          <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
+          <h2 className="mt-12 sm:mt-10 text-center text-lg sm:text-3xl font-bold">
             OPH COMMUNITY
           </h2>
-          <p className="text-gray-400 text-center mt-[20px] text-[22px]">
-            One stop solution for artist journey to success.
+          <p className="text-gray-400 text-center mt-4 sm:mt-5 text-xs sm:text-lg">
+            Now its time to bridge a gap between artists music and their
+            audience
           </p>
           {/* <p className="text-center px-2 py-3 rounded-full bg-cyan-300 text-black">
               Lets Start
              </p> */}
           <div className="w-full flex justify-center">
             <button
-              className="px-8 py-3 rounded-full text-black mt-5 bg-[#5DC9DE] font-bold"
+              className="px-8 sm:px-10 py-2 sm:py-3 rounded-full text-black mt-5 bg-[#5DC9DE] font-bold w-full"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} //scroll to top
             >
               Lets Start

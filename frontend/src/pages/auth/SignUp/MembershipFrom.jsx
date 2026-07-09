@@ -57,6 +57,48 @@ const MembershipForm = () => {
     }
   }, [ophid, headers]);
 
+  // Mobile-only styles to inject without modifying the desktop structure
+  const wrappedContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <style>
+        /* MOBILE VIEWPORT ONLY TUNING */
+        @media (max-width: 767px) {
+          html, body {
+            overflow-x: hidden !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            padding: 0 !important; /* Removed internal body padding to close the gap */
+            margin: 0 !important;
+            -webkit-text-size-adjust: 100%;
+          }
+          * {
+            box-sizing: border-box !important;
+          }
+          /* Flatten layout and force elements to stretch from the absolute left boundary */
+          table, tbody, tr, td, th, div, form, section, img {
+            max-width: 100% !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            margin-left: 0 !important; /* Neutralizes any accidental indentation pushing data right */
+            padding-left: 4px !important;
+          }
+          input, select, textarea {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      ${content}
+    </body>
+    </html>
+  `;
+
   return (
     <>
       <div className="relative bg-cover bg-center">
@@ -83,8 +125,9 @@ const MembershipForm = () => {
               // Option 1: Render using iframe to prevent styling conflicts
               <iframe
                 title="Membership Form"
-                srcDoc={content}
+                srcDoc={wrappedContent}
                 className="membership-form-iframe"
+                style={{ width: "100%", minHeight: "600px", border: "none" }}
               />
             ) : (
               <p className="loading-message">Loading form...</p>
@@ -93,7 +136,9 @@ const MembershipForm = () => {
             <button
               onClick={() => {
                 toast.success("Documentation details updated successfully");
-                navigate("/auth/profile-status", { state: { ophid: ophid, backPath: "/auth/membership-form" } });
+                navigate("/auth/profile-status", {
+                  state: { ophid: ophid, backPath: "/auth/membership-form" },
+                });
               }}
               className="w-full my-4 bg-cyan-400 text-black rounded py-3 font-medium hover:bg-cyan-300 transition-colors duration-200"
             >
