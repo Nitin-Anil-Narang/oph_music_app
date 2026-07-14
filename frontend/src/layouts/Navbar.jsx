@@ -64,12 +64,12 @@ function Navbar() {
   return (
     <nav className="absolute w-full top-0 left-0 z-[99999]">
       <div className="w-full lg:container lg:mx-auto px-[16px] py-[16px] lg:px-16 lg:pt-8 flex justify-between items-center">
-        {/* Logo */}
-        <div className="text-xl font-bold text-gray-800">
-          <a href={import.meta.env.VITE_WEBSITE_URL}>
-            <img src={logo} alt="Logo" className="w-16" />
-          </a>
-        </div>
+          {/* Logo */}
+          <div className="text-xl font-bold text-gray-800">
+            <button onClick={() => navigateWithOrigin("/home")} className="cursor-pointer">
+              <img src={logo} alt="Logo" className="w-16" />
+            </button>
+          </div>
 
         {/* Desktop Nav Links */}
         <ul className="hidden lg:flex space-x-12 text-cyan-400">

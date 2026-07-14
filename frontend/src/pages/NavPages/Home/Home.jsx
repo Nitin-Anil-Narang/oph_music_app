@@ -19,36 +19,37 @@ function Home() {
   return (
     <div className="relative w-full overflow-hidden">
       <Helmet>
-        <title>Independent Artist Platform in India for Music - OPH Community</title>
-        <meta name="description" content="Join OPH Community - an open-source, artist management platform offers 100% ownership, a powerful music collaboration platform and free music distribution." />
+        <title>
+          Independent Artist Platform in India for Music - OPH Community
+        </title>
+        <meta
+          name="description"
+          content="Join OPH Community - an open-source, artist management platform offers 100% ownership, a powerful music collaboration platform and free music distribution."
+        />
       </Helmet>
       <HeroSection />
       <MobileNavbar />
-       <div className="lg:px-10 px-6 xl:px-16">
-      <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
-
-       </div>
+      <div className="lg:px-10 px-6 xl:px-16">
+        <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
+      </div>
       <IndustryStats />
-      <div className=" lg:px-10 px-6 xl:px-16">
-      <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
-
-       </div>
+      <div className="lg:px-10 px-6 xl:px-16 mt-4 mb-4 lg:mt-0 lg:mb-0">
+        <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
+      </div>
       <PodcastSlider />
-      <div className=" lg:px-10 px-6 xl:px-16">
-      <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
-       </div>
+      <div className="lg:px-10 px-6 xl:px-16 mt-4 mb-4 lg:mt-0 lg:mb-0">
+        <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
+      </div>
       <ArtistSlider />
-      <div className=" lg:px-10 px-6 xl:px-16">
-      <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
-
-       </div>
+      <div className="lg:px-10 px-6 xl:px-16 mt-4 mb-4 lg:mt-0 lg:mb-0">
+        <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
+      </div>
       <TipsSlider />
       <BookSpot />
       <WhatWeProvide />
-      <div className=" lg:px-10 px-6 xl:px-16">
-      <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
-
-       </div>
+      <div className="lg:px-10 px-6 xl:px-16 mt-4 mb-4 lg:mt-0 lg:mb-0">
+        <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
+      </div>
       <TopPicksSection />
       <MusicTasteSection />
     </div>

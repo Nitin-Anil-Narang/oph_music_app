@@ -255,11 +255,11 @@ const TipsSlider = () => {
               &times;
             </button>
 
-            <div className="relative w-full aspect-[9/16]">
+            <div className="relative w-full aspect-[9/16] fullscreen:aspect-auto fullscreen:h-full">
               <CustomVideoPlayer
                 ref={modalVideoRef}
                 src={selectedVideo}
-                className="w-full h-full rounded-lg object-cover"
+                className="w-full h-full rounded-lg object-contain fullscreen:rounded-none"
                 autoPlay
                 playsInline
                 muted={false}

@@ -216,12 +216,15 @@ const ArtistSlider = ({
       <div className="relative lg:container lg:mx-auto">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-8 sm:mb-16">
-          <div className="text-center sm:text-left p-0 lg:px-6 max-w-2xl">
+          <div className="text-left px-3 sm:text-center p-0 lg:max-w-xl">
             <h2 className="text-2xl lg:text-5xl font-black mb-3 uppercase tracking-tight text-white leading-tight">
-              THESE ARTISTS ARE <span className="text-[#5DC9DE]">INDUSTRY BANGERS.</span>
+              THESE ARTISTS ARE{" "}
+              <span className="text-[#5DC9DE]">INDUSTRY BANGERS.</span>
             </h2>
             <p className="text-gray-400 text-sm sm:text-base">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took
+              Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry. Lorem Ipsum has been the industry's standard dummy text
+              ever since the 1500s, when an unknown printer took
             </p>
           </div>
           <div className="hidden sm:flex pe-0 py-4 lg:py-0 sm:mt-8 lg:pe-6 xl:pe-16 relative z-50 items-center gap-2">

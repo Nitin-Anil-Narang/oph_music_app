@@ -220,20 +220,47 @@ const CustomVideoPlayer = forwardRef(
       if (!containerRef.current) return;
 
       if (!isFullscreen) {
-        if (containerRef.current.requestFullscreen) {
-          containerRef.current.requestFullscreen();
-        } else if (containerRef.current.webkitRequestFullscreen) {
-          containerRef.current.webkitRequestFullscreen();
-        } else if (containerRef.current.msRequestFullscreen) {
-          containerRef.current.msRequestFullscreen();
+        // Request fullscreen
+        const fullscreenPromise = containerRef.current.requestFullscreen
+          ? containerRef.current.requestFullscreen()
+          : containerRef.current.webkitRequestFullscreen
+            ? containerRef.current.webkitRequestFullscreen()
+            : containerRef.current.msRequestFullscreen
+              ? containerRef.current.msRequestFullscreen()
+              : null;
+
+        if (fullscreenPromise) {
+          fullscreenPromise
+            .then(() => {
+              // Force landscape orientation on mobile
+              if (screen.orientation && screen.orientation.lock) {
+                screen.orientation
+                  .lock('landscape-primary')
+                  .catch((err) => {
+                    // Try alternative landscape orientation
+                    if (screen.orientation.lock) {
+                      screen.orientation
+                        .lock('landscape')
+                        .catch((err2) => console.log('Orientation lock not supported:', err2));
+                    }
+                  });
+              }
+            })
+            .catch((err) => console.error('Fullscreen error:', err));
         }
       } else {
+        // Exit fullscreen
         if (document.exitFullscreen) {
           document.exitFullscreen();
         } else if (document.webkitExitFullscreen) {
           document.webkitExitFullscreen();
         } else if (document.msExitFullscreen) {
           document.msExitFullscreen();
+        }
+
+        // Unlock orientation when exiting fullscreen
+        if (screen.orientation && screen.orientation.unlock) {
+          screen.orientation.unlock();
         }
       }
     };
@@ -350,7 +377,7 @@ const CustomVideoPlayer = forwardRef(
           id={id}
           src={src}
           poster={poster}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
           onContextMenu={handleContextMenu}
           onClick={handleVideoClick}
           onPlay={(e) => {

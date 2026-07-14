@@ -178,7 +178,9 @@ export default function ArtistProfile() {
         }
       };
       newAudio.addEventListener("loadedmetadata", syncDuration);
-      newAudio.addEventListener("timeupdate", () => setCurrentTime(newAudio.currentTime));
+      newAudio.addEventListener("timeupdate", () =>
+        setCurrentTime(newAudio.currentTime),
+      );
       newAudio.play().catch(() => {
         toast.error("Could not play this track.");
         setPlayingSongId(null);
@@ -186,7 +188,10 @@ export default function ArtistProfile() {
       setAudio(newAudio);
       setCurrentTime(0);
       setPlayingSongId(song.song_id);
-      newAudio.onended = () => { setPlayingSongId(null); setCurrentTime(0); };
+      newAudio.onended = () => {
+        setPlayingSongId(null);
+        setCurrentTime(0);
+      };
     }
   };
 
@@ -641,7 +646,9 @@ export default function ArtistProfile() {
               <>
                 <p className="text-gray-400 text-sm">
                   OPH Artist Code:{" "}
-                  <span className="text-white font-semibold">#{artist.oph_id}</span>
+                  <span className="text-white font-semibold">
+                    #{artist.oph_id}
+                  </span>
                 </p>
                 <p className="text-gray-400 text-sm">
                   Profession:{" "}
@@ -652,35 +659,57 @@ export default function ArtistProfile() {
                     )}
                   </span>
                 </p>
-                <p className="text-gray-300 text-sm leading-relaxed">{artist.bio}</p>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  {artist.bio}
+                </p>
               </>
             ) : (
               <>
                 {approvedSongs.length === 0 ? (
-                  <p className="text-center text-gray-400 text-sm py-10">No songs added yet.</p>
+                  <p className="text-center text-gray-400 text-sm py-10">
+                    No songs added yet.
+                  </p>
                 ) : (
                   approvedSongs.map((song) => {
-                    const isPlaying = playingSongId === song.song_id && !audio?.paused;
+                    const isPlaying =
+                      playingSongId === song.song_id && !audio?.paused;
                     const duration = trackLengthSec[song.song_id];
                     return (
-                      <div key={song.song_id} className="border-b border-gray-800 pb-3">
+                      <div
+                        key={song.song_id}
+                        className="border-b border-gray-800 pb-3"
+                      >
                         <div className="flex items-center gap-3">
                           <img
-                            src={song.song_image || song.cover_image || artist.personal_photo}
+                            src={
+                              song.song_image ||
+                              song.cover_image ||
+                              artist.personal_photo
+                            }
                             alt=""
                             className="w-12 h-12 rounded object-cover flex-shrink-0"
                           />
                           <div className="flex-1 min-w-0">
                             {/* <div className="text-xs text-gray-500 uppercase">Song</div> */}
-                            <div className="font-medium text-sm truncate">{song.song_name}</div>
-                            <div className="text-xs text-gray-400 truncate">{song.primary_artist}</div>
-                            <div className="text-xs text-gray-500">PLAY {song.total_song_views ?? "—"}</div>
+                            <div className="font-medium text-sm truncate">
+                              {song.song_name}
+                            </div>
+                            <div className="text-xs text-gray-400 truncate">
+                              {song.primary_artist}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              PLAY {song.total_song_views ?? "—"}
+                            </div>
                           </div>
                           <button
                             className="p-2 bg-purple-600 rounded-full hover:bg-purple-500 flex-shrink-0"
                             onClick={() => handlePlayPause(song)}
                           >
-                            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                            {isPlaying ? (
+                              <Pause className="w-4 h-4" />
+                            ) : (
+                              <Play className="w-4 h-4" />
+                            )}
                           </button>
                         </div>
                         {playingSongId === song.song_id && (
@@ -691,7 +720,10 @@ export default function ArtistProfile() {
                             value={currentTime}
                             onChange={(e) => {
                               const t = Number(e.target.value);
-                              if (audio) { audio.currentTime = t; setCurrentTime(t); }
+                              if (audio) {
+                                audio.currentTime = t;
+                                setCurrentTime(t);
+                              }
                             }}
                             className="w-full mt-2 h-1 accent-[#5DC9DE] cursor-pointer"
                           />
