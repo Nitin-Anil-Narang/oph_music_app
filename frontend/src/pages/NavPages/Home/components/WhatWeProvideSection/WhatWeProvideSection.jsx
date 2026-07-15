@@ -30,7 +30,7 @@ const WhatWeProvide = () => {
       />
       <div className="lg:container lg:mx-auto pb-10 grid grid-cols-1 lg:pb-20 xl:pb-0 lg:grid-cols-2 gap-12 items-start">
         {/* Left Content */}
-        <div className="space-y-6 mt-8">
+        <div className="space-y-6 mt-8 lg:text-left text-center">
           <h2 className="text-4xl lg:text-5xl font-bold">
             THE VALUE <span className="text-[#5DC9DE]">WE PROVIDE</span>
           </h2>
@@ -66,9 +66,9 @@ const WhatWeProvide = () => {
       </div>
 
       {/* Mobile Image - Below Content */}
-      <div className="lg:hidden relative h-[420px] mt-[70px] max-[760px]:mt-0 lg:mt-0">
+      <div className="lg:hidden relative h-[650px] mt-[70px] max-[760px]:mt-0 lg:mt-0">
         <img
-          className="object-cover absolute left-[10px] top-1/2 -translate-y-1/2 w-[90%] h-[600px]"
+          className="object-cover absolute top-1/2 -translate-y-1/2 h-[600px]"
           src={whatWePro}
           alt="Free Music Distribution"
         />

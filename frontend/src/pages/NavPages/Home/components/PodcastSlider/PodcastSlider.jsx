@@ -393,13 +393,17 @@ function PodcastSlider({ searchText, title }) {
                     </h3>
                   </Link>
                   <div className="text-gray-400 text-sm sm:text-base">
-                    <span>{podcast.artist_name}</span>
+                    <span className="text-[rgb(93,201,222)]">
+                      {podcast.artist_name}
+                    </span>
                     <span className="mx-2">—</span>
                     <span>{podcast.duration_in_minutes || "--"} min</span>
                     <span className="mx-2">—</span>
                     <span>{formatListeners(podcast.views)}</span>
                     <br />
-                    <span>{podcast.credit_name || ""}</span>
+                    <span className="text-[rgb(93,201,222)]">
+                      {podcast.credit_name || ""}
+                    </span>
                     <div className="flex flex-wrap gap-2 justify-center mt-2">
                       {podcast.keywords
                         ? podcast.keywords.split(",").map((keyword, index) => (

@@ -165,16 +165,15 @@ function SuccessSlider({ searchText, title }) {
     return <div>Loading...</div>;
   }
 
-  // Handle no matching content
   if (filteredSuccess.length === 0) {
     return (
-      <div className="bg-black text-white py-[16px] lg:py-7 text-center">
+      <div className="bg-black text-white py-12 text-center">
         <div className="container mx-auto px-4 lg:px-16">
-          <h2 className="text-xl lg:text-4xl font-bold uppercase mt-2">
+          <h2 className="text-xl lg:text-5xl font-bold uppercase mt-4">
             No Success Stories Found
           </h2>
           {searchText && (
-            <p className="text-gray-400 mt-2">
+            <p className="text-gray-400 mt-4 text-lg">
               No content found matching "{searchText}".
             </p>
           )}
@@ -184,14 +183,14 @@ function SuccessSlider({ searchText, title }) {
   }
 
   return (
-    <div id="stories-section" className="bg-black text-white py-[16px] lg:py-7">
-      <div className="container mx-auto mb-12 px-4 lg:px-16">
+    <div id="stories-section" className="bg-black text-white py-[16px] lg:py-12">
+      <div className="container mx-auto mb-[16px] lg:mb-16 px-4 lg:px-16">
         {title ? (
-          <h2 className="text-[#5DC9DE] text-2xl font-bold uppercase drop-shadow-[0_0_20px_white] text-center">
+          <h2 className="text-[#5DC9DE] text-3xl md:text-4xl font-bold uppercase drop-shadow-[0_0_20px_white] text-center">
             {title}
           </h2>
         ) : (
-          <h1 className="text-xl lg:text-4xl font-bold text-center mb-8 leading-tight uppercase mt-2">
+          <h1 className="text-2xl md:text-5xl font-bold text-center mb-10 leading-tight uppercase mt-4">
             Success Stories
           </h1>
         )}
@@ -199,20 +198,20 @@ function SuccessSlider({ searchText, title }) {
 
       <div className="success-slider w-full px-4 lg:px-16">
         {filteredSuccess.length <= 2 ? (
-          <div className="flex justify-center flex-wrap gap-4">
+          <div className="flex justify-center flex-wrap gap-6 md:gap-8 lg:gap-10">
             {filteredSuccess.map((success, index) => (
               <div
                 key={index}
-                className="px-2 lg:px-4 w-full sm:w-1/2 md:w-1/3"
+                className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
               >
                 <div
-                  className="relative overflow-hidden rounded-xl cursor-pointer"
+                  className="relative overflow-hidden rounded-2xl cursor-pointer shadow-lg transform transition-transform duration-300 hover:scale-105"
                   style={{ aspectRatio: "3/4.5" }}
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={() => handleMouseUp(success.video_url)}
                 >
-                  <div className="w-full h-full rounded-xl overflow-hidden">
+                  <div className="w-full h-full rounded-2xl overflow-hidden">
                     <Image
                       src={success.thumbnail_url}
                       fallback={<Shimmer width={300} height={400} />}
@@ -226,14 +225,14 @@ function SuccessSlider({ searchText, title }) {
                     <img
                       src={PlayButton}
                       alt="Play"
-                      className="w-16 h-16 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20"
+                      className="w-20 h-20 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
                     />
                   </div>
                 </div>
                 <div className="p-4 sm:p-6 text-center">
                   <Link
                     to={buildResourcePath("story", success.id, success.title)}
-                    className="block text-xl font-semibold mb-2 hover:text-[#5DC9DE] hover:cursor-pointer"
+                    className="block text-xl md:text-2xl font-semibold mb-2 hover:text-[#5DC9DE] hover:cursor-pointer"
                   >
                     {success.title}
                   </Link>
@@ -244,15 +243,15 @@ function SuccessSlider({ searchText, title }) {
         ) : (
           <Slider {...settings}>
             {filteredSuccess.map((success, index) => (
-              <div key={index} className="px-2 lg:px-4 w-full">
+              <div key={index} className="px-3 lg:px-6">
                 <div
-                  className="relative overflow-hidden rounded-xl cursor-pointer"
+                  className="relative overflow-hidden rounded-2xl cursor-pointer shadow-lg transform transition-transform duration-300 hover:scale-105"
                   style={{ aspectRatio: "3/4.5" }}
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={() => handleMouseUp(success.video_url)}
                 >
-                  <div className="w-full h-full rounded-xl overflow-hidden">
+                  <div className="w-full h-full rounded-2xl overflow-hidden">
                     <Image
                       src={success.thumbnail_url}
                       fallback={<Shimmer width={300} height={400} />}
@@ -266,15 +265,14 @@ function SuccessSlider({ searchText, title }) {
                     <img
                       src={PlayButton}
                       alt="Play"
-                      className="w-16 h-16 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20"
+                      className="w-20 h-20 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
                     />
                   </div>
                 </div>
-
                 <div className="p-4 sm:p-6 text-center">
                   <Link
                     to={buildResourcePath("story", success.id, success.title)}
-                    className="block text-xl font-semibold mb-2 hover:text-[#5DC9DE] hover:cursor-pointer"
+                    className="block text-xl md:text-2xl font-semibold mb-2 hover:text-[#5DC9DE] hover:cursor-pointer"
                   >
                     {success.title}
                   </Link>
@@ -286,25 +284,25 @@ function SuccessSlider({ searchText, title }) {
 
         {isModalOpen && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
             onClick={closeModal}
           >
             <div
-              className="relative bg-black rounded-lg shadow-2xl w-full max-w-[440px] aspect-[9/16] mx-auto"
+              className="relative bg-black rounded-lg shadow-2xl w-full max-w-[360px] aspect-[9/16] mx-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                className="absolute top-2 right-2 text-white w-10 h-10 rounded-full flex items-center justify-center text-3xl z-50 font-bold"
                 onClick={closeModal}
+                className="absolute top-2 right-2 text-white text-[40px] font-bold z-50 hover:opacity-80"
               >
                 &times;
               </button>
-              <div className="relative h-auto w-auto">
+              <div className="relative w-full h-full">
                 <CustomVideoPlayer
                   ref={modalVideoRef}
                   id="video-player-success"
                   src={selectedVideo}
-                  className="rounded-lg w-full object-contain"
+                  className="rounded-lg w-full h-full object-contain"
                   autoPlay
                   pauseOtherVideos={true}
                   onPlay={() => setIsPlaying(true)}
