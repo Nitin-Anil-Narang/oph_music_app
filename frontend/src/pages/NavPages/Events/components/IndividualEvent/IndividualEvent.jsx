@@ -11,7 +11,6 @@ import {
 } from "../../../../../utils/date";
 
 // Accept either Instagram username or full profile URL (same as HeroSection RegistrationModal)
-// URL regex allows optional query params (e.g. ?igsh=...) from share links
 const instagramUsernameRegex = /^[a-zA-Z0-9](?:[a-zA-Z0-9._]{0,29})$/;
 const instagramUrlRegex =
   /^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?(?:\?[^#\s]*)?$/;
@@ -19,7 +18,7 @@ const instagramUrlRegex =
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const isValidPhoneNumber = (phone) => /^\d{10}$/.test(phone);
 
-// Extracted to prevent re-mount on parent re-renders (e.g. countdown timer) - preserves form input
+// Extracted to prevent re-mount on parent re-renders
 function EventRegistrationModal({
   singleEvent,
   professions,
@@ -251,20 +250,15 @@ const IndividualEvent = () => {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
 
-  // fetch single event by id: /events/:id
   const fetchSingleEvent = async () => {
     setLoading(true);
     try {
       const response = await axiosApi.get(`/event/${id}`);
-      console.log(response.data);
-      // Normalize response to the shape used by the component.
-      // API might return event object at response.data or response.data.data
       const raw = response?.data?.data ?? response?.data ?? null;
       if (!raw) {
         throw new Error("Invalid event response");
       }
 
-      // Map API fields to the keys the component expects.
       const mapped = {
         id: raw.id ?? raw.event_id ?? id,
         name: raw.name ?? raw.title ?? raw.EventName ?? "Untitled Event",
@@ -283,12 +277,7 @@ const IndividualEvent = () => {
           raw.long_description ??
           raw.description_long ??
           "",
-        hashtags: Array.isArray(raw.hashtags)
-          ? raw.hashtags
-          : typeof raw.hashtags === "string"
-            ? // split string hashtags by spaces or commas
-              raw.hashtags.split(/[\s,]+/).filter(Boolean)
-            : [],
+        hashtags: raw.hashtags ?? [],
         fees:
           raw.fees ?? raw.registrationFee_normal ?? raw.registration_fee ?? 0,
         registrationStart:
@@ -355,9 +344,6 @@ const IndividualEvent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  console.log(JSON.stringify(singleEvent), "Event");
-
-  // Timer update
   useEffect(() => {
     if (!singleEvent?.event_date_time) return;
 
@@ -414,149 +400,89 @@ const IndividualEvent = () => {
       )}
 
       {!loading && singleEvent && (
-        <div className="relative px-4 md:px-10 xl:px-16  text-white h-auto min-h-screen overflow-hidden">
-          {/* Background with gradient */}
+        <div className="relative px-4 md:px-10 xl:px-16 text-white h-auto min-h-screen overflow-hidden bg-black">
+          {/* Background Image Container with Soft Translucent Gradient Overlay */}
           <div
-            className="absolute inset-0 bg-black"
+            className="absolute inset-0 max-md:h-[80vh] md:h-[70vh]"
             style={{
-              background: `linear-gradient(to bottom,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 60%,
-      rgba(0, 0, 0, 1) 100%),
-      url(${singleEvent.thumbnail_url})`,
+              background: `linear-gradient(to bottom, 
+                rgba(0, 0, 0, 0.2) 0%, 
+                rgba(0, 0, 0, 0.5) 60%, 
+                rgba(0, 0, 0, 0.85) 100%), 
+                url(${singleEvent.thumbnail_url})`,
               backgroundSize: "cover",
               backgroundPosition: "top center",
-              height: "70vh",
             }}
           />
 
-          {/* Solid black overlay for bottom half */}
-          <div className="absolute inset-0 bg-black" style={{ top: "70vh" }} />
+          {/* Solid Black Bottom Wrapper */}
+          <div className="absolute inset-0 bg-black" style={{ top: "80vh" }} />
 
-          {/* Content */}
-          <div className="relative z-10 container mx-auto my-10 pt-[250px] sm:pt-[400px]">
-            {/* Timer */}
+          {/* Main Content */}
+          <div className="relative z-10 container mx-auto my-10 pt-[200px] sm:pt-[400px]">
+            {/* Timer & Chance to win */}
             <div className="flex sm:flex-row flex-col gap-4 mb-6">
-              <div className="flex gap-4">
-                <div
-                  className="
-  bg-gradient-to-b from-[#3A3A3A] via-[#1F1F1F] to-[#050505]
-  border border-[#4A4A4A]
-  shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
-  rounded-2xl
-  p-4
-  text-center
-
-  md:bg-none
-  md:bg-white/5
-  md:border-white/10
-  md:shadow-none
-  md:rounded-lg
-"
-                >
-                  <div className="text-3xl font-bold">{timers.days}</div>
-                  <div className="text-sm text-gray-300">Days</div>
-                </div>
-                <div
-                  className="
-  bg-gradient-to-b from-[#3A3A3A] via-[#1F1F1F] to-[#050505]
-  border border-[#4A4A4A]
-  shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
-  rounded-2xl
-  p-4
-  text-center
-
-  md:bg-none
-  md:bg-white/5
-  md:border-white/10
-  md:shadow-none
-  md:rounded-lg
-"
-                >
-                  <div className="text-3xl font-bold">{timers.hours}</div>
-                  <div className="text-sm text-gray-300">Hours</div>
-                </div>
-                <div
-                  className="
-  bg-gradient-to-b from-[#3A3A3A] via-[#1F1F1F] to-[#050505]
-  border border-[#4A4A4A]
-  shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
-  rounded-2xl
-  p-4
-  text-center
-
-  md:bg-none
-  md:bg-white/5
-  md:border-white/10
-  md:shadow-none
-  md:rounded-lg
-"
-                >
-                  <div className="text-3xl  font-bold">{timers.minutes}</div>
-                  <div className="text-sm text-gray-300">Minute</div>
-                </div>
-                <div
-                  className="
-  bg-gradient-to-b from-[#3A3A3A] via-[#1F1F1F] to-[#050505]
-  border border-[#4A4A4A]
-  shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
-  rounded-2xl
-  p-4
-  text-center
-
-  md:bg-none
-  md:bg-white/5
-  md:border-white/10
-  md:shadow-none
-  md:rounded-lg
-"
-                >
-                  <div className="text-3xl font-bold">{timers.seconds}</div>
-                  <div className="text-sm text-gray-300">Second</div>
-                </div>
+              {/* Glassmorphism Timer Box */}
+              <div className="flex gap-3 sm:gap-4">
+                {[
+                  { val: timers.days, label: "Days" },
+                  { val: timers.hours, label: "Hours" },
+                  { val: timers.minutes, label: "Minute" },
+                  { val: timers.seconds, label: "Second" },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="
+                      flex-1 p-3 sm:p-4 text-center rounded-2xl sm:rounded-lg
+                      bg-white/10 border border-white/20 backdrop-blur-md
+                      shadow-lg text-white
+                    "
+                  >
+                    <div className="text-2xl sm:text-3xl font-bold">
+                      {item.val}
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-200">
+                      {item.label}
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              {/* Prize Amount */}
+              {/* Prize Amount Card */}
               <div
                 className="
-    sm:ml-auto
-    w-full lg:w-auto
-    p-6
-    px-3 sm:px-6
-    transition-colors
-
-    backdrop-blur-sm
-    bg-transparent
-    border
-    border-white/20
-    rounded-lg
-    shadow-lg
-
-    max-md:bg-gradient-to-b
-    max-md:from-[#3A3A3A]
-    max-md:via-[#1F1F1F]
-    max-md:to-[#050505]
-    max-md:border-[#4A4A4A]
-    max-md:rounded-2xl
-    max-md:shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
-  "
+                  sm:ml-auto w-full lg:w-auto p-4 sm:p-6
+                  flex items-center justify-between sm:justify-start
+                  bg-white/10 border border-white/20 backdrop-blur-md
+                  rounded-2xl sm:rounded-lg shadow-lg
+                "
               >
-                <span className="text-xl lg:text-sm text-gray-300">
+                <span className="text-sm text-gray-200 uppercase font-bold tracking-wider">
                   CHANCE TO WIN
                 </span>
-                <span className="text-2xl ms-4 font-bold text-emerald-400">
+                <span className="text-2xl ms-4 font-black text-[#2DDA89]">
                   ₹{singleEvent.reward_amount ?? "0"}
                 </span>
               </div>
             </div>
 
-            {/* Tags */}
+            {/* Clean Hashtags List */}
             <div className="flex gap-2 mb-4 flex-wrap">
-              {singleEvent.hashtags?.map((tag, index) => (
-                <span key={index} className="text-gray-400">
-                  {tag}
-                </span>
-              ))}
+              {(Array.isArray(singleEvent.hashtags)
+                ? singleEvent.hashtags
+                : typeof singleEvent.hashtags === "string"
+                  ? singleEvent.hashtags.replace(/[\[\]"]/g, "").split(/[\s,]+/)
+                  : []
+              )
+                .filter(Boolean)
+                .map((tag, index) => (
+                  <span
+                    key={index}
+                    className="text-xs text-[#5DC9DE] bg-white/5 border border-white/10 px-2.5 py-1 rounded-full backdrop-blur-sm"
+                  >
+                    {tag.startsWith("#") ? tag : `#${tag}`}
+                  </span>
+                ))}
             </div>
 
             {/* Title and Description */}
@@ -571,7 +497,7 @@ const IndividualEvent = () => {
             <div className="space-y-4 mb-8">
               <div className="text-amber-400">
                 Registration:{" "}
-                <span className="text-white">
+                <span className="text-amber-400">
                   {formatRegistrationStartDate(
                     singleEvent.registrationStart || singleEvent.regn_start,
                   )}{" "}
@@ -583,7 +509,9 @@ const IndividualEvent = () => {
               </div>
               <div className="text-gray-300">
                 Participated Users:{" "}
-                <span className="text-white">{singleEvent.total_bookings}</span>
+                <span className="text-[#5DC9DE]">
+                {singleEvent.total_bookings}
+                </span>
               </div>
               <div className="text-emerald-400">
                 {dateFormat(singleEvent.event_date_time)} -{" "}

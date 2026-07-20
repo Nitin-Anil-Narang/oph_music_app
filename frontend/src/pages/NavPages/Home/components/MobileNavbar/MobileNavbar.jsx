@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Home, Trophy, Music, BarChart3, Play, Phone } from "lucide-react";
+import "./MobileNavbar.css";
 
 export default function MobileNavbar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isHomePage = pathname === "/home" || pathname === "/";
+  const [activeTooltip, setActiveTooltip] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState(0);
+  const longPressTimers = useRef({});
+  const iconRefs = useRef({});
 
   const navItems = [
     { icon: Home, path: "/home", label: "Home" },
@@ -43,31 +48,57 @@ export default function MobileNavbar() {
     navigate(path);
   };
 
-  const containerClass = "lg:hidden fixed bottom-0 left-0 w-full px-6 py-2 flex justify-center bg-black/40 border-t border-gray-800/80 z-50 overflow-hidden";
+  const handleTouchStart = (index) => {
+    const iconElement = iconRefs.current[index];
+    if (iconElement) {
+      const rect = iconElement.getBoundingClientRect();
+      setTooltipPosition(rect.left + rect.width / 2);
+    }
+    longPressTimers.current[index] = setTimeout(() => {
+      setActiveTooltip(index);
+    }, 1000);
+  };
+
+  const handleTouchEnd = (index) => {
+    clearTimeout(longPressTimers.current[index]);
+    setActiveTooltip(null);
+  };
+
+  const handleTouchCancel = (index) => {
+    clearTimeout(longPressTimers.current[index]);
+    setActiveTooltip(null);
+  };
+
+  const containerClass = "lg:hidden fixed bottom-0 left-0 w-full px-6 py-2 flex justify-center bg-black/40 border-t border-gray-800/80 z-50";
 
   const innerDivClass = isHomePage
     ? "flex justify-around items-center w-full max-w-md bg-[#13161C] border border-gray-800 rounded-2xl py-4 px-3 shadow-2xl relative z-50"
-    : "flex justify-around items-center w-full max-w-md bg-[#13161C] border border-gray-800 rounded-2xl py-3 px-3 shadow-2xl overflow-hidden";
+    : "flex justify-around items-center w-full max-w-md bg-[#13161C] border border-gray-800 rounded-2xl py-3 px-3 shadow-2xl";
 
   return (
     <div className={containerClass}>
       <div className={innerDivClass}>
         {navItems.map((item, index) => {
           const Icon = item.icon;
-          // Determine if path is active
           const isActive =
             pathname === item.path ||
             (item.path === "/home" && pathname === "/") ||
             (item.path !== "/home" && pathname.startsWith(item.path.split("?")[0]));
 
           return (
-            <div key={index} className="relative flex flex-col items-center">
+            <div
+              key={index}
+              className="relative flex flex-col items-center"
+              ref={(el) => (iconRefs.current[index] = el)}
+              onTouchStart={() => handleTouchStart(index)}
+              onTouchEnd={() => handleTouchEnd(index)}
+              onTouchCancel={() => handleTouchCancel(index)}
+            >
               {/* Active text label above the icon */}
-              {isActive && (
-                <div className="absolute -top-9 bg-black border border-gray-800 text-[#5DC9DE] text-[10px] font-semibold px-2 py-0.5 rounded shadow-md whitespace-nowrap">
-                  {/* {item.label} */}
-                  {/* Small arrow bubble pointer */}
-                  <div className="absolute left-1/2 -bottom-[4px] -translate-x-1/2 w-1.5 h-1.5 bg-black border-r border-b border-gray-800 rotate-45"></div>
+              {/* Long-press tooltip - mobile only */}
+              {activeTooltip === index && (
+                <div className="tooltip-label" style={{ left: `${tooltipPosition}px` }}>
+                  {item.label}
                 </div>
               )}
 

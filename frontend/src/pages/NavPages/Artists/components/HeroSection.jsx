@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 import searchIc from "/assets/images/artists/searchIc.svg";
 import { ChevronDown } from "lucide-react";
 
- const btnClass =
-   "w-full rounded-3xl border border-white/20 bg-[rgb(52,53,55,0.4)] backdrop-blur-sm py-3 pl-4 pr-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#5DC9DE]/60 cursor-pointer flex items-center justify-between gap-2";
+const btnClass =
+  "w-full rounded-3xl border border-white/20 bg-[rgb(52,53,55,0.4)] backdrop-blur-sm py-3 pl-4 pr-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#5DC9DE]/60 cursor-pointer flex items-center justify-between gap-2";
 
 const FilterSelect = ({ value, onChange, options, placeholder, ariaLabel }) => {
   const [open, setOpen] = useState(false);
@@ -27,6 +27,7 @@ const FilterSelect = ({ value, onChange, options, placeholder, ariaLabel }) => {
         top: rect.bottom + 4,
         left: rect.left,
         width: rect.width,
+        maxWidth: "calc(100vw - 32px)", // Prevents portal dropdown from bleeding offscreen
         zIndex: 9999,
       });
     }
@@ -53,7 +54,10 @@ const FilterSelect = ({ value, onChange, options, placeholder, ariaLabel }) => {
           >
             <li
               className="px-4 py-2 cursor-pointer hover:bg-white/10"
-              onClick={() => { onChange(""); setOpen(false); }}
+              onClick={() => {
+                onChange("");
+                setOpen(false);
+              }}
             >
               {placeholder}
             </li>
@@ -61,13 +65,16 @@ const FilterSelect = ({ value, onChange, options, placeholder, ariaLabel }) => {
               <li
                 key={opt}
                 className="px-4 py-2 cursor-pointer hover:bg-white/10 truncate"
-                onClick={() => { onChange(opt); setOpen(false); }}
+                onClick={() => {
+                  onChange(opt);
+                  setOpen(false);
+                }}
               >
                 {opt}
               </li>
             ))}
           </ul>,
-          document.body
+          document.body,
         )}
     </div>
   );
@@ -96,29 +103,32 @@ const HeroSection = ({
   };
 
   return (
-    <div className="relative sm:min-h-[70vh] min-h-[40vh] w-full flex flex-col items-center justify-center text-white pt-[100px] sm:pt-[140px]">
+    /* Fix: Added overflow-x-hidden and max-w-full to parent container */
+    <div className="relative sm:min-h-[70vh] min-h-[40vh] w-full max-w-full overflow-x-hidden flex flex-col items-center justify-center text-white pt-[100px] sm:pt-[140px]">
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/60 z-10" />
       <div
         className="absolute inset-0 bg-[url('/assets/images/artists/artistHeroBg.png')] bg-cover bg-center"
         style={{ backgroundBlendMode: "overlay" }}
         aria-label="Artists EPK"
       />
-      <div className="relative z-20 max-w-5xl w-full text-center space-y-6">
+
+      {/* Fix: Added max-w-full to prevent horizontal layout overflow */}
+      <div className="relative z-20 max-w-5xl w-full max-w-full text-center space-y-6 px-4">
         <h1 className="text-4xl sm:text-5xl font-bold">
           FIND YOUR <span className="text-[#5DC9DE]">COLLABORATOR</span>
         </h1>
-        <p className="text-gray-300 px-4 sm:text-base lg:text-lg">
+        <p className="text-gray-300 sm:text-base lg:text-lg">
           No need to look anywhere else—every music artist you seek is right
           here.
         </p>
 
-        <div className="flex flex-col items-center gap-4 mt-8 px-4 py-8">
+        <div className="flex flex-col items-center gap-4 mt-8 py-8 w-full">
           <div className="relative flex w-full max-w-[600px] bg-[rgb(52,53,55,0.4)] rounded-3xl backdrop-blur-md py-2 border border-white/5 shadow-lg">
             <input
               type="text"
               placeholder="Search Artists..."
               value={inputName}
-              className="flex-1 px-6 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none min-w-0"
+              className="flex-1 px-4 sm:px-6 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none min-w-0"
               onChange={(e) => setInputName(e.target.value)}
             />
             <button

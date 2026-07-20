@@ -57,7 +57,13 @@ const StruggleEndsSection = () => {
             </div>
 
             <div className="space-y-4">
-              <p className="text-gray-400 leading-relaxed text-lg">
+              <p className="text-gray-400" style={{
+                fontWeight: 300,
+                fontSize: 'clamp(16px, 4vw, 20px)',
+                lineHeight: '170%',
+                letterSpacing: '0px',
+                textAlign: 'center'
+              }}>
                 {aboutUs.about_us_desc}
               </p>
             </div>
