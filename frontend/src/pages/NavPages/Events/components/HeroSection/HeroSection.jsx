@@ -14,7 +14,7 @@ import {
 
 const instagramUsernameRegex = /^[a-zA-Z0-9](?:[a-zA-Z0-9._]{0,29})$/;
 const instagramUrlRegex =
-  /^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?(?:\?[^#\s]*)?$/;
+  /^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?(?:\?[^\#\s]*)?$/;
 
 export default function HeroSection({ professions = [] }) {
   const navigate = useNavigate();
@@ -44,6 +44,7 @@ export default function HeroSection({ professions = [] }) {
     autoplaySpeed: 2500,
     beforeChange: () => setIsDragging(true),
     afterChange: () => setIsDragging(false),
+    dotsClass: "slick-dots md:block hidden",
   };
 
   useEffect(() => {
@@ -375,13 +376,13 @@ export default function HeroSection({ professions = [] }) {
       )}
 
       {!loading && upcomingEvents.length === 0 && (
-        <div className="text-center pt-[130px] pb-[65px]  lg:py-20">
+        <div className="text-center pt-[130px] pb-[65px] lg:py-20">
           <p className="text-gray-400">No upcoming events right now.</p>
         </div>
       )}
 
       {!loading && upcomingEvents.length > 0 && (
-        <div className="relative w-full overflow-hidden bg-black">
+        <div className="relative w-full overflow-hidden bg-black mt-0 pt-0">
           <button
             className="absolute top-1/2 left-4 z-50 transform -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-3 rounded-full hidden sm:block"
             onClick={() => sliderRef.current && sliderRef.current.slickPrev()}
@@ -400,118 +401,163 @@ export default function HeroSection({ professions = [] }) {
 
           <Slider ref={sliderRef} {...settings}>
             {upcomingEvents.map((event, idx) => (
-              <div key={event.id ?? idx} className="relative min-h-[60dvh] md:h-screen w-full">
-                <img
-                  src={event.thumbnail_url}
-                  alt={event.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-black/95" />
+              <div key={event.id ?? idx} className="mt-0 pt-0">
+                {/* Mobile Layout - Strictly matching Figma specs */}
+                <div className="md:hidden relative w-full bg-black min-h-[77vh]">
+                  {/* Image Section - Height: 296px */}
+                  <img
+                    src={event.thumbnail_url}
+                    alt={event.name}
+                    className="w-full h-[296px] object-cover block"
+                  />
 
-                <div
-                  className="absolute inset-0 flex sm:items-end items-center sm:pb-24 pb-10 pt-[150px] cursor-pointer"
-                  onClick={() => {
-                    if (!isDragging) navigate(`/events/${event.id}`);
-                  }}
-                >
-                  <div className="container mx-auto px-4 xl:px-16 w-full flex flex-col lg:flex-row justify-between items-center">
-                    {/* Left: date, title, countdown */}
-                    <div className="flex flex-col">
-                      <div className="text-xs sm:text-sm font-semibold text-[#5DC9DE] mb-1 tracking-wide lg:text-lg lg:mb-2">
-                        {dateFormat(event.event_date_time)} – {event.location}
-                      </div>
-
-                      <h1
-                        className="uppercase font-black text-2xl sm:text-4xl lg:text-6xl text-white tracking-tight leading-tight"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (!isDragging) navigate(`/events/${event.id}`);
-                        }}
-                      >
-                        {event.name}
-                      </h1>
-
-                      {timers[idx] && (
-                        <div className="flex gap-2 mt-4">
-                          <CountdownBox value={timers[idx].days} label="Days" />
-                          <CountdownBox
-                            value={timers[idx].hours}
-                            label="Hours"
-                          />
-                          <CountdownBox
-                            value={timers[idx].minutes}
-                            label="Minute"
-                          />
-                          <CountdownBox
-                            value={timers[idx].seconds}
-                            label="Second"
-                          />
-                        </div>
-                      )}
-
-                      {/* Mobile-only: Chance to Win badge + Book button */}
-                      <div className="lg:hidden mt-4 w-full flex items-center justify-center bg-gradient-to-r from-gray-900/90 to-[#0C0D27]/90 border border-white/10 rounded-xl py-3 px-4 shadow-xl backdrop-blur-md">
-                        <span className="text-xs sm:text-sm tracking-widest font-bold uppercase text-white mr-2">
-                          CHANCE TO WIN
-                        </span>
-                        <span className="text-[#2DDA89] text-base sm:text-lg font-black tracking-wide">
-                          ₹{event.reward_amount ?? 0}
-                        </span>
-                      </div>
-                      <div
-                        className={`lg:hidden mt-3 w-full py-3.5 rounded-full text-sm font-extrabold tracking-wide text-center transition-all duration-300 ${
-                          isRegistrationOpenByDateTime(event)
-                            ? "bg-[#5DC9DE] text-black cursor-pointer hover:bg-[#4cb5c8] active:scale-[0.98] shadow-lg"
-                            : "bg-gray-600 text-white cursor-not-allowed opacity-60"
-                        }`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleBookSpot(event, event.id);
-                        }}
-                        title={
-                          isRegistrationNotStartedYetByDateTime(event)
-                            ? "Registration has not started yet"
-                            : !isRegistrationOpenByDateTime(event)
-                              ? "Registration has closed"
-                              : undefined
-                        }
-                      >
-                        Book Your Spot Now
-                      </div>
+                  {/* Content Layout Overlay / Container matching Figma Specs: 
+                      width: 430px; height: 368px; top: 166px; gap: 20px; opacity: 1 */}
+                  <div className="absolute top-[166px] left-1/2 transform -translate-x-1/2 w-[430px] max-w-full h-[368px] flex flex-col gap-[20px] opacity-100 px-4 z-10">
+                    {/* Date and Location */}
+                    <div className="text-xs font-semibold text-[#5DC9DE] tracking-wide">
+                      {dateFormat(event.event_date_time)} – {event.location}
                     </div>
 
-                    {/* Desktop-only: Chance to Win card + Book button */}
-                    <div
-                      className="hidden lg:flex mt-0 flex-col items-center"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <div className="bg-gradient-to-b from-[#FFFFFF26] to-[#FFFFFF00] w-[285px] rounded-xl py-5 px-6 backdrop-blur-[12px] text-center">
-                        <span className="text-[18px] uppercase text-white block text-center">
-                          Chance to Win
-                        </span>
-                        <span className="text-[#2DDA89] text-[40px] font-extrabold">
-                          ₹{event.reward_amount ?? 0}
-                        </span>
+                    {/* Title */}
+                    <h1 className="uppercase font-black text-xl text-white tracking-tight leading-tight">
+                      {event.name}
+                    </h1>
+
+                    {/* Countdown */}
+                    {timers[idx] && (
+                      <div className="flex gap-2">
+                        <CountdownBox value={timers[idx].days} label="Days" />
+                        <CountdownBox value={timers[idx].hours} label="Hours" />
+                        <CountdownBox
+                          value={timers[idx].minutes}
+                          label="Minute"
+                        />
+                        <CountdownBox
+                          value={timers[idx].seconds}
+                          label="Second"
+                        />
                       </div>
+                    )}
+
+                    {/* Chance to Win */}
+                    <div className="flex items-center justify-center bg-gradient-to-r from-gray-900/90 to-[#0C0D27]/90 border border-white/10 rounded-xl py-3 px-4 shadow-xl backdrop-blur-md">
+                      <span className="text-sm tracking-widest font-bold uppercase text-white mr-2">
+                        CHANCE TO WIN
+                      </span>
+                      <span className="text-[#2DDA89] text-lg font-black tracking-wide">
+                        ₹{event.reward_amount ?? 0}
+                      </span>
+                    </div>
+
+                    {/* Book Button */}
+                    <div
+                      className={`w-full py-3 rounded-full text-sm font-extrabold tracking-wide text-center transition-all duration-300 ${
+                        isRegistrationOpenByDateTime(event)
+                          ? "bg-[#5DC9DE] text-black cursor-pointer hover:bg-[#4cb5c8] active:scale-[0.98] shadow-lg"
+                          : "bg-gray-600 text-white cursor-not-allowed opacity-60"
+                      }`}
+                      onClick={() => handleBookSpot(event, event.id)}
+                      title={
+                        isRegistrationNotStartedYetByDateTime(event)
+                          ? "Registration has not started yet"
+                          : !isRegistrationOpenByDateTime(event)
+                            ? "Registration has closed"
+                            : undefined
+                      }
+                    >
+                      Book Your Spot Now
+                    </div>
+                  </div>
+                </div>
+
+                {/* Desktop Layout - Original */}
+                <div className="hidden md:block relative min-h-[60dvh] md:h-screen w-full">
+                  <img
+                    src={event.thumbnail_url}
+                    alt={event.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-black/95" />
+
+                  <div
+                    className="absolute inset-0 flex sm:items-end items-center sm:pb-24 pb-10 pt-[150px] cursor-pointer"
+                    onClick={() => {
+                      if (!isDragging) navigate(`/events/${event.id}`);
+                    }}
+                  >
+                    <div className="container mx-auto px-4 xl:px-16 w-full flex flex-col lg:flex-row justify-between items-center">
+                      {/* Left: date, title, countdown */}
+                      <div className="flex flex-col">
+                        <div className="text-xs sm:text-sm font-semibold text-[#5DC9DE] mb-1 tracking-wide lg:text-lg lg:mb-2">
+                          {dateFormat(event.event_date_time)} – {event.location}
+                        </div>
+
+                        <h1
+                          className="uppercase font-black text-2xl sm:text-4xl lg:text-6xl text-white tracking-tight leading-tight"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!isDragging) navigate(`/events/${event.id}`);
+                          }}
+                        >
+                          {event.name}
+                        </h1>
+
+                        {timers[idx] && (
+                          <div className="flex gap-2 mt-4">
+                            <CountdownBox
+                              value={timers[idx].days}
+                              label="Days"
+                            />
+                            <CountdownBox
+                              value={timers[idx].hours}
+                              label="Hours"
+                            />
+                            <CountdownBox
+                              value={timers[idx].minutes}
+                              label="Minute"
+                            />
+                            <CountdownBox
+                              value={timers[idx].seconds}
+                              label="Second"
+                            />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Desktop-only: Chance to Win card + Book button */}
                       <div
-                        className={`mt-4 px-6 py-2 rounded-3xl text-black text-lg font-semibold ${
-                          isRegistrationOpenByDateTime(event)
-                            ? "bg-[#5DC9DE] cursor-pointer hover:bg-[#4db8cc]"
-                            : "bg-gray-500 cursor-not-allowed opacity-70"
-                        }`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleBookSpot(event, event.id);
-                        }}
-                        title={
-                          isRegistrationNotStartedYetByDateTime(event)
-                            ? "Registration has not started yet"
-                            : !isRegistrationOpenByDateTime(event)
-                              ? "Registration has closed"
-                              : undefined
-                        }
+                        className="flex mt-0 flex-col items-center"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        Book Your Spot Now
+                        <div className="bg-gradient-to-b from-[#FFFFFF26] to-[#FFFFFF00] w-[285px] rounded-xl py-5 px-6 backdrop-blur-[12px] text-center">
+                          <span className="text-[18px] uppercase text-white block text-center">
+                            Chance to Win
+                          </span>
+                          <span className="text-[#2DDA89] text-[40px] font-extrabold">
+                            ₹{event.reward_amount ?? 0}
+                          </span>
+                        </div>
+                        <div
+                          className={`mt-4 px-6 py-2 rounded-3xl text-black text-lg font-semibold ${
+                            isRegistrationOpenByDateTime(event)
+                              ? "bg-[#5DC9DE] cursor-pointer hover:bg-[#4db8cc]"
+                              : "bg-gray-500 cursor-not-allowed opacity-70"
+                          }`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleBookSpot(event, event.id);
+                          }}
+                          title={
+                            isRegistrationNotStartedYetByDateTime(event)
+                              ? "Registration has not started yet"
+                              : !isRegistrationOpenByDateTime(event)
+                                ? "Registration has closed"
+                                : undefined
+                          }
+                        >
+                          Book Your Spot Now
+                        </div>
                       </div>
                     </div>
                   </div>

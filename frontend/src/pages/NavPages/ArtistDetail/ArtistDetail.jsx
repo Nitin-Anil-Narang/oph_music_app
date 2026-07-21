@@ -563,8 +563,8 @@ const ArtistDetail = () => {
               </div>
             </div>
 
-            {/* Songs Table */}
-            <table className="w-full mb-[30px] lg:mb-12 text-xs sm:text-sm lg:text-base table-auto">
+            {/* DESKTOP TABLE VIEW */}
+            <table className="w-full mb-[30px] lg:mb-12 text-xs sm:text-sm lg:text-base table-auto hidden sm:table">
               <thead>
                 <tr className="text-gray-400 border-b border-gray-800">
                   <th className="pb-3 px-1 text-center">#</th>
@@ -690,6 +690,95 @@ const ArtistDetail = () => {
                 ))}
               </tbody>
             </table>
+            {/* END DESKTOP TABLE VIEW */}
+
+            {/* MOBILE VERTICAL CARD VIEW */}
+            <div className="sm:hidden mb-12 space-y-4">
+              {artist?.songs.length === 0 ? (
+                <p className="py-10 text-center text-gray-400 text-sm">
+                  No songs added by this artist yet.
+                </p>
+              ) : (
+                artist?.songs.map((song, index) => {
+                  const sk = songKey(song);
+                  const audioSrc = resolveSongAudioUrl(song);
+                  return (
+                    <div
+                      key={sk || index}
+                      className="border-b border-gray-800 hover:bg-gray-800/50 pb-4 px-3 py-2 rounded transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="text-lg font-semibold mb-1">
+                            {index + 1 < 10 ? "0" + (index + 1) : index + 1}
+                          </div>
+                          <div className="text-sm font-semibold text-gray-300 mb-2">
+                            {song.song_name}
+                          </div>
+                          {(song.primaryArtist || song.primary_artist) && (
+                            <div className="text-xs text-gray-400 mb-3">
+                              {song.primaryArtist || song.primary_artist}
+                              {song.secondary_artist && `, ${song.secondary_artist}`}
+                            </div>
+                          )}
+                          <div className="flex flex-col gap-2">
+                            <div className="text-base text-gray-300">
+                              {song.total_song_views ?? "—"}
+                            </div>
+                            <div className="text-base text-gray-300">
+                              <SongDuration url={audioSrc} />
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          disabled={!audioSrc}
+                          className="p-3 flex items-center justify-center rounded-full bg-[#6F4FA0] disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+                          onClick={() => handlePlayPause(song)}
+                          aria-label={
+                            playingSongId === sk && !audioRef.current?.paused
+                              ? "Pause"
+                              : "Play"
+                          }
+                        >
+                          {playingSongId === sk && !audioRef.current?.paused ? (
+                            <FaPause className="text-white" size={16} />
+                          ) : (
+                            <FaPlay className="text-white ml-1" size={16} />
+                          )}
+                        </button>
+                      </div>
+                      {activeSeekSongId === sk &&
+                        audioProgress.duration > 0 && (
+                          <input
+                            type="range"
+                            min={0}
+                            max={audioProgress.duration}
+                            step={0.01}
+                            value={Math.min(
+                              audioProgress.current,
+                              audioProgress.duration,
+                            )}
+                            onChange={(e) => handleSeek(sk, e.target.value)}
+                            onPointerDown={() => {
+                              isSeekingRef.current = true;
+                            }}
+                            onMouseDown={() => {
+                              isSeekingRef.current = true;
+                            }}
+                            onTouchStart={() => {
+                              isSeekingRef.current = true;
+                            }}
+                            aria-label={`Seek ${song.song_name || "track"}`}
+                            className="w-full mt-3 h-1 cursor-pointer accent-[#5DC9DE]"
+                          />
+                        )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+            {/* END MOBILE VERTICAL CARD VIEW */}
 
             {/* Image Gallery */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">

@@ -7,6 +7,7 @@ import BookSpot from "./components/BookSpotSection/BookSpotSection";
 import WhatWeProvide from "./components/WhatWeProvideSection/WhatWeProvideSection";
 import MusicTasteSection from "./components/MusicTasteSection/MusicTasteSection";
 import TopPicksSection from "./components/TopPicksSection/TopPicksSection";
+import StruggleEndSection from "./components/StruggleEndSection/StruggleEndSection";
 import ArtistSlider from "./components/ArtistSlider/ArtistSlider";
 import TipsSlider from "./components/TipsSlider/TipsSlider";
 import { useDispatch } from "react-redux";
@@ -51,6 +52,7 @@ function Home() {
         <div className="container w-full  h-[1px] mx-auto bg-gray-400 opacity-30 relative"></div>
       </div>
       <TopPicksSection />
+      <StruggleEndSection />
       <MusicTasteSection />
     </div>
   );
