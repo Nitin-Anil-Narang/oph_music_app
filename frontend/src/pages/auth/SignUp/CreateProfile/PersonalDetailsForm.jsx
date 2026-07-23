@@ -46,7 +46,7 @@ const indianStates = [
 const PersonalDetailsForm = () => {
   const navigate = useNavigate();
   console.log();
-  
+
   const { headers, ophid } = useArtist();
   const [video, setVideo] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
@@ -58,7 +58,9 @@ const PersonalDetailsForm = () => {
 
   const fetchPageMedia = async () => {
     try {
-      const response = await axiosApi.get("/page-media?page_name=personal_details");
+      const response = await axiosApi.get(
+        "/page-media?page_name=personal_details",
+      );
       if (response.data.success && response.data.data) {
         setVideo(response.data.data.video_url);
         setThumbnail(response.data.data.thumbnail_url);
@@ -125,9 +127,12 @@ const PersonalDetailsForm = () => {
 
       if (response.success) {
         // Handle contact number - support both contact_num and contact_number
-        const contactNum = response.data.contact_number || response.data.contact_num || "";
-        const processedContactNum = contactNum 
-          ? (contactNum.includes("+91") ? contactNum.split("+91")[1] : contactNum)
+        const contactNum =
+          response.data.contact_number || response.data.contact_num || "";
+        const processedContactNum = contactNum
+          ? contactNum.includes("+91")
+            ? contactNum.split("+91")[1]
+            : contactNum
           : "";
 
         setFormData({
@@ -139,7 +144,7 @@ const PersonalDetailsForm = () => {
           location: response.data.location || "",
           step_status: response.data.step_status || "",
           current_step: response.data.current_step || "",
-          artist_type: response.data.artist_type || ""
+          artist_type: response.data.artist_type || "",
         });
 
         setcheckSimilarData({
@@ -268,10 +273,13 @@ const PersonalDetailsForm = () => {
 
       formDataToSend.append("location", formData.location);
       formDataToSend.append("email", formData.email);
-      
+
       // Backend will determine the next step based on application status
       // Just send a placeholder - backend will override it
-      formDataToSend.append("step", "/auth/create-profile/professional-details");
+      formDataToSend.append(
+        "step",
+        "/auth/create-profile/professional-details",
+      );
 
       // Append profile image if it exists
       if (formData.profileImage?.file) {
@@ -290,18 +298,18 @@ const PersonalDetailsForm = () => {
       if (response.success) {
         toast.success("Personal details updated successfully");
         console.log(formData.artist_type + " artist type");
-        
+
         const path = `${response.step}`;
-        navigate(path,{
-          state : {
+        navigate(path, {
+          state: {
             user_type: formData.artist_type,
-            backPath: "/auth/create-profile/personal-details"
-          }
+            backPath: "/auth/create-profile/personal-details",
+          },
         });
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Failed to update personal details"
+        error.response?.data?.message || "Failed to update personal details",
       );
     } finally {
       setLoading(false);
@@ -346,11 +354,11 @@ const PersonalDetailsForm = () => {
 
         <div className="min-h-[calc(100vh-70px)] mt-20 bg-opacity-70 text-white p-6 flex flex-col items-center">
           {video && (
-            <div className="relative flex justify-center mb-6 w-full max-w-[800px] mx-auto sm:rounded-lg rounded-3xl overflow-hidden">
+            <div className="relative flex justify-center mb-6 w-full max-w-[800px] mx-auto">
               <CustomVideoPlayer
                 src={video}
                 poster={thumbnail || undefined}
-                className="w-full h-[50vh] bg-black"
+                className="w-full h-[50vh] rounded-lg overflow-hidden bg-black"
                 pauseOtherVideos={true}
                 allowFullscreen={true}
                 showPlayButtonOverlay
@@ -418,7 +426,8 @@ const PersonalDetailsForm = () => {
                   placeholder="Legal Name"
                   value={formData.legalName}
                   onChange={handleInputChange}
-                  className="w-full lg:w-auto h-12 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
+                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
                 />
               </div>
 
@@ -430,7 +439,8 @@ const PersonalDetailsForm = () => {
                   placeholder="Stage Name"
                   value={formData.stageName}
                   onChange={handleInputChange}
-                  className="w-full lg:w-auto h-12 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
+                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
                 />
               </div>
 
@@ -446,7 +456,8 @@ const PersonalDetailsForm = () => {
                   placeholder="000000000"
                   value={formData.contactNumber}
                   onChange={handleInputChange}
-                  className="w-full lg:w-auto h-12 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
+                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
                 />
               </div>
 
@@ -456,7 +467,8 @@ const PersonalDetailsForm = () => {
                   name="location"
                   value={formData.location}
                   onChange={handleInputChange}
-                  className="w-full lg:w-auto h-12 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
+                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
                 >
                   <option value="">Select Your State</option>
                   {indianStates.map((state) => (
@@ -475,7 +487,8 @@ const PersonalDetailsForm = () => {
                   placeholder="abc@gmail.com"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full lg:w-auto h-12 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
+                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
                 />
               </div>
 
