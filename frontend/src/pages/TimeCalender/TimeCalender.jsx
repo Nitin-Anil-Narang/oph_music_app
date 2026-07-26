@@ -5,6 +5,8 @@ import { toast } from "react-hot-toast";
 import { useArtist } from "../auth/API/ArtistContext";
 import NavbarRight from "../../components/Navbar/NavbarRight";
 import NavbarLeft from "../../components/Navbar/NavbarLeft";
+import ReactDOM from "react-dom";
+import { ChevronDown } from "lucide-react";
 
 function toLocalDateStr(year, month, day) {
   return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -34,6 +36,9 @@ export default function TimeCalendar() {
   const toastShownRef = useRef(false);
   const [data, setData] = useState([]);
   const [todaysBookings, setTodaysBookings] = useState([]);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const [dropdownStyle, setDropdownStyle] = useState({});
+  const mobileDropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchBlockedDates = async () => {
@@ -87,6 +92,40 @@ export default function TimeCalendar() {
 
     fetchBlockedDates();
   }, [headers]);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (
+        mobileDropdownRef.current &&
+        !mobileDropdownRef.current.contains(e.target)
+      ) {
+        setMobileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, []);
+
+  const handleMobileDropdown = () => {
+    if (mobileDropdownRef.current) {
+      const rect = mobileDropdownRef.current.getBoundingClientRect();
+
+      setDropdownStyle({
+        position: "fixed",
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+        maxWidth: "calc(100vw - 32px)",
+        zIndex: 9999,
+      });
+    }
+
+    setMobileDropdownOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     if (
@@ -151,8 +190,7 @@ export default function TimeCalendar() {
     "December",
   ];
 
-  const daysInMonth = (month, year) =>
-    new Date(year, month + 1, 0).getDate();
+  const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
   const firstDayOfMonth = new Date(currentYear, currentMonthIndex, 1).getDay();
 
@@ -214,9 +252,7 @@ export default function TimeCalendar() {
 
     if (dateInfo && ownerRow) {
       if (isWithinFiveDays(year, month, day)) {
-        toast.error(
-          "You cannot change dates that are within 5 days of today",
-        );
+        toast.error("You cannot change dates that are within 5 days of today");
         return;
       }
       navigate("/dashboard/date-change", { state: { date: dateStr } });
@@ -423,9 +459,7 @@ export default function TimeCalendar() {
                 </button>
                 <select
                   value={currentYear}
-                  onChange={(e) =>
-                    setCurrentYear(parseInt(e.target.value, 10))
-                  }
+                  onChange={(e) => setCurrentYear(parseInt(e.target.value, 10))}
                   className="bg-gray-800 text-white rounded px-4 py-2 ml-2"
                 >
                   {Array.from(
@@ -441,31 +475,58 @@ export default function TimeCalendar() {
             </div>
 
             <div className="lg:hidden bg-[#1E1A2D]/70 rounded-2xl p-3">
-              <div className="bg-[#4A425B] rounded-lg px-3 py-2">
-                <select
-                  className="w-full bg-transparent text-white font-semibold outline-none cursor-pointer"
-                  value={`${currentMonthIndex}-${currentYear}`}
-                  onChange={(e) => {
-                    const [month, year] = e.target.value.split("-");
-                    setCurrentMonthIndex(Number(month));
-                    setCurrentYear(Number(year));
-                  }}
+              <div
+                ref={mobileDropdownRef}
+                className="relative bg-[#4A425B] rounded-lg"
+              >
+                <button
+                  type="button"
+                  onClick={handleMobileDropdown}
+                  className="w-full px-3 py-2 flex items-center justify-between text-white font-semibold"
                 >
-                  {Array.from(
-                    { length: 5 },
-                    (_, y) => new Date().getFullYear() + y,
-                  ).flatMap((year) =>
-                    months.map((month, index) => (
-                      <option
-                        key={`${index}-${year}`}
-                        value={`${index}-${year}`}
-                        className="bg-[#4A425B]"
-                      >
-                        {month} {year}
-                      </option>
-                    )),
+                  <span>
+                    {months[currentMonthIndex]} {currentYear}
+                  </span>
+
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      mobileDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {mobileDropdownOpen &&
+                  ReactDOM.createPortal(
+                    <ul
+                      style={dropdownStyle}
+                      className="max-h-60 overflow-y-auto rounded-xl border border-white/20 bg-[#4A425B] text-white shadow-lg"
+                    >
+                      {Array.from(
+                        { length: 5 },
+                        (_, y) => new Date().getFullYear() + y,
+                      ).flatMap((year) =>
+                        months.map((month, index) => (
+                          <li
+                            key={`${index}-${year}`}
+                            className={`px-4 py-3 cursor-pointer hover:bg-white/10 ${
+                              currentMonthIndex === index &&
+                              currentYear === year
+                                ? "bg-white/10"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              setCurrentMonthIndex(index);
+                              setCurrentYear(year);
+                              setMobileDropdownOpen(false);
+                            }}
+                          >
+                            {month} {year}
+                          </li>
+                        )),
+                      )}
+                    </ul>,
+                    document.body,
                   )}
-                </select>
               </div>
 
               <div className="flex flex-wrap justify-between gap-2 mt-4 text-[10px]">

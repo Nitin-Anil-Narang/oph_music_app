@@ -263,10 +263,12 @@ const HeroSection = ({
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-1 sm:gap-2">
-                        <span>Registration:</span>
-                        <span className="font-medium text-white">
-                          {formatRegistrationStartDate(ev.registrationStart)} to{" "}
-                          {formatRegistrationEndDate(ev.registrationEnd)}
+                        <span>
+                          Registration:{" "}
+                          <span className="font-medium text-white">
+                            {formatRegistrationStartDate(ev.registrationStart)}{" "}
+                            to {formatRegistrationEndDate(ev.registrationEnd)}
+                          </span>
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-1 sm:gap-2">
@@ -286,7 +288,10 @@ const HeroSection = ({
                       ) : (
                         <button
                           onClick={() => handleClick(ev)}
-                          onTouchEnd={(e) => { e.stopPropagation(); handleClick(ev); }}
+                          onTouchEnd={(e) => {
+                            e.stopPropagation();
+                            handleClick(ev);
+                          }}
                           className="bg-cyan-400 text-gray-900 px-4 py-2 rounded-full text-sm font-extrabold mt-[20px]"
                         >
                           Register Now!

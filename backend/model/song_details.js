@@ -8,14 +8,14 @@ LEFT JOIN user_details ud ON ud.oph_id = sre.oph_id
 LEFT JOIN songs_register sr ON sre.songId = sr.song_id 
 LEFT JOIN video_details vd ON sr.song_id = vd.song_id
 WHERE sre.oph_id = ? AND sre.songId = ?`,
-    [ophid, songId]
+    [ophid, songId],
   );
 
   const [secondary_artist] = await db.execute(
     `SELECT DISTINCT sre.oph_id, sa.artist_type, sa.artist_name FROM song_release sre LEFT JOIN secondary_artist sa ON sre.songId = sa.song_id WHERE 
     sre.oph_id = ? AND sre.songId = ?
     `,
-    [ophid, songId]
+    [ophid, songId],
   );
 
   const saMap = {};
@@ -53,7 +53,7 @@ WHERE sre.oph_id = ? AND sre.songId = ?`,
      share_url, youtube_url, spotify_url, apple_url, instagram_url, facebook_url 
    FROM song_release 
    WHERE oph_id = ? AND songId = ?`,
-    [ophid, songId]
+    [ophid, songId],
   );
 
   const releaseDetailsMap = [];
@@ -66,43 +66,42 @@ WHERE sre.oph_id = ? AND sre.songId = ?`,
         stream_name: "Song Release Timing",
         release_time: rd.release_time,
         link: rd.share_url,
-        status: rd.release_time ? 1 : 0
+        status: rd.release_time ? 1 : 0,
       },
       {
         stream_name: "Music Video Release Timing YouTube",
         release_time: rd.youtube_release_time,
         link: rd.youtube_url,
-        status: rd.release_time ? 1 : 0
+        status: rd.youtube_release_time ? 1 : 0,
       },
       {
         stream_name: "Spotify Release Timing",
         release_time: rd.spotify_release_time,
         link: rd.spotify_url,
-        status: rd.release_time ? 1 : 0
+        status: rd.spotify_release_time ? 1 : 0,
       },
       {
         stream_name: "Apple Music Release Timing",
         release_time: rd.apple_release_time,
         link: rd.apple_url,
-        status: rd.release_time ? 1 : 0
+        status: rd.apple_release_time ? 1 : 0,
       },
       {
         stream_name: "Instagram Reels Timing",
         release_time: rd.instagram_release_time,
         link: rd.instagram_url,
-        status: rd.release_time ? 1 : 0
+        status: rd.instagram_release_time ? 1 : 0,
       },
       {
         stream_name: "Facebook Reels Timing",
         release_time: rd.facebook_release_time,
         link: rd.facebook_url,
-        status: rd.release_time ? 1 : 0
-      }
+        status: rd.facebook_release_time ? 1 : 0,
+      },
     );
   }
 
   console.log(saMap[ophid]);
-  
 
   const songMap = {
     content: content[0],

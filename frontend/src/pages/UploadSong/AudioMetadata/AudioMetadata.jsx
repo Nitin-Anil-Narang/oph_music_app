@@ -10,6 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import NavbarRight from "../../../components/Navbar/NavbarRight";
 import NavbarLeft from "../../../components/Navbar/NavbarLeft";
+import FilterSelect from "../../../components/FilterSelect/FilterSelect";
 
 function SecondaryArtistForm({ artistType, onClose, onArtistAdd, contentId }) {
   const [name, setName] = useState("");
@@ -140,7 +141,10 @@ function SecondaryArtistForm({ artistType, onClose, onArtistAdd, contentId }) {
         <h2 className="text-xl font-bold text-cyan-400">
           Add Secondary Artist
         </h2>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-300 text-2xl">
+        <button
+          onClick={onClose}
+          className="text-gray-400 hover:text-gray-300 text-2xl"
+        >
           ×
         </button>
       </div>
@@ -1036,27 +1040,33 @@ export default function AudioMetadataForm() {
                   <label className="block">
                     Language <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    value={langID || ""}
-                    onChange={handleLanguageChange}
-                    className="w-full bg-black border text-white border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
-                    required
-                  >
-                    <option value="">Select Language</option>
-                    {languages.map((lang) => {
-                      const raw = String(lang.name || "").trim();
-                      const label =
-                        raw.length === 0
-                          ? ""
-                          : raw.charAt(0).toUpperCase() +
-                            raw.slice(1).toLowerCase();
-                      return (
-                        <option key={lang.id} value={lang.id}>
-                          {label}
-                        </option>
+                  <FilterSelect
+                    value={
+                      languages.find((l) => l.id === langID)?.name
+                        ? languages
+                            .find((l) => l.id === langID)
+                            .name.charAt(0)
+                            .toUpperCase() +
+                          languages
+                            .find((l) => l.id === langID)
+                            .name.slice(1)
+                            .toLowerCase()
+                        : ""
+                    }
+                    placeholder="Select Language"
+                    ariaLabel="Language"
+                    options={languages.map(
+                      (lang) =>
+                        lang.name.charAt(0).toUpperCase() +
+                        lang.name.slice(1).toLowerCase(),
+                    )}
+                    onChange={(value) => {
+                      const selected = languages.find(
+                        (l) => l.name.toLowerCase() === value.toLowerCase(),
                       );
-                    })}
-                  </select>
+                      setLangID(selected?.id || "");
+                    }}
+                  />
                 </div>
 
                 {/* Genre Dropdown */}
@@ -1064,19 +1074,13 @@ export default function AudioMetadataForm() {
                   <label className="block">
                     Genre <span className="text-red-500">*</span>
                   </label>
-                  <select
+                  <FilterSelect
                     value={genre}
-                    onChange={handleGenreChange}
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
-                    required
-                  >
-                    <option value="">Select Genre</option>
-                    {genres.map((g, index) => (
-                      <option key={index} value={g}>
-                        {g}
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="Select Genre"
+                    ariaLabel="Genre"
+                    options={genres}
+                    onChange={setGenre}
+                  />
                 </div>
 
                 {/* Subgenre Dropdown - depends on Genre selection */}
@@ -1085,19 +1089,13 @@ export default function AudioMetadataForm() {
                   <label className="block">
                     Subgenre <span className="text-red-500">*</span>
                   </label>
-                  <select
+                  <FilterSelect
                     value={subGenre}
-                    onChange={handleSubgenreChange}
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
-                    required
-                  >
-                    <option value="">Select Subgenre</option>
-                    {subGenres.map((sub, index) => (
-                      <option key={index} value={sub}>
-                        {sub}
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="Select Subgenre"
+                    ariaLabel="Sub Genre"
+                    options={subGenres}
+                    onChange={setSubGenre}
+                  />
                 </div>
 
                 {/* Mood Dropdown */}
@@ -1105,19 +1103,13 @@ export default function AudioMetadataForm() {
                   <label className="block">
                     Mood <span className="text-red-500">*</span>
                   </label>
-                  <select
+                  <FilterSelect
                     value={mood}
-                    onChange={handleMoodChange}
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-full p-3 focus:outline-none focus:border-cyan-400"
-                    required
-                  >
-                    <option value="">Select Mood</option>
-                    {moods.map((m, index) => (
-                      <option key={index} value={m}>
-                        {m}
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="Select Mood"
+                    ariaLabel="Mood"
+                    options={moods}
+                    onChange={setMood}
+                  />
                 </div>
                 {/* Lyrics */}
                 <div className="space-y-2">

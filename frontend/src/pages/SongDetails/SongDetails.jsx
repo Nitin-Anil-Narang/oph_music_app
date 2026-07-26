@@ -176,11 +176,11 @@ const SongDetails = () => {
               </p>
               <p>
                 <span className="text-gray-400">Lyrics:</span>{" "}
-                {secondary_artists?.lyrics?.join(", ") || content.stage_name}
+                {secondary_artists?.lyricist?.join(", ") || content.stage_name}
               </p>
               <p>
                 <span className="text-gray-400">Music:</span>{" "}
-                {secondary_artists?.music?.join(", ") || content.stage_name}
+                {secondary_artists?.composer?.join(", ") || content.stage_name}
               </p>
               <p>
                 <span className="text-gray-400">Produced By:</span>{" "}
@@ -242,7 +242,7 @@ const SongDetails = () => {
             >
               <div className="py-4 px-2 border-r border-gray-700">
                 <p className="text-gray-300">
-                  {item.stream_name} Timing:{" "}
+                  {item.stream_name} :{" "}
                   <span className="text-white font-semibold">
                     {item.release_time ? formatTime(item.release_time) : "TBD"}
                   </span>

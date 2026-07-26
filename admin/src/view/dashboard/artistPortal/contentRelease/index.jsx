@@ -9,20 +9,20 @@ const ContentReleaseInd = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const [releaseData, setReleaseData] = useState({
-    release_time: "",
-    youtube_release_time: "",
-    spotify_release_time: "",
-    apple_release_time: "",
-    instagram_release_time: "",
-    facebook_release_time: "",
-    share_url: "",
-    youtube_url: "",
-    spotify_url: "",
-    apple_url: "",
-    instagram_url: "",
-    facebook_url: "",
-  });
+  // const [releaseData, setReleaseData] = useState({
+  //   release_time: "",
+  //   youtube_release_time: "",
+  //   spotify_release_time: "",
+  //   apple_release_time: "",
+  //   instagram_release_time: "",
+  //   facebook_release_time: "",
+  //   share_url: "",
+  //   youtube_url: "",
+  //   spotify_url: "",
+  //   apple_url: "",
+  //   instagram_url: "",
+  //   facebook_url: "",
+  // });
 
   useEffect(() => {
     const fetchSong = async () => {
@@ -45,11 +45,11 @@ const ContentReleaseInd = () => {
           instagram_release_time: song.instagram_release_time || "",
           facebook_release_time: song.facebook_release_time || "",
           share_url: song.share_url || "",
-          youtube_url: song.share_url || "",
-          spotify_url: song.share_url || "",
-          apple_url: song.share_url || "",
-          instagram_url: song.share_url || "",
-          facebook_url: song.share_url || "",
+          youtube_url: song.youtube_url || "",
+          spotify_url: song.spotify_url || "",
+          apple_url: song.apple_url || "",
+          instagram_url: song.instagram_url || "",
+          facebook_url: song.facebook_url || "",
         });
       } catch (err) {
         console.error("Error fetching song:", err);
@@ -63,25 +63,25 @@ const ContentReleaseInd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(releaseData);
+    // console.log(releaseData);
 
-    if (
-      !releaseData.release_time ||
-      !releaseData.youtube_release_time ||
-      !releaseData.spotify_release_time ||
-      !releaseData.apple_release_time ||
-      !releaseData.instagram_release_time ||
-      !releaseData.facebook_release_time ||
-      !releaseData.share_url ||
-      !releaseData.youtube_url ||
-      !releaseData.spotify_url ||
-      !releaseData.apple_url ||
-      !releaseData.instagram_url ||
-      !releaseData.facebook_url
-    ) {
-      toast.error("Fill all the fields");
-      return;
-    }
+    // if (
+    //   !releaseData.release_time ||
+    //   !releaseData.youtube_release_time ||
+    //   !releaseData.spotify_release_time ||
+    //   !releaseData.apple_release_time ||
+    //   !releaseData.instagram_release_time ||
+    //   !releaseData.facebook_release_time ||
+    //   !releaseData.share_url ||
+    //   !releaseData.youtube_url ||
+    //   !releaseData.spotify_url ||
+    //   !releaseData.apple_url ||
+    //   !releaseData.instagram_url ||
+    //   !releaseData.facebook_url
+    // ) {
+    //   toast.error("Fill all the fields");
+    //   return;
+    // }
 
     try {
       const response = await axiosApi.post(
@@ -89,24 +89,24 @@ const ContentReleaseInd = () => {
         {
           ophid: ophid,
           songId: songId,
-          release_time: releaseData.release_time,
-          youtube_release_time: releaseData.youtube_release_time,
-          spotify_release_time: releaseData.spotify_release_time,
-          apple_release_time: releaseData.apple_release_time,
-          instagram_release_time: releaseData.instagram_release_time,
-          facebook_release_time: releaseData.facebook_release_time,
-          share_url: releaseData.share_url,
-          youtube_url: releaseData.youtube_url,
-          spotify_url: releaseData.spotify_url,
-          apple_url: releaseData.apple_url,
-          instagram_url: releaseData.instagram_url,
-          facebook_url: releaseData.facebook_url,
+          release_time: content.release_time,
+          youtube_release_time: content.youtube_release_time,
+          spotify_release_time: content.spotify_release_time,
+          apple_release_time: content.apple_release_time,
+          instagram_release_time: content.instagram_release_time,
+          facebook_release_time: content.facebook_release_time,
+          share_url: content.share_url,
+          youtube_url: content.youtube_url,
+          spotify_url: content.spotify_url,
+          apple_url: content.apple_url,
+          instagram_url: content.instagram_url,
+          facebook_url: content.facebook_url,
         },
         {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (response.data.success) {
@@ -151,8 +151,9 @@ const ContentReleaseInd = () => {
             "facebook_url",
           ]}
           handleSubmit={handleSubmit}
-          setReleaseData={setReleaseData}
-          releaseData={releaseData}
+          setContent={setContent}
+          // setReleaseData={setReleaseData}
+          // releaseData={releaseData}
         />
       </div>
     </div>
@@ -197,8 +198,9 @@ const SectionBlock = ({
   data,
   fields,
   handleSubmit,
-  setReleaseData,
-  releaseData,
+  // setReleaseData,
+  // releaseData,
+  setContent
 }) => {
   return (
     <div className="bg-gray-50 rounded-xl shadow-md p-6 space-y-4">
@@ -218,19 +220,24 @@ const SectionBlock = ({
                 readOnly
                 className="w-full p-2 border rounded-md text-black bg-gray-100"
               />
-            ) : field === "youtube_release_time" ||
+            ) : field === "release_time" ||
+              field === "youtube_release_time" ||
               field === "spotify_release_time" ||
               field === "apple_release_time" ||
               field === "instagram_release_time" ||
               field === "facebook_release_time" ||
-              field === "release_time"
-              ? (
+              field === "share_url" ||
+              field === "youtube_url" ||
+              field === "spotify_url" ||
+              field === "apple_url" ||
+              field === "instagram_url" ||
+              field === "facebook_url" ? (
               <input
                 type="time"
-                value={releaseData[field]}
+                value={data[field]}
                 className="w-full p-2 border rounded-md text-black bg-gray-100"
                 onChange={(e) =>
-                  setReleaseData((prev) => ({
+                  setContent((prev) => ({
                     ...prev,
                     [field]: e.target.value,
                   }))
@@ -242,7 +249,7 @@ const SectionBlock = ({
                 value={releaseData[field]}
                 className="w-full p-2 border rounded-md text-black bg-gray-100"
                 onChange={(e) =>
-                  setReleaseData((prev) => ({
+                  setContent((prev) => ({
                     ...prev,
                     [field]: e.target.value,
                   }))
