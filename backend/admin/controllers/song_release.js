@@ -2,7 +2,7 @@ const {
   getSongReleaseList,
   getIndividualSongReleaseList,
   setSongReleaseDetails,
-  getSpecialArtist
+  getSpecialArtist,
 } = require("../model/song_release");
 
 const getSongReleaseListController = async (req, res) => {
@@ -71,22 +71,7 @@ const setSongReleaseDetailsController = async (req, res) => {
       facebook_url,
     } = req.body;
 
-    if (
-      !ophid ||
-      !songId ||
-      !release_time ||
-      !youtube_release_time ||
-      !spotify_release_time ||
-      !apple_release_time ||
-      !instagram_release_time ||
-      !facebook_release_time ||
-      !share_url ||
-      !youtube_url ||
-      !spotify_url ||
-      !apple_url ||
-      !instagram_url ||
-      !facebook_url
-    ) {
+    if (!ophid || !songId) {
       return res.status(400).json({
         success: false,
         message: "Missing required fields",
@@ -107,7 +92,7 @@ const setSongReleaseDetailsController = async (req, res) => {
       spotify_url,
       apple_url,
       instagram_url,
-      facebook_url
+      facebook_url,
     );
 
     if (response) {

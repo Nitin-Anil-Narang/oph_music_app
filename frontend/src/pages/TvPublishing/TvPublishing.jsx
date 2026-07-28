@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useOutletContext } from "react-router-dom";
 import NavbarRight from "../../components/Navbar/NavbarRight";
 import NavbarLeft from "../../components/Navbar/NavbarLeft";
+import FilterSelect from "../../components/FilterSelect/FilterSelect"
 
 export default function TVPublishing() {
   const [loading, setLoading] = useState(false);
@@ -44,8 +45,7 @@ export default function TVPublishing() {
           return status === "open" || status === "rejected";
         });
 
-        console.log("available contents",availableContents);
-        
+        console.log("available contents", availableContents);
 
         if (availableContents.length > 0) {
           const first = availableContents[0];
@@ -256,33 +256,20 @@ export default function TVPublishing() {
               <UnlockIcon />
               <p className="text-center text-cyan-300 max-w-[800px]">
                 You can submit your songs to request access to this section. If
-                your song meets the eligibility criteria for TV,
-                the OPH Community Administration team will review your
-                submission and unlock the section for you. Thank you.
+                your song meets the eligibility criteria for TV, the OPH
+                Community Administration team will review your submission and
+                unlock the section for you. Thank you.
               </p>
             </div>
           ) : (
             <div className="  ">
               <div className="space-y-2 mb-6 rounded-xl border px-4 py-4 sm:px-5 sm:py-5 border-[#5DC9DE]/35 bg-gray-800/50 ring-1 ring-[#5DC9DE]/25 p-4">
                 <label className="block text-gray-400">Song Name</label>
-                <select
-                  value={selectedContentId || ""}
-                  onChange={(e) => {
-                    const contentId = e.target.value;
-                    const content = contents.find(
-                      (c) => c.song_id == contentId,
-                    );
-                    console.log("dd", content);
-                    setSelectedContentId(contentId);
-                    setSelectedContent(content);
-                    setFiles({ audio: null, video: null });
-                  }}
-                  className="bg-[#191D27]/35 text-white p-2 rounded"
-                >
-                  <option value="" disabled className="bg-[#191D27] text-gray-400">
-                    Select the Song
-                  </option>
-                  {contents
+                <FilterSelect
+                  value={selectedContent?.song_name || ""}
+                  placeholder="Select the Song"
+                  ariaLabel="Select Song"
+                  options={contents
                     .filter((content) => {
                       const status = content.status?.toLowerCase();
                       return status === "open" || status === "rejected";
@@ -290,12 +277,25 @@ export default function TVPublishing() {
                     .sort((a, b) =>
                       (a.song_name || "").localeCompare(b.song_name || ""),
                     )
-                    .map((content) => (
-                      <option key={content.song_id} value={content.song_id}>
-                        {content.song_name}
-                      </option>
-                    ))}
-                </select>
+                    .map((content) => ({
+                      value: content.song_id,
+                      label: content.song_name,
+                    }))}
+                  onChange={(contentId) => {
+                    const content = contents.find(
+                      (c) => String(c.song_id) === String(contentId),
+                    );
+
+                    console.log("dd", content);
+
+                    setSelectedContentId(contentId);
+                    setSelectedContent(content);
+                    setFiles({
+                      audio: null,
+                      video: null,
+                    });
+                  }}
+                />
                 <span
                   className={`px-4 mx-10 py-1 rounded-full text-sm border ${getStatusColor(
                     selectedContent?.status,
