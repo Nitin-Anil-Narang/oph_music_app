@@ -281,6 +281,7 @@ function ReelsSlider({ searchText, title }) {
                   src={selectedVideo}
                   className="rounded-lg w-full h-full object-contain"
                   autoPlay
+                  orientation="portrait"
                   pauseOtherVideos={true}
                   onPlay={() => setIsPlaying(true)}
                   onPause={() => setIsPlaying(false)}

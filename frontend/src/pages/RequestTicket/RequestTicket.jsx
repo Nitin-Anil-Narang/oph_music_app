@@ -9,6 +9,7 @@ import { useArtist } from "../auth/API/ArtistContext";
 import axios from "axios";
 import NavbarRight from "../../components/Navbar/NavbarRight";
 import NavbarLeft from "../../components/Navbar/NavbarLeft";
+import FilterSelect from "../../components/FilterSelect/FilterSelect";
 
 const TICKET_KEY = "ticket_state";
 const STATUS_MAP = {
@@ -382,31 +383,17 @@ export default function RequestTicketForm() {
             />
           </div>
 
-          {/* Category */}
           <div className="space-y-2">
             <label className="block">
               Category <span className="text-red-500">*</span>
             </label>
-            <div className="relative">
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className="w-full bg-gray-800/50 border border-gray-700 rounded-lg p-3 appearance-none focus:outline-none focus:border-cyan-400"
-                required
-              >
-                <option value="">Select Category</option>
-
-                {/* <option key={ticketCategories.id} value={ticketCategories.id}>
-                    {ticketCategories.name}</option> */}
-                {ticketCategories.map((cat) => (
-                  <option key={cat.id} value={cat.name}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none w-5 h-5" />
-            </div>
+            <FilterSelect
+              value={formData.category}
+              placeholder="Select Category"
+              ariaLabel="Category"
+              options={ticketCategories.map((cat) => ({ value: cat.name, label: cat.name }))}
+              onChange={(val) => setFormData((prev) => ({ ...prev, category: val }))}
+            />
           </div>
 
           <div className="space-y-2">

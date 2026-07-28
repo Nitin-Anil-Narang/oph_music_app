@@ -6,18 +6,34 @@ import { useArtist } from "../auth/API/ArtistContext";
 import CustomVideoPlayer from "../../components/CustomVideoPlayer/CustomVideoPlayer";
 import NavbarRight from "../../components/Navbar/NavbarRight";
 import NavbarLeft from "../../components/Navbar/NavbarLeft";
+import FilterSelect from "../../components/FilterSelect/FilterSelect";
 import "./styles.css";
 
-const AUDIO_CHART_COLORS = [
+const PLATFORM_COLORS = {
+  spotify:        "#1DB954", // Spotify green
+  "jio saavn":    "#00BCD4", // Jio Saavn turquoise
+  jiosaavn:       "#00BCD4",
+  telegram:       "#2AABEE", // Telegram blue
+  "youtube music":"#FF0000", // YouTube Music red
+  youtubemusic:   "#FF0000",
+  "apple music":  "#FC3C44", // Apple Music pinkish-red
+  applemusic:     "#FC3C44",
+  gaana:          "#F4511E", // Gaana orange
+};
+
+const AUDIO_CHART_COLORS_FALLBACK = [
   "#22d3ee",
   "#8959D3",
-  "#34a853",
+  "#14b8a6",
+  "#6366f1",
   "#f59e0b",
   "#ec4899",
-  "#6366f1",
-  "#14b8a6",
-  "#f97316",
 ];
+
+function getPlatformColor(platformLabel, idx) {
+  const key = String(platformLabel).toLowerCase().replace(/\s+/g, " ").trim();
+  return PLATFORM_COLORS[key] ?? AUDIO_CHART_COLORS_FALLBACK[idx % AUDIO_CHART_COLORS_FALLBACK.length];
+}
 
 function sameSongId(metricSongId, selectedId) {
   if (metricSongId == null || selectedId == null) return false;
@@ -496,25 +512,14 @@ export default function AnalyticsDashboard() {
                   {/* Mobile: pill button */}
 
                   {/* Desktop: styled select */}
-                  <div className="relative hidden lg:block">
-                    <select
-                      className="appearance-none bg-[#191D27]/80 border border-gray-700 rounded-lg px-4 py-3 pr-10 text-gray-200 focus:outline-none focus:border-[#5dc9de] text-sm"
-                      value={selectedDuration}
-                      onChange={(e) =>
-                        setSelectedDuration(Number(e.target.value))
-                      }
-                    >
-                      {durationOptions.map((option) => (
-                        <option
-                          key={`duration-${option.value}`}
-                          value={option.value}
-                          className="bg-[#191D27] text-gray-200"
-                        >
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none w-4 h-4" />
+                  <div className="hidden lg:block w-48">
+                    <FilterSelect
+                      value={durationOptions.find((o) => o.value === selectedDuration)?.label || ""}
+                      placeholder="Select Duration"
+                      ariaLabel="Duration"
+                      options={durationOptions.map((o) => ({ value: String(o.value), label: o.label }))}
+                      onChange={(val) => setSelectedDuration(Number(val))}
+                    />
                   </div>
                 </div>
               </div>
@@ -525,102 +530,38 @@ export default function AnalyticsDashboard() {
 
             {/* Song Selection and Platform */}
             <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1 relative">
-                <select
-                  className="w-full appearance-none bg-[#191D27]/80 border border-gray-700 rounded-lg p-3 pr-10 text-gray-200 focus:outline-none focus:border-cyan-400"
-                  value={selectedContent?.[0]?.song_id?.toString() ?? ""}
-                  onChange={(e) => {
-                    const songId = parseInt(e.target.value, 10);
-
-                    const selectedRows = submitMetric.filter((metric) =>
-                      sameSongId(metric.song_id, songId),
-                    );
-
-                    if (selectedRows.length === 0) {
-                      console.error(
-                        "Selected content not found in contents array",
-                      );
-                      return;
-                    }
-
-                    setSelectedContent(selectedRows);
+              <div className="flex-1">
+                <FilterSelect
+                  value={selectedContent?.[0] ? (selectedContent[0].song_name || selectedContent[0].name || "") : ""}
+                  placeholder="Select a Song"
+                  ariaLabel="Song"
+                  options={uniqueSongs.map((c) => ({ value: String(c.song_id), label: c.song_name || c.name }))}
+                  onChange={(songId) => {
+                    const selectedRows = submitMetric.filter((metric) => sameSongId(metric.song_id, songId));
+                    if (selectedRows.length > 0) setSelectedContent(selectedRows);
                   }}
-                >
-                  <option
-                    value=""
-                    disabled
-                    className="bg-[#191D27] text-gray-400"
-                  >
-                    Select a Song
-                  </option>
-
-                  {uniqueSongs.map((uniqueContent, songIdx) => (
-                    <option
-                      key={`song-${String(uniqueContent.song_id)}-${songIdx}`}
-                      value={String(uniqueContent.song_id)}
-                      className="bg-[#191D27] text-gray-200"
-                    >
-                      {uniqueContent.song_name || uniqueContent.name}
-                    </option>
-                  ))}
-                </select>
-
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-200 pointer-events-none" />
+                />
               </div>
 
-              <div className="relative">
-                <select
-                  className="w-full appearance-none border border-gray-700 rounded-lg p-3 pr-10 text-black font-bold focus:outline-none focus:border-[#5dc9de] truncate"
-                  style={{ backgroundColor: "#5dc9de" }}
+              <div className="w-48">
+                <FilterSelect
                   value={selectedStream || ""}
-                  onChange={(e) => setSelectedStream(e.target.value)}
-                >
-                  <option key="platform-placeholder" value="" disabled>
-                    Select Platform
-                  </option>
-                  {[
-                    { key: "yt", value: "YouTube" },
-                    { key: "ig", value: "Instagram" },
-                    { key: "audio", value: "Audio Platform" },
-                  ].map((platform) => (
-                    <option key={platform.key} value={platform.value}>
-                      {platform.value}
-                    </option>
-                  ))}
-                </select>
-
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-black pointer-events-none" />
+                  placeholder="Select Platform"
+                  ariaLabel="Platform"
+                  options={["YouTube", "Instagram", "Audio Platform"]}
+                  onChange={setSelectedStream}
+                />
               </div>
             </div>
 
-            <div className="relative lg:hidden w-full lg:w-[unset]">
-              <select
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                value={selectedDuration}
-                onChange={(e) => setSelectedDuration(Number(e.target.value))}
-              >
-                {durationOptions.map((option) => (
-                  <option key={`duration-${option.value}`} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <div className="flex items-center justify-center gap-2 px-5 py-3 bg-[#191D27] border border-gray-700 rounded-full text-white text-sm font-medium pointer-events-none">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4 text-gray-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                Duration
-              </div>
+            <div className="lg:hidden w-full">
+              <FilterSelect
+                value={durationOptions.find((o) => o.value === selectedDuration)?.label || ""}
+                placeholder="Duration"
+                ariaLabel="Duration"
+                options={durationOptions.map((o) => ({ value: String(o.value), label: o.label }))}
+                onChange={(val) => setSelectedDuration(Number(val))}
+              />
             </div>
 
             {/* Video Preview */}
@@ -795,9 +736,7 @@ export default function AnalyticsDashboard() {
                               : 0
                           }
                           yFromZero
-                          colors={[
-                            AUDIO_CHART_COLORS[idx % AUDIO_CHART_COLORS.length],
-                          ]}
+                          colors={[getPlatformColor(platformLabel, idx)]}
                         />
                       ));
                   }

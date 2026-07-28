@@ -16,9 +16,14 @@ const FilterSelect = ({
   const [dropdownStyle, setDropdownStyle] = useState({});
   const btnRef = useRef(null);
 
+  const dropdownRef = useRef(null);
+
   useEffect(() => {
     const handler = (e) => {
-      if (btnRef.current && !btnRef.current.contains(e.target)) {
+      if (
+        btnRef.current && !btnRef.current.contains(e.target) &&
+        dropdownRef.current && !dropdownRef.current.contains(e.target)
+      ) {
         setOpen(false);
       }
     };
@@ -67,6 +72,7 @@ const FilterSelect = ({
       {open &&
         ReactDOM.createPortal(
           <ul
+            ref={dropdownRef}
             style={dropdownStyle}
             className="max-h-60 overflow-y-auto rounded-xl border border-gray-700 bg-gray-900 text-white shadow-lg"
           >

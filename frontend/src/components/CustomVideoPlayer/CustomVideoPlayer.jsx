@@ -32,6 +32,8 @@ const CustomVideoPlayer = forwardRef(
       pauseOtherVideos = true,
       id,
       allowFullscreen = true,
+      /** "portrait" locks to portrait in fullscreen; anything else locks to landscape */
+      orientation = "landscape",
     },
     ref,
   ) => {
@@ -232,18 +234,20 @@ const CustomVideoPlayer = forwardRef(
         if (fullscreenPromise) {
           fullscreenPromise
             .then(() => {
-              // Force landscape orientation on mobile
               if (screen.orientation && screen.orientation.lock) {
+                const lockOrientation = orientation === "portrait"
+                  ? "portrait-primary"
+                  : "landscape-primary";
+                const fallbackOrientation = orientation === "portrait"
+                  ? "portrait"
+                  : "landscape";
                 screen.orientation
-                  .lock('landscape-primary')
-                  .catch((err) => {
-                    // Try alternative landscape orientation
-                    if (screen.orientation.lock) {
-                      screen.orientation
-                        .lock('landscape')
-                        .catch((err2) => console.log('Orientation lock not supported:', err2));
-                    }
-                  });
+                  .lock(lockOrientation)
+                  .catch(() =>
+                    screen.orientation
+                      .lock(fallbackOrientation)
+                      .catch((err) => console.log('Orientation lock not supported:', err))
+                  );
               }
             })
             .catch((err) => console.error('Fullscreen error:', err));

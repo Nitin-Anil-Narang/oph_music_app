@@ -1079,7 +1079,10 @@ export default function AudioMetadataForm() {
                     placeholder="Select Genre"
                     ariaLabel="Genre"
                     options={genres}
-                    onChange={setGenre}
+                    onChange={(value) => {
+                      console.log("Selected Genre:", value);
+                      setGenre(value);
+                    }}
                   />
                 </div>
 

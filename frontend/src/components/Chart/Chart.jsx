@@ -61,6 +61,11 @@ export default function Chart({
       tickLine: { stroke: "#374151" },
     };
 
+    const xAxisProps = {
+      ...commonAxisProps,
+      tick: { fill: "#6B7280", fontSize: 12, dy: 10 },
+    };
+
     const safeData = data.map((d) => ({
       ...d,
       value: (() => {
@@ -103,7 +108,7 @@ export default function Chart({
 
     const commonProps = {
       data: type === "area" && yFromZero ? areaPlotData : safeData,
-      margin: { top: 10, right: 30, left: 0, bottom: 0 },
+      margin: { top: 10, right: 30, left: 0, bottom: 20 },
     };
 
     switch (type) {
@@ -115,7 +120,7 @@ export default function Chart({
               stroke="#1F2937"
               vertical={false}
             />
-            <XAxis dataKey="name" {...commonAxisProps} />
+            <XAxis dataKey="name" {...xAxisProps} />
             <YAxis
               {...commonAxisProps}
               domain={[yBottom, yTop]}
@@ -139,10 +144,10 @@ export default function Chart({
               stroke="#1F2937"
               vertical={false}
             />
-            <XAxis dataKey="name" {...commonAxisProps} />
+            <XAxis dataKey="name" {...xAxisProps} />
             <YAxis
               {...commonAxisProps}
-              domain={[0, 'auto']}
+              domain={[0, "auto"]}
             />
             <Tooltip content={<CustomTooltip />} />
             {stacked ? (
@@ -163,10 +168,8 @@ export default function Chart({
             )}
             {showLegend && legendLabel && (
               <Legend
-                wrapperStyle={{
-                  paddingTop: "20px",
-                }}
-                payload={[{ value: legendLabel, type: 'square', color: colors[0] }]}
+                wrapperStyle={{ paddingTop: "20px" }}
+                payload={[{ value: legendLabel, type: "square", color: colors[0] }]}
                 formatter={(value) => (
                   <span className="text-gray-400">{value}</span>
                 )}
@@ -185,7 +188,7 @@ export default function Chart({
         );
         const axes = (
           <>
-            <XAxis dataKey="name" {...commonAxisProps} />
+            <XAxis dataKey="name" {...xAxisProps} />
             <YAxis {...commonAxisProps} domain={[yBottom, yTop]} />
           </>
         );
@@ -197,8 +200,6 @@ export default function Chart({
             </linearGradient>
           </defs>
         );
-        // yFromZero (e.g. monthly traffic): stroke on Area alone can sit on the baseline and
-        // hide 0 → n segments; overlay Line so the rise from zero is always drawn.
         if (yFromZero) {
           return (
             <ComposedChart {...commonProps}>
