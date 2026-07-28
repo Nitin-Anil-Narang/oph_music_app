@@ -56,16 +56,22 @@ export default function MobileNavbar() {
     }
     longPressTimers.current[index] = setTimeout(() => {
       setActiveTooltip(index);
-    }, 1000);
+    }, 500);
   };
 
   const handleTouchEnd = (index) => {
-    clearTimeout(longPressTimers.current[index]);
+    if (longPressTimers.current[index]) {
+      clearTimeout(longPressTimers.current[index]);
+      delete longPressTimers.current[index];
+    }
     setActiveTooltip(null);
   };
 
   const handleTouchCancel = (index) => {
-    clearTimeout(longPressTimers.current[index]);
+    if (longPressTimers.current[index]) {
+      clearTimeout(longPressTimers.current[index]);
+      delete longPressTimers.current[index];
+    }
     setActiveTooltip(null);
   };
 
@@ -88,11 +94,20 @@ export default function MobileNavbar() {
           return (
             <div
               key={index}
-              className="relative flex flex-col items-center"
+              className="relative flex flex-col items-center touch-none"
               ref={(el) => (iconRefs.current[index] = el)}
-              onTouchStart={() => handleTouchStart(index)}
-              onTouchEnd={() => handleTouchEnd(index)}
-              onTouchCancel={() => handleTouchCancel(index)}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                handleTouchStart(index);
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                handleTouchEnd(index);
+              }}
+              onTouchCancel={(e) => {
+                e.preventDefault();
+                handleTouchCancel(index);
+              }}
             >
               {/* Active text label above the icon */}
               {/* Long-press tooltip - mobile only */}

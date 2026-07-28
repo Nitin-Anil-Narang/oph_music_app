@@ -413,7 +413,7 @@ export default function HeroSection({ professions = [] }) {
 
                   {/* Content Layout Overlay / Container matching Figma Specs: 
                       width: 430px; height: 368px; top: 166px; gap: 20px; opacity: 1 */}
-                  <div className="absolute top-[166px] left-1/2 transform -translate-x-1/2 w-[430px] max-w-full h-[368px] flex flex-col gap-[20px] opacity-100 px-4 z-10">
+                  <div className="absolute top-[190px] left-1/2 transform -translate-x-1/2 w-[430px] max-w-full h-[368px] flex flex-col gap-[20px] opacity-100 px-4 z-10">
                     {/* Date and Location */}
                     <div className="text-xs font-semibold text-[#5DC9DE] tracking-wide">
                       {dateFormat(event.event_date_time)} – {event.location}

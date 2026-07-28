@@ -693,10 +693,10 @@ const SignUpForm = () => {
 
         <div className="pt-6 sm:pt-12 lg:pt-6">
           <h2 className="uppercase text-base sm:text-xl font-semibold">
-            OPH COMMUNITY
+            OPH Community Music Platform Function
           </h2>
           <h2 className="uppercase text-xs sm:text-base font-semibold mt-2 text-[#5DC9DE]">
-            One stop solution for artist journey to success.
+            YOUR MUSIC, YOUR RIGHTS, YOUR STAGE
           </h2>
 
           {/* Artist Type Selector Buttons - Mobile Only */}
@@ -810,6 +810,153 @@ const SignUpForm = () => {
               + Everything Included Mentioned below (Free of Cost by OPH
               COMMUNITY) Only for our Talented Indian Music Artist
             </h2>
+          </div>
+
+          {/* Mobile Full-Width Layout */}
+          <div className="lg:hidden w-full mt-6 sm:mt-8 px-2 sm:px-4">
+            <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+              1. Marketing Functions:
+            </h2>
+            <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+              <h3>100% Google Ads marketing by the OPH Community</h3>
+              <h3>100% Facebook Ads marketing by the OPH Community</h3>
+              <h3>
+                All creatives and artist branding will be managed by the OPH
+                Community
+              </h3>
+            </ul>
+
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+            <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+              2. Creative Function
+            </h2>
+            <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+              <h3>Teaser</h3>
+              <h3>Song Reel</h3>
+              <h3>Poster</h3>
+              <h3>Distribution Poster</h3>
+              <h3>Thumbnail</h3>
+              <h3>Artist Story</h3>
+            </ul>
+            <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+              This will be{" "}
+              <span className="text-[#5DC9DE]">
+                created by the OPH Community
+              </span>
+            </p>
+
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+            <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+              3. Distribution Audio Functions:
+            </h2>
+            <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+              <h3>
+                Distribution across all music platforms (including Indian
+                platforms)
+              </h3>
+              <h3>Artist profile linking on Instagram</h3>
+              <h3>
+                Creation of new profiles on Apple Music and Spotify (if the
+                artist doesn't already have one)
+              </h3>
+              <h3>Caller tunes will be made available</h3>
+              <h3>Image design will be handled by the OPH Community</h3>
+              <h3>
+                All data will be accessible through the Artist Portal, managed
+                by the OPH Community.
+              </h3>
+            </ul>
+
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+            <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+              4. Ownership:
+            </h2>
+            <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+              <h3>
+                Full ownership will remain with the artist, with no
+                interference.
+              </h3>
+            </ul>
+
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+            <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+              5. TV Release:
+            </h2>
+            <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+              <h3>
+                The artist's music video will have the opportunity to be
+                released on TV platforms across various channels.
+              </h3>
+            </ul>
+
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+            <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+              6. Revenue Model:
+            </h2>
+            <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+              <h3>
+                100% of the revenue from both audio and video will go to the
+                artist.
+              </h3>
+            </ul>
+
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+            <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+              7. Withdrawal Threshold:
+            </h2>
+            <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+              <h3>
+                No limit or threshold on the withdrawal amount. Artists can
+                withdraw any amount, even as low as ₹100.
+              </h3>
+            </ul>
+
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+            <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+              8. Exposure:
+            </h2>
+            <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+              <h3>
+                The artist's EPK and profile will be displayed on the official
+                OPH Community website, providing connections and networking
+                opportunities.
+              </h3>
+            </ul>
+
+            <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+              9. Support:
+            </h2>
+            <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+              <h3>Call Support</h3>
+              <h3>Chat Support</h3>
+              <h3>Ticket Raising System</h3>
+              <h3>Access To a Personal Portal</h3>
+            </ul>
+
+            <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+            <p className="underline text-[#5DC9DE] font-bold text-base sm:text-xl before:text-base sm:before:text-lg before:mr-2 w-full px-1 sm:px-3">
+              First Time Ever in India – Only for Limited Thousand Artist
+            </p>
+            <p className="mt-4 sm:mt-6 text-xs sm:text-sm font-medium before:content-['•'] before:text-base sm:before:text-lg before:mr-2 w-full px-1 sm:px-3">
+              One Time Artist Documentation Registration fees –{" "}
+              <span className="text-[#5DC9DE] font-black">
+                2,999 for lifetime Access
+              </span>
+            </p>
+            <p className="mt-2 text-xs sm:text-sm font-medium before:content-['•'] before:text-base sm:before:text-lg before:mr-2 w-full px-1 sm:px-3">
+              Pay as You Go Per{" "}
+              <span className="text-[#5DC9DE] font-black">
+                Song Registration Documentation fees – 799
+              </span>
+            </p>
           </div>
 
           {/* Desktop Two-Column Content Layout */}

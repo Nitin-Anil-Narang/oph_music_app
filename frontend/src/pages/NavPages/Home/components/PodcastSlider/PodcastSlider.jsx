@@ -211,11 +211,11 @@ function PodcastSlider({ searchText, title }) {
         )}
       </div>
 
-      <div className="podcast-slider w-full px-4 lg:px-16">
+      <div className="podcast-slider w-full px-2 sm:px-4 lg:px-16">
         {filteredPodcasts.length < 3 ? (
           <div className="flex overflow-x-auto">
             {filteredPodcasts.map((podcast, index) => (
-              <div key={index} className="px-2 lg:px-4 w-full">
+              <div key={index} className="px-1 sm:px-2 lg:px-4 w-full flex-shrink-0">
                 <div className="rounded-xl overflow-hidden relative">
                   {playingIndex === index ? (
                     <CustomVideoPlayer
@@ -235,7 +235,7 @@ function PodcastSlider({ searchText, title }) {
                       }}
                       src={podcast.video_url}
                       poster={podcast.thumbnail_url}
-                      className="w-full sm:w-[95%] lg:w-[95%] aspect-[16/9] rounded-xl mx-auto"
+                      className="w-full aspect-[16/9] rounded-xl"
                       pauseOtherVideos={true}
                       onPlay={() => {
                         // Only handle video play if not triggered by button click
@@ -252,7 +252,7 @@ function PodcastSlider({ searchText, title }) {
                     />
                   ) : (
                     <div className="relative cursor-pointer overflow-hidden">
-                      <div className="w-full sm:w-[95%] lg:w-[95%] aspect-[16/9] mx-auto">
+                      <div className="w-full aspect-[16/9]">
                         <Image
                           src={podcast.thumbnail_url}
                           fallback={<Shimmer width={160} height={90} />}
@@ -323,7 +323,7 @@ function PodcastSlider({ searchText, title }) {
         ) : (
           <Slider {...settings}>
             {filteredPodcasts.map((podcast, index) => (
-              <div key={index} className="px-2 lg:px-4 w-full">
+              <div key={index} className="px-1 sm:px-2 lg:px-4 w-full">
                 <div className="rounded-xl overflow-hidden relative">
                   {playingIndex === index ? (
                     <CustomVideoPlayer
@@ -343,7 +343,7 @@ function PodcastSlider({ searchText, title }) {
                       }}
                       src={podcast.video_url}
                       poster={podcast.thumbnail_url}
-                      className="w-full sm:w-[95%] lg:w-[95%] aspect-[16/9] rounded-xl mx-auto"
+                      className="w-full aspect-[16/9] rounded-xl"
                       pauseOtherVideos={true}
                       onPlay={() => {
                         // Only handle video play if not triggered by button click
@@ -360,7 +360,7 @@ function PodcastSlider({ searchText, title }) {
                     />
                   ) : (
                     <div className="relative cursor-pointer overflow-hidden">
-                      <div className="w-full sm:w-[95%] lg:w-[95%] aspect-[16/9] mx-auto">
+                      <div className="w-full aspect-[16/9]">
                         <Image
                           src={podcast.thumbnail_url}
                           fallback={<Shimmer width={160} height={90} />}
