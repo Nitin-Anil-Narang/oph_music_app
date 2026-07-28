@@ -457,13 +457,13 @@ const ProfessionalDetailsForm = () => {
       />
       <div className="min-h-screen z-10  bg-opacity-70 text-white p-6">
         <ProfileFormHeader title="PROFESSIONAL DETAILS" />
-        <div className=" mt-20 min-h-[calc(100vh-70px)] text-white p-6 flex flex-col items-center  mx-auto">
+        <div className="mt-20 min-h-[calc(100vh-70px)] text-white p-2 sm:p-6 flex flex-col items-center mx-auto">
           {video && (
             <div className="relative flex justify-center mb-6 w-full max-w-[800px] mx-auto">
               <CustomVideoPlayer
                 src={video}
                 poster={thumbnail || undefined}
-                className="w-full h-[50vh] rounded-lg overflow-hidden bg-black"
+                className="w-full h-[30vh] sm:h-[40vh] md:h-[50vh] rounded-lg overflow-hidden bg-black"
                 pauseOtherVideos={true}
                 allowFullscreen={true}
                 showPlayButtonOverlay
@@ -480,15 +480,15 @@ const ProfessionalDetailsForm = () => {
             </div>
           )}
           <form
-            className="space-y-4 px-2 sm:px-[10%] md:px-[15%] xl:px-[25%] mt-10 pb-12 w-full"
+            className="px-2 sm:px-[10%] md:px-[15%] xl:px-[25%] mt-10 pb-12 w-full"
             onSubmit={handleSubmit}
           >
-            <div>
-              <label className="block text-white mb-3">
-                Profession: <span className="text-red-500">*</span>{" "}
-              </label>
-
-              <div className="relative w-full">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="block text-white mb-1 sm:mb-3 text-xs sm:text-base">
+                  Profession: <span className="text-red-500">*</span>{" "}
+                </label>
+                <div className="relative w-full">
                 {/* Select Box */}
                 <select
                   className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
@@ -518,13 +518,14 @@ const ProfessionalDetailsForm = () => {
                 <AiOutlineDown className="absolute text-[13px] top-1/2 right-3 transform -translate-y-1/2 text-white pointer-events-none" />
               </div>
             </div>
+            </div>
 
-            <div>
-              <label className="block text-white mb-3">
+            <div className="space-y-2 mt-6">
+              <label className="block text-white mb-1 sm:mb-3 text-xs sm:text-base">
                 Add Bio: <span className="text-red-500">*</span>
               </label>
               <textarea
-                className="w-full h-[150px]  border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 py-2 text-white bg-[rgba(30,30,30,0.7)] rounded-2xl outline-none shadow-inner
+                className="w-[95%] sm:w-96 md:w-full h-[150px]  border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 py-2 text-white bg-[rgba(30,30,30,0.7)] rounded-2xl outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
                 placeholder="About you..."
                 rows={6}
@@ -550,7 +551,7 @@ const ProfessionalDetailsForm = () => {
               </div>
             </div>
 
-            <div className="relative mb-8">
+            <div className="relative mb-8 mt-6">
               {videoUrl && (
                 <CustomVideoPlayer
                   src={videoUrl}
@@ -563,8 +564,8 @@ const ProfessionalDetailsForm = () => {
               )}
             </div>
 
-            <div>
-              <label className="block text-white mb-3">
+            <div className="space-y-2 mt-6">
+              <label className="block text-white mb-1 sm:mb-3 text-xs sm:text-base">
                 Upload Your Photos: <span className="text-red-500">*</span>
               </label>
               <input
@@ -608,7 +609,7 @@ const ProfessionalDetailsForm = () => {
               )}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 mt-6">
               {[
                 {
                   platform: "Spotify",
@@ -631,8 +632,8 @@ const ProfessionalDetailsForm = () => {
                   key: "appleMusicUrl",
                 },
               ].map(({ platform, value, key }) => (
-                <div key={key}>
-                  <label className="block text-white mb-3">
+                <div key={key} className="space-y-2">
+                  <label className="block text-white mb-1 sm:mb-3 text-xs sm:text-base">
                     Add {platform} URL:
                   </label>
                   <input
@@ -645,23 +646,23 @@ const ProfessionalDetailsForm = () => {
                         [key]: e.target.value,
                       }))
                     }
-                    className="w-[90%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                    className="w-[95%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
                   />
                 </div>
               ))}
             </div>
 
-            <div>
-              <label className="block text-white mb-3">
+            <div className="space-y-2 mt-6">
+              <label className="block text-white mb-1 sm:mb-3 text-xs sm:text-base">
                 Experience: <span className="text-red-500">*</span>
               </label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <label className="block text-white text-sm mb-3">Years</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-8">
+                <div className="space-y-2">
+                  <label className="block text-white text-sm mb-1 sm:mb-3 text-xs sm:text-sm">Years</label>
                   <input
-                    min={0}
                     type="number"
+                    min={0}
                     value={formData.ExperienceYearly}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -669,12 +670,12 @@ const ProfessionalDetailsForm = () => {
                         ExperienceYearly: parseInt(e.target.value) || 0,
                       }))
                     }
-                    className="w-[90%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                    className="w-[95%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
                   />
                 </div>
-                <div>
-                  <label className="block text-white text-sm mb-3">
+                <div className="space-y-2">
+                  <label className="block text-white text-sm mb-1 sm:mb-3 text-xs sm:text-sm">
                     Months
                   </label>
                   <input
@@ -687,18 +688,18 @@ const ProfessionalDetailsForm = () => {
                         experienceMonths: parseInt(e.target.value) || 0,
                       }))
                     }
-                    className="w-[90%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                    className="w-[95%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
                    focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-8 items-end mt-6">
               {!shouldHideSongsPlanned && (
                 <>
-                  <div>
-                    <label className="block text-white text-sm mb-3">
+                  <div className="space-y-2">
+                    <label className="block text-white text-sm mb-1 sm:mb-3 text-xs sm:text-sm">
                       Number of songs planning:{" "}
                       <span className="text-red-500">*</span>
                     </label>
@@ -712,13 +713,13 @@ const ProfessionalDetailsForm = () => {
                           songsPlanned: parseInt(e.target.value) || 0,
                         }))
                       }
-                      className="w-[90%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                      className="w-[95%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
        focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
                     />
                   </div>
 
-                  <div className="w-full">
-                    <label className="block w-full mb-3">
+                  <div className="w-full space-y-2">
+                    <label className="block w-full mb-1 sm:mb-3 text-xs sm:text-sm">
                       Song planning duration:{" "}
                       <span className="text-red-500">*</span>
                     </label>
@@ -730,7 +731,7 @@ const ProfessionalDetailsForm = () => {
                           songPlanningDuration: e.target.value,
                         }))
                       }
-                      className="w-[90%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
+                      className="w-[95%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
        focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
                     >
                       <option value="">Select One</option>
@@ -743,7 +744,8 @@ const ProfessionalDetailsForm = () => {
               )}
             </div>
 
-            <div className="mt-12">
+            {/* stylelint-disable-next-line */}
+            <div className="mt-8">
               <button
                 type="submit"
                 className="w-full bg-cyan-400 text-black py-3 rounded-full hover:font-bold flex items-center  justify-center"

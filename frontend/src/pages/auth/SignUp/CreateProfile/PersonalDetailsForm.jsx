@@ -349,16 +349,16 @@ const PersonalDetailsForm = () => {
         srcSet=""
       />
 
-      <div className="min-h-screen z-10  bg-opacity-70 text-white p-6">
+      <div className="min-h-screen z-10 bg-opacity-70 text-white p-2 sm:p-6">
         <ProfileFormHeader title="PERSONAL DETAILS" />
 
-        <div className="min-h-[calc(100vh-70px)] mt-20 bg-opacity-70 text-white p-6 flex flex-col items-center">
+        <div className="min-h-[calc(100vh-70px)] mt-20 bg-opacity-70 text-white p-2 sm:p-6 flex flex-col items-center">
           {video && (
             <div className="relative flex justify-center mb-6 w-full max-w-[800px] mx-auto">
               <CustomVideoPlayer
                 src={video}
                 poster={thumbnail || undefined}
-                className="w-full h-[50vh] rounded-lg overflow-hidden bg-black"
+                className="w-full h-[30vh] sm:h-[40vh] md:h-[50vh] rounded-lg overflow-hidden bg-black"
                 pauseOtherVideos={true}
                 allowFullscreen={true}
                 showPlayButtonOverlay

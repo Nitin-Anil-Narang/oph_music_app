@@ -470,55 +470,55 @@ const CustomVideoPlayer = forwardRef(
           </div>
 
           {/* Controls Bar */}
-          <div className="flex items-center justify-between px-4 py-3 gap-4">
+          <div className="flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 gap-2 sm:gap-4 flex-wrap sm:flex-nowrap">
             {/* Left Controls */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1 sm:gap-3 flex-wrap sm:flex-nowrap">
               {/* Play/Pause */}
               <button
                 onClick={togglePlayPause}
-                className="text-white hover:text-[#5DC9DE] transition-colors"
+                className="text-white hover:text-[#5DC9DE] transition-colors text-sm sm:text-base"
                 aria-label={isPlaying ? "Pause" : "Play"}
                 title={isPlaying ? "Pause" : "Play"}
               >
                 {isPlaying ? (
-                  <FaPause className="text-xl" />
+                  <FaPause className="text-lg sm:text-xl" />
                 ) : (
-                  <FaPlay className="text-xl" />
+                  <FaPlay className="text-lg sm:text-xl" />
                 )}
               </button>
 
               {/* 10s Backward */}
               <button
                 onClick={skipBackward}
-                className="text-white hover:text-[#5DC9DE] transition-colors"
+                className="text-white hover:text-[#5DC9DE] transition-colors text-sm sm:text-base"
                 aria-label="Skip backward 10 seconds"
                 title="Backward 10s"
               >
-                <FaBackward className="text-lg" />
+                <FaBackward className="text-base sm:text-lg" />
               </button>
 
               {/* 10s Forward */}
               <button
                 onClick={skipForward}
-                className="text-white hover:text-[#5DC9DE] transition-colors"
+                className="text-white hover:text-[#5DC9DE] transition-colors text-sm sm:text-base"
                 aria-label="Skip forward 10 seconds"
                 title="forward 10s"
               >
-                <FaForward className="text-lg" />
+                <FaForward className="text-base sm:text-lg" />
               </button>
 
               {/* Volume Control */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <button
                   onClick={toggleMute}
-                  className="text-white hover:text-[#5DC9DE] transition-colors"
+                  className="text-white hover:text-[#5DC9DE] transition-colors text-sm sm:text-base"
                   aria-label={isMuted ? "Unmute" : "Mute"}
                   title={isMuted ? "Unmute" : "Mute"}
                 >
                   {isMuted ? (
-                    <FaVolumeMute className="text-lg" />
+                    <FaVolumeMute className="text-base sm:text-lg" />
                   ) : (
-                    <FaVolumeUp className="text-lg" />
+                    <FaVolumeUp className="text-base sm:text-lg" />
                   )}
                 </button>
                 <input
@@ -528,12 +528,12 @@ const CustomVideoPlayer = forwardRef(
                   step="0.01"
                   value={isMuted ? 0 : volume}
                   onChange={handleVolumeChange}
-                  className="w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-[#5DC9DE]"
+                  className="w-12 sm:w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-[#5DC9DE]"
                 />
               </div>
 
               {/* Time Display */}
-              <span className="text-white text-sm">
+              <span className="text-white text-xs sm:text-sm whitespace-nowrap">
                 {formatTime(currentTime)} / {formatTime(duration)}
               </span>
             </div>
@@ -543,13 +543,13 @@ const CustomVideoPlayer = forwardRef(
               <div className="flex items-center">
                 <button
                   onClick={toggleFullscreen}
-                  className="text-white hover:text-[#5DC9DE] transition-colors"
+                  className="text-white hover:text-[#5DC9DE] transition-colors text-sm sm:text-base"
                   title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
                 >
                   {isFullscreen ? (
-                    <FaCompress className="text-lg" />
+                    <FaCompress className="text-base sm:text-lg" />
                   ) : (
-                    <FaExpand className="text-lg" />
+                    <FaExpand className="text-base sm:text-lg" />
                   )}
                 </button>
               </div>
