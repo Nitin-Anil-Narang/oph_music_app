@@ -4,11 +4,11 @@
  */
 
 const getEmailTemplate = (headerTitle, headerEmoji, content) => {
-  console.log('📧 EMAIL TEMPLATE GENERATION');
-  console.log('Header Title:', headerTitle);
-  console.log('Header Emoji:', headerEmoji);
-  console.log('Content Length:', content.length);
-  
+  console.log("📧 EMAIL TEMPLATE GENERATION");
+  console.log("Header Title:", headerTitle);
+  console.log("Header Emoji:", headerEmoji);
+  console.log("Content Length:", content.length);
+
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -110,16 +110,22 @@ const getEmailTemplate = (headerTitle, headerEmoji, content) => {
 };
 
 // Contact Form Confirmation Email
-const contactFormConfirmationEmail = (name, email, phone, instagramHandle, description) => {
-  console.log('\n🎉 CONTACT FORM EMAIL');
-  console.log('Name:', name);
-  console.log('Email:', email);
-  console.log('Phone:', phone);
-  console.log('Instagram:', instagramHandle);
-  console.log('Description:', description);
-  
+const contactFormConfirmationEmail = (
+  name,
+  email,
+  phone,
+  instagramHandle,
+  description,
+) => {
+  console.log("\n🎉 CONTACT FORM EMAIL");
+  console.log("Name:", name);
+  console.log("Email:", email);
+  console.log("Phone:", phone);
+  console.log("Instagram:", instagramHandle);
+  console.log("Description:", description);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${name || 'there'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${name || "there"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Thank you for reaching out to us! We've received your message and our team will get back to you within <strong>24 hours</strong>.
@@ -148,12 +154,16 @@ const contactFormConfirmationEmail = (name, email, phone, instagramHandle, descr
               <td style="font-weight: 600; color: #333333; font-size: 14px;">Instagram:</td>
               <td style="color: #555555; font-size: 14px;">@${instagramHandle}</td>
             </tr>
-            ${description ? `
+            ${
+              description
+                ? `
             <tr>
               <td style="font-weight: 600; color: #333333; font-size: 14px; vertical-align: top; padding-top: 12px;">Message:</td>
               <td style="color: #555555; font-size: 14px; padding-top: 12px;">${description}</td>
             </tr>
-            ` : ''}
+            `
+                : ""
+            }
           </table>
         </td>
       </tr>
@@ -206,19 +216,23 @@ const contactFormConfirmationEmail = (name, email, phone, instagramHandle, descr
       Welcome aboard!
     </p>
   `;
-  
-  return getEmailTemplate('Thank You for Contacting OPH Community!', '🎉', content);
+
+  return getEmailTemplate(
+    "Thank You for Contacting OPH Community!",
+    "🎉",
+    content,
+  );
 };
 
 // Event Booking Approved Email
 const eventBookingApprovedEmail = (userName, transactionId, eventName) => {
-  console.log('\n🎉 EVENT BOOKING EMAIL');
-  console.log('User Name:', userName);
-  console.log('Transaction ID:', transactionId);
-  console.log('Event Name:', eventName);
-  
+  console.log("\n🎉 EVENT BOOKING EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+  console.log("Event Name:", eventName);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Thank you for registering! We're excited to confirm that your event registration has been successfully approved.
@@ -230,7 +244,7 @@ const eventBookingApprovedEmail = (userName, transactionId, eventName) => {
           <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Event Details</p>
           
           <table width="100%" cellpadding="8" cellspacing="0">
-            ${eventName ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Event:</td><td style="color: #555555; font-size: 14px;">${eventName}</td></tr>` : ''}
+            ${eventName ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Event:</td><td style="color: #555555; font-size: 14px;">${eventName}</td></tr>` : ""}
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
             <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
           </table>
@@ -242,19 +256,19 @@ const eventBookingApprovedEmail = (userName, transactionId, eventName) => {
       You can view your event details and manage your registration in your dashboard.
     </p>
   `;
-  
-  return getEmailTemplate('Event Successfully Booked!', '🎉', content);
+
+  return getEmailTemplate("Event Successfully Booked!", "🎉", content);
 };
 
 // Date Booking Approved Email
 const dateBookingApprovedEmail = (userName, transactionId, releaseDate) => {
-  console.log('\n🎉 DATE BOOKING EMAIL');
-  console.log('User Name:', userName);
-  console.log('Transaction ID:', transactionId);
-  console.log('Release Date:', releaseDate);
-  
+  console.log("\n🎉 DATE BOOKING EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+  console.log("Release Date:", releaseDate);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Excellent news! Your time calendar date has been successfully booked.
@@ -267,7 +281,7 @@ const dateBookingApprovedEmail = (userName, transactionId, releaseDate) => {
           
           <table width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Release Date:</td><td style="color: #555555; font-size: 14px;">${releaseDate}</td></tr>
-            ${transactionId ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>` : ''}
+            ${transactionId ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>` : ""}
             <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Confirmed ✓</td></tr>
           </table>
         </td>
@@ -278,19 +292,19 @@ const dateBookingApprovedEmail = (userName, transactionId, releaseDate) => {
       Your date is now reserved. Mark your calendar and get ready for your release!
     </p>
   `;
-  
-  return getEmailTemplate('Date Booking Successful!', '🎉', content);
+
+  return getEmailTemplate("Date Booking Successful!", "🎉", content);
 };
 
 // Song Registration Approved Email
 const songRegistrationApprovedEmail = (userName, transactionId, songName) => {
-  console.log('\n🎵 SONG REGISTRATION EMAIL');
-  console.log('User Name:', userName);
-  console.log('Transaction ID:', transactionId);
-  console.log('Song Name:', songName);
-  
+  console.log("\n🎵 SONG REGISTRATION EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+  console.log("Song Name:", songName);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Fantastic news! Your song has been successfully registered.
@@ -302,7 +316,7 @@ const songRegistrationApprovedEmail = (userName, transactionId, songName) => {
           <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Song Details</p>
           
           <table width="100%" cellpadding="8" cellspacing="0">
-            ${songName ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Song:</td><td style="color: #555555; font-size: 14px;">${songName}</td></tr>` : ''}
+            ${songName ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Song:</td><td style="color: #555555; font-size: 14px;">${songName}</td></tr>` : ""}
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
             <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Registered ✓</td></tr>
           </table>
@@ -314,19 +328,19 @@ const songRegistrationApprovedEmail = (userName, transactionId, songName) => {
       Keep creating amazing music! We're excited to have your work in our community.
     </p>
   `;
-  
-  return getEmailTemplate('Song Successfully Registered!', '🎵', content);
+
+  return getEmailTemplate("Song Successfully Registered!", "🎵", content);
 };
 
 // Special Artist Song Approved Email
 const specialArtistSongApprovedEmail = (userName, transactionId, songName) => {
-  console.log('\n⭐ SPECIAL ARTIST SONG EMAIL');
-  console.log('User Name:', userName);
-  console.log('Transaction ID:', transactionId);
-  console.log('Song Name:', songName);
-  
+  console.log("\n⭐ SPECIAL ARTIST SONG EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+  console.log("Song Name:", songName);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Congratulations! Your special artist song has been approved.
@@ -338,7 +352,7 @@ const specialArtistSongApprovedEmail = (userName, transactionId, songName) => {
           <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Song Details</p>
           
           <table width="100%" cellpadding="8" cellspacing="0">
-            ${songName ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Song:</td><td style="color: #555555; font-size: 14px;">${songName}</td></tr>` : ''}
+            ${songName ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Song:</td><td style="color: #555555; font-size: 14px;">${songName}</td></tr>` : ""}
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
             <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
           </table>
@@ -350,18 +364,18 @@ const specialArtistSongApprovedEmail = (userName, transactionId, songName) => {
       Thank you for being a special artist in our community!
     </p>
   `;
-  
-  return getEmailTemplate('Special Artist Song Approved!', '⭐', content);
+
+  return getEmailTemplate("Special Artist Song Approved!", "⭐", content);
 };
 
 // Payment Approved Email (Generic)
-const paymentApprovedEmail = (userName, transactionId) => {
-  console.log('\n✅ PAYMENT APPROVED EMAIL');
-  console.log('User Name:', userName);
-  console.log('Transaction ID:', transactionId);
-  
+const paymentApprovedEmail = (userName, transactionId, amount) => {
+  console.log("\n✅ PAYMENT APPROVED EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       ✅ Great news! Your payment has been approved.
     </p>
@@ -373,7 +387,8 @@ const paymentApprovedEmail = (userName, transactionId) => {
           <table width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
             <tr><td style="font-weight: 600; color: #333333; font-size: 14px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
-          </table>
+<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">${amount}</td></tr>          
+            </table>
         </td>
       </tr>
     </table>
@@ -382,19 +397,19 @@ const paymentApprovedEmail = (userName, transactionId) => {
       You can now access your dashboard and start using our services.
     </p>
   `;
-  
-  return getEmailTemplate('Payment Approved!', '✅', content);
+
+  return getEmailTemplate("Payment Approved!", "✅", content);
 };
 
 // Payment Rejected Email
-const paymentRejectedEmail = (userName, transactionId, rejectReason) => {
-  console.log('\n❌ PAYMENT REJECTED EMAIL');
-  console.log('User Name:', userName);
-  console.log('Transaction ID:', transactionId);
-  console.log('Reject Reason:', rejectReason);
-  
+const paymentRejectedEmail = (userName, transactionId, rejectReason,amount) => {
+  console.log("\n❌ PAYMENT REJECTED EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+  console.log("Reject Reason:", rejectReason);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       We regret to inform you that your payment has been rejected.
@@ -408,7 +423,8 @@ const paymentRejectedEmail = (userName, transactionId, rejectReason) => {
           <table width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Rejected</td></tr>
-            ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ''}
+            ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">${amount}</td></tr>
           </table>
         </td>
       </tr>
@@ -418,17 +434,17 @@ const paymentRejectedEmail = (userName, transactionId, rejectReason) => {
       If you have any questions or need assistance, please don't hesitate to contact us. We're here to help resolve any issues.
     </p>
   `;
-  
-  return getEmailTemplate('Payment Rejected', '❌', content);
+
+  return getEmailTemplate("Payment Rejected", "❌", content);
 };
 
 // Personal Details Approved Email
 const personalDetailsApprovedEmail = (userName) => {
-  console.log('\n✅ PERSONAL DETAILS APPROVED EMAIL');
-  console.log('User Name:', userName);
-  
+  console.log("\n✅ PERSONAL DETAILS APPROVED EMAIL");
+  console.log("User Name:", userName);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Great news! Your personal details have been successfully verified and approved.
@@ -451,18 +467,18 @@ const personalDetailsApprovedEmail = (userName) => {
       You're one step closer to joining the OPH Community! Please complete the remaining steps in your dashboard.
     </p>
   `;
-  
-  return getEmailTemplate('Personal Details Approved!', '✅', content);
+
+  return getEmailTemplate("Personal Details Approved!", "✅", content);
 };
 
 // Personal Details Rejected Email
 const personalDetailsRejectedEmail = (userName, rejectReason) => {
-  console.log('\n❌ PERSONAL DETAILS REJECTED EMAIL');
-  console.log('User Name:', userName);
-  console.log('Reject Reason:', rejectReason);
-  
+  console.log("\n❌ PERSONAL DETAILS REJECTED EMAIL");
+  console.log("User Name:", userName);
+  console.log("Reject Reason:", rejectReason);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Unfortunately, your personal details have been rejected and require updates.
@@ -476,7 +492,7 @@ const personalDetailsRejectedEmail = (userName, rejectReason) => {
           <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Step:</td><td style="color: #555555; font-size: 14px;">Personal Details</td></tr>
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Rejected</td></tr>
-            ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ''}
+            ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
           </table>
         </td>
       </tr>
@@ -486,17 +502,17 @@ const personalDetailsRejectedEmail = (userName, rejectReason) => {
       Please update your personal information in your dashboard and resubmit for verification.
     </p>
   `;
-  
-  return getEmailTemplate('Personal Details Rejected', '❌', content);
+
+  return getEmailTemplate("Personal Details Rejected", "❌", content);
 };
 
 // Professional Details Approved Email
 const professionalDetailsApprovedEmail = (userName) => {
-  console.log('\n✅ PROFESSIONAL DETAILS APPROVED EMAIL');
-  console.log('User Name:', userName);
-  
+  console.log("\n✅ PROFESSIONAL DETAILS APPROVED EMAIL");
+  console.log("User Name:", userName);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Excellent! Your professional details have been successfully verified and approved.
@@ -519,18 +535,18 @@ const professionalDetailsApprovedEmail = (userName) => {
       You're making great progress! Please complete the remaining steps in your dashboard.
     </p>
   `;
-  
-  return getEmailTemplate('Professional Details Approved!', '✅', content);
+
+  return getEmailTemplate("Professional Details Approved!", "✅", content);
 };
 
 // Professional Details Rejected Email
 const professionalDetailsRejectedEmail = (userName, rejectReason) => {
-  console.log('\n❌ PROFESSIONAL DETAILS REJECTED EMAIL');
-  console.log('User Name:', userName);
-  console.log('Reject Reason:', rejectReason);
-  
+  console.log("\n❌ PROFESSIONAL DETAILS REJECTED EMAIL");
+  console.log("User Name:", userName);
+  console.log("Reject Reason:", rejectReason);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Unfortunately, your professional details have been rejected and require updates.
@@ -544,7 +560,7 @@ const professionalDetailsRejectedEmail = (userName, rejectReason) => {
           <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Step:</td><td style="color: #555555; font-size: 14px;">Professional Details</td></tr>
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Rejected</td></tr>
-            ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ''}
+            ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
           </table>
         </td>
       </tr>
@@ -554,17 +570,17 @@ const professionalDetailsRejectedEmail = (userName, rejectReason) => {
       Please update your professional information in your dashboard and resubmit for verification.
     </p>
   `;
-  
-  return getEmailTemplate('Professional Details Rejected', '❌', content);
+
+  return getEmailTemplate("Professional Details Rejected", "❌", content);
 };
 
 // Documentation Details Approved Email
 const documentationDetailsApprovedEmail = (userName) => {
-  console.log('\n✅ DOCUMENTATION DETAILS APPROVED EMAIL');
-  console.log('User Name:', userName);
-  
+  console.log("\n✅ DOCUMENTATION DETAILS APPROVED EMAIL");
+  console.log("User Name:", userName);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Perfect! Your documentation details have been successfully verified and approved.
@@ -587,18 +603,18 @@ const documentationDetailsApprovedEmail = (userName) => {
       Almost there! Please complete any remaining steps in your dashboard.
     </p>
   `;
-  
-  return getEmailTemplate('Documentation Details Approved!', '✅', content);
+
+  return getEmailTemplate("Documentation Details Approved!", "✅", content);
 };
 
 // Documentation Details Rejected Email
 const documentationDetailsRejectedEmail = (userName, rejectReason) => {
-  console.log('\n❌ DOCUMENTATION DETAILS REJECTED EMAIL');
-  console.log('User Name:', userName);
-  console.log('Reject Reason:', rejectReason);
-  
+  console.log("\n❌ DOCUMENTATION DETAILS REJECTED EMAIL");
+  console.log("User Name:", userName);
+  console.log("Reject Reason:", rejectReason);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Unfortunately, your documentation details have been rejected and require updates.
@@ -612,7 +628,7 @@ const documentationDetailsRejectedEmail = (userName, rejectReason) => {
           <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Step:</td><td style="color: #555555; font-size: 14px;">Documentation Details</td></tr>
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Rejected</td></tr>
-            ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ''}
+            ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
           </table>
         </td>
       </tr>
@@ -622,17 +638,17 @@ const documentationDetailsRejectedEmail = (userName, rejectReason) => {
       Please update your documentation in your dashboard and resubmit for verification.
     </p>
   `;
-  
-  return getEmailTemplate('Documentation Details Rejected', '❌', content);
+
+  return getEmailTemplate("Documentation Details Rejected", "❌", content);
 };
 
 // All Documents Verified Email
 const allDocumentsVerifiedEmail = (userName) => {
-  console.log('\n🎉 ALL DOCUMENTS VERIFIED EMAIL');
-  console.log('User Name:', userName);
-  
+  console.log("\n🎉 ALL DOCUMENTS VERIFIED EMAIL");
+  console.log("User Name:", userName);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || 'Artist'},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
     
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
       Congratulations! All your documents have been successfully verified and approved.
@@ -691,14 +707,18 @@ const allDocumentsVerifiedEmail = (userName) => {
       </tr>
     </table>
   `;
-  
-  return getEmailTemplate('Congratulations! Your Documents are Verified', '🎉', content);
+
+  return getEmailTemplate(
+    "Congratulations! Your Documents are Verified",
+    "🎉",
+    content,
+  );
 };
 
 // 📧 Forgot Password Email Template
 function forgotPasswordEmail(userName, resetLink) {
-  console.log('📧 Generating forgot password email template');
-  
+  console.log("📧 Generating forgot password email template");
+
   const content = `
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Hi ${userName},</p>
     
@@ -716,14 +736,14 @@ function forgotPasswordEmail(userName, resetLink) {
     
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">⏰ This link will expire in 5 minutes, so be sure to reset it soon. Need help? We're happy to assist—just reach out!</p>
   `;
-  
-  return getEmailTemplate('Reset Your Password', '🔐', content);
+
+  return getEmailTemplate("Reset Your Password", "🔐", content);
 }
 
 // 📧 Password Reset Success Email Template
 function passwordResetSuccessEmail(userName) {
-  console.log('📧 Generating password reset success email template');
-  
+  console.log("📧 Generating password reset success email template");
+
   const content = `
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Hi ${userName},</p>
     
@@ -760,8 +780,8 @@ function passwordResetSuccessEmail(userName) {
     
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">🔒 If you didn't make this change, please contact us immediately to secure your account.</p>
   `;
-  
-  return getEmailTemplate('Password Reset Successful', '✅', content);
+
+  return getEmailTemplate("Password Reset Successful", "✅", content);
 }
 
 module.exports = {
@@ -780,5 +800,5 @@ module.exports = {
   documentationDetailsRejectedEmail,
   allDocumentsVerifiedEmail,
   forgotPasswordEmail,
-  passwordResetSuccessEmail
+  passwordResetSuccessEmail,
 };

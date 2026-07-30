@@ -6,7 +6,7 @@ const db = require("../../DB/connect");
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const updateWithdrawStatus = async (req, res) => {
-  const { withdrawal_id, action, reason } = req.body;
+  const { withdrawal_id, action, reason,amount  } = req.body;
 
   if (!withdrawal_id || !action) {
     return res.status(400).json({ message: "Missing required fields" });
@@ -20,7 +20,8 @@ const updateWithdrawStatus = async (req, res) => {
     const result = await WithdrawModel.updateWithdrawStatus(
       withdrawal_id,
       action,
-      reason
+      reason,
+      amount
     );
 
     // Fetch ophID from the withdraw record
@@ -48,7 +49,7 @@ const updateWithdrawStatus = async (req, res) => {
             from: "OPH Community <creators@ophcommunity.org>",
             to: userEmail,
             subject: "Withdrawal Request Approved!",
-            html: paymentApprovedEmail(userName, withdrawal_id),
+            html: paymentApprovedEmail(userName, withdrawal_id, amount),
           });
           console.log("Withdrawal approval email sent to:", userEmail);
         } else if (action === "reject") {
@@ -56,7 +57,7 @@ const updateWithdrawStatus = async (req, res) => {
             from: "OPH Community <creators@ophcommunity.org>",
             to: userEmail,
             subject: "Withdrawal Request Rejected",
-            html: paymentRejectedEmail(userName, withdrawal_id, reason),
+            html: paymentRejectedEmail(userName, withdrawal_id, reason, amount),
           });
           console.log("Withdrawal rejection email sent to:", userEmail);
         }

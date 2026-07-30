@@ -31,7 +31,7 @@ useEffect(() => {
     });
 }, []);
   
-  const handleStatusChange = async (withdrawal_id, action) => {
+  const handleStatusChange = async (withdrawal_id, action,amount) => {
     const data = summaryMap[withdrawal_id] || {};
 
     if (action === "reject") {
@@ -46,6 +46,7 @@ useEffect(() => {
         withdrawal_id,
         action,
         reason: action === "reject" ? data.reason : null,
+        amount
       });
       alert(`Withdrawal ${action}ed successfully`);
 
@@ -141,7 +142,7 @@ useEffect(() => {
                             flex: 1,
                           }}
                           onClick={() =>
-                            handleStatusChange(withdrawalId, "reject")
+                            handleStatusChange(withdrawalId, "reject",withdraw.withdraw_amount)
                           }
                         >
                           Confirm Reject
@@ -185,7 +186,7 @@ useEffect(() => {
                           flex: 1,
                         }}
                         onClick={() =>
-                          handleStatusChange(withdrawalId, "approve")
+                          handleStatusChange(withdrawalId, "approve",withdraw.withdraw_amount)
                         }
                       >
                         Approve
