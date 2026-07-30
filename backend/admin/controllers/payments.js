@@ -11,7 +11,7 @@ const {
   eventBookingApprovedEmail,
 } = require("../../utils/emailTemplates");
 
-const resend = new Resend("re_XMPVxrwG_5piBuXZ9ti12ovEuQC7RVuV5");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const updateStatus = async (req, res) => {
   try {

@@ -1,4 +1,9 @@
 const WithdrawModel = require("../model/withdraw");
+const { Resend } = require("resend");
+const { paymentApprovedEmail, paymentRejectedEmail } = require("../../utils/emailTemplates");
+const db = require("../../DB/connect");
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const updateWithdrawStatus = async (req, res) => {
   const { withdrawal_id, action, reason } = req.body;
