@@ -22,6 +22,47 @@ const updateWithdrawStatus = async (req, res) => {
       action,
       reason
     );
+
+    // Fetch ophID from the withdraw record
+    const [withdrawRows] = await db.execute(
+      "SELECT OPH_ID FROM withdraw WHERE withdrawal_id = ?",
+      [withdrawal_id]
+    );
+    const ophID = withdrawRows[0]?.OPH_ID;
+    console.log("Withdrawal ophID:", ophID);
+
+    if (ophID) {
+      const [userRows] = await db.execute(
+        "SELECT email, full_name FROM user_details WHERE oph_id = ?",
+        [ophID]
+      );
+      const userEmail = userRows[0]?.email;
+      const userName = userRows[0]?.full_name;
+      console.log("Withdrawal email target:", userEmail);
+
+      if (userEmail) {
+        if (action === "approve") {
+          console.log(userEmail , " userEmail");
+          
+          await resend.emails.send({
+            from: "OPH Community <creators@ophcommunity.org>",
+            to: userEmail,
+            subject: "Withdrawal Request Approved!",
+            html: paymentApprovedEmail(userName, withdrawal_id),
+          });
+          console.log("Withdrawal approval email sent to:", userEmail);
+        } else if (action === "reject") {
+          await resend.emails.send({
+            from: "OPH Community <creators@ophcommunity.org>",
+            to: userEmail,
+            subject: "Withdrawal Request Rejected",
+            html: paymentRejectedEmail(userName, withdrawal_id, reason),
+          });
+          console.log("Withdrawal rejection email sent to:", userEmail);
+        }
+      }
+    }
+
     return res.status(200).json({ success: true, data: result });
   } catch (error) {
     console.error("Error updating withdraw status:", error.message);
