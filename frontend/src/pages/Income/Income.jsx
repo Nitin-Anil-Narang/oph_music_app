@@ -274,22 +274,52 @@ export default function IncomeWithdrawal() {
     console.log("eerre");
 
     return (
-      <div className="min-h-[calc(100vh-70px)] flex items-center justify-center">
+      <div className="min-h-[calc(100vh-70px)] flex items-center justify-center max-w-[500px]">
         <div className="flex flex-col items-center gap-4 text-white">
           {incomeStatus?.status === "locked" ? (
-            <p className="text-lg font-semibold">
-              Income is locked. Request to unlock
+            <div className="flex flex-col gap-[20px] items-center justify-center ">
+              <svg
+                width="98"
+                height="128"
+                viewBox="0 0 98 128"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M85.1667 42.5833H79.0833V30.4167C79.0833 13.6267 65.4567 0 48.6667 0C31.8767 0 18.25 13.6267 18.25 30.4167V42.5833H12.1667C5.475 42.5833 0 48.0583 0 54.75V115.583C0 122.275 5.475 127.75 12.1667 127.75H85.1667C91.8583 127.75 97.3333 122.275 97.3333 115.583V54.75C97.3333 48.0583 91.8583 42.5833 85.1667 42.5833ZM48.6667 97.3333C41.975 97.3333 36.5 91.8583 36.5 85.1667C36.5 78.475 41.975 73 48.6667 73C55.3583 73 60.8333 78.475 60.8333 85.1667C60.8333 91.8583 55.3583 97.3333 48.6667 97.3333ZM30.4167 42.5833V30.4167C30.4167 20.3183 38.5683 12.1667 48.6667 12.1667C58.765 12.1667 66.9167 20.3183 66.9167 30.4167V42.5833H30.4167Z"
+                  fill="#5DC9DE"
+                />
+              </svg>
+
+              <p className="text-[32px] font-semibold leading-none mt-[13px]">
+                Income is Locked. <br /> Request to Unlock
             </p>
+            </div>
           ) : (
-            <p className="text-lg font-semibold">
-              your request is under review
+            <div className="flex flex-col gap-[20px] items-center justify-center ">
+              <svg
+                width="98"
+                height="128"
+                viewBox="0 0 98 128"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M85.1667 42.5833H79.0833V30.4167C79.0833 13.6267 65.4567 0 48.6667 0C31.8767 0 18.25 13.6267 18.25 30.4167V42.5833H12.1667C5.475 42.5833 0 48.0583 0 54.75V115.583C0 122.275 5.475 127.75 12.1667 127.75H85.1667C91.8583 127.75 97.3333 122.275 97.3333 115.583V54.75C97.3333 48.0583 91.8583 42.5833 85.1667 42.5833ZM48.6667 97.3333C41.975 97.3333 36.5 91.8583 36.5 85.1667C36.5 78.475 41.975 73 48.6667 73C55.3583 73 60.8333 78.475 60.8333 85.1667C60.8333 91.8583 55.3583 97.3333 48.6667 97.3333ZM30.4167 42.5833V30.4167C30.4167 20.3183 38.5683 12.1667 48.6667 12.1667C58.765 12.1667 66.9167 20.3183 66.9167 30.4167V42.5833H30.4167Z"
+                  fill="#5DC9DE"
+                />
+              </svg>
+
+              <p className="text-[24px] font-semibold text-center">
+                Your request is <br/> under review
             </p>
+            </div>
           )}
 
           {incomeStatus?.status === "locked" && (
             <button
               onClick={handleIncomeRequest}
-              className="bg-white text-[#6F4FA0] px-6 py-2 rounded-lg font-medium hover:opacity-90 transition"
+              className="w-full bg-cyan-400 text-gray-900 px-[16px] py-[16px] rounded-full text-[16px] font-extrabold mt-[7px]"
             >
               Request to Unlock
             </button>
@@ -389,7 +419,10 @@ export default function IncomeWithdrawal() {
         </div>
 
         {/* Withdrawal Form */}
-        <form onSubmit={submitWithdraw} className="max-w-2xl space-y-6 mb-[16px]">
+        <form
+          onSubmit={submitWithdraw}
+          className="max-w-2xl space-y-6 mb-[16px]"
+        >
           <div className="flex gap-4 flex flex-col md:flex-row">
             <div className="flex-1">
               <label className="block text-sm text-gray-400 mb-2">
@@ -415,7 +448,7 @@ export default function IncomeWithdrawal() {
                   income &&
                   parseFloat(withdrawAmount) >
                     (income.availableAmount ?? income.income) && (
-                    <p className="absolute -bottom-6 left-0 text-red-400 text-sm">
+                    <p className="mt-[10px] text-red-400 text-sm">
                       Amount cannot exceed available income of ₹
                       {parseFloat(
                         income.availableAmount ?? income.income,

@@ -8,6 +8,7 @@ import Struggle from "../../../../../public/assets/images/struggle.png";
 import Elipse from "../../../../../public/assets/images/elipse.png";
 import Elipse2 from "../../../../../public/assets/images/elipse2.png";
 import { useArtist } from "../../API/ArtistContext";
+import FilterSelect from "../../../../components/FilterSelect/FilterSelect";
 import CustomVideoPlayer from "../../../../components/CustomVideoPlayer/CustomVideoPlayer";
 
 const artistTypeData = {
@@ -42,86 +43,6 @@ const artistTypeData = {
   ],
 };
 
-/* --- Custom Dropdown Component --- */
-const CustomArtistTypeSelect = ({ value, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
-
-  const options = [
-    { label: "Independent Artist", value: "Independent artist" },
-    { label: "Specialist Artist", value: "Special artist" },
-  ];
-
-  const selectedOption = options.find((opt) => opt.value === value);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  return (
-    <div className="relative w-full" ref={dropdownRef}>
-      <button
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="w-full flex items-center justify-between px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent text-gray-100 text-xs sm:text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 shadow-lg transition-all"
-      >
-        <span className={selectedOption ? "text-gray-100" : "text-gray-400"}>
-          {selectedOption ? selectedOption.label : "Select Artist Type"}
-        </span>
-
-        {/* Custom Glowing Arrow */}
-        <svg
-          className={`w-4 h-4 text-cyan-400 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : "rotate-0"
-          }`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
-
-      {/* Floating Options Menu */}
-      {isOpen && (
-        <div className="absolute left-0 right-0 mt-2 z-50 rounded-xl bg-gray-900/95 backdrop-blur-md border border-white/10 shadow-2xl overflow-hidden transition-all">
-          {options.map((option) => (
-            <div
-              key={option.value}
-              onClick={() => {
-                onChange({
-                  target: { name: "artistType", value: option.value },
-                });
-                setIsOpen(false);
-              }}
-              className={`px-4 py-2.5 text-xs sm:text-sm cursor-pointer transition-colors duration-150 flex items-center justify-between ${
-                value === option.value
-                  ? "bg-cyan-500/20 text-cyan-400 font-medium"
-                  : "text-gray-300 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              <span>{option.label}</span>
-              {value === option.value && (
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></span>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -440,14 +361,29 @@ const SignUpForm = () => {
                 )}
               </div>
 
-              {/* Custom Artist Type Dropdown */}
+              {/* Artist Type Dropdown */}
               <div>
                 <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2 lg:mb-4">
                   Artist Type :<span className="text-red-500">*</span>
                 </label>
-                <CustomArtistTypeSelect
-                  value={formData.artistType}
-                  onChange={handleChange}
+                <FilterSelect
+                  value={
+                    formData.artistType === "Independent artist"
+                      ? "Independent Artist"
+                      : formData.artistType === "Special artist"
+                      ? "Specialist Artist"
+                      : ""
+                  }
+                  placeholder="Select Artist Type"
+                  ariaLabel="Artist Type"
+                  className="w-full flex items-center justify-between px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent text-gray-100 text-xs sm:text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 shadow-lg transition-all cursor-pointer"
+                  options={[
+                    { value: "Independent artist", label: "Independent Artist" },
+                    { value: "Special artist", label: "Specialist Artist" },
+                  ]}
+                  onChange={(val) =>
+                    handleChange({ target: { name: "artistType", value: val } })
+                  }
                 />
                 {errors.artistType && (
                   <div className="text-red-500 text-xs sm:text-sm mt-1">

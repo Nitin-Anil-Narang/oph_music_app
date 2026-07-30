@@ -5,6 +5,7 @@ import { getPersonalDetails, updatePersonalDetails } from "../../API/profile";
 import ProfileFormHeader from "../components/ProfileFormHeader";
 import Loading from "../../../../components/Loading";
 import { useArtist } from "../../API/ArtistContext";
+import FilterSelect from "../../../../components/FilterSelect/FilterSelect";
 import axiosApi from "../../../../conf/axios";
 import CustomVideoPlayer from "../../../../components/CustomVideoPlayer/CustomVideoPlayer";
 import { AiOutlineUser } from "react-icons/ai";
@@ -463,20 +464,14 @@ const PersonalDetailsForm = () => {
 
               {/* Location */}
               <div>
-                <select
-                  name="location"
+                <FilterSelect
                   value={formData.location}
-                  onChange={handleInputChange}
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
-                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)]  focus:border-[#5DC9DE] outline-none  transition duration-200"
-                >
-                  <option value="">Select Your State</option>
-                  {indianStates.map((state) => (
-                    <option key={state} value={state}>
-                      {state}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="Select Your State"
+                  ariaLabel="Location"
+                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner focus:ring-2 focus:border-[#5DC9DE] transition duration-200 cursor-pointer flex items-center justify-between gap-2"
+                  options={indianStates}
+                  onChange={(val) => setFormData((prev) => ({ ...prev, location: val }))}
+                />
               </div>
 
               {/* Email */}

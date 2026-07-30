@@ -10,10 +10,14 @@ const FilterSelect = ({ value, onChange, options, placeholder, ariaLabel }) => {
   const [open, setOpen] = useState(false);
   const [dropdownStyle, setDropdownStyle] = useState({});
   const btnRef = useRef(null);
+  const listRef = useRef(null);
 
   useEffect(() => {
     const handler = (e) => {
-      if (btnRef.current && !btnRef.current.contains(e.target)) setOpen(false);
+      if (
+        btnRef.current && !btnRef.current.contains(e.target) &&
+        listRef.current && !listRef.current.contains(e.target)
+      ) setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -27,11 +31,16 @@ const FilterSelect = ({ value, onChange, options, placeholder, ariaLabel }) => {
         top: rect.bottom + 4,
         left: rect.left,
         width: rect.width,
-        maxWidth: "calc(100vw - 32px)", // Prevents portal dropdown from bleeding offscreen
+        maxWidth: "calc(100vw - 32px)",
         zIndex: 9999,
       });
     }
     setOpen((o) => !o);
+  };
+
+  const handleSelect = (val) => {
+    onChange(val);
+    setOpen(false);
   };
 
   return (
@@ -43,32 +52,29 @@ const FilterSelect = ({ value, onChange, options, placeholder, ariaLabel }) => {
         className={btnClass}
       >
         <span className="truncate">{value || placeholder}</span>
-        <ChevronDown className="h-4 w-4 shrink-0 text-white/70" />
+        <ChevronDown className={`h-4 w-4 shrink-0 text-white/70 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open &&
         ReactDOM.createPortal(
           <ul
+            ref={listRef}
             style={dropdownStyle}
             className="max-h-48 overflow-y-auto rounded-xl border border-white/20 bg-gray-900 text-white text-sm shadow-lg"
           >
             <li
               className="px-4 py-2 cursor-pointer hover:bg-white/10"
-              onClick={() => {
-                onChange("");
-                setOpen(false);
-              }}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => handleSelect("")}
             >
               {placeholder}
             </li>
             {options.map((opt) => (
               <li
                 key={opt}
-                className="px-4 py-2 cursor-pointer hover:bg-white/10 truncate"
-                onClick={() => {
-                  onChange(opt);
-                  setOpen(false);
-                }}
+                className={`px-4 py-2 cursor-pointer hover:bg-white/10 truncate ${value === opt ? "bg-white/10" : ""}`}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => handleSelect(opt)}
               >
                 {opt}
               </li>

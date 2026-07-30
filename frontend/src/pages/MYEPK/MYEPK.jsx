@@ -36,7 +36,9 @@ const MYEPK = () => {
   const [relatedArtists, setRelatedArtists] = useState([]);
 
   const [audio, setAudio] = useState(null);
-  const [playingSongId, setPlayingSongId] = useState(null); // State for currently playing song ID
+  const [playingSongId, setPlayingSongId] = useState(null);
+  const [progress, setProgress] = useState({}); // { [songId]: { current, duration } }
+  const audioRefs = useRef({}); // { [songId]: HTMLAudioElement }
 
   const { headers, ophid } = useArtist();
 
@@ -101,17 +103,12 @@ const MYEPK = () => {
   // Listen for pauseAllAudio event to pause audio when video plays
   useEffect(() => {
     const handlePauseAllAudio = () => {
-      if (audio && !audio.paused) {
-        audio.pause();
-        setPlayingSongId(null);
-      }
+      Object.values(audioRefs.current).forEach((a) => a.pause());
+      setPlayingSongId(null);
     };
-
     window.addEventListener("pauseAllAudio", handlePauseAllAudio);
-    return () => {
-      window.removeEventListener("pauseAllAudio", handlePauseAllAudio);
-    };
-  }, [audio]);
+    return () => window.removeEventListener("pauseAllAudio", handlePauseAllAudio);
+  }, []);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -143,41 +140,66 @@ const MYEPK = () => {
     }
   };
 
+  const getOrCreateAudio = (song) => {
+    if (!audioRefs.current[song.id]) {
+      const a = new Audio(song.audio_url);
+      a.addEventListener("timeupdate", () => {
+        setProgress((p) => ({ ...p, [song.id]: { current: a.currentTime, duration: a.duration || 0 } }));
+      });
+      a.addEventListener("loadedmetadata", () => {
+        setProgress((p) => ({ ...p, [song.id]: { current: a.currentTime, duration: a.duration || 0 } }));
+      });
+      a.addEventListener("ended", () => {
+        setPlayingSongId(null);
+        setProgress((p) => ({ ...p, [song.id]: { current: 0, duration: a.duration || 0 } }));
+        a.currentTime = 0;
+      });
+      audioRefs.current[song.id] = a;
+    }
+    return audioRefs.current[song.id];
+  };
+
   const handlePlayPause = (song) => {
+    const a = getOrCreateAudio(song);
     if (playingSongId === song.id) {
-      // Toggle play/pause for the same song
-      if (!audio?.paused) {
-        audio?.pause();
+      if (!a.paused) {
+        a.pause();
         setPlayingSongId(null);
       } else {
-        // Pause video when audio starts playing
-        if (videoRef.current && !videoRef.current.paused) {
-          videoRef.current.pause();
-          setShowButton(true);
-        }
-        audio?.play()?.catch((error) => {
-          console.error("Audio play failed:", error);
-        });
+        if (videoRef.current && !videoRef.current.paused) { videoRef.current.pause(); setShowButton(true); }
+        a.play().catch(console.error);
         setPlayingSongId(song.id);
       }
     } else {
-      // Pause video when audio starts playing
-      if (videoRef.current && !videoRef.current.paused) {
-        videoRef.current.pause();
-        setShowButton(true);
-      }
-      // New song selected
-      if (audio) {
-        audio.pause();
-      }
-      const newAudio = new Audio(song.audio_url);
-      newAudio.play().catch((error) => {
-        console.error("Audio play failed:", error);
-      });
-      setAudio(newAudio);
+      if (videoRef.current && !videoRef.current.paused) { videoRef.current.pause(); setShowButton(true); }
+      // pause currently playing
+      if (audio) audio.pause();
+      setAudio(a);
+      a.play().catch(console.error);
       setPlayingSongId(song.id);
     }
   };
+
+  const handleSeek = (song, value) => {
+    const a = audioRefs.current[song.id];
+    if (a) {
+      a.currentTime = Number(value);
+      setProgress((p) => ({ ...p, [song.id]: { current: Number(value), duration: a.duration || 0 } }));
+    }
+  };
+
+  const sumOfPlays = (songs) => {
+
+    let sum = 0;
+
+    for(let i = 0; i < songs.length; i++)
+    {
+        sum += songs[i].total_song_views;
+    }
+
+    return sum;
+
+  }
 
   const formatListeners = (views) => {
     if (views >= 1000000) {
@@ -291,11 +313,14 @@ const MYEPK = () => {
                     {artist.total_content}{" "}
                     {artist.total_content > 1 ? "Songs" : "Song"}
                     {/* {artist.total_views > 0 && "— " + formatListeners(artist.total_views)} */}
+                    <span className="text-primary mb-2 font-bold"> - { sumOfPlays(artist.songs) } Listeners</span>
                   </p>
+                  
                 )}
+                <span className="text-primary mb-2 font-bold"></span>
                 <p className="text-gray-400 mb-6">{artist.bio}</p>
 
-                <div className="flex justify-center sm:justify-normal gap-4">
+                <div className="flex justify-start sm:justify-normal gap-4">
                   <a
                     target="_blank"
                     href={artist.facebook_url}
@@ -412,87 +437,129 @@ const MYEPK = () => {
               </button>
             </div>
 
-            {/* Songs Table */}
-            {artist.songs.length > 0 ? (
-              <table
-                table
-                className="w-full mb-12 text-xs sm:text-sm lg:text-base table-auto"
-              >
-                <thead>
-                  <tr className="text-gray-400 border-b border-gray-800">
-                    <th className="pb-3 px-1 text-center">#</th>
-                    <th className="pb-3 px-1 text-center">SONG'S NAME</th>
-                    <th className="pb-3 px-1 text-center">PLAYS</th>
-                    <th className="pb-3 px-1 text-center">TIME</th>
-                    <th className="pb-3 px-1 text-center">PLAY</th>
-                    {/* <th className="pb-3 px-1 text-center">DOWNLOAD</th> */}
-                  </tr>
-                </thead>
+            {/* Songs List */}
+            {artist.songs.filter((song) =>
+              (song.song_type === "free" && song.song_status === "approved") ||
+              (song.song_type === "paid" && song.song_status === "approved" && song.payment_status === "approved")
+            ).length > 0 ? (
+              <div className="w-full mb-12">
+                {/* Desktop Table */}
+                <table className="hidden sm:table w-full text-sm lg:text-base table-auto">
+                  <thead>
+                    <tr className="text-gray-400 border-b border-gray-800">
+                      <th className="pb-3 px-1 text-center">#</th>
+                      <th className="pb-3 px-1 text-center">SONG'S NAME</th>
+                      <th className="pb-3 px-1 text-center">PLAYS</th>
+                      <th className="pb-3 px-1 text-center">TIME</th>
+                      <th className="pb-3 px-1 text-center">PLAY</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {artist.songs
+                      .filter((song) =>
+                        (song.song_type === "free" && song.song_status === "approved") ||
+                        (song.song_type === "paid" && song.song_status === "approved" && song.payment_status === "approved")
+                      )
+                      .map((song, index) => (
+                        <tr key={song.id || index} className="border-b border-gray-800 hover:bg-gray-800/50 text-white">
+                          <td className="py-3 px-1 text-center">{index + 1}</td>
+                          <td className="py-3 px-1 text-center">
+                            <div className="flex flex-col items-center">
+                              <span className="font-medium">{song.song_name}</span>
+                              <span className="text-gray-400 text-xs">{song.primary_artist}</span>
+                            </div>
+                          </td>
+                          <td className="py-3 px-1 text-center">
+                            {song.total_song_views > 0 ? song.total_song_views : "—"}
+                          </td>
+                          <td className="py-3 px-1 text-center">
+                            <SongDuration url={song.audio_url} />
+                          </td>
+                          <td className="py-3 px-1 text-center">
+                            <button className="p-2 bg-[#6F4FA0] rounded-full" onClick={() => handlePlayPause(song)}>
+                              {playingSongId === song.id && !audio?.paused ? (
+                                <Pause className="w-4 h-4" />
+                              ) : (
+                                <Play className="w-4 h-4" />
+                              )}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
 
-                <tbody>
-                  {artist?.songs
-                    .filter((song) => {
-                      if (
-                        song.song_type === "free" &&
-                        song.song_status === "approved"
-                      ) {
-                        return true;
-                      }
-
-                      if (
-                        song.song_type === "paid" &&
-                        song.song_status === "approved" &&
-                        song.payment_status === "approved"
-                      ) {
-                        return true;
-                      }
-
-                      return false;
-                    })
-                    .map((song, index) => (
-                      <tr
-                        key={song.id || index}
-                        className="border-b border-gray-800 hover:bg-gray-800/50 text-white"
-                      >
-                        <td className="py-3 px-1 text-center">{index + 1}</td>
-
-                        <td className="py-3 px-1 text-center">
-                          <div className="flex flex-col items-center">
-                            <span className="font-medium">
-                              {song.song_name}
-                            </span>
-                            <span className="text-gray-400 text-xs">
-                              {song.primary_artist}
-                            </span>
+                {/* Mobile Cards */}
+                <div className="flex sm:hidden flex-col">
+                  {artist.songs
+                    .filter((song) =>
+                      (song.song_type === "free" && song.song_status === "approved") ||
+                      (song.song_type === "paid" && song.song_status === "approved" && song.payment_status === "approved")
+                    )
+                    .map((song, index) => {
+                      const isActive = playingSongId === song.id;
+                      const prog = progress[song.id] || { current: 0, duration: 0 };
+                      const pct = prog.duration > 0 ? (prog.current / prog.duration) * 100 : 0;
+                      return (
+                        <div key={song.id || index} className="border-b border-gray-800 py-4">
+                          {/* Row: index + song info + play button */}
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <p className="text-white text-sm mb-1">{String(index + 1).padStart(2, "0")}</p>
+                              <p className="text-white font-bold text-base leading-tight">{song.song_name}</p>
+                              <p className="text-gray-400 text-sm">{song.primary_artist}</p>
+                            </div>
+                            <button
+                              className="w-12 h-12 bg-[#6F4FA0] rounded-full flex items-center justify-center flex-shrink-0 ml-3"
+                              onClick={() => handlePlayPause(song)}
+                            >
+                              {isActive && !audioRefs.current[song.id]?.paused ? (
+                                <Pause className="w-5 h-5 text-white" />
+                              ) : (
+                                <Play className="w-5 h-5 text-white" />
+                              )}
+                            </button>
                           </div>
-                        </td>
 
-                        <td className="py-3 px-1 text-center">
-                          {song.total_song_views > 0
-                            ? song.total_song_views
-                            : "—"}
-                        </td>
+                          {/* Progress bar — only when active */}
+                          {isActive && (
+                            <div className="mt-3 relative flex items-center">
+                              <input
+                                type="range"
+                                min={0}
+                                max={prog.duration || 100}
+                                step={0.1}
+                                value={prog.current}
+                                onChange={(e) => handleSeek(song, e.target.value)}
+                                className="song-progress w-full h-1 appearance-none rounded-full cursor-pointer"
+                                style={{
+                                  background: `linear-gradient(to right, #5DC9DE ${pct}%, #4b5563 ${pct}%)`,
+                                }}
+                              />
+                            </div>
+                          )}
 
-                        <td className="py-3 px-1 text-center">
-                          <SongDuration url={song.audio_url} />
-                        </td>
-
-                        <td className="py-3 px-1 text-center">
-                          <button
-                            className="p-2 bg-[#6F4FA0] rounded-full"
-                            onClick={() => handlePlayPause(song)}
-                          >
-                            {playingSongId === song.id && !audio?.paused ? (
-                              <Pause className="w-4 h-4" />
-                            ) : (
-                              <Play className="w-4 h-4" />
-                            )}
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+                          {/* Plays + Duration + Download */}
+                          <div className="flex items-end justify-between mt-2">
+                            <div>
+                              <p className="text-white text-sm">{song.total_song_views > 0 ? song.total_song_views.toLocaleString("en-IN") : "—"}</p>
+                              <p className="text-white text-sm"><SongDuration url={song.audio_url} /></p>
+                            </div>
+                            <button
+                              className="w-12 h-12 bg-[#5DC9DE] rounded-full flex items-center justify-center flex-shrink-0"
+                              onClick={() => handleSongDownload(song, song.song_name)}
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 4v12M8 12l4 4 4-4" />
+                                <line x1="4" y1="20" x2="20" y2="20" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
             ) : (
               <p className="text-gray-400 text-xl text-center mb-20">
                 No song uploaded

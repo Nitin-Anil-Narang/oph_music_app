@@ -490,45 +490,59 @@ hover:bg-[#5A3F85] "
 
       {status.length > 0 && (
         <section className="mb-[20px]">
-          <h1 className="font-extrabold text-[55px] mt-[20px] md:mt-[55px]">
+          <h1 className="font-extrabold text-[35px] lg:text-[55px] mt-[20px] md:mt-[55px] text-[#5DC9DE]">
             Status
           </h1>
-          <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
-            <table
-              className="border-collapse mt-[41px]"
-              style={{ minWidth: "600px", width: "100%" }}
-            >
+
+          {/* Mobile card layout */}
+          <div className="lg:hidden mt-6 flex flex-col">
+            {status.map((stat, index) => (
+              <div key={index}>
+                <div className="grid grid-cols-2 gap-y-4 py-5">
+                  <div>
+                    <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-1">Date</p>
+                    <p className="text-white font-bold text-base">
+                      {new Date(stat.date).toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata" })}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-1">Request</p>
+                    <p className="text-white font-bold text-base uppercase">{stat.field} Update</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-1">Status</p>
+                    <p className="text-white font-bold text-base uppercase">{stat.status}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-1">Reason</p>
+                    <p className="text-white font-bold text-base">{stat.reason || "-"}</p>
+                  </div>
+                </div>
+                {index < status.length - 1 && <div className="border-b border-[#FFFFFF33]" />}
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden lg:block" style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+            <table className="border-collapse mt-[41px]" style={{ minWidth: "600px", width: "100%" }}>
               <thead>
                 <tr className="border-b border-b-[#FFFFFF33] text-left">
                   <th className="pb-[14px] text-[15px] font-semibold">DATE</th>
-                  <th className="pb-[14px] text-[15px] font-semibold">
-                    REQUEST
-                  </th>
-                  <th className="pb-[14px] text-[15px] font-semibold">
-                    STATUS
-                  </th>
-                  <th className="pb-[14px] text-[15px] font-semibold">
-                    REASON
-                  </th>
+                  <th className="pb-[14px] text-[15px] font-semibold">REQUEST</th>
+                  <th className="pb-[14px] text-[15px] font-semibold">STATUS</th>
+                  <th className="pb-[14px] text-[15px] font-semibold">REASON</th>
                 </tr>
               </thead>
               <tbody>
                 {status.map((stat, index) => (
                   <tr key={index}>
                     <td className="py-[12px] font-bold text-[16px]">
-                      {new Date(stat.date).toLocaleDateString("en-GB", {
-                        timeZone: "Asia/Kolkata",
-                      })}
+                      {new Date(stat.date).toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata" })}
                     </td>
-                    <td className="py-[12px] font-bold text-[16px]">
-                      {stat.field} update
-                    </td>
-                    <td className="py-[12px] font-bold text-[16px]">
-                      {stat.status}
-                    </td>
-                    <td className="py-[12px] font-bold text-[16px]">
-                      {stat.reason || "-"}
-                    </td>
+                    <td className="py-[12px] font-bold text-[16px]">{stat.field} update</td>
+                    <td className="py-[12px] font-bold text-[16px]">{stat.status}</td>
+                    <td className="py-[12px] font-bold text-[16px]">{stat.reason || "-"}</td>
                   </tr>
                 ))}
               </tbody>

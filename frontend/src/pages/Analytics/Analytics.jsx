@@ -1,6 +1,7 @@
-import { ChartArea, ChevronDown } from "lucide-react";
+import { ChartArea, ChevronDown, CalendarDays } from "lucide-react";
 import Chart from "../../components/Chart/Chart";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 import axiosApi from "../../conf/axios";
 import { useArtist } from "../auth/API/ArtistContext";
 import CustomVideoPlayer from "../../components/CustomVideoPlayer/CustomVideoPlayer";
@@ -136,6 +137,119 @@ function audioChartDataWithBaseline(monthPoints) {
   ];
 }
 
+/* ── Mobile-only sub-components ─────────────────────────────────────── */
+
+function MobileSongPlatformSelect({ songValue, songOptions, onSongChange, platformValue, onPlatformChange }) {
+  const [songOpen, setSongOpen] = useState(false);
+  const [platformOpen, setPlatformOpen] = useState(false);
+  const ref = useRef(null);
+  const songBtnRef = useRef(null);
+  const platformBtnRef = useRef(null);
+  const [songDropStyle, setSongDropStyle] = useState({});
+  const [platformDropStyle, setPlatformDropStyle] = useState({});
+  const platforms = ["YouTube", "Instagram", "Audio Platform"];
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setSongOpen(false);
+        setPlatformOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const openSong = () => {
+    const rect = songBtnRef.current?.getBoundingClientRect();
+    if (rect) setSongDropStyle({ position: "fixed", top: rect.bottom + 4, left: rect.left, width: rect.width, zIndex: 9999 });
+    setSongOpen((p) => !p);
+    setPlatformOpen(false);
+  };
+
+  const openPlatform = () => {
+    const rect = platformBtnRef.current?.getBoundingClientRect();
+    if (rect) setPlatformDropStyle({ position: "fixed", top: rect.bottom + 4, left: rect.left, width: rect.width, zIndex: 9999 });
+    setPlatformOpen((p) => !p);
+    setSongOpen(false);
+  };
+
+  return (
+    <div ref={ref} className="rounded-2xl overflow-hidden border border-gray-700">
+      {/* Song section — dark top half */}
+      <div ref={songBtnRef} className="bg-[#1a1f2e] px-4 py-4 flex items-start justify-between cursor-pointer" onClick={openSong}>
+        <div>
+          <p className="text-gray-400 text-sm mb-1">Song Name:</p>
+          <p className="text-white font-semibold text-base">{songValue || "Select a Song"}</p>
+        </div>
+        <ChevronDown className={`w-5 h-5 text-white mt-1 shrink-0 transition-transform ${songOpen ? "rotate-180" : ""}`} />
+      </div>
+      {/* Platform section — cyan bottom half */}
+      <div ref={platformBtnRef} className="bg-[#5DC9DE] px-4 py-4 flex items-center justify-between cursor-pointer" onClick={openPlatform}>
+        <span className="font-semibold text-black text-base">{platformValue || "Select Platform"}</span>
+        <ChevronDown className={`w-5 h-5 text-black shrink-0 transition-transform ${platformOpen ? "rotate-180" : ""}`} />
+      </div>
+      {/* Song dropdown — portal */}
+      {songOpen && ReactDOM.createPortal(
+        <ul style={songDropStyle} className="max-h-60 overflow-y-auto rounded-xl border border-gray-700 bg-gray-900 text-white shadow-lg">
+          {songOptions.map((opt) => (
+            <li key={opt.value} className="px-4 py-3 cursor-pointer hover:bg-white/10 truncate"
+              onClick={() => { onSongChange(opt.value); setSongOpen(false); }}>{opt.label}</li>
+          ))}
+        </ul>, document.body
+      )}
+      {/* Platform dropdown — portal */}
+      {platformOpen && ReactDOM.createPortal(
+        <ul style={platformDropStyle} className="max-h-60 overflow-y-auto rounded-xl border border-gray-700 bg-gray-900 text-white shadow-lg">
+          <li className="px-4 py-3 cursor-pointer hover:bg-white/10" onClick={() => { onPlatformChange(""); setPlatformOpen(false); }}>Select Platform</li>
+          {platforms.map((p) => (
+            <li key={p} className={`px-4 py-3 cursor-pointer hover:bg-white/10 ${platformValue === p ? "bg-white/10" : ""}`}
+              onClick={() => { onPlatformChange(p); setPlatformOpen(false); }}>{p}</li>
+          ))}
+        </ul>, document.body
+      )}
+    </div>
+  );
+}
+
+function MobileDurationSelect({ value, options, onChange }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const [dropStyle, setDropStyle] = useState({});
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const handleOpen = () => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (rect) setDropStyle({ position: "fixed", top: rect.bottom + 4, left: rect.left, width: rect.width, zIndex: 9999 });
+    setOpen((p) => !p);
+  };
+
+  return (
+    <div ref={ref} className="relative">
+      <button type="button" onClick={handleOpen}
+        className="w-full rounded-full bg-[#1a1f2e] border border-gray-700 px-4 py-4 flex items-center justify-center gap-2 text-white font-semibold text-base">
+        <CalendarDays className="w-5 h-5" />
+        <span>{value || "Duration"}</span>
+      </button>
+      {open && ReactDOM.createPortal(
+        <ul style={dropStyle} className="max-h-60 overflow-y-auto rounded-xl border border-gray-700 bg-gray-900 text-white shadow-lg">
+          {options.map((opt) => (
+            <li key={opt.value} className={`px-4 py-3 cursor-pointer hover:bg-white/10 ${value === opt.label ? "bg-white/10" : ""}`}
+              onClick={() => { onChange(opt.value); setOpen(false); }}>{opt.label}</li>
+          ))}
+        </ul>, document.body
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+
 export default function AnalyticsDashboard() {
   const { ophid, headers } = useArtist();
   const [selectedContentId, setSelectedContentId] = useState(null);
@@ -257,6 +371,7 @@ export default function AnalyticsDashboard() {
         revenueRaw != null && revenueRaw !== "" ? Number(revenueRaw) : null;
       return {
         name: metric.song_name,
+        song_name: metric.song_name,
         date: metric.updated_at || null,
         Id: metric.Id || metric.id,
         song_id: metric.song_id,
@@ -528,21 +643,39 @@ export default function AnalyticsDashboard() {
               </div>
             </div>
 
-            {/* Song Selection and Platform */}
-            <div className="flex flex-col md:flex-row gap-4">
+            {/* Song + Platform connected card — Mobile */}
+            <div className="lg:hidden flex flex-col gap-3">
+              <MobileSongPlatformSelect
+                songValue={selectedContent?.[0]?.name || ""}
+                songOptions={uniqueSongs.map((c) => ({ value: String(c.song_id), label: c.name }))}
+                onSongChange={(songId) => {
+                  const selectedRows = submitMetric.filter((metric) => sameSongId(metric.song_id, songId));
+                  if (selectedRows.length > 0) setSelectedContent(selectedRows);
+                }}
+                platformValue={selectedStream || ""}
+                onPlatformChange={setSelectedStream}
+              />
+              <MobileDurationSelect
+                value={durationOptions.find((o) => o.value === selectedDuration)?.label || ""}
+                options={durationOptions.map((o) => ({ value: String(o.value), label: o.label }))}
+                onChange={(val) => setSelectedDuration(Number(val))}
+              />
+            </div>
+
+            {/* Song Selection and Platform — Desktop */}
+            <div className="hidden lg:flex flex-row gap-4">
               <div className="flex-1">
                 <FilterSelect
-                  value={selectedContent?.[0] ? (selectedContent[0].song_name || selectedContent[0].name || "") : ""}
+                  value={selectedContent?.[0]?.name || ""}
                   placeholder="Select a Song"
                   ariaLabel="Song"
-                  options={uniqueSongs.map((c) => ({ value: String(c.song_id), label: c.song_name || c.name }))}
+                  options={uniqueSongs.map((c) => ({ value: String(c.song_id), label: c.name }))}
                   onChange={(songId) => {
                     const selectedRows = submitMetric.filter((metric) => sameSongId(metric.song_id, songId));
                     if (selectedRows.length > 0) setSelectedContent(selectedRows);
                   }}
                 />
               </div>
-
               <div className="w-48">
                 <FilterSelect
                   value={selectedStream || ""}
@@ -552,16 +685,6 @@ export default function AnalyticsDashboard() {
                   onChange={setSelectedStream}
                 />
               </div>
-            </div>
-
-            <div className="lg:hidden w-full">
-              <FilterSelect
-                value={durationOptions.find((o) => o.value === selectedDuration)?.label || ""}
-                placeholder="Duration"
-                ariaLabel="Duration"
-                options={durationOptions.map((o) => ({ value: String(o.value), label: o.label }))}
-                onChange={(val) => setSelectedDuration(Number(val))}
-              />
             </div>
 
             {/* Video Preview */}
@@ -594,9 +717,7 @@ export default function AnalyticsDashboard() {
 
                 <div className="px-0 md:px-4 py-1">
                   <h3 className="text-lg font-semibold">
-                    {selectedContent?.[0]?.song_name ||
-                      selectedContent?.[0]?.name ||
-                      "No content selected"}
+                    {selectedContent?.[0]?.name || "No content selected"}
                   </h3>
 
                   <p className="text-sm text-cyan-400">

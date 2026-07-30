@@ -11,6 +11,7 @@ import { useArtist } from "../../API/ArtistContext";
 import MusicBg from "../../../../../public/assets/images/music_bg.png";
 import Elipse from "../../../../../public/assets/images/elipse2.png";
 import axiosApi from "../../../../conf/axios";
+import FilterSelect from "../../../../components/FilterSelect/FilterSelect";
 import CustomVideoPlayer from "../../../../components/CustomVideoPlayer/CustomVideoPlayer";
 import SignatureCanvas from "react-signature-canvas";
 // import { fetchVideoForScreen } from "../../../../utils/fetchVideo";
@@ -758,20 +759,14 @@ const DocumentationDetailsForm = () => {
 
             {/* Bank Details */}
             <div className="space-y-4  mb-4">
-              <select
-                name="bankName"
+              <FilterSelect
                 value={formData.bankName}
-                onChange={handleInputChange}
-                className="w-full h-10 bg-transparent rounded-xl px-6 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg"
-                required
-              >
-                <option value="">Select Bank</option>
-                {banks.map((bank) => (
-                  <option key={bank.id} value={bank.name}>
-                    {bank.name}
-                  </option>
-                ))}
-              </select>
+                placeholder="Select Bank"
+                ariaLabel="Bank Name"
+                className="w-full h-10 flex items-center justify-between bg-transparent rounded-xl px-4 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg cursor-pointer"
+                options={banks.map((b) => ({ value: b.name, label: b.name }))}
+                onChange={(val) => setFormData((prev) => ({ ...prev, bankName: val }))}
+              />
               <input
                 type="text"
                 name="accountHolder"

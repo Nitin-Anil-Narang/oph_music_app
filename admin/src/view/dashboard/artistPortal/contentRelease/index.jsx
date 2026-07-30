@@ -225,13 +225,7 @@ const SectionBlock = ({
               field === "spotify_release_time" ||
               field === "apple_release_time" ||
               field === "instagram_release_time" ||
-              field === "facebook_release_time" ||
-              field === "share_url" ||
-              field === "youtube_url" ||
-              field === "spotify_url" ||
-              field === "apple_url" ||
-              field === "instagram_url" ||
-              field === "facebook_url" ? (
+              field === "facebook_release_time" ? (
               <input
                 type="time"
                 value={data[field]}
@@ -246,7 +240,7 @@ const SectionBlock = ({
             ) : (
               <input
                 type="text"
-                value={releaseData[field]}
+                value={data[field]}
                 className="w-full p-2 border rounded-md text-black bg-gray-100"
                 onChange={(e) =>
                   setContent((prev) => ({

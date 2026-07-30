@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 import { toast } from "react-hot-toast";
-import { AiOutlineDown } from "react-icons/ai";
 import {
   getProfessionalDetails,
   updateProfessionalDetails,
@@ -14,6 +13,7 @@ import MusicBg from "../../../../../public/assets/images/music_bg.png";
 import Elipse from "../../../../../public/assets/images/elipse2.png";
 import axiosApi from "../../../../conf/axios";
 import { data, useNavigate, useSearchParams } from "react-router-dom";
+import FilterSelect from "../../../../components/FilterSelect/FilterSelect";
 import { useLocation } from "react-router-dom";
 import CustomVideoPlayer from "../../../../components/CustomVideoPlayer/CustomVideoPlayer";
 
@@ -488,36 +488,15 @@ const ProfessionalDetailsForm = () => {
                 <label className="block text-white mb-1 sm:mb-3 text-xs sm:text-base">
                   Profession: <span className="text-red-500">*</span>{" "}
                 </label>
-                <div className="relative w-full">
-                {/* Select Box */}
-                <select
-                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
-                   focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200 appearance-none"
-                  value={formData.profession}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      profession: e.target.value,
-                    }))
-                  }
-                  disabled={professionsLoading}
-                >
-                  <option value="">
-                    {professionsLoading
-                      ? "Loading professions..."
-                      : "Select Profession"}
-                  </option>
-                  {professions.map((profession) => (
-                    <option key={profession.id} value={profession.id}>
-                      {profession.name}
-                    </option>
-                  ))}
-                </select>
-
-                {/* Custom Arrow Icon */}
-                <AiOutlineDown className="absolute text-[13px] top-1/2 right-3 transform -translate-y-1/2 text-white pointer-events-none" />
+                <FilterSelect
+                  value={professions.find((p) => p.id == formData.profession)?.name || ""}
+                  placeholder={professionsLoading ? "Loading professions..." : "Select Profession"}
+                  ariaLabel="Profession"
+                  className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner focus:ring-2 focus:border-[#5DC8DF] transition duration-200 cursor-pointer flex items-center justify-between gap-2"
+                  options={professions.map((p) => ({ value: String(p.id), label: p.name }))}
+                  onChange={(val) => setFormData((prev) => ({ ...prev, profession: val }))}
+                />
               </div>
-            </div>
             </div>
 
             <div className="space-y-2 mt-6">
@@ -723,22 +702,18 @@ const ProfessionalDetailsForm = () => {
                       Song planning duration:{" "}
                       <span className="text-red-500">*</span>
                     </label>
-                    <select
+                    <FilterSelect
                       value={formData.songPlanningDuration}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          songPlanningDuration: e.target.value,
-                        }))
-                      }
-                      className="w-[95%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
-       focus:ring-2 focus:bg-[rgb(93 ,201,222,0.5)] outline-none  focus:border-[#5DC8DF]  transition duration-200"
-                    >
-                      <option value="">Select One</option>
-                      <option value="monthly">Per Monthly</option>
-                      <option value="quarterly">Per Quarterly</option>
-                      <option value="yearly">Per Yearly</option>
-                    </select>
+                      placeholder="Select One"
+                      ariaLabel="Song Planning Duration"
+                      className="w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner focus:ring-2 focus:border-[#5DC8DF] transition duration-200 cursor-pointer flex items-center justify-between gap-2"
+                      options={[
+                        { value: "monthly", label: "Per Monthly" },
+                        { value: "quarterly", label: "Per Quarterly" },
+                        { value: "yearly", label: "Per Yearly" },
+                      ]}
+                      onChange={(val) => setFormData((prev) => ({ ...prev, songPlanningDuration: val }))}
+                    />
                   </div>
                 </>
               )}

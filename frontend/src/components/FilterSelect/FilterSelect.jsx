@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import { ChevronDown } from "lucide-react";
 
-const btnClass =
+const defaultBtnClass =
   "w-full rounded-full border border-gray-700 bg-gray-800/50 p-3 text-white focus:outline-none focus:border-cyan-400 cursor-pointer flex items-center justify-between gap-2";
 
 const FilterSelect = ({
@@ -11,6 +11,7 @@ const FilterSelect = ({
   options,
   placeholder = "Select",
   ariaLabel,
+  className,
 }) => {
   const [open, setOpen] = useState(false);
   const [dropdownStyle, setDropdownStyle] = useState({});
@@ -58,7 +59,7 @@ const FilterSelect = ({
         type="button"
         aria-label={ariaLabel}
         onClick={handleOpen}
-        className={btnClass}
+        className={className || defaultBtnClass}
       >
         <span className="truncate text-left">{value || placeholder}</span>
 
