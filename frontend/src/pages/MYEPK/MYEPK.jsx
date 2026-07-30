@@ -17,6 +17,8 @@ import Edit from "../../../public/assets/images/edit.png";
 import { useArtist } from "../../pages/auth/API/ArtistContext";
 import { useSelector } from "react-redux";
 import { IoIosArrowRoundDown } from "react-icons/io";
+import NavbarLeft from "../../components/Navbar/NavbarLeft";
+import NavbarRight from "../../components/Navbar/NavbarRight";
 import { SongDuration } from "../ArtistSpotlight/ArtistSpotlight";
 import CustomVideoPlayer from "../../components/CustomVideoPlayer/CustomVideoPlayer";
 const MYEPK = () => {
@@ -259,7 +261,12 @@ const MYEPK = () => {
           {/* Solid black overlay for bottom half */}
 
           {/* Content */}
-          <div className="relative z-50 container px-6 xl:px-16 lg:px-10 mx-auto pt-[120px] sm:pt-[200px] pb-[24px]">
+          <div className="relative z-50 container px-[16px] xl:px-16 lg:px-10 mx-auto pt-[10px] sm:pt-[200px] pb-[24px]">
+            {/* Mobile navigation header */}
+            <div className="flex items-center justify-between mb-[40px] block lg:hidden">
+              <NavbarLeft />
+              <NavbarRight />
+            </div>
             {/* Name Header */}
             <h1 className="text-5xl md:text-7xl text-white font-bold mb-4 ">
               {artist.name}
@@ -510,13 +517,13 @@ const MYEPK = () => {
                               <p className="text-gray-400 text-sm">{song.primary_artist}</p>
                             </div>
                             <button
-                              className="w-12 h-12 bg-[#6F4FA0] rounded-full flex items-center justify-center flex-shrink-0 ml-3"
+                              className="w-9 h-9 bg-[#6F4FA0] rounded-full flex items-center justify-center flex-shrink-0 ml-3"
                               onClick={() => handlePlayPause(song)}
                             >
                               {isActive && !audioRefs.current[song.id]?.paused ? (
-                                <Pause className="w-5 h-5 text-white" />
+                                <Pause className="w-4 h-4 text-white" />
                               ) : (
-                                <Play className="w-5 h-5 text-white" />
+                                <Play className="w-4 h-4 text-white" />
                               )}
                             </button>
                           </div>
@@ -540,16 +547,16 @@ const MYEPK = () => {
                           )}
 
                           {/* Plays + Duration + Download */}
-                          <div className="flex items-end justify-between mt-2">
-                            <div>
+                          <div className="flex items-end justify-between mt-2 gap-[6px]">
+                            <div className="flex flex-col gap-[8px] mt-[6px]">
                               <p className="text-white text-sm">{song.total_song_views > 0 ? song.total_song_views.toLocaleString("en-IN") : "—"}</p>
                               <p className="text-white text-sm"><SongDuration url={song.audio_url} /></p>
                             </div>
                             <button
-                              className="w-12 h-12 bg-[#5DC9DE] rounded-full flex items-center justify-center flex-shrink-0"
+                              className="w-9 h-9 bg-[#5DC9DE] rounded-full flex items-center justify-center flex-shrink-0"
                               onClick={() => handleSongDownload(song, song.song_name)}
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M12 4v12M8 12l4 4 4-4" />
                                 <line x1="4" y1="20" x2="20" y2="20" />
                               </svg>
