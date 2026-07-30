@@ -261,7 +261,7 @@ const MYEPK = () => {
           {/* Solid black overlay for bottom half */}
 
           {/* Content */}
-          <div className="relative z-50 container px-[16px] xl:px-16 lg:px-10 mx-auto pt-[10px] sm:pt-[200px] pb-[24px]">
+          <div className="w-full relative px-[16px] xl:px-16 lg:px-10 lg:mx-auto pt-[10px] lg:pt-[200px] pb-[24px]">
             {/* Mobile navigation header */}
             <div className="flex items-center justify-between mb-[40px] block lg:hidden">
               <NavbarLeft />
