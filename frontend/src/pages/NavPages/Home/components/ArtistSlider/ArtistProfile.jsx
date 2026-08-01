@@ -6,7 +6,10 @@ import Elipse from "../../../../../../public/assets/images/elipse.png";
 import { SongDuration } from "../../../../ArtistSpotlight/ArtistSpotlight";
 import { navigateToArtistDetail } from "../../../../../utils/artistHash";
 import { resolveProfessionLabel } from "../../../../../utils/professionDisplay";
-import { resolveSongAudioUrl, songKey } from "../../../../../utils/songAudioUrl";
+import {
+  resolveSongAudioUrl,
+  songKey,
+} from "../../../../../utils/songAudioUrl";
 
 const ArtistProfile = ({ id }) => {
   const navigate = useNavigate();
@@ -20,8 +23,21 @@ const ArtistProfile = ({ id }) => {
   const [activeSeekSongId, setActiveSeekSongId] = useState(null);
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [volume, setVolume] = useState(1);
-  const [audioProgress, setAudioProgress] = useState({ current: 0, duration: 0 });
+  const [audioProgress, setAudioProgress] = useState({
+    current: 0,
+    duration: 0,
+  });
   const isSeekingRef = useRef(false);
+
+  const sumOfPlays = (songs) => {
+    let sum = 0;
+
+    for (let i = 0; i < songs.length; i++) {
+      sum += songs[i].total_views;
+    }
+
+    return sum;
+  };
 
   const fetchArtistDetail = async () => {
     if (id == null || id === "") {
@@ -38,18 +54,15 @@ const ArtistProfile = ({ id }) => {
       });
       if (response?.data?.success && response?.data?.data) {
         setArtist(response.data.data);
+        console.log(artist);
       } else {
         setArtist(null);
-        setError(
-          response?.data?.message || "Artist details not found",
-        );
+        setError(response?.data?.message || "Artist details not found");
       }
     } catch (err) {
       setArtist(null);
       setError(
-        err.response?.data?.message ||
-          err.message ||
-          "Failed to load artist",
+        err.response?.data?.message || err.message || "Failed to load artist",
       );
     } finally {
       setLoading(false);
@@ -273,12 +286,13 @@ const ArtistProfile = ({ id }) => {
 
                 <div className="flex items-center gap-2 mb-4">
                   <span style={{ color: "#6F4FA0" }}>
-                    {approvedSongs.length} song{approvedSongs.length === 1 ? "" : "s"}
+                    {approvedSongs.length} song
+                    {approvedSongs.length === 1 ? "" : "s"}
                   </span>
                   <span className="text-gray-600">→</span>
                   <span style={{ color: "#6F4FA0" }}>
                     {" "}
-                    {formatNumber(artist.total_views)} Listeners
+                    {sumOfPlays(artist.songs)} Listeners
                   </span>
                 </div>
 
@@ -319,101 +333,102 @@ const ArtistProfile = ({ id }) => {
                     const songTitle =
                       song.song_name || song.name || song.title || "";
                     return (
-                    <tr
-                      key={sk || index}
-                      className="border-b border-gray-800 hover:bg-gray-800/50"
-                    >
-                      <td className="py-4">
-                        <div className="flex flex-col sm:flex-row gap-1 sm:gap-0">
-                          <span className="font-medium">
-                            {index + 1 < 10 ? "0" + (index + 1) : index + 1}
-                          </span>
-                          {/* Mobile-only song name */}
-                          <span className="text-sm text-gray-400 sm:hidden truncate w-[120px]">
-                            {truncateText(songTitle, 20)}
-                          </span>
-                        </div>
-                      </td>
-
-                      {/* Song name - only visible on tablet and above */}
-                      <td className="py-4 hidden sm:table-cell">
-                        <div className="ms-5">
-                          <div className="font-medium">
-                            {truncateText(songTitle, 20)}
+                      <tr
+                        key={sk || index}
+                        className="border-b border-gray-800 hover:bg-gray-800/50"
+                      >
+                        <td className="py-4">
+                          <div className="flex flex-col sm:flex-row gap-1 sm:gap-0">
+                            <span className="font-medium">
+                              {index + 1 < 10 ? "0" + (index + 1) : index + 1}
+                            </span>
+                            {/* Mobile-only song name */}
+                            <span className="text-sm text-gray-400 sm:hidden truncate w-[120px]">
+                              {truncateText(songTitle, 20)}
+                            </span>
                           </div>
-                          {song.featuring_artists &&
-                            song.featuring_artists.map((artist, ind) => (
-                              <span
-                                key={ind}
-                                className="text-gray-400 me-2 text-sm"
-                              >
-                                {artist}
-                                {ind !== song.featuring_artists.length - 1 &&
-                                  ", "}
-                              </span>
-                            ))}
-                        </div>
-                      </td>
+                        </td>
 
-                      <td className="py-4">
-                        {song.total_views ?? song.youtube_views ?? "—"}
-                      </td>
-                      <td className="py-4 text-center">
-                        <SongDuration url={audioSrc} />
-                      </td>
+                        {/* Song name - only visible on tablet and above */}
+                        <td className="py-4 hidden sm:table-cell">
+                          <div className="ms-5">
+                            <div className="font-medium">
+                              {truncateText(songTitle, 20)}
+                            </div>
+                            {song.featuring_artists &&
+                              song.featuring_artists.map((artist, ind) => (
+                                <span
+                                  key={ind}
+                                  className="text-gray-400 me-2 text-sm"
+                                >
+                                  {artist}
+                                  {ind !== song.featuring_artists.length - 1 &&
+                                    ", "}
+                                </span>
+                              ))}
+                          </div>
+                        </td>
 
-                      <td className="py-4 text-center align-middle">
-                        <div className="flex flex-col items-stretch gap-1.5 min-w-[120px] sm:min-w-[160px] max-w-[240px] mx-auto">
-                          <button
-                            type="button"
-                            disabled={!audioSrc}
-                            className="min-w-[30px] w-[30px] h-[30px] mx-auto flex items-center justify-center rounded-full bg-[#6F4FA0] disabled:opacity-40 disabled:cursor-not-allowed"
-                            onClick={() => handlePlayPause(song)}
-                            aria-label={
-                              playingSongId === sk && !audioRef.current?.paused
-                                ? "Pause"
-                                : "Play"
-                            }
-                          >
-                            {playingSongId === sk &&
-                            !audioRef.current?.paused ? (
-                              <FaPause className="text-white" size={13} />
-                            ) : (
-                              <FaPlay className="text-white ml-1" size={13} />
-                            )}
-                          </button>
-                          <div className="h-7 w-full flex items-center touch-none px-0.5">
-                            {activeSeekSongId === sk &&
-                              audioProgress.duration > 0 && (
-                                <input
-                                  type="range"
-                                  min={0}
-                                  max={audioProgress.duration}
-                                  step={0.01}
-                                  value={Math.min(
-                                    audioProgress.current,
-                                    audioProgress.duration,
-                                  )}
-                                  onChange={(e) =>
-                                    handleSeek(sk, e.target.value)
-                                  }
-                                  onPointerDown={() => {
-                                    isSeekingRef.current = true;
-                                  }}
-                                  onMouseDown={() => {
-                                    isSeekingRef.current = true;
-                                  }}
-                                  onTouchStart={() => {
-                                    isSeekingRef.current = true;
-                                  }}
-                                  aria-label={`Seek ${songTitle || "track"}`}
-                                  className="w-full h-2 cursor-pointer accent-[#5DC9DE]"
-                                />
+                        <td className="py-4">
+                          {song.total_views ?? song.youtube_views ?? "—"}
+                        </td>
+                        <td className="py-4 text-center">
+                          <SongDuration url={audioSrc} />
+                        </td>
+
+                        <td className="py-4 text-center align-middle">
+                          <div className="flex flex-col items-stretch gap-1.5 min-w-[120px] sm:min-w-[160px] max-w-[240px] mx-auto">
+                            <button
+                              type="button"
+                              disabled={!audioSrc}
+                              className="min-w-[30px] w-[30px] h-[30px] mx-auto flex items-center justify-center rounded-full bg-[#6F4FA0] disabled:opacity-40 disabled:cursor-not-allowed"
+                              onClick={() => handlePlayPause(song)}
+                              aria-label={
+                                playingSongId === sk &&
+                                !audioRef.current?.paused
+                                  ? "Pause"
+                                  : "Play"
+                              }
+                            >
+                              {playingSongId === sk &&
+                              !audioRef.current?.paused ? (
+                                <FaPause className="text-white" size={13} />
+                              ) : (
+                                <FaPlay className="text-white ml-1" size={13} />
                               )}
+                            </button>
+                            <div className="h-7 w-full flex items-center touch-none px-0.5">
+                              {activeSeekSongId === sk &&
+                                audioProgress.duration > 0 && (
+                                  <input
+                                    type="range"
+                                    min={0}
+                                    max={audioProgress.duration}
+                                    step={0.01}
+                                    value={Math.min(
+                                      audioProgress.current,
+                                      audioProgress.duration,
+                                    )}
+                                    onChange={(e) =>
+                                      handleSeek(sk, e.target.value)
+                                    }
+                                    onPointerDown={() => {
+                                      isSeekingRef.current = true;
+                                    }}
+                                    onMouseDown={() => {
+                                      isSeekingRef.current = true;
+                                    }}
+                                    onTouchStart={() => {
+                                      isSeekingRef.current = true;
+                                    }}
+                                    aria-label={`Seek ${songTitle || "track"}`}
+                                    className="w-full h-2 cursor-pointer accent-[#5DC9DE]"
+                                  />
+                                )}
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
                     );
                   })
                 )}
@@ -431,7 +446,8 @@ const ArtistProfile = ({ id }) => {
                 approvedSongs.slice(0, 3).map((song, index) => {
                   const sk = songKey(song);
                   const audioSrc = resolveSongAudioUrl(song);
-                  const songTitle = song.song_name || song.name || song.title || "";
+                  const songTitle =
+                    song.song_name || song.name || song.title || "";
                   return (
                     <div
                       key={sk || index}

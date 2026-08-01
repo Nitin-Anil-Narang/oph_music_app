@@ -274,7 +274,7 @@ export default function IncomeWithdrawal() {
     console.log("eerre");
 
     return (
-      <div className="min-h-[calc(100vh-70px)] flex items-center justify-center max-w-[500px]">
+      <div className="mx-auto min-h-[calc(100vh-70px)] flex items-center justify-center max-w-[500px]">
         <div className="flex flex-col items-center gap-4 text-white">
           {incomeStatus?.status === "locked" ? (
             <div className="flex flex-col gap-[20px] items-center justify-center ">
