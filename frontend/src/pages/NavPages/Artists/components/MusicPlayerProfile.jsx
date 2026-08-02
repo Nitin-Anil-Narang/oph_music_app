@@ -542,7 +542,7 @@ const RelatedArtists = ({ rankedArtists }) => {
   };
   return (
     <div className="w-full pb-20 pt-28">
-      <h2 className="text-white mb-8 text-4xl font-bold">
+      <h2 className="text-white mb-8 text-4xl font-bold mt-[28px] lg:mt-0">
         RELATED <span className="text-[#5DC9DE]">ARTISTS:</span>
       </h2>
 
