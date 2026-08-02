@@ -623,8 +623,7 @@ const SignUpForm = () => {
           ARTIST
         </h1>
         <h2 className="text-left mt-3 text-xs sm:text-sm text-[#9BA3B7] leading-relaxed">
-          NOW - NO WORRIES ON ANYTHING JUST MAKE YOUR MUSIC PEACEFULLY - LEAVE
-          THE REST TO INDIA'S ONLY REAL MUSIC COMMUNITY.
+         Everything will be supported by OPH COMMUNITY Artist only need to focus on their Creative Work – Making Music
         </h2>
 
         <div className="pt-6 sm:pt-12 lg:pt-6">
@@ -1193,6 +1192,11 @@ const SignUpForm = () => {
           </div>
 
           <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
+
+          <p className="text-center mt-6 sm:mt-8 leading-relaxed mx-auto px-4 sm:px-0" style={{ fontSize: 'clamp(18px, 5vw, 32px)', fontWeight: 400, color: '#E5E7EB', maxWidth: '1334px' }}>
+            Now – No hassle for Anything just Make your Music Peacefully – Rest live on
+            India's Only Real Music Community
+          </p>
 
           <h2 className="mt-8 sm:mt-10 text-center text-xl sm:text-3xl font-bold">
             OPH COMMUNITY
