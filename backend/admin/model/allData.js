@@ -221,6 +221,35 @@ const contactDetails = async () => {
   return rows;
 };
 
+/**
+ * Registration leads: signed up but never submitted a Registration payment
+ * (abandoned on the payment screen).
+ */
+const unpaidRegistrationLeads = async () => {
+  const [rows] = await db.execute(
+    `SELECT
+      ud.oph_id,
+      ud.full_name,
+      ud.stage_name,
+      ud.email,
+      ud.contact_number,
+      ud.artist_type,
+      ud.step_status,
+      ud.current_step,
+      ud.created_at,
+      ud.updated_at,
+      COALESCE(app.payment_status, 'pending') AS payment_status,
+      COALESCE(app.overall_status, 'pending') AS overall_status
+    FROM user_details ud
+    LEFT JOIN application_status app ON app.oph_id = ud.oph_id
+    LEFT JOIN payments p
+      ON p.oph_id = ud.oph_id AND p.from_source = 'Registration'
+    WHERE p.id IS NULL
+    ORDER BY ud.created_at DESC`
+  );
+  return rows;
+};
+
 const epkDetails = async () => {
   const [rows] = await db.execute("SELECT * FROM special_artist_details");
   return rows;
@@ -282,7 +311,8 @@ module.exports = {
   withdrawalsDetails,
   ticketsDetails,
   eventParticipantsDetails,
-  contactDetails, 
+  contactDetails,
+  unpaidRegistrationLeads,
   epkDetails,
   specialistArtistSongsExport,
   SongRegistrationDetails,
