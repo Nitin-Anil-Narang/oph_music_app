@@ -29,7 +29,7 @@ function HeroSection() {
 
       {/* Content container */}
       <div className="md:container pt-[40px] md:pt-[45px] lg:pt-5 lg:mx-auto mt-16 lg:mt-24 mb-16 lg:mb-24 relative z-10 w-full">
-        <div className="md:max-w-2xl w-full text-left pt-4 md:pt-0">
+        <div className="md:max-w-2xl w-full text-left pt-4 md:pt-0 lg:pl-8">
           <p className="text-sm sm:text-base md:text-lg opacity-75 text-[#9BA3B7] mb-2 tracking-wide uppercase">
             We support independent artists.
           </p>
