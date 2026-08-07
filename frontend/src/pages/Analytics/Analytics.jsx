@@ -398,6 +398,10 @@ export default function AnalyticsDashboard() {
     { label: "Last 15 Days", value: 15 },
     { label: "Last 30 Days", value: 30 },
   ]);
+
+  const filteredDurationOptions = selectedStream === "Audio Platform"
+    ? durationOptions.filter((opt) => opt.value !== 30)
+    : durationOptions;
   const [selectedDuration, setSelectedDuration] = useState(7);
 
   useEffect(() => {
@@ -750,13 +754,13 @@ export default function AnalyticsDashboard() {
                   <div className="hidden lg:block w-48">
                     <FilterSelect
                       value={
-                        durationOptions.find(
+                        filteredDurationOptions.find(
                           (o) => o.value === selectedDuration,
                         )?.label || ""
                       }
                       placeholder="Select Duration"
                       ariaLabel="Duration"
-                      options={durationOptions.map((o) => ({
+                      options={filteredDurationOptions.map((o) => ({
                         value: String(o.value),
                         label: o.label,
                       }))}
@@ -800,10 +804,10 @@ export default function AnalyticsDashboard() {
               />
               <MobileDurationSelect
                 value={
-                  durationOptions.find((o) => o.value === selectedDuration)
+                  filteredDurationOptions.find((o) => o.value === selectedDuration)
                     ?.label || ""
                 }
-                options={durationOptions.map((o) => ({
+                options={filteredDurationOptions.map((o) => ({
                   value: String(o.value),
                   label: o.label,
                 }))}
