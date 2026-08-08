@@ -310,7 +310,14 @@ async function saveMonthlyLeaderboardMetrics() {
   } catch (err) {
     console.error("Error updating leaderboard metrics:", err.message);
     console.error(err);
+    throw err;
   }
 }
 
-saveMonthlyLeaderboardMetrics();
+module.exports = saveMonthlyLeaderboardMetrics;
+
+if (require.main === module) {
+  saveMonthlyLeaderboardMetrics()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
+}

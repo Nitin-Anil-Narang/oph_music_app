@@ -160,7 +160,14 @@ async function saveMonthlySpecialArtistMetrics() {
   } catch (err) {
     console.error("Error updating special artist monthly metrics:", err.message);
     console.error(err);
+    throw err;
   }
 }
 
-saveMonthlySpecialArtistMetrics();
+module.exports = saveMonthlySpecialArtistMetrics;
+
+if (require.main === module) {
+  saveMonthlySpecialArtistMetrics()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
+}

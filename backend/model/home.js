@@ -18,7 +18,7 @@ const parseVideoImageUrl = (raw) => {
 };
 
 /**
- * Top approved platform songs by YouTube views (from song_social_metrics).
+ * Top approved platform songs by summed YouTube views (from song_social_metrics).
  */
 const newReleases = async () => {
   try {
@@ -45,7 +45,13 @@ const newReleases = async () => {
         INNER JOIN song_application_status sas ON sr.song_id = sas.song_id
         INNER JOIN audio_details ad ON sr.song_id = ad.song_id
         INNER JOIN video_details vd ON sr.song_id = vd.song_id
-        LEFT JOIN song_social_metrics ssm ON sr.song_id = ssm.song_id
+        LEFT JOIN (
+          SELECT
+            song_id,
+            SUM(COALESCE(youtube_views, 0)) AS youtube_views
+          FROM song_social_metrics
+          GROUP BY song_id
+        ) ssm ON sr.song_id = ssm.song_id
         WHERE LOWER(TRIM(COALESCE(sas.overall_status, ''))) = 'approved'
           AND ad.status = 'approved'
           AND vd.status = 'approved'
