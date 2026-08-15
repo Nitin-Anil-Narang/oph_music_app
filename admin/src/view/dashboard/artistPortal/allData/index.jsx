@@ -229,6 +229,16 @@ const AllData = () => {
       color: 'bg-green-500 hover:bg-green-600'
     },
     {
+      id: 'Unpaid Registration Leads',
+      exportKey: ALL_DATA_EXPORT_KEYS.UNPAID_REGISTRATION_LEADS,
+      label: 'Download Unpaid Registration Leads',
+      description:
+        'Users who signed up but did not pay on the registration payment screen (leads)',
+      endpoint: '/unpaid-registration-leads-excel',
+      icon: '',
+      color: 'bg-amber-500 hover:bg-amber-600'
+    },
+    {
       id: 'Special Artist Details',
       exportKey: ALL_DATA_EXPORT_KEYS.SPECIAL_ARTIST_DETAILS,
       label: 'Download Special Artist Details Data',

@@ -24,6 +24,10 @@ router.get("/withdrawals-excel", ...scoped(allDataCont.getWithdrawals));
 router.get("/tickets-excel", ...scoped(allDataCont.getTickets));
 router.get("/event-participants-excel", ...scoped(allDataCont.downloadEventParticipants));
 router.get("/contact-us-excel", ...scoped(allDataCont.downloadContactUs));
+router.get(
+  "/unpaid-registration-leads-excel",
+  ...scoped(allDataCont.downloadUnpaidRegistrationLeads)
+);
 router.get("/special-artist-details-excel", ...scoped(allDataCont.downloadSpecialArtistDetails));
 router.get("/special-artist-songs-excel", ...scoped(allDataCont.downloadSpecialArtistSongsExcel));
 router.get("/songs-register-excel", ...scoped(allDataCont.downloadSongsRegister));

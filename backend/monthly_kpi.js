@@ -342,7 +342,14 @@ async function saveMonthlyKPIMetrics() {
   } catch (err) {
     console.error("Error updating KPI metrics:", err.message);
     console.error(err);
+    throw err;
   }
 }
 
-saveMonthlyKPIMetrics();
+module.exports = saveMonthlyKPIMetrics;
+
+if (require.main === module) {
+  saveMonthlyKPIMetrics()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
+}

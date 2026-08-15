@@ -231,6 +231,70 @@ const downloadContactUs = async (req, res) => {
   }
 };
 
+/** Users who signed up but never paid on the registration payment screen (leads). */
+const downloadUnpaidRegistrationLeads = async (req, res) => {
+  try {
+    const rows = await allDataCont.unpaidRegistrationLeads();
+
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ message: "No unpaid registration leads found" });
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Unpaid Registration Leads");
+
+    worksheet.columns = [
+      { header: "SR. NO.", key: "sr_no", width: 10 },
+      { header: "OPH ID", key: "oph_id", width: 22 },
+      { header: "Full Name", key: "full_name", width: 25 },
+      { header: "Stage Name", key: "stage_name", width: 25 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Contact Number", key: "contact_number", width: 18 },
+      { header: "Artist Type", key: "artist_type", width: 18 },
+      { header: "Step Status", key: "step_status", width: 20 },
+      { header: "Payment Status", key: "payment_status", width: 16 },
+      { header: "Overall Status", key: "overall_status", width: 16 },
+      { header: "Signed Up At", key: "created_at", width: 25 },
+      { header: "Updated At", key: "updated_at", width: 25 },
+    ];
+
+    rows.forEach((row, index) => {
+      worksheet.addRow({
+        sr_no: index + 1,
+        oph_id: row.oph_id ?? "",
+        full_name: row.full_name ?? "",
+        stage_name: row.stage_name ?? "",
+        email: row.email ?? "",
+        contact_number: row.contact_number ?? "",
+        artist_type: row.artist_type ?? "",
+        step_status: row.step_status ?? row.current_step ?? "",
+        payment_status: row.payment_status ?? "pending",
+        overall_status: row.overall_status ?? "pending",
+        created_at: row.created_at ? formatDateTimeIST(row.created_at) : "",
+        updated_at: row.updated_at ? formatDateTimeIST(row.updated_at) : "",
+      });
+    });
+
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).alignment = { horizontal: "center" };
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=unpaid_registration_leads.xlsx"
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error("Error downloading unpaid registration leads Excel:", error);
+    res.status(500).json({ error: "Failed to download Excel file" });
+  }
+};
+
 const downloadSpecialArtistDetails = async (req, res) => {
   try {
     const [detailRowsRaw, songRowsRaw] = await Promise.all([
@@ -1425,6 +1489,7 @@ module.exports = {
   getTickets,
   downloadEventParticipants,
   downloadContactUs,
+  downloadUnpaidRegistrationLeads,
   downloadSpecialArtistDetails,
   downloadSpecialArtistSongsExcel,
   downloadSongsRegister,

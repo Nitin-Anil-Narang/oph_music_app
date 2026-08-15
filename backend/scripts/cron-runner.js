@@ -168,11 +168,25 @@ function completeTask(success = true, message = '') {
     }
 
     log(`Loading CommonJS module: ${taskFilePath}`);
-    require(taskFilePath);
-    log(`CommonJS module loaded, waiting for async operations to complete...`);
-    setTimeout(() => {
-      completeTask(true);
-    }, 60000);
+    const mod = require(taskFilePath);
+    const run =
+      typeof mod === "function"
+        ? mod
+        : typeof mod?.default === "function"
+          ? mod.default
+          : Object.values(mod || {}).find((v) => typeof v === "function");
+
+    if (typeof run !== "function") {
+      completeTask(
+        false,
+        `${taskFileName} must export an async function (got: ${typeof run})`,
+      );
+      return;
+    }
+
+    log("Awaiting CommonJS task until all HTTP/S3 work finishes...");
+    await run();
+    completeTask(true);
   } catch (err) {
     completeTask(false, err.message + "\n" + (err.stack || ""));
   }

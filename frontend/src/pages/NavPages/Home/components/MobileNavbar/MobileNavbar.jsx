@@ -94,20 +94,11 @@ export default function MobileNavbar() {
           return (
             <div
               key={index}
-              className="relative flex flex-col items-center touch-none"
+              className="relative flex flex-col items-center"
               ref={(el) => (iconRefs.current[index] = el)}
-              onTouchStart={(e) => {
-                e.preventDefault();
-                handleTouchStart(index);
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                handleTouchEnd(index);
-              }}
-              onTouchCancel={(e) => {
-                e.preventDefault();
-                handleTouchCancel(index);
-              }}
+              onTouchStart={() => handleTouchStart(index)}
+              onTouchEnd={() => handleTouchEnd(index)}
+              onTouchCancel={() => handleTouchCancel(index)}
             >
               {/* Active text label above the icon */}
               {/* Long-press tooltip - mobile only */}

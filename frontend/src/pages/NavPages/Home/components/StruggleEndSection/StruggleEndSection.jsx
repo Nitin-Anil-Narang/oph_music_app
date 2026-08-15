@@ -38,31 +38,30 @@ const StruggleEndsSection = () => {
           className="absolute z-10 right-0 -top-[300px] w-[400px]"
           alt=""
         />
-        <div className="container px-4 md:px-16 lg:px-16 mx-auto">
-          <div className="mb-8 flex justify-center items-center">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-2 text-center md:text-left">
+        <div className="container px-3 sm:px-4 md:px-16 lg:px-16 mx-auto">
+          <div className="mb-8">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-center md:text-left">
                 ABOUT <span className="text-[#5DC9DE]">OPH COMMUNITY </span>
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="relative group">
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-8 items-center">
+            <div className="relative group w-full overflow-hidden">
               <CustomVideoPlayer
                 src={aboutUs.about_us_video}
                 poster={aboutUs.about_us_thumbnail}
-                className="w-full h-[300px] sm:h-[400px] rounded-xl aspect-[4/3]"
+                className="w-full h-[250px] sm:h-[300px] md:h-[400px] rounded-xl"
                 showPlayButtonOverlay={true}
                 pauseOtherVideos={true}
               />
             </div>
 
             <div className="space-y-4">
-              <p className="text-gray-400" style={{
+              <p className="text-gray-400 text-center md:text-left" style={{
                 fontWeight: 300,
-                fontSize: 'clamp(16px, 4vw, 20px)',
+                fontSize: 'clamp(14px, 3.5vw, 20px)',
                 lineHeight: '170%',
-                letterSpacing: '0px',
-                textAlign: 'center'
+                letterSpacing: '0px'
               }}>
                 {aboutUs.about_us_desc}
               </p>

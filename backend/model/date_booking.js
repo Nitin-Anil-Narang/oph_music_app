@@ -4,6 +4,7 @@ const {
   getPendingReleaseDateChangeBlocks,
   getActivePendingReleaseDateChanges,
 } = require("../utils/releaseDateChangeQueries");
+const { RELEASE_DATE_CHANGE_FROM_SQL } = require("../utils/calendarDateUtils");
 
 const insertBooking = async (oph_id, booking_date, song_name, project_type, song_id = null) => {
   const [result] = await db.execute(
@@ -209,23 +210,53 @@ const getAllBookings = async () => {
 };
 
 const getAllBookingsByID = async (ophid) => {
-  // Only show dates that are approved by admin (have an approved "Date booking" payment).
+  // Paid-in-advance release-date options: unused calendar slots that are paid/approved.
+  // After a release-date change, calender.current_booking_date moves to the new date while
+  // the original "Date booking" payment still has the old release_date — so also accept:
+  // - Date booking matched to current, previous, or original booking date
+  // - Approved "Release date change" payment matched to the current booking date
   // Exclude dates already used by registered songs (songs_register.release_date).
   const [rows] = await db.execute(
-    `SELECT c.* FROM calender c
-     INNER JOIN payments p ON p.oph_id = c.oph_id
-       AND DATE(p.release_date) = DATE(c.current_booking_date)
-       AND LOWER(TRIM(p.from_source)) = 'date booking'
-       AND LOWER(TRIM(p.status)) = 'approved'
+    `SELECT DISTINCT c.* FROM calender c
      WHERE c.oph_id = ?
-       AND (c.song_name IS null OR c.song_name = '')
+       AND (c.song_name IS NULL OR c.song_name = '')
        AND DATE(c.current_booking_date) >= CURDATE()
        AND c.current_booking_date NOT IN (
          SELECT sr.release_date FROM songs_register sr
          WHERE (sr.oph_id = ? OR sr.OPH_ID = ?)
            AND sr.release_date IS NOT NULL
            AND sr.release_date != '0000-00-00'
-       )`,
+       )
+       AND (
+         EXISTS (
+           SELECT 1 FROM payments p
+           WHERE p.oph_id = c.oph_id
+             AND LOWER(TRIM(p.status)) = 'approved'
+             AND (
+               LOWER(TRIM(p.from_source)) = 'date booking'
+               OR LOWER(TRIM(p.from_source)) = 'datebooking'
+             )
+             AND (
+               DATE(p.release_date) = DATE(c.current_booking_date)
+               OR (
+                 c.previous_booking_date IS NOT NULL
+                 AND DATE(p.release_date) = DATE(c.previous_booking_date)
+               )
+               OR (
+                 c.original_booking_date IS NOT NULL
+                 AND DATE(p.release_date) = DATE(c.original_booking_date)
+               )
+             )
+         )
+         OR EXISTS (
+           SELECT 1 FROM payments p
+           WHERE p.oph_id = c.oph_id
+             AND LOWER(TRIM(p.status)) = 'approved'
+             AND ${RELEASE_DATE_CHANGE_FROM_SQL}
+             AND DATE(p.release_date) = DATE(c.current_booking_date)
+         )
+       )
+     ORDER BY c.current_booking_date ASC`,
     [ophid, ophid, ophid]
   );
 

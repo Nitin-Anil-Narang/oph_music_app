@@ -325,7 +325,14 @@ async function saveMonthlySongMetrics() {
   } catch (err) {
     console.error("Error updating song metrics:", err.message);
     console.error(err);
+    throw err;
   }
 }
 
-saveMonthlySongMetrics();
+module.exports = saveMonthlySongMetrics;
+
+if (require.main === module) {
+  saveMonthlySongMetrics()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
+}
