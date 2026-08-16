@@ -318,11 +318,40 @@ class DateBookingService {
       [oldStr, newStr, JSON.stringify(history), ophNorm, oldStr, oldStr],
     );
 
+    if (result.affectedRows > 0) {
+      // Keep Date Booking payment pointed at the active calendar slot (was nulled on RDC submit)
+      await connection.query(
+        `UPDATE payments
+         SET release_date = ?,
+             old_release_date = NULL,
+             updated_at = NOW()
+         WHERE oph_id = ?
+           AND (
+             LOWER(TRIM(from_source)) = 'date booking'
+             OR LOWER(TRIM(from_source)) = 'datebooking'
+           )
+           AND (status IS NULL OR LOWER(TRIM(status)) != 'rejected')
+           AND (
+             release_date IS NULL
+             OR release_date = '0000-00-00'
+             OR TRIM(release_date) = ''
+             OR DATE(release_date) = DATE(?)
+             OR (
+               old_release_date IS NOT NULL
+               AND DATE(old_release_date) = DATE(?)
+             )
+           )`,
+        [newStr, ophNorm, oldStr, oldStr],
+      );
+    }
+
     return { applied: result.affectedRows > 0 };
   }
 
   /**
    * Clear pending release date change on reject (calendar was never moved to the new date).
+   * Also restores Date Booking payment.release_date — it was nulled when the change was submitted,
+   * which otherwise hides the previous slot from paid-in-advance Register Song options.
    */
   async clearPendingReleaseDateChangeOnReject(connection, ophId, newDate, rejectReason) {
     const ophNorm = String(ophId).trim();
@@ -330,7 +359,7 @@ class DateBookingService {
     if (!ophNorm || !newStr) return { cleared: false };
 
     const [rows] = await connection.query(
-      `SELECT reason_history FROM calender WHERE oph_id = ? LIMIT 1`,
+      `SELECT current_booking_date, reason_history FROM calender WHERE oph_id = ? LIMIT 1`,
       [ophNorm],
     );
 
@@ -356,6 +385,32 @@ class DateBookingService {
        WHERE oph_id = ?`,
       [JSON.stringify(history), ophNorm],
     );
+
+    const restoreDate = normalizeBookingDate(rows[0].current_booking_date);
+    if (restoreDate) {
+      await connection.query(
+        `UPDATE payments
+         SET release_date = ?,
+             old_release_date = NULL,
+             updated_at = NOW()
+         WHERE oph_id = ?
+           AND (
+             LOWER(TRIM(from_source)) = 'date booking'
+             OR LOWER(TRIM(from_source)) = 'datebooking'
+           )
+           AND (status IS NULL OR LOWER(TRIM(status)) != 'rejected')
+           AND (
+             release_date IS NULL
+             OR release_date = '0000-00-00'
+             OR TRIM(release_date) = ''
+             OR (
+               old_release_date IS NOT NULL
+               AND DATE(old_release_date) = DATE(?)
+             )
+           )`,
+        [restoreDate, ophNorm, restoreDate],
+      );
+    }
 
     return { cleared: true };
   }

@@ -263,6 +263,7 @@ const TipsSlider = () => {
                 autoPlay
                 playsInline
                 muted={false}
+                orientation="portrait"
                 pauseOtherVideos={true}
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}

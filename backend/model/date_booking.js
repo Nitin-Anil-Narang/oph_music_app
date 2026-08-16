@@ -239,12 +239,26 @@ const getAllBookingsByID = async (ophid) => {
              AND (
                DATE(p.release_date) = DATE(c.current_booking_date)
                OR (
+                 p.old_release_date IS NOT NULL
+                 AND DATE(p.old_release_date) = DATE(c.current_booking_date)
+               )
+               OR (
                  c.previous_booking_date IS NOT NULL
                  AND DATE(p.release_date) = DATE(c.previous_booking_date)
                )
                OR (
+                 c.previous_booking_date IS NOT NULL
+                 AND p.old_release_date IS NOT NULL
+                 AND DATE(p.old_release_date) = DATE(c.previous_booking_date)
+               )
+               OR (
                  c.original_booking_date IS NOT NULL
                  AND DATE(p.release_date) = DATE(c.original_booking_date)
+               )
+               OR (
+                 c.original_booking_date IS NOT NULL
+                 AND p.old_release_date IS NOT NULL
+                 AND DATE(p.old_release_date) = DATE(c.original_booking_date)
                )
              )
          )
