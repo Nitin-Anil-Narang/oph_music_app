@@ -215,7 +215,10 @@ function PodcastSlider({ searchText, title }) {
         {filteredPodcasts.length < 3 ? (
           <div className="flex overflow-x-auto">
             {filteredPodcasts.map((podcast, index) => (
-              <div key={index} className="px-1 sm:px-2 lg:px-4 w-full flex-shrink-0">
+              <div
+                key={index}
+                className="px-1 sm:px-2 lg:px-4 w-full flex-shrink-0"
+              >
                 <div className="rounded-xl overflow-hidden relative">
                   {playingIndex === index ? (
                     <CustomVideoPlayer
@@ -427,7 +430,7 @@ function PodcastSlider({ searchText, title }) {
             onClick={() => navigate("/auth/signup")}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full lg:w-[unset] bg-[#5DC9DE] text-black font-semibold py-3 px-8 rounded-full hover:font-bold transition delay-300 pointer-events-auto"
+            className="w-full lg:w-[unset] bg-[#5DC9DE] text-black font-semibold text-sm min-[390px]:text-base py-3 px-8 rounded-full hover:font-bold transition delay-300 pointer-events-auto"
           >
             COMMUNITY PLATFORM – SIGN UP
           </a>

@@ -376,7 +376,7 @@ export default function HeroSection({ professions = [] }) {
       )}
 
       {!loading && upcomingEvents.length === 0 && (
-        <div className="text-center pt-[130px] pb-[65px] lg:py-20">
+        <div className="text-center pt-[130px] pb-[65px] lg:py-28">
           <p className="text-gray-400">No upcoming events right now.</p>
         </div>
       )}
@@ -403,7 +403,12 @@ export default function HeroSection({ professions = [] }) {
             {upcomingEvents.map((event, idx) => (
               <div key={event.id ?? idx} className="mt-0 pt-0">
                 {/* Mobile Layout - Strictly matching Figma specs */}
-                <div className="md:hidden relative w-full bg-black min-h-[77vh]">
+                <div
+                  className="md:hidden relative w-full bg-black min-h-[77vh]"
+                  onClick={() => {
+                    if (!isDragging) navigate(`/events/${event.id}`);
+                  }}
+                >
                   {/* Image Section - Height: 296px */}
                   <img
                     src={event.thumbnail_url}

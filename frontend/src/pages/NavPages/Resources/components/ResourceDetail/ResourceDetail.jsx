@@ -192,7 +192,7 @@ export default function ResourceDetail() {
         </span>
       </div>
 
-      <div className="flex gap-4 mb-6">
+      <div className="flex gap-4 mb-6 flex-wrap">
         {content.keywords
           ? content.keywords.split(",").map((keyword, index) => (
               <span

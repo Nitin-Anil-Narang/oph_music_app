@@ -218,7 +218,7 @@ const ArtistRankingSection = ({ data, selectedMonth }) => {
                   </div>
                 </div>
 
-                <div className="flex-1 text-gray-300 truncate">
+                <div className="flex-1 text-gray-300 min-[640px]:pr-[12px] max-[900px]:truncate">
                   {artist.stage_name}
                 </div>
                 <div className="flex-1 text-gray-300 hidden sm:block">
