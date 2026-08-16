@@ -106,8 +106,9 @@ echo "# Monthly Leaderboard metrics backup - Runs on 1st of each month at midnig
 echo "0 0 1 * * cd $BACKEND_DIR && $NVM_SOURCE node scripts/cron-runner.js monthly-leaderboard >> $LOGS_DIR/cron-monthly-leaderboard.log 2>&1" >> "$CRON_TEMP"
 echo "" >> "$CRON_TEMP"
 
-echo "# Monthly Song metrics backup - Runs on 1st of each month at midnight UTC (12:00 AM)" >> "$CRON_TEMP"
-echo "0 0 1 * * cd $BACKEND_DIR && $NVM_SOURCE node scripts/cron-runner.js monthly-song >> $LOGS_DIR/cron-monthly-song.log 2>&1" >> "$CRON_TEMP"
+# Audio platform (song_audio_metrics) snapshot — every ~10 days (days 1, 11, 21), midnight UTC
+echo "# Monthly Song / audio platform metrics backup - Every ~10 days at midnight UTC" >> "$CRON_TEMP"
+echo "0 0 */10 * * cd $BACKEND_DIR && $NVM_SOURCE node scripts/cron-runner.js monthly-song >> $LOGS_DIR/cron-monthly-song.log 2>&1" >> "$CRON_TEMP"
 echo "" >> "$CRON_TEMP"
 
 echo "# End OPH Music App Cron Jobs" >> "$CRON_TEMP"
@@ -126,7 +127,7 @@ echo "  - KPI calculation: 4x daily — 00:00, 06:00, 12:00, 18:00 UTC (every 6 
 echo "  - Leaderboard generation: 4x daily — same schedule as KPI"
 echo "  - Monthly KPI backup: 1st of month, midnight UTC (12:00 AM)"
 echo "  - Monthly Leaderboard backup: 1st of month, midnight UTC (12:00 AM)"
-echo "  - Monthly Song backup: 1st of month, midnight UTC (12:00 AM)"
+echo "  - Monthly Song / audio platform backup: every ~10 days (1, 11, 21), midnight UTC"
 echo ""
 echo "To view your cron jobs, run: crontab -l"
 echo "To edit cron jobs, run: crontab -e"

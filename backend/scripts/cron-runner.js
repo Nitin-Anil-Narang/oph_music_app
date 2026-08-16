@@ -10,7 +10,7 @@
  * - leaderboard: Generate and update leaderboard scores (daily)
  * - monthly-kpi: Save monthly KPI metrics to S3 (monthly)
  * - monthly-leaderboard: Save monthly leaderboard metrics to S3 (monthly)
- * - monthly-song: Save monthly song metrics to S3 (monthly)
+ * - monthly-song: Save song/audio-platform metrics to S3 (every ~10 days)
  * - monthly-special-artist-metrics: Save approved SA artist traffic + events to S3 (monthly)
  */
 
