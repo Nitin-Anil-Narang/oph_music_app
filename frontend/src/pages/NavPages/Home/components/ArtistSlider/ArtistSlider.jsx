@@ -47,6 +47,17 @@ function sortArtistsScoredFirst(list) {
   return [...scored, ...rest];
 }
 
+const sumOfPlays = (songs) => {
+  let sum = 0;
+  console.log(songs);
+  
+  for (let i = 0; i < songs.length; i++) {
+    sum += songs[i].total_views;
+  }
+
+  return sum;
+};
+
 /**
  * Left-edge slide index so `clickedIndex` sits near the middle of the viewport.
  * Matches react-slick non-centerMode behavior (clicked slide visible and centered when possible).
@@ -166,7 +177,6 @@ const ArtistSlider = ({
       }
     }
   };
-
 
   const handleArtistClick = (id, index) => {
     setCurrentArtist(id);
@@ -370,12 +380,12 @@ const ArtistSlider = ({
                           id === currArtist ? "text-white" : "text-gray-400"
                         }`}
                       >
-                        {artist.total_views >= 1000000
-                          ? `${(artist.total_views / 1000000).toFixed(1)}M`
-                          : artist.total_views >= 1000
-                            ? `${(artist.total_views / 1000).toFixed(1)}K`
-                            : artist.total_views}{" "}
-                        Listeners
+                        {/* { sumOfPlays(artist.songs) >= 1000000
+                          ? `${( sumOfPlays(artist.songs) / 1000000).toFixed(1)}M`
+                          :  sumOfPlays(artist.songs) >= 1000
+                            ? `${( sumOfPlays(artist.songs) / 1000).toFixed(1)}K`
+                            :  sumOfPlays(artist.songs)}{" "} */}
+                        {sumOfPlays(artist.songs)} Listeners
                       </p>
                     </div>
                   </div>

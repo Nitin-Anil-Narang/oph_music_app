@@ -20,6 +20,18 @@ const FilterSelect = ({
   const dropdownRef = useRef(null);
 
   useEffect(() => {
+    const handleScroll = () => {
+      setOpen(false);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
     const handler = (e) => {
       if (
         btnRef.current && !btnRef.current.contains(e.target) &&
