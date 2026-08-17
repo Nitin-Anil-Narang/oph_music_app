@@ -210,22 +210,21 @@ const getAllBookings = async () => {
 };
 
 const getAllBookingsByID = async (ophid) => {
-  // Paid-in-advance release-date options: unused calendar slots that are paid/approved.
-  // After a release-date change, calender.current_booking_date moves to the new date while
-  // the original "Date booking" payment still has the old release_date — so also accept:
-  // - Date booking matched to current, previous, or original booking date
-  // - Approved "Release date change" payment matched to the current booking date
-  // Exclude dates already used by registered songs (songs_register.release_date).
+  // Paid-in-advance options = this artist's unused future calendar slots.
+  // Calendar is source of truth for owned dates (payment.release_date can drift after
+  // release-date-change reject/approve). Still require at least one approved Date Booking
+  // (or an approved RDC for this exact date) so unpaid junk rows are not listed.
   const [rows] = await db.execute(
     `SELECT DISTINCT c.* FROM calender c
      WHERE c.oph_id = ?
-       AND (c.song_name IS NULL OR c.song_name = '')
+       AND (c.song_name IS NULL OR TRIM(c.song_name) = '')
        AND DATE(c.current_booking_date) >= CURDATE()
-       AND c.current_booking_date NOT IN (
-         SELECT sr.release_date FROM songs_register sr
+       AND NOT EXISTS (
+         SELECT 1 FROM songs_register sr
          WHERE (sr.oph_id = ? OR sr.OPH_ID = ?)
            AND sr.release_date IS NOT NULL
            AND sr.release_date != '0000-00-00'
+           AND DATE(sr.release_date) = DATE(c.current_booking_date)
        )
        AND (
          EXISTS (
@@ -235,31 +234,6 @@ const getAllBookingsByID = async (ophid) => {
              AND (
                LOWER(TRIM(p.from_source)) = 'date booking'
                OR LOWER(TRIM(p.from_source)) = 'datebooking'
-             )
-             AND (
-               DATE(p.release_date) = DATE(c.current_booking_date)
-               OR (
-                 p.old_release_date IS NOT NULL
-                 AND DATE(p.old_release_date) = DATE(c.current_booking_date)
-               )
-               OR (
-                 c.previous_booking_date IS NOT NULL
-                 AND DATE(p.release_date) = DATE(c.previous_booking_date)
-               )
-               OR (
-                 c.previous_booking_date IS NOT NULL
-                 AND p.old_release_date IS NOT NULL
-                 AND DATE(p.old_release_date) = DATE(c.previous_booking_date)
-               )
-               OR (
-                 c.original_booking_date IS NOT NULL
-                 AND DATE(p.release_date) = DATE(c.original_booking_date)
-               )
-               OR (
-                 c.original_booking_date IS NOT NULL
-                 AND p.old_release_date IS NOT NULL
-                 AND DATE(p.old_release_date) = DATE(c.original_booking_date)
-               )
              )
          )
          OR EXISTS (
