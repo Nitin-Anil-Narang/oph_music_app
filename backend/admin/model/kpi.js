@@ -231,6 +231,10 @@ const getTopArtists = async (page = 1, perPage = 6) => {
   const per = Math.min(100, Math.max(1, parseInt(perPage, 10) || 6));
   const offset = (p - 1) * per;
 
+  // =========================================================
+  // 1. COUNT TOTAL ARTISTS
+  // =========================================================
+
   const [countRows] = await db.execute(`
     SELECT COUNT(DISTINCT ud.oph_id) AS total
     FROM user_details ud
@@ -238,30 +242,170 @@ const getTopArtists = async (page = 1, perPage = 6) => {
       ON ud.oph_id = app.oph_id
       AND LOWER(TRIM(app.overall_status)) IN ('completed', 'approved')
   `);
+
   const total = Number(countRows[0]?.total) || 0;
+
+  // =========================================================
+  // 2. GET TOP ARTISTS
+  // =========================================================
 
   const [rows] = await db.query(
     `
     SELECT
       ud.oph_id,
+      ud.artist_type,
       pf.profession,
       ud.location,
       ud.personal_photo,
       ud.stage_name,
       IFNULL(kpi.total_views, 0) AS total_views,
       IFNULL(kpi.score, 0) AS kpi_score
+
     FROM user_details ud
+
     INNER JOIN application_status app
       ON ud.oph_id = app.oph_id
       AND LOWER(TRIM(app.overall_status)) IN ('completed', 'approved')
-    LEFT JOIN KPI_score kpi ON ud.oph_id = kpi.oph_id
-    LEFT JOIN professional_details pf ON ud.oph_id = pf.oph_id
-    ORDER BY IFNULL(kpi.score, 0) DESC, IFNULL(kpi.total_views, 0) DESC, ud.stage_name ASC
+
+    LEFT JOIN KPI_score kpi
+      ON ud.oph_id = kpi.oph_id
+
+    LEFT JOIN professional_details pf
+      ON ud.oph_id = pf.oph_id
+
+    ORDER BY
+      IFNULL(kpi.score, 0) DESC,
+      IFNULL(kpi.total_views, 0) DESC,
+      ud.stage_name ASC
+
     LIMIT ${per} OFFSET ${offset}
     `,
   );
 
-  return { rows, total };
+  // =========================================================
+  // 3. CREATE ARTIST RESPONSE
+  // =========================================================
+
+  const artistRows = rows.map((row) => ({
+    oph_id: row.oph_id,
+    artist_type: row.artist_type,
+    personal_photo: row.personal_photo,
+    stage_name: row.stage_name,
+    profession: row.profession,
+    location: row.location,
+    total_views: row.total_views,
+    kpi_score: row.kpi_score,
+    songs: [],
+  }));
+
+  // =========================================================
+  // 4. FETCH SONGS FOR EACH ARTIST
+  // =========================================================
+
+  for (const artist of artistRows) {
+    try {
+      // =======================================================
+      // SPECIAL ARTIST
+      // =======================================================
+
+      if (isSpecialArtistProfile(artist.artist_type, artist.oph_id)) {
+        const saRows = await fetchSpecialArtistPublicSongRows(artist.oph_id);
+
+        artist.songs = formatSpecialArtistSongsForTopArtist(saRows);
+      }
+
+      // =======================================================
+      // NORMAL ARTIST
+      // =======================================================
+      else {
+        const [songRows] = await db.execute(
+          `
+          SELECT
+            sr.song_id,
+            COALESCE(ad.Song_name, sr.Song_name) AS Song_name,
+            IFNULL(ssm.youtube_views, 0) AS youtube_views,
+            ad.audio_url,
+            sas.overall_status AS song_overall_status,
+            sa.artist_name
+
+          FROM songs_register sr
+
+          INNER JOIN song_application_status sas
+            ON sr.song_id = sas.song_id
+
+          INNER JOIN audio_details ad
+            ON sr.song_id = ad.song_id
+
+          LEFT JOIN secondary_artist sa
+            ON sr.song_id = sa.song_id
+
+          LEFT JOIN song_social_metrics ssm
+            ON sr.song_id = ssm.song_id
+
+          WHERE sr.oph_id = ?
+            AND LOWER(TRIM(COALESCE(sas.overall_status, ''))) = 'approved'
+            AND ad.audio_url IS NOT NULL
+            AND TRIM(ad.audio_url) <> ''
+          `,
+          [artist.oph_id],
+        );
+
+        // =====================================================
+        // GROUP SONGS
+        // =====================================================
+
+        const songMap = {};
+
+        songRows.forEach((row) => {
+          if (!songMap[row.song_id]) {
+            songMap[row.song_id] = {
+              name: row.Song_name,
+              song_id: row.song_id,
+              youtube_views: row.youtube_views,
+              total_views: row.youtube_views,
+              audio_file_url: row.audio_url,
+              featuring_artists: row.artist_name ? [row.artist_name] : [],
+              overall_status: row.song_overall_status,
+            };
+          } else {
+            // Add secondary artist only once
+            if (
+              row.artist_name &&
+              !songMap[row.song_id].featuring_artists.includes(row.artist_name)
+            ) {
+              songMap[row.song_id].featuring_artists.push(row.artist_name);
+            }
+          }
+        });
+
+        artist.songs = Object.values(songMap);
+      }
+    } catch (error) {
+      console.error(
+        `Error fetching songs for artist ${artist.oph_id}:`,
+        error?.message || error,
+      );
+
+      artist.songs = [];
+    }
+  }
+
+  // =========================================================
+  // 5. REMOVE INTERNAL artist_type FROM RESPONSE
+  // =========================================================
+
+  artistRows.forEach((artist) => {
+    delete artist.artist_type;
+  });
+
+  // =========================================================
+  // 6. FINAL RESPONSE
+  // =========================================================
+
+  return {
+    rows: artistRows,
+    total,
+  };
 };
 
 const getSpecialArtist = async () => {
