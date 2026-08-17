@@ -13,6 +13,9 @@ const Backendaxios = axios.create({
 
 const S3_KEY = "monthly_kpi/song_metrics.json";
 
+/** Cron cadence for this job only (setup-cron.sh): every ~10 days, not monthly. */
+const SNAPSHOT_INTERVAL_DAYS = 10;
+
 /*
 HOW TO RUN THIS FILE:
 
@@ -41,6 +44,9 @@ The file will:
 
 async function saveMonthlySongMetrics() {
   try {
+    console.log(
+      `Starting song/audio-platform metrics snapshot (cron interval ~${SNAPSHOT_INTERVAL_DAYS} days)`,
+    );
     console.log("Fetching /get-all_song_metrics ...");
     const response = await Backendaxios.get("/get-all_song_metrics");
     const raw = response.data ?? response;
