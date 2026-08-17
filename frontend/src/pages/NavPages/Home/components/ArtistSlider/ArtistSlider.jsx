@@ -50,7 +50,7 @@ function sortArtistsScoredFirst(list) {
 const sumOfPlays = (songs) => {
   let sum = 0;
   console.log(songs);
-  
+
   for (let i = 0; i < songs.length; i++) {
     sum += songs[i].total_views;
   }
@@ -380,12 +380,12 @@ const ArtistSlider = ({
                           id === currArtist ? "text-white" : "text-gray-400"
                         }`}
                       >
-                        {/* { sumOfPlays(artist.songs) >= 1000000
-                          ? `${( sumOfPlays(artist.songs) / 1000000).toFixed(1)}M`
-                          :  sumOfPlays(artist.songs) >= 1000
-                            ? `${( sumOfPlays(artist.songs) / 1000).toFixed(1)}K`
-                            :  sumOfPlays(artist.songs)}{" "} */}
-                        {sumOfPlays(artist.songs)} Listeners
+                        {sumOfPlays(artist.songs) >= 1000000
+                          ? `${(sumOfPlays(artist.songs) / 1000000).toFixed(1)}M`
+                          : sumOfPlays(artist.songs) >= 1000
+                            ? `${(sumOfPlays(artist.songs) / 1000).toFixed(1)}K`
+                            : sumOfPlays(artist.songs)}{" "}
+                        Listeners
                       </p>
                     </div>
                   </div>
