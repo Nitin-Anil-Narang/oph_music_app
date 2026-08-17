@@ -167,6 +167,7 @@ const ArtistSlider = ({
     }
   };
 
+
   const handleArtistClick = (id, index) => {
     setCurrentArtist(id);
     setSelectedArtist(id);

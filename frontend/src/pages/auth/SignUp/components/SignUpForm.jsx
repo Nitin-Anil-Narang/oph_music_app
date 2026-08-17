@@ -1193,7 +1193,7 @@ const SignUpForm = () => {
 
           <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
 
-          <p className="text-center mt-6 sm:mt-8 leading-relaxed mx-auto px-4 sm:px-0" style={{ fontSize: 'clamp(18px, 5vw, 32px)', fontWeight: 400, color: '#E5E7EB', maxWidth: '1334px' }}>
+          <p className="text-center mt-6 sm:mt-8 leading-relaxed mx-auto px-4 sm:px-0 uppercase" style={{ fontSize: 'clamp(18px, 5vw, 32px)', fontWeight: 400, color: '#E5E7EB', maxWidth: '1334px' }}>
             Now – No hassle for Anything just Make your Music Peacefully – Rest live on
             India's Only Real Music Community
           </p>

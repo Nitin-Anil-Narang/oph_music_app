@@ -368,7 +368,7 @@ function Leaderboard() {
                           />
                         </div>
                       </div>
-                      <div className="flex-1 text-gray-300">
+                      <div className="flex-1 text-gray-300 min-[640px]:pr-[12px] max-[900px]:truncate">
                         {artist.stage_name}
                       </div>
                       <div className="flex-1 text-gray-300">
@@ -543,7 +543,7 @@ function Leaderboard() {
                 name="location"
                 isMulti
                 options={uniqueLocations.map((location) => ({
-                  value: location,  
+                  value: location,
                   label: location,
                 }))}
                 className="basic-multi-select"
