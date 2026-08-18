@@ -1,5 +1,5 @@
 import React from "react";
-import semiColonIc from "../../../../../../../frontend/src/assets/images/HeroImg.svg";
+import semiColonIc from "../../../../../../../frontend/src/assets/images/hero-bg.jpg";
 import starAbsItem from "/assets/images/starAbsItem.png";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";

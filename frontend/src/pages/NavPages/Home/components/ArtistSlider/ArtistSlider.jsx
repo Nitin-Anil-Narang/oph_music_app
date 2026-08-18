@@ -48,15 +48,22 @@ function sortArtistsScoredFirst(list) {
 }
 
 const sumOfPlays = (songs) => {
-  let sum = 0;
-  console.log(songs);
-
-  for (let i = 0; i < songs.length; i++) {
-    sum += songs[i].total_views;
-  }
-
-  return sum;
+  if (!Array.isArray(songs)) return 0;
+  return songs.reduce((sum, song) => sum + (Number(song?.total_views) || 0), 0);
 };
+
+function listenerCount(artist) {
+  const fromTotal = Number(artist?.total_views);
+  if (Number.isFinite(fromTotal) && fromTotal > 0) return fromTotal;
+  return sumOfPlays(artist?.songs);
+}
+
+function formatListeners(count) {
+  const n = Number(count) || 0;
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  return String(n);
+}
 
 /**
  * Left-edge slide index so `clickedIndex` sits near the middle of the viewport.
@@ -273,8 +280,9 @@ const ArtistSlider = ({
 
         {/* Slider Section */}
         <div className="relative">
+          {artists.length > 0 && (
           <Slider
-            key={artists.length ? `artists-${artists.length}` : "artists-empty"}
+            key={`artists-${artists.length}`}
             ref={sliderRef}
             {...{
               dots: false,
@@ -380,12 +388,7 @@ const ArtistSlider = ({
                           id === currArtist ? "text-white" : "text-gray-400"
                         }`}
                       >
-                        {sumOfPlays(artist.songs) >= 1000000
-                          ? `${(sumOfPlays(artist.songs) / 1000000).toFixed(1)}M`
-                          : sumOfPlays(artist.songs) >= 1000
-                            ? `${(sumOfPlays(artist.songs) / 1000).toFixed(1)}K`
-                            : sumOfPlays(artist.songs)}{" "}
-                        Listeners
+                        {formatListeners(listenerCount(artist))} Listeners
                       </p>
                     </div>
                   </div>
@@ -393,6 +396,7 @@ const ArtistSlider = ({
               );
             })}
           </Slider>
+          )}
         </div>
 
         {/* Mobile Arrow buttons (below the slider) */}

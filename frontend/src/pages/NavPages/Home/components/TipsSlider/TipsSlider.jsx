@@ -149,6 +149,7 @@ const TipsSlider = () => {
 
         {/* Desktop - Original Slider */}
         <div className="hidden md:block relative px-4 mb-16">
+          {tips.length > 0 && (
           <Slider ref={sliderRef} {...settings} className="tips-slider">
             {tips.map((tip) => (
               <div key={tip.id} className="px-2">
@@ -195,6 +196,7 @@ const TipsSlider = () => {
               </div>
             ))}
           </Slider>
+          )}
         </div>
 
         {/* Mobile - Reels Grid */}

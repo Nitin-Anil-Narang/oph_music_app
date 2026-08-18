@@ -30,13 +30,8 @@ const ArtistProfile = ({ id }) => {
   const isSeekingRef = useRef(false);
 
   const sumOfPlays = (songs) => {
-    let sum = 0;
-
-    for (let i = 0; i < songs.length; i++) {
-      sum += songs[i].total_views;
-    }
-
-    return sum;
+    if (!Array.isArray(songs)) return 0;
+    return songs.reduce((sum, song) => sum + (Number(song?.total_views) || 0), 0);
   };
 
   const fetchArtistDetail = async () => {
@@ -292,7 +287,7 @@ const ArtistProfile = ({ id }) => {
                   <span className="text-gray-600">→</span>
                   <span style={{ color: "#6F4FA0" }}>
                     {" "}
-                    {sumOfPlays(artist.songs)} Listeners
+                    {Number(artist.total_views) || sumOfPlays(artist.songs)} Listeners
                   </span>
                 </div>
 
