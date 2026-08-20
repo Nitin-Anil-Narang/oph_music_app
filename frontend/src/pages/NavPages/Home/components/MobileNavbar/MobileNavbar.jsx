@@ -75,7 +75,7 @@ export default function MobileNavbar() {
     setActiveTooltip(null);
   };
 
-  const containerClass = "lg:hidden fixed bottom-0 left-0 w-full px-6 py-2 flex justify-center bg-black/40 border-t border-gray-800/80 z-50";
+  const containerClass = "mobile-bottom-nav lg:hidden fixed bottom-0 left-0 w-full px-6 py-2 flex justify-center bg-black/40 border-t border-gray-800/80 z-50";
 
   const innerDivClass = isHomePage
     ? "flex justify-around items-center w-full max-w-md bg-[#13161C] border border-gray-800 rounded-2xl py-4 px-3 shadow-2xl relative z-50"

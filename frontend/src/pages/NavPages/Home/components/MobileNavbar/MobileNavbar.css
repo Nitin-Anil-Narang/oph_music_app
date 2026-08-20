@@ -29,6 +29,11 @@
   }
 }
 
+body.oph-hide-mobile-nav .mobile-bottom-nav {
+  display: none !important;
+  pointer-events: none !important;
+}
+
 /* Prevent tooltip display on desktop */
 @media (hover: hover) and (pointer: fine) {
   .tooltip-label {

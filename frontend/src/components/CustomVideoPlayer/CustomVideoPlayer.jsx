@@ -15,6 +15,7 @@ import {
 } from "react-icons/fa";
 import { FaBackward, FaForward } from "react-icons/fa";
 import { pauseAllAudio } from "../../utils/pauseAllAudio";
+import { hideMobileNav, showMobileNav } from "../../utils/hideMobileNav";
 
 const CustomVideoPlayer = forwardRef(
   (
@@ -256,12 +257,14 @@ const CustomVideoPlayer = forwardRef(
     const enterCssFullscreen = () => {
       setIsCssFullscreen(true);
       document.body.style.overflow = "hidden";
+      hideMobileNav();
       tryLockOrientation("portrait");
     };
 
     const exitCssFullscreen = () => {
       setIsCssFullscreen(false);
       document.body.style.overflow = "";
+      showMobileNav();
       tryUnlockOrientation();
     };
 
@@ -548,7 +551,7 @@ const CustomVideoPlayer = forwardRef(
 
         {/* Custom Controls */}
         <div
-          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 ${
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 z-[60] ${
             showControls ? "opacity-100" : "opacity-0"
           }`}
         >

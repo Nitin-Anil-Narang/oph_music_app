@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import CustomVideoPlayer from "../../../../components/CustomVideoPlayer/CustomVideoPlayer";
+import { hideMobileNav, showMobileNav } from "../../../../utils/hideMobileNav";
 
 /** Same popup used by Reels and Success Stories so fullscreen/portrait behavior matches. */
 export default function PortraitVideoModal({
@@ -12,11 +13,17 @@ export default function PortraitVideoModal({
   onPlay,
   onPause,
 }) {
+  useEffect(() => {
+    if (!open) return undefined;
+    hideMobileNav();
+    return () => showMobileNav();
+  }, [open]);
+
   if (!open || !src) return null;
 
   return ReactDOM.createPortal(
     <div
-      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[80] p-4"
+      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[120] p-4"
       onClick={onClose}
     >
       <div
