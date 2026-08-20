@@ -45,7 +45,9 @@ const CustomVideoPlayer = forwardRef(
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(1);
     const [isMuted, setIsMuted] = useState(false);
-    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
+    const [isCssFullscreen, setIsCssFullscreen] = useState(false);
+    const isFullscreen = isNativeFullscreen || isCssFullscreen;
     const [showControls, setShowControls] = useState(true);
     const controlsTimeoutRef = useRef(null);
     const wasPlayingBeforeSeek = useRef(false);
@@ -217,62 +219,80 @@ const CustomVideoPlayer = forwardRef(
       }
     };
 
-    // Toggle fullscreen
-    const toggleFullscreen = () => {
-      if (!containerRef.current) return;
+    const tryLockOrientation = (mode) => {
+      const api = screen.orientation;
+      if (!api?.lock) return;
+      const primary = mode === "portrait" ? "portrait-primary" : "landscape-primary";
+      const fallback = mode === "portrait" ? "portrait" : "landscape";
+      api.lock(primary).catch(() => api.lock(fallback).catch(() => {}));
+    };
 
-      if (!isFullscreen) {
-        // Request fullscreen
-        const fullscreenPromise = containerRef.current.requestFullscreen
-          ? containerRef.current.requestFullscreen()
-          : containerRef.current.webkitRequestFullscreen
-            ? containerRef.current.webkitRequestFullscreen()
-            : containerRef.current.msRequestFullscreen
-              ? containerRef.current.msRequestFullscreen()
-              : null;
-
-        if (fullscreenPromise) {
-          fullscreenPromise
-            .then(() => {
-              if (screen.orientation && screen.orientation.lock) {
-                const lockOrientation = orientation === "portrait"
-                  ? "portrait-primary"
-                  : "landscape-primary";
-                const fallbackOrientation = orientation === "portrait"
-                  ? "portrait"
-                  : "landscape";
-                screen.orientation
-                  .lock(lockOrientation)
-                  .catch(() =>
-                    screen.orientation
-                      .lock(fallbackOrientation)
-                      .catch((err) => console.log('Orientation lock not supported:', err))
-                  );
-              }
-            })
-            .catch((err) => console.error('Fullscreen error:', err));
-        }
-      } else {
-        // Exit fullscreen
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-
-        // Unlock orientation when exiting fullscreen
-        if (screen.orientation && screen.orientation.unlock) {
-          screen.orientation.unlock();
-        }
+    const tryUnlockOrientation = () => {
+      try {
+        screen.orientation?.unlock?.();
+      } catch {
+        /* ignore */
       }
     };
 
-    // Handle fullscreen change
+    const enterCssFullscreen = () => {
+      setIsCssFullscreen(true);
+      document.body.style.overflow = "hidden";
+      tryLockOrientation("portrait");
+    };
+
+    const exitCssFullscreen = () => {
+      setIsCssFullscreen(false);
+      document.body.style.overflow = "";
+      tryUnlockOrientation();
+    };
+
+    const enterNativeFullscreen = (el) => {
+      const req =
+        el.requestFullscreen?.() ||
+        el.webkitRequestFullscreen?.() ||
+        el.msRequestFullscreen?.();
+      if (req && typeof req.then === "function") {
+        req
+          .then(() => tryLockOrientation(orientation === "portrait" ? "portrait" : "landscape"))
+          .catch((err) => console.error("Fullscreen error:", err));
+      }
+    };
+
+    const exitNativeFullscreen = () => {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if (document.msExitFullscreen) document.msExitFullscreen();
+      tryUnlockOrientation();
+    };
+
+    /**
+     * Portrait videos (stories/reels): never use the OS video fullscreen API.
+     * On phones that always rotates to landscape. Use a viewport overlay instead.
+     */
+    const toggleFullscreen = () => {
+      if (!containerRef.current) return;
+      const useCssPortrait = orientation === "portrait";
+
+      if (!isFullscreen) {
+        if (useCssPortrait) {
+          enterCssFullscreen();
+          return;
+        }
+        enterNativeFullscreen(containerRef.current);
+        return;
+      }
+
+      if (isCssFullscreen) {
+        exitCssFullscreen();
+        return;
+      }
+      exitNativeFullscreen();
+    };
+
     useEffect(() => {
       const handleFullscreenChange = () => {
-        setIsFullscreen(
+        setIsNativeFullscreen(
           !!(
             document.fullscreenElement ||
             document.webkitFullscreenElement ||
@@ -303,6 +323,31 @@ const CustomVideoPlayer = forwardRef(
         );
       };
     }, []);
+
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video || orientation !== "portrait") return undefined;
+      const onBeginNativeFs = () => {
+        video.webkitExitFullscreen?.();
+        enterCssFullscreen();
+      };
+      video.addEventListener("webkitbeginfullscreen", onBeginNativeFs);
+      return () => {
+        video.removeEventListener("webkitbeginfullscreen", onBeginNativeFs);
+      };
+    }, [orientation]);
+
+    useEffect(() => {
+      if (!isCssFullscreen) return undefined;
+      const onKey = (event) => {
+        if (event.key === "Escape") exitCssFullscreen();
+      };
+      document.addEventListener("keydown", onKey);
+      return () => {
+        document.removeEventListener("keydown", onKey);
+        document.body.style.overflow = "";
+      };
+    }, [isCssFullscreen]);
 
     // Auto-hide controls
     useEffect(() => {
@@ -367,7 +412,11 @@ const CustomVideoPlayer = forwardRef(
     return (
       <div
         ref={containerRef}
-        className={`relative group ${className}`}
+        className={`relative group ${className} ${
+          isCssFullscreen
+            ? "!fixed inset-0 z-[9999] !w-screen !h-[100dvh] !max-w-none bg-black flex items-center justify-center"
+            : ""
+        }`}
         onMouseMove={resetControlsTimeout}
         onMouseLeave={() => {
           if (isPlaying && controlsTimeoutRef.current) {
