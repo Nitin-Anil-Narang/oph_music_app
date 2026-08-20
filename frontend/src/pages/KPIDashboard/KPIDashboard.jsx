@@ -29,6 +29,8 @@ function isSpecialArtistOphId(id) {
     .includes("-SA-");
 }
 
+const DEFAULT_MONTH_WINDOW = 6;
+
 /** Order metrics by calendar month (S3 `special_artist_metrics.json` year → month buckets). */
 function sortMetricsChronologically(metrics) {
   return [...metrics].sort((a, b) => {
@@ -37,6 +39,32 @@ function sortMetricsChronologically(metrics) {
     if (yA !== yB) return yA - yB;
     return MONTH_NAMES.indexOf(a.month) - MONTH_NAMES.indexOf(b.month);
   });
+}
+
+function metricMonthStart(item) {
+  const monthIndex = MONTH_NAMES.indexOf(item.month);
+  const year = parseInt(item.year, 10);
+  if (monthIndex < 0 || !Number.isFinite(year)) return null;
+  return new Date(year, monthIndex, 1);
+}
+
+/** Inclusive current month plus the previous n-1 calendar months. */
+function isMetricInLastNCalendarMonths(item, n, now = new Date()) {
+  const monthStart = metricMonthStart(item);
+  if (!monthStart) return false;
+  const windowStart = new Date(now.getFullYear(), now.getMonth() - (n - 1), 1);
+  const windowEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  return monthStart >= windowStart && monthStart <= windowEnd;
+}
+
+function isMetricInLastNDays(item, days, now = new Date()) {
+  const monthStart = metricMonthStart(item);
+  if (!monthStart) return false;
+  const monthIndex = MONTH_NAMES.indexOf(item.month);
+  const monthEnd = new Date(parseInt(item.year, 10), monthIndex + 1, 0);
+  const cutoff = new Date(now);
+  cutoff.setDate(now.getDate() - days);
+  return monthEnd >= cutoff && monthStart <= now;
 }
 
 export default function KPIDashboard() {
@@ -49,7 +77,7 @@ export default function KPIDashboard() {
   const [artistRank, setArtistRank] = useState(null);
   const [selectedContent, setSelectedContent] = useState("");
   const [selectedContentId, setSelectedContentId] = useState(null);
-  const [duration, setDuration] = useState(30);
+  const [duration, setDuration] = useState(null);
 
   const durationOptions = [
     { value: 15, label: "Last 15 Days" },
@@ -120,22 +148,18 @@ export default function KPIDashboard() {
       const metrics = response.data.s3Metrics || [];
 
       const currentDate = new Date();
-      const cutoffDate = new Date();
-      cutoffDate.setDate(currentDate.getDate() - duration);
-
-      let filteredMetrics;
-      if (isSpecialArtist) {
-        // monthly_kpi/special_artist_metrics.json — show every month present for this artist, chronological
-        filteredMetrics = sortMetricsChronologically(metrics);
-      } else {
-        filteredMetrics = metrics.filter((item) => {
-          const monthIndex = MONTH_NAMES.indexOf(item.month);
-          if (monthIndex < 0) return false;
-          const monthStart = new Date(item.year, monthIndex, 1);
-          const monthEnd = new Date(item.year, monthIndex + 1, 0);
-          return monthEnd >= cutoffDate && monthStart <= currentDate;
-        });
-      }
+      const dayWindow = duration === 15 || duration === 30 ? duration : null;
+      const filteredMetrics = sortMetricsChronologically(
+        metrics.filter((item) =>
+          dayWindow == null
+            ? isMetricInLastNCalendarMonths(
+                item,
+                DEFAULT_MONTH_WINDOW,
+                currentDate,
+              )
+            : isMetricInLastNDays(item, dayWindow, currentDate),
+        ),
+      );
 
       const performanceData = [];
       const trafficData = [];
