@@ -107,34 +107,173 @@ const getReleatedArtists = async (profession) => {
   ) {
     return [];
   }
+
   const q = String(profession).trim();
   const isNumericId = /^[0-9]+$/.test(q);
+
+  // =========================================================
+  // 1. GET RELATED ARTISTS
+  // =========================================================
 
   const [rows] = await db.execute(
     `SELECT
        ud.oph_id AS oph_id,
        ud.oph_id AS ophid,
+       ud.artist_type,
        ud.personal_photo,
        ud.stage_name,
+       ud.full_name AS name,
+       pd.profession,
+       ud.location,
        IFNULL(kpi.total_views, 0) AS total_views
      FROM user_details ud
-     INNER JOIN professional_details pd ON ud.oph_id = pd.OPH_ID
-     LEFT JOIN KPI_score kpi ON ud.oph_id = kpi.oph_id
+
+     INNER JOIN professional_details pd
+       ON ud.oph_id = pd.OPH_ID
+
+     LEFT JOIN KPI_score kpi
+       ON ud.oph_id = kpi.oph_id
+
      WHERE ${
        isNumericId
          ? `(
              TRIM(CAST(pd.Profession AS CHAR)) = TRIM(?)
              OR CAST(pd.Profession AS UNSIGNED) = ?
              OR LOWER(TRIM(CAST(pd.Profession AS CHAR))) = LOWER(
-               (SELECT TRIM(name) FROM professions WHERE id = ? LIMIT 1)
+               (
+                 SELECT TRIM(name)
+                 FROM professions
+                 WHERE id = ?
+                 LIMIT 1
+               )
              )
            )`
          : `LOWER(TRIM(CAST(pd.Profession AS CHAR))) = LOWER(TRIM(?))`
      }
+
      ORDER BY IFNULL(kpi.total_views, 0) DESC
+
      LIMIT 48`,
     isNumericId ? [q, Number(q), Number(q)] : [q],
   );
+
+  // =========================================================
+  // 2. FETCH SONGS FOR EACH RELATED ARTIST
+  // =========================================================
+
+  for (const artist of rows) {
+    try {
+      // =======================================================
+      // SPECIAL ARTIST
+      // =======================================================
+
+      if (isSpecialArtistProfile(artist.artist_type, artist.oph_id)) {
+        const saRows = await fetchSpecialArtistPublicSongRows(artist.oph_id);
+
+        const primaryLabel =
+          (artist.stage_name && String(artist.stage_name).trim()) ||
+          (artist.name && String(artist.name).trim()) ||
+          "";
+
+        artist.songs = formatSpecialArtistSongsForHome(saRows, primaryLabel);
+      }
+
+      // =======================================================
+      // NORMAL ARTIST
+      // =======================================================
+      else {
+        const [songRows] = await db.execute(
+          `
+          SELECT
+            ad.song_id,
+            ad.song_name,
+            ad.primary_artist,
+            ad.audio_url,
+
+            sas.overall_status,
+
+            SUM(ssm.youtube_views) AS total_song_views,
+
+            GROUP_CONCAT(
+              DISTINCT sa.artist_name
+              SEPARATOR ', '
+            ) AS secondary_artist
+
+          FROM songs_register sr
+
+          INNER JOIN audio_details ad
+            ON sr.song_id = ad.song_id
+
+          INNER JOIN song_application_status sas
+            ON sr.song_id = sas.song_id
+
+          LEFT JOIN song_social_metrics ssm
+            ON sr.song_id = ssm.song_id
+
+          LEFT JOIN secondary_artist sa
+            ON sr.song_id = sa.song_id
+
+          WHERE sr.oph_id = ?
+            AND LOWER(TRIM(COALESCE(sas.overall_status, ''))) = 'approved'
+            AND ad.audio_url IS NOT NULL
+            AND TRIM(ad.audio_url) <> ''
+
+          GROUP BY
+            ad.song_id,
+            ad.song_name,
+            ad.primary_artist,
+            ad.audio_url,
+            sas.overall_status
+          `,
+          [artist.oph_id],
+        );
+
+        // =====================================================
+        // FORMAT NORMAL ARTIST SONGS
+        // =====================================================
+
+        artist.songs = songRows.map((song) => {
+          const secondaryArtists = song.secondary_artist
+            ? song.secondary_artist.split(", ").filter((a) => a.trim())
+            : [];
+
+          return {
+            song_id: song.song_id,
+            song_name: song.song_name,
+
+            primaryArtist: song.primary_artist,
+            primary_artist: song.primary_artist,
+
+            secondary_artist: secondaryArtists,
+            featuring_artists: secondaryArtists,
+
+            total_song_views: song.total_song_views || 0,
+
+            audio_url: song.audio_url,
+            audio_file_url: song.audio_url,
+
+            overall_status: song.overall_status,
+          };
+        });
+      }
+    } catch (error) {
+      console.error(
+        `Error fetching songs for related artist ${artist.oph_id}:`,
+        error?.message || error,
+      );
+
+      artist.songs = [];
+    }
+  }
+
+  // =========================================================
+  // 3. REMOVE INTERNAL FIELD
+  // =========================================================
+
+  rows.forEach((artist) => {
+    delete artist.artist_type;
+  });
+
   return rows;
 };
 
@@ -334,8 +473,6 @@ WHERE overall_status = 'approved';
     songs: isSA ? saSongs : [],
   };
 };
-
-
 
 const getUpcomingSong = async (ophid) => {
   try {
