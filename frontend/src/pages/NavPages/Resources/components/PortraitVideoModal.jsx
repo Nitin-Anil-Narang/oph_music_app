@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import CustomVideoPlayer from "../../../../components/CustomVideoPlayer/CustomVideoPlayer";
-import { hideMobileNav, showMobileNav } from "../../../../utils/hideMobileNav";
 
-/** Same popup used by Reels and Success Stories — mobile opens full-viewport portrait (no OS landscape player). */
+/** Same popup used by Reels and Success Stories — keeps mobile bottom nav visible. */
 export default function PortraitVideoModal({
   open,
   src,
@@ -15,10 +14,8 @@ export default function PortraitVideoModal({
 }) {
   useEffect(() => {
     if (!open) return undefined;
-    hideMobileNav();
     document.body.style.overflow = "hidden";
     return () => {
-      showMobileNav();
       document.body.style.overflow = "";
     };
   }, [open]);
@@ -27,12 +24,12 @@ export default function PortraitVideoModal({
 
   return ReactDOM.createPortal(
     <div
-      className="fixed inset-0 z-[120] bg-black flex items-center justify-center"
+      className="fixed inset-x-0 top-0 bottom-[88px] md:inset-0 z-[40] bg-black flex items-center justify-center"
       onClick={onClose}
     >
-      {/* Mobile: full viewport portrait frame. Desktop: centered 9:16 card. */}
+      {/* Mobile: fill space above bottom nav. Desktop: centered 9:16 card. */}
       <div
-        className="relative bg-black w-full h-[100dvh] max-h-[100dvh] landscape:max-w-[56.25dvh] landscape:w-full landscape:mx-auto md:h-auto md:max-w-[360px] md:aspect-[9/16] md:rounded-lg md:shadow-2xl md:mx-auto"
+        className="relative bg-black w-full h-full max-h-full landscape:max-w-[56.25dvh] landscape:w-full landscape:mx-auto md:h-auto md:max-w-[360px] md:aspect-[9/16] md:rounded-lg md:shadow-2xl md:mx-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -51,8 +48,6 @@ export default function PortraitVideoModal({
             className="w-full h-full md:rounded-lg"
             autoPlay
             orientation="portrait"
-            immersiveOnMobile
-            allowFullscreen={false}
             pauseOtherVideos={true}
             onPlay={onPlay}
             onPause={onPause}

@@ -16,7 +16,6 @@ import {
 } from "react-icons/fa";
 import { FaBackward, FaForward } from "react-icons/fa";
 import { pauseAllAudio } from "../../utils/pauseAllAudio";
-import { hideMobileNav, showMobileNav } from "../../utils/hideMobileNav";
 
 const CustomVideoPlayer = forwardRef(
   (
@@ -34,9 +33,7 @@ const CustomVideoPlayer = forwardRef(
       pauseOtherVideos = true,
       id,
       allowFullscreen = true,
-      /** When true, mobile skips the expand button (modal is already full viewport). */
-      immersiveOnMobile = false,
-      /** "portrait" locks to portrait in fullscreen; anything else locks to landscape */
+      /** "portrait" uses CSS fullscreen (no OS landscape player); anything else uses native */
       orientation = "landscape",
     },
     ref,
@@ -59,12 +56,6 @@ const CustomVideoPlayer = forwardRef(
     const stayPortraitRef = useRef(stayPortrait);
     stayPortraitRef.current = stayPortrait;
 
-    const isCoarseMobile =
-      typeof window !== "undefined" &&
-      window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
-    // Portrait on phones: never show expand — OS fullscreen rotates to landscape on OnePlus/Android.
-    const hideExpandButton =
-      isCoarseMobile && (immersiveOnMobile || orientation === "portrait");
     const portraitMode = orientation === "portrait" || stayPortrait;
     const portraitModeRef = useRef(portraitMode);
     portraitModeRef.current = portraitMode;
@@ -340,13 +331,11 @@ const CustomVideoPlayer = forwardRef(
     const enterCssFullscreen = () => {
       setIsCssFullscreen(true);
       document.body.style.overflow = "hidden";
-      hideMobileNav();
     };
 
     const exitCssFullscreen = () => {
       setIsCssFullscreen(false);
       document.body.style.overflow = "";
-      showMobileNav();
     };
 
     const enterNativeFullscreen = (el) => {
@@ -380,7 +369,7 @@ const CustomVideoPlayer = forwardRef(
     const toggleFullscreen = (e) => {
       e?.stopPropagation?.();
       e?.preventDefault?.();
-      if (!containerRef.current || hideExpandButton) return;
+      if (!containerRef.current) return;
 
       if (portraitModeRef.current) {
         if (!isCssFullscreen) enterCssFullscreen();
@@ -518,12 +507,19 @@ const CustomVideoPlayer = forwardRef(
           top: 0,
           left: 0,
           right: 0,
-          bottom: 0,
+          // Leave room for mobile bottom nav so fullscreen controls stay tappable
+          bottom:
+            typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
+              ? 88
+              : 0,
           width: "100vw",
-          height: "100dvh",
+          height:
+            typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
+              ? "calc(100dvh - 88px)"
+              : "100dvh",
           maxWidth: "none",
           maxHeight: "none",
-          zIndex: 2147483646,
+          zIndex: 40,
           background: "#000",
           transform: "none",
           borderRadius: 0,
@@ -626,9 +622,9 @@ const CustomVideoPlayer = forwardRef(
           </div>
         )}
 
-        {/* Custom Controls */}
+        {/* Custom Controls — extra bottom pad on mobile so expand clears the nav */}
         <div
-          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 z-[60] ${
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 z-[60] pb-2 md:pb-0 ${
             showControls ? "opacity-100" : "opacity-0"
           }`}
         >
@@ -717,13 +713,14 @@ const CustomVideoPlayer = forwardRef(
             </div>
 
             {/* Right Controls */}
-            {allowFullscreen && !hideExpandButton && (
+            {allowFullscreen && (
               <div className="flex items-center">
                 <button
                   type="button"
                   onClick={toggleFullscreen}
-                  className="text-white hover:text-[#5DC9DE] transition-colors text-sm sm:text-base"
+                  className="text-white hover:text-[#5DC9DE] transition-colors text-sm sm:text-base p-2 -m-1"
                   title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                  aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
                 >
                   {isFullscreen ? (
                     <FaCompress className="text-base sm:text-lg" />
