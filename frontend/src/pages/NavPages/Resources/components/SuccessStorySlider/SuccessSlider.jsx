@@ -8,7 +8,7 @@ import { Image, Shimmer } from "react-shimmer";
 import { Link } from "react-router-dom";
 import { buildResourcePath } from "../../../../../utils/resourceSlug";
 import toast from "react-hot-toast";
-import CustomVideoPlayer from "../../../../../components/CustomVideoPlayer/CustomVideoPlayer";
+import PortraitVideoModal from "../PortraitVideoModal";
 
 function SuccessSlider({ searchText, title }) {
   const [isDragging, setIsDragging] = useState(false);
@@ -83,34 +83,11 @@ function SuccessSlider({ searchText, title }) {
     }
   };
 
-  const handlePlayPauseVideo = (index) => {
-    if (isDragging) return;
-
-    if (
-      playingIndex !== null &&
-      playingIndex !== index &&
-      videoRefs.current[playingIndex]
-    ) {
-      videoRefs.current[playingIndex].pause();
-      videoRefs.current[playingIndex].currentTime = 0;
-    }
-
-    if (playingIndex === index) {
-      videoRefs.current[index].pause();
-      videoRefs.current[index].currentTime = 0;
-      setPlayingIndex(null);
-    } else {
-      setPlayingIndex(index);
-      if (videoRefs.current[index]) {
-        videoRefs.current[index].play();
-      }
-    }
-  };
-
   const stopAllVideos = () => {
     videoRefs.current.forEach((video) => {
       if (video) {
         video.pause();
+        video.currentTime = 0;
       }
     });
     setPlayingIndex(null);
@@ -214,7 +191,7 @@ function SuccessSlider({ searchText, title }) {
                   <div className="w-full h-full rounded-2xl overflow-hidden">
                     <Image
                       src={success.thumbnail_url}
-                      fallback={<Shimmer width={300} height={400} />}
+                      fallback={<Shimmer width={400} height={500} />}
                       alt={success.title}
                       NativeImgProps={{
                         className: "w-full h-full object-cover",
@@ -254,7 +231,7 @@ function SuccessSlider({ searchText, title }) {
                   <div className="w-full h-full rounded-2xl overflow-hidden">
                     <Image
                       src={success.thumbnail_url}
-                      fallback={<Shimmer width={300} height={400} />}
+                      fallback={<Shimmer width={400} height={500} />}
                       alt={success.title}
                       NativeImgProps={{
                         className: "w-full h-full object-cover",
@@ -283,34 +260,15 @@ function SuccessSlider({ searchText, title }) {
         )}
 
         {isModalOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
-            onClick={closeModal}
-          >
-            <div
-              className="relative bg-black rounded-lg shadow-2xl w-full max-w-[360px] aspect-[9/16] mx-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={closeModal}
-                className="absolute top-2 right-2 text-white text-[40px] font-bold z-50 hover:opacity-80"
-              >
-                &times;
-              </button>
-              <div className="relative w-full h-full">
-                <CustomVideoPlayer
-                  ref={modalVideoRef}
-                  id="video-player-success"
-                  src={selectedVideo}
-                  className="rounded-lg w-full h-full object-contain"
-                  autoPlay
-                  pauseOtherVideos={true}
-                  onPlay={() => setIsPlaying(true)}
-                  onPause={() => setIsPlaying(false)}
-                />
-              </div>
-            </div>
-          </div>
+          <PortraitVideoModal
+            open={isModalOpen}
+            src={selectedVideo}
+            onClose={closeModal}
+            playerRef={modalVideoRef}
+            playerId="video-player-success"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+          />
         )}
       </div>
     </div>

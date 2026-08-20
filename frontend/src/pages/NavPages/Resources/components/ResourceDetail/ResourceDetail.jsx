@@ -167,7 +167,13 @@ export default function ResourceDetail() {
 
   return (
     <div className="text-white py-40 min-h-screen xl:px-16 lg:px-10 px-6 container mx-auto">
-      <div className="relative w-full aspect-video mb-8 rounded-xl overflow-hidden md:p-12">
+      <div
+        className={`relative w-full mb-8 overflow-hidden mx-auto ${
+          resourceType === "story" || resourceType === "reel"
+            ? "fixed inset-0 z-[100] bg-black md:relative md:inset-auto md:z-auto md:rounded-xl aspect-auto h-[100dvh] md:aspect-[9/16] md:max-w-[420px] md:h-auto md:p-0"
+            : "aspect-video md:p-12 rounded-xl"
+        }`}
+      >
         <CustomVideoPlayer
           ref={videoRef}
           src={content.video_url}
@@ -175,6 +181,14 @@ export default function ResourceDetail() {
           className="w-full h-full"
           pauseOtherVideos={true}
           showPlayButtonOverlay={true}
+          orientation={
+            resourceType === "story" || resourceType === "reel"
+              ? "portrait"
+              : "landscape"
+          }
+          immersiveOnMobile={
+            resourceType === "story" || resourceType === "reel"
+          }
         />
       </div>
 

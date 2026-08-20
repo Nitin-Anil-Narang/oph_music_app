@@ -8,8 +8,10 @@ import Elipse from "../../../../../../public/assets/images/elipse2.png";
 import { Image, Shimmer } from "react-shimmer";
 import ArtistProfile from "./ArtistProfile";
 
-/** Max per_page allowed by /get-top-artist (see admin kpi controller). */
-const TOP_ARTIST_PAGE_SIZE = 100;
+/** Page size for /get-top-artist (max 100 on the API). */
+const TOP_ARTIST_PAGE_SIZE = 36;
+/** Cap slides so home/artists do not download hundreds of S3 photos. */
+const DEFAULT_MAX_ARTISTS = 36;
 
 /** After exclude filter: KPI-scored artists first, then everyone else (stable tie-breakers). */
 function sortArtistsScoredFirst(list) {
@@ -48,15 +50,22 @@ function sortArtistsScoredFirst(list) {
 }
 
 const sumOfPlays = (songs) => {
-  let sum = 0;
-  console.log(songs);
-
-  for (let i = 0; i < songs.length; i++) {
-    sum += songs[i].total_views;
-  }
-
-  return sum;
+  if (!Array.isArray(songs)) return 0;
+  return songs.reduce((sum, song) => sum + (Number(song?.total_views) || 0), 0);
 };
+
+function listenerCount(artist) {
+  const fromTotal = Number(artist?.total_views);
+  if (Number.isFinite(fromTotal) && fromTotal > 0) return fromTotal;
+  return sumOfPlays(artist?.songs);
+}
+
+function formatListeners(count) {
+  const n = Number(count) || 0;
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  return String(n);
+}
 
 /**
  * Left-edge slide index so `clickedIndex` sits near the middle of the viewport.
@@ -75,6 +84,7 @@ const ArtistSlider = ({
   rows = 1,
   onListedProfileOpenChange,
   excludeOphIds = [],
+  maxArtists = DEFAULT_MAX_ARTISTS,
 }) => {
   const sliderRef = useRef(null);
   const artistProfileRef = useRef(null);
@@ -90,67 +100,30 @@ const ArtistSlider = ({
   useEffect(() => {
     let cancelled = false;
 
-    const fetchAllTopArtists = async () => {
-      const merged = [];
-      const seen = new Set();
-      let totalFromApi = null;
-      let page = 1;
-
+    const fetchTopArtists = async () => {
       try {
-        while (page <= 50) {
-          const response = await axiosApi.get(
-            `/get-top-artist?page=${page}&per_page=${TOP_ARTIST_PAGE_SIZE}`,
-          );
-          if (cancelled) return;
-
-          const list = Array.isArray(response.data?.data)
-            ? response.data.data
-            : [];
-          const total = response.data?.total;
-          if (typeof total === "number" && Number.isFinite(total)) {
-            totalFromApi = total;
-          }
-
-          for (const row of list) {
-            const oid = String(row.oph_id ?? row.OPH_ID ?? "").trim();
-            if (!oid || seen.has(oid)) continue;
-            seen.add(oid);
-            merged.push(row);
-          }
-
-          const gotAll =
-            list.length < TOP_ARTIST_PAGE_SIZE ||
-            (totalFromApi != null && merged.length >= totalFromApi);
-          if (gotAll) break;
-          page += 1;
-        }
-
+        const cap = Math.max(1, Number(maxArtists) || DEFAULT_MAX_ARTISTS);
+        const perPage = Math.min(TOP_ARTIST_PAGE_SIZE, cap);
+        // Light list: photos + KPI only (songs load on profile click).
+        const response = await axiosApi.get(
+          `/get-top-artist?page=1&per_page=${perPage}&include_songs=0`,
+        );
         if (cancelled) return;
-        setAllArtists(merged);
 
-        if (import.meta.env.DEV) {
-          console.groupCollapsed("[ArtistSlider] get-top-artist (all pages)");
-          console.log("total from API", totalFromApi);
-          console.log("unique loaded", merged.length);
-          console.table(
-            merged.map((a) => ({
-              oph_id: a.oph_id ?? a.OPH_ID,
-              stage_name: a.stage_name,
-              total_views: a.total_views,
-            })),
-          );
-          console.groupEnd();
-        }
+        const list = Array.isArray(response.data?.data)
+          ? response.data.data
+          : [];
+        setAllArtists(list.slice(0, cap));
       } catch (error) {
         console.error("Error fetching artists:", error);
       }
     };
 
-    fetchAllTopArtists();
+    fetchTopArtists();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [maxArtists]);
 
   const excludeSet = useMemo(
     () => new Set(excludeOphIds.map((id) => String(id).trim()).filter(Boolean)),
@@ -273,8 +246,9 @@ const ArtistSlider = ({
 
         {/* Slider Section */}
         <div className="relative">
+          {artists.length > 0 && (
           <Slider
-            key={artists.length ? `artists-${artists.length}` : "artists-empty"}
+            key={`artists-${artists.length}`}
             ref={sliderRef}
             {...{
               dots: false,
@@ -345,6 +319,8 @@ const ArtistSlider = ({
                         }
                         alt={artist.stage_name}
                         NativeImgProps={{
+                          loading: "lazy",
+                          decoding: "async",
                           className: `
                             w-[120px] sm:w-[150px] lg:w-[180px]
                             aspect-square
@@ -380,12 +356,7 @@ const ArtistSlider = ({
                           id === currArtist ? "text-white" : "text-gray-400"
                         }`}
                       >
-                        {sumOfPlays(artist.songs) >= 1000000
-                          ? `${(sumOfPlays(artist.songs) / 1000000).toFixed(1)}M`
-                          : sumOfPlays(artist.songs) >= 1000
-                            ? `${(sumOfPlays(artist.songs) / 1000).toFixed(1)}K`
-                            : sumOfPlays(artist.songs)}{" "}
-                        Listeners
+                        {formatListeners(listenerCount(artist))} Listeners
                       </p>
                     </div>
                   </div>
@@ -393,6 +364,7 @@ const ArtistSlider = ({
               );
             })}
           </Slider>
+          )}
         </div>
 
         {/* Mobile Arrow buttons (below the slider) */}

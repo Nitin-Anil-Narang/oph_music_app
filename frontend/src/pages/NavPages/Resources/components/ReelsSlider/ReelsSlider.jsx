@@ -8,7 +8,7 @@ import { Image, Shimmer } from "react-shimmer";
 import { Link } from "react-router-dom";
 import { buildResourcePath } from "../../../../../utils/resourceSlug";
 import toast from "react-hot-toast";
-import CustomVideoPlayer from "../../../../../components/CustomVideoPlayer/CustomVideoPlayer";
+import PortraitVideoModal from "../PortraitVideoModal";
 
 function ReelsSlider({ searchText, title }) {
   const [isDragging, setIsDragging] = useState(false);
@@ -260,35 +260,15 @@ function ReelsSlider({ searchText, title }) {
         )}
 
         {isModalOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
-            onClick={closeModal}
-          >
-            <div
-              className="relative bg-black rounded-lg shadow-2xl w-full max-w-[360px] aspect-[9/16] mx-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={closeModal}
-                className="absolute top-2 right-2 text-white text-[40px] font-bold z-50 hover:opacity-80"
-              >
-                &times;
-              </button>
-              <div className="relative w-full h-full">
-                <CustomVideoPlayer
-                  ref={modalVideoRef}
-                  id="video-player-reels"
-                  src={selectedVideo}
-                  className="rounded-lg w-full h-full object-contain"
-                  autoPlay
-                  orientation="portrait"
-                  pauseOtherVideos={true}
-                  onPlay={() => setIsPlaying(true)}
-                  onPause={() => setIsPlaying(false)}
-                />
-              </div>
-            </div>
-          </div>
+          <PortraitVideoModal
+            open={isModalOpen}
+            src={selectedVideo}
+            onClose={closeModal}
+            playerRef={modalVideoRef}
+            playerId="video-player-reels"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+          />
         )}
       </div>
     </div>

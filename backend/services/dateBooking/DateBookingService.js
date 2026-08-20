@@ -3,6 +3,7 @@ const {
   normalizeCalendarDateOnly,
   parseReasonHistory,
   isWithinFiveDaysOfToday,
+  RELEASE_DATE_CHANGE_FROM_SQL,
 } = require('../../utils/calendarDateUtils');
 const {
   isNewDateBlockedForReleaseDateChange,
@@ -350,44 +351,83 @@ class DateBookingService {
 
   /**
    * Clear pending release date change on reject (calendar was never moved to the new date).
-   * Also restores Date Booking payment.release_date — it was nulled when the change was submitted,
-   * which otherwise hides the previous slot from paid-in-advance Register Song options.
+   * Also restores the Date Booking payment for the specific slot that was being changed
+   * (artists can have many calendar rows — never use LIMIT 1 / blanket NULL restore).
    */
   async clearPendingReleaseDateChangeOnReject(connection, ophId, newDate, rejectReason) {
     const ophNorm = String(ophId).trim();
     const newStr = normalizeBookingDate(newDate);
     if (!ophNorm || !newStr) return { cleared: false };
 
-    const [rows] = await connection.query(
-      `SELECT current_booking_date, reason_history FROM calender WHERE oph_id = ? LIMIT 1`,
+    const [rdcRows] = await connection.query(
+      `SELECT old_release_date FROM payments
+       WHERE oph_id = ?
+         AND (release_date = ? OR DATE(release_date) = DATE(?))
+         AND ${RELEASE_DATE_CHANGE_FROM_SQL}
+       ORDER BY created_at DESC
+       LIMIT 1`,
+      [ophNorm, newStr, newStr],
+    );
+    const oldFromPayment = normalizeBookingDate(rdcRows[0]?.old_release_date);
+
+    const [allRows] = await connection.query(
+      `SELECT id, current_booking_date, reason_history
+       FROM calender
+       WHERE oph_id = ?`,
       [ophNorm],
     );
 
-    if (rows.length === 0) return { cleared: false };
-
-    const history = parseReasonHistory(rows[0].reason_history).map((item, index, arr) => {
-      if (index === arr.length - 1 && item.status === 'pending') {
-        return {
-          ...item,
-          status: 'rejected',
-          rejected_at: new Date().toISOString(),
-          admin_reject_reason: rejectReason,
-        };
+    let target = null;
+    for (const row of allRows) {
+      const hist = parseReasonHistory(row.reason_history);
+      const last = hist.length ? hist[hist.length - 1] : null;
+      if (
+        last?.status === "pending" &&
+        normalizeBookingDate(last.new_date) === newStr
+      ) {
+        target = row;
+        break;
       }
-      return item;
-    });
+    }
+    if (!target && oldFromPayment) {
+      target =
+        allRows.find(
+          (r) =>
+            normalizeBookingDate(r.current_booking_date) === oldFromPayment,
+        ) || null;
+    }
+    if (!target && allRows.length === 1) {
+      target = allRows[0];
+    }
+    if (!target) return { cleared: false };
+
+    const history = parseReasonHistory(target.reason_history).map(
+      (item, index, arr) => {
+        if (index === arr.length - 1 && item.status === "pending") {
+          return {
+            ...item,
+            status: "rejected",
+            rejected_at: new Date().toISOString(),
+            admin_reject_reason: rejectReason,
+          };
+        }
+        return item;
+      },
+    );
 
     await connection.query(
       `UPDATE calender
        SET reason = NULL,
            reason_history = ?,
            updated_at = NOW()
-       WHERE oph_id = ?`,
-      [JSON.stringify(history), ophNorm],
+       WHERE id = ?`,
+      [JSON.stringify(history), target.id],
     );
 
-    const restoreDate = normalizeBookingDate(rows[0].current_booking_date);
+    const restoreDate =
+      oldFromPayment || normalizeBookingDate(target.current_booking_date);
     if (restoreDate) {
+      // Only the payment that was nulled for THIS slot (match old_release_date)
       await connection.query(
         `UPDATE payments
          SET release_date = ?,
@@ -399,15 +439,8 @@ class DateBookingService {
              OR LOWER(TRIM(from_source)) = 'datebooking'
            )
            AND (status IS NULL OR LOWER(TRIM(status)) != 'rejected')
-           AND (
-             release_date IS NULL
-             OR release_date = '0000-00-00'
-             OR TRIM(release_date) = ''
-             OR (
-               old_release_date IS NOT NULL
-               AND DATE(old_release_date) = DATE(?)
-             )
-           )`,
+           AND old_release_date IS NOT NULL
+           AND DATE(old_release_date) = DATE(?)`,
         [restoreDate, ophNorm, restoreDate],
       );
     }

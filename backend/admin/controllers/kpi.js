@@ -192,7 +192,12 @@ const getTopArtistsController = async (req, res) => {
 
     const page = Math.max(1, parseInt(req.query.page, 10) || 1);
     const perPage = Math.min(100, Math.max(1, parseInt(req.query.per_page, 10) || 6));
-    const { rows, total } = await SongSocialMetrics.getTopArtists(page, perPage);
+    const includeSongs =
+      String(req.query.include_songs ?? "").toLowerCase() === "1" ||
+      String(req.query.include_songs ?? "").toLowerCase() === "true";
+    const { rows, total } = await SongSocialMetrics.getTopArtists(page, perPage, {
+      includeSongs,
+    });
     const totalPages = Math.max(1, Math.ceil(total / perPage));
 
     return res.status(200).json({

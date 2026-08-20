@@ -55,6 +55,33 @@ function toNum(v) {
 
 const AUDIO_TZ = "Asia/Kolkata";
 
+const MONTH_NAMES = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+/** Prefer S3 year/month bucket, else derive from a timestamp. */
+function audioMonthKeyFromRow(row) {
+  if (row?.year != null && row?.month) {
+    const mi = MONTH_NAMES.indexOf(String(row.month));
+    const y = parseInt(row.year, 10);
+    if (mi >= 0 && Number.isFinite(y)) {
+      return `${y}-${String(mi + 1).padStart(2, "0")}`;
+    }
+  }
+  return audioMonthKeyFromDate(row?.audioDate);
+}
+
 /** YYYY-MM in AUDIO_TZ for sorting / bucketing. */
 function audioMonthKeyFromDate(isoOrDate) {
   if (isoOrDate == null || isoOrDate === "") return "";
@@ -399,9 +426,7 @@ export default function AnalyticsDashboard() {
     { label: "Last 30 Days", value: 30 },
   ]);
 
-  const filteredDurationOptions = selectedStream === "Audio Platform"
-    ? durationOptions.filter((opt) => opt.value !== 30)
-    : durationOptions;
+  const filteredDurationOptions = durationOptions;
   const [selectedDuration, setSelectedDuration] = useState(7);
 
   useEffect(() => {
@@ -473,44 +498,53 @@ export default function AnalyticsDashboard() {
 
   console.log(contents);
 
-  const submitMetric = React.useMemo(
-    () =>
-      (contents.dbMetrics || []).map((metric) => {
-        const streams =
-          metric.audio_platform_streams != null &&
-          metric.audio_platform_streams !== ""
-            ? Number(metric.audio_platform_streams)
-            : null;
-        const revenueRaw = metric.audio_platform_revenue;
-        const revenueNum =
-          revenueRaw != null && revenueRaw !== "" ? Number(revenueRaw) : null;
-        return {
-          name: metric.song_name,
-          song_name: metric.song_name,
-          date: metric.updated_at || null,
-          Id: metric.Id || metric.id,
-          song_id: metric.song_id,
-          video_url: metric.video_url,
-          image_url: metric.image_url,
-          credits: metric.credits,
-          youtube_views: toNum(metric.youtube_views),
-          youtube_engagement: toNum(metric.youtube_engagement),
-          youtube_avg_view_duration:
-            metric.youtube_avg_view_duration ?? "00:00:00",
-          youtube_revenue: metric.youtube_revenue ?? "0.00",
-          insta_engagement: toNum(metric.insta_engagement),
-          Notes: metric.Notes ?? "",
-          audio_platform_name: metric.audio_platform_name ?? null,
-          audio_platform_streams: Number.isFinite(streams) ? streams : null,
-          audio_platform_revenue: Number.isFinite(revenueNum)
-            ? revenueNum
-            : null,
-          audioDate:
-            metric.audioDate ?? metric.updated_at ?? metric.created_at ?? null,
-        };
-      }),
-    [contents],
-  );
+  const mapMetricRow = (metric, extra = {}) => {
+    const streams =
+      metric.audio_platform_streams != null &&
+      metric.audio_platform_streams !== ""
+        ? Number(metric.audio_platform_streams)
+        : null;
+    const revenueRaw = metric.audio_platform_revenue;
+    const revenueNum =
+      revenueRaw != null && revenueRaw !== "" ? Number(revenueRaw) : null;
+    return {
+      name: metric.song_name,
+      song_name: metric.song_name,
+      date: metric.updated_at || null,
+      Id: metric.Id || metric.id,
+      song_id: metric.song_id,
+      video_url: metric.video_url,
+      image_url: metric.image_url,
+      credits: metric.credits,
+      youtube_views: toNum(metric.youtube_views),
+      youtube_engagement: toNum(metric.youtube_engagement),
+      youtube_avg_view_duration:
+        metric.youtube_avg_view_duration ?? "00:00:00",
+      youtube_revenue: metric.youtube_revenue ?? "0.00",
+      insta_engagement: toNum(metric.insta_engagement),
+      Notes: metric.Notes ?? "",
+      audio_platform_name: metric.audio_platform_name ?? null,
+      audio_platform_streams: Number.isFinite(streams) ? streams : null,
+      audio_platform_revenue: Number.isFinite(revenueNum)
+        ? revenueNum
+        : null,
+      audioDate:
+        metric.audioDate ?? metric.updated_at ?? metric.created_at ?? null,
+      year: metric.year ?? extra.year,
+      month: metric.month ?? extra.month,
+      fromS3: Boolean(extra.fromS3),
+    };
+  };
+
+  const submitMetric = React.useMemo(() => {
+    const db = (contents.dbMetrics || []).map((m) =>
+      mapMetricRow(m, { fromS3: false }),
+    );
+    const s3 = (contents.s3Metrics || []).map((m) =>
+      mapMetricRow(m, { fromS3: true, year: m.year, month: m.month }),
+    );
+    return [...db, ...s3];
+  }, [contents]);
 
   const submitMetricRef = useRef(submitMetric);
   submitMetricRef.current = submitMetric;
@@ -542,7 +576,9 @@ export default function AnalyticsDashboard() {
   const chartData = Array.isArray(selectedContent)
     ? (() => {
         const dataMap = new Map();
-        selectedContent.forEach((c) => {
+        selectedContent
+          .filter((c) => !c.fromS3)
+          .forEach((c) => {
           const dateKey = c.date
             ? new Date(c.date).toLocaleDateString("en-GB", {
                 timeZone: "Asia/Kolkata",
@@ -589,7 +625,7 @@ export default function AnalyticsDashboard() {
       : [];
 
   const AudiochartData = audioChartRows.map((c) => {
-    const monthKey = audioMonthKeyFromDate(c.audioDate);
+    const monthKey = audioMonthKeyFromRow(c);
     return {
       name: c.audio_platform_name,
       date: c.audioDate,
@@ -631,15 +667,25 @@ export default function AnalyticsDashboard() {
 
   // normalize to rows (array) and compute totals
 
-  const totalRevenueINR = rows.reduce((sum, r) => {
+  const totalRevenueINR = (() => {
     if (selectedStream === "Audio Platform") {
-      return sum + toNum(r.audio_platform_revenue);
+      const latest = new Map();
+      for (const r of rows) {
+        const plat = String(r.audio_platform_name ?? "").trim();
+        if (!plat) continue;
+        const t = r.audioDate ? new Date(r.audioDate).getTime() : 0;
+        const prev = latest.get(plat);
+        if (!prev || t >= prev.t) {
+          latest.set(plat, { t, v: toNum(r.audio_platform_revenue) });
+        }
+      }
+      return Array.from(latest.values()).reduce((sum, x) => sum + x.v, 0);
     }
     if (selectedStream === "YouTube") {
-      return sum + toNum(r.youtube_revenue);
+      return rows.reduce((sum, r) => sum + toNum(r.youtube_revenue), 0);
     }
-    return sum;
-  }, 0);
+    return 0;
+  })();
 
   const filterByDuration = (data, dateField) => {
     const currentDate = new Date();
@@ -654,7 +700,10 @@ export default function AnalyticsDashboard() {
   };
 
   const filteredChartData = filterByDuration(chartData, "date");
-  const filteredAudioChartData = filterByDuration(AudiochartData, "date");
+  const filteredAudioChartData =
+    selectedStream === "Audio Platform"
+      ? AudiochartData
+      : filterByDuration(AudiochartData, "date");
 
   /** One chart per audio platform (S3 / DB rows), sorted by total streams desc. */
   const audioPlatformChartGroups = (() => {
@@ -748,9 +797,7 @@ export default function AnalyticsDashboard() {
                 </h2>
 
                 <div className="flex justify-end">
-                  {/* Mobile: pill button */}
-
-                  {/* Desktop: styled select */}
+                  {selectedStream !== "Audio Platform" && (
                   <div className="hidden lg:block w-48">
                     <FilterSelect
                       value={
@@ -767,6 +814,7 @@ export default function AnalyticsDashboard() {
                       onChange={(val) => setSelectedDuration(Number(val))}
                     />
                   </div>
+                  )}
                 </div>
               </div>
               <div className="hidden lg:block">
@@ -802,6 +850,7 @@ export default function AnalyticsDashboard() {
                 selectedContent={selectedContent}
                 contents={contents}
               />
+              {selectedStream !== "Audio Platform" && (
               <MobileDurationSelect
                 value={
                   filteredDurationOptions.find((o) => o.value === selectedDuration)
@@ -813,6 +862,7 @@ export default function AnalyticsDashboard() {
                 }))}
                 onChange={(val) => setSelectedDuration(Number(val))}
               />
+              )}
             </div>
 
             {/* Song Selection and Platform — Desktop */}
@@ -1029,6 +1079,13 @@ export default function AnalyticsDashboard() {
 
                   return (
                     <>
+                      {paginatedCharts.length === 0 && (
+                        <p className="text-gray-400 text-sm">
+                          {selectedStream === "Audio Platform"
+                            ? "No audio platform stream data for this song."
+                            : "No chart data in the selected duration."}
+                        </p>
+                      )}
                       {paginatedCharts.map((chart, idx) => (
                         <div key={idx}>{chart}</div>
                       ))}

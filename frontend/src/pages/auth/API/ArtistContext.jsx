@@ -223,11 +223,35 @@ export const ArtistProvider = ({ children }) => {
     document.cookie = 'oph_origin_domain=; path=/; max-age=0; SameSite=Lax; Secure';
     document.cookie = 'oph_origin_domain=; path=/; max-age=0; SameSite=Lax'; // Fallback without Secure
     
+    const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
+    const stayOnPublicPage =
+      pathname === "/home" ||
+      pathname.startsWith("/content/") ||
+      pathname.startsWith("/resources/") ||
+      pathname.startsWith("/artists/") ||
+      pathname.startsWith("/events/") ||
+      pathname.startsWith("/dashboard/artist-detail") ||
+      pathname.startsWith("/public-artist-detail") ||
+      pathname.startsWith("/collaboration-artist-detail") ||
+      pathname.startsWith("/leaderboard") ||
+      pathname === "/contact" ||
+      pathname === "/find-your-collaborator" ||
+      pathname === "/success" ||
+      pathname === "/privacy-policy" ||
+      pathname === "/cancellation-policy" ||
+      pathname === "/disclaimer" ||
+      pathname === "/refund-policy" ||
+      pathname === "/terms-and-conditions";
+
+    if (stayOnPublicPage) {
+      console.log("Public route — session cleared, staying on page");
+      console.groupEnd();
+      return;
+    }
+
     setTimeout(() => {
       console.log("Navigating to /auth/login now");
       navigate("/auth/login");
-      // Give the console a moment to flush logs before reload
-      setTimeout(() => window.location.reload(), 200);
     }, 500);
     console.groupEnd();
   };
