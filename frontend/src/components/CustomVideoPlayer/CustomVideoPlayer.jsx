@@ -34,8 +34,6 @@ const CustomVideoPlayer = forwardRef(
       pauseOtherVideos = true,
       id,
       allowFullscreen = true,
-      /** Modal already fills the phone — hide expand on mobile (reels/stories). */
-      immersiveOnMobile = false,
       /** "portrait" uses CSS fullscreen (no OS landscape player); anything else uses native */
       orientation = "landscape",
     },
@@ -59,10 +57,6 @@ const CustomVideoPlayer = forwardRef(
     const stayPortraitRef = useRef(stayPortrait);
     stayPortraitRef.current = stayPortrait;
 
-    const isCoarseMobile =
-      typeof window !== "undefined" &&
-      window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
-    const hideExpandButton = immersiveOnMobile && isCoarseMobile;
     const portraitMode = orientation === "portrait" || stayPortrait;
     const portraitModeRef = useRef(portraitMode);
     portraitModeRef.current = portraitMode;
@@ -378,7 +372,7 @@ const CustomVideoPlayer = forwardRef(
     const toggleFullscreen = (e) => {
       e?.stopPropagation?.();
       e?.preventDefault?.();
-      if (!containerRef.current || hideExpandButton) return;
+      if (!containerRef.current) return;
 
       if (portraitModeRef.current) {
         if (!isCssFullscreen) enterCssFullscreen();
@@ -715,7 +709,7 @@ const CustomVideoPlayer = forwardRef(
             </div>
 
             {/* Right Controls */}
-            {allowFullscreen && !hideExpandButton && (
+            {allowFullscreen && (
               <div className="flex items-center">
                 <button
                   type="button"
