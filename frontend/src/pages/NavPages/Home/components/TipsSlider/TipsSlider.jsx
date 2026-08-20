@@ -5,7 +5,7 @@ import "./TipsSlider.css";
 import Struggle from "../../../../../../public/assets/images/struggle.png";
 import Elipse3 from "../../../../../../public/assets/images/elipse3.png";
 import axiosApi from "../../../../../conf/axios";
-import CustomVideoPlayer from "../../../../../components/CustomVideoPlayer/CustomVideoPlayer";
+import PortraitVideoModal from "../../../Resources/components/PortraitVideoModal";
 
 const TipsSlider = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -239,41 +239,16 @@ const TipsSlider = () => {
         </div>
       </div>
 
-      {/* Video Modal */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
-          onClick={closeModal}
-        >
-          <div
-            className="relative bg-black rounded-lg shadow-lg w-[80%] md:max-w-md mx-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close Button - Mobile Only */}
-            <button
-              className="md:hidden absolute top-1 right-0 w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-full text-white text-2xl font-bold z-[70] hover:bg-white/30 transition-all border border-white/30"
-              onClick={closeModal}
-            >
-              &times;
-            </button>
-
-            <div className="relative w-full aspect-[9/16] fullscreen:aspect-auto fullscreen:h-full">
-              <CustomVideoPlayer
-                ref={modalVideoRef}
-                src={selectedVideo}
-                className="w-full h-full rounded-lg object-contain fullscreen:rounded-none"
-                autoPlay
-                playsInline
-                muted={false}
-                orientation="portrait"
-                pauseOtherVideos={true}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Video Modal — same portrait immersive player as Resources stories */}
+      <PortraitVideoModal
+        open={isModalOpen}
+        src={selectedVideo}
+        onClose={closeModal}
+        playerRef={modalVideoRef}
+        playerId="video-player-tips"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      />
     </div>
   );
 };

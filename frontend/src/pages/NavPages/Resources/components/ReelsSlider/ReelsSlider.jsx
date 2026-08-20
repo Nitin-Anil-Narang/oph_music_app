@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import { buildResourcePath } from "../../../../../utils/resourceSlug";
 import toast from "react-hot-toast";
 import PortraitVideoModal from "../PortraitVideoModal";
-import PortraitVideoModal from "../PortraitVideoModal";
 
 function ReelsSlider({ searchText, title }) {
   const [isDragging, setIsDragging] = useState(false);

@@ -5,6 +5,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
+import ReactDOM from "react-dom";
 import {
   FaPlay,
   FaPause,
@@ -33,6 +34,8 @@ const CustomVideoPlayer = forwardRef(
       pauseOtherVideos = true,
       id,
       allowFullscreen = true,
+      /** When true, mobile skips the expand button (modal is already full viewport). */
+      immersiveOnMobile = false,
       /** "portrait" locks to portrait in fullscreen; anything else locks to landscape */
       orientation = "landscape",
     },
@@ -55,6 +58,34 @@ const CustomVideoPlayer = forwardRef(
       orientation === "portrait" || videoIsPortrait;
     const stayPortraitRef = useRef(stayPortrait);
     stayPortraitRef.current = stayPortrait;
+
+    const isCoarseMobile =
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
+    // Portrait on phones: never show expand — OS fullscreen rotates to landscape on OnePlus/Android.
+    const hideExpandButton =
+      isCoarseMobile && (immersiveOnMobile || orientation === "portrait");
+    const portraitMode = orientation === "portrait" || stayPortrait;
+    const portraitModeRef = useRef(portraitMode);
+    portraitModeRef.current = portraitMode;
+
+    const exitAnyNativeFullscreen = () => {
+      const video = videoRef.current;
+      document.exitFullscreen?.().catch(() => {});
+      document.webkitExitFullscreen?.();
+      document.msExitFullscreen?.();
+      video?.webkitExitFullscreen?.();
+      try {
+        video?.webkitSetPresentationMode?.("inline");
+      } catch {
+        /* ignore */
+      }
+    };
+
+    const blockNativeVideoFullscreen = () => {
+      if (!portraitModeRef.current) return;
+      exitAnyNativeFullscreen();
+    };
     const [showControls, setShowControls] = useState(true);
     const controlsTimeoutRef = useRef(null);
     const wasPlayingBeforeSeek = useRef(false);
@@ -114,6 +145,58 @@ const CustomVideoPlayer = forwardRef(
         video.removeEventListener("loadedmetadata", updateDuration);
       };
     }, []);
+
+    // Block Android/OnePlus native video fullscreen (always forces landscape).
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video || !portraitMode) return undefined;
+
+      const blockNative = (e) => {
+        e?.preventDefault?.();
+        e?.stopPropagation?.();
+        exitAnyNativeFullscreen();
+      };
+
+      try {
+        video.webkitSetPresentationMode?.("inline");
+      } catch {
+        /* ignore */
+      }
+
+      const noopFs = () => {
+        exitAnyNativeFullscreen();
+        return Promise.resolve();
+      };
+
+      const originals = {};
+      [
+        "requestFullscreen",
+        "webkitRequestFullscreen",
+        "webkitRequestFullScreen",
+        "mozRequestFullScreen",
+        "msRequestFullscreen",
+        "webkitEnterFullscreen",
+        "webkitEnterFullScreen",
+      ].forEach((method) => {
+        if (typeof video[method] === "function") {
+          originals[method] = video[method];
+          video[method] = noopFs;
+        }
+      });
+
+      video.addEventListener("webkitbeginfullscreen", blockNative, true);
+      video.addEventListener("webkitendfullscreen", blockNative, true);
+      video.addEventListener("dblclick", blockNative, true);
+
+      return () => {
+        Object.entries(originals).forEach(([method, fn]) => {
+          video[method] = fn;
+        });
+        video.removeEventListener("webkitbeginfullscreen", blockNative, true);
+        video.removeEventListener("webkitendfullscreen", blockNative, true);
+        video.removeEventListener("dblclick", blockNative, true);
+      };
+    }, [portraitMode]);
 
     // Handle play/pause
     const togglePlayPause = (e) => {
@@ -258,24 +341,27 @@ const CustomVideoPlayer = forwardRef(
       setIsCssFullscreen(true);
       document.body.style.overflow = "hidden";
       hideMobileNav();
-      tryLockOrientation("portrait");
     };
 
     const exitCssFullscreen = () => {
       setIsCssFullscreen(false);
       document.body.style.overflow = "";
       showMobileNav();
-      tryUnlockOrientation();
     };
 
     const enterNativeFullscreen = (el) => {
+      // Never use OS fullscreen for portrait — Android (OnePlus) rotates to landscape.
+      if (portraitModeRef.current) {
+        enterCssFullscreen();
+        return;
+      }
       const req =
         el.requestFullscreen?.() ||
         el.webkitRequestFullscreen?.() ||
         el.msRequestFullscreen?.();
       if (req && typeof req.then === "function") {
         req
-          .then(() => tryLockOrientation(orientation === "portrait" ? "portrait" : "landscape"))
+          .then(() => tryLockOrientation("landscape"))
           .catch((err) => console.error("Fullscreen error:", err));
       }
     };
@@ -288,24 +374,24 @@ const CustomVideoPlayer = forwardRef(
     };
 
     /**
-     * Portrait videos (stories/reels): never use the OS video fullscreen API.
-     * On phones that always rotates to landscape. Use a viewport overlay instead.
+     * Portrait videos (stories/reels): CSS overlay only — never OS fullscreen.
+     * Landscape videos: native fullscreen with landscape lock.
      */
     const toggleFullscreen = (e) => {
       e?.stopPropagation?.();
       e?.preventDefault?.();
-      if (!containerRef.current) return;
-      const useCssPortrait = stayPortraitRef.current;
+      if (!containerRef.current || hideExpandButton) return;
 
-      if (!isFullscreen) {
-        if (useCssPortrait) {
-          enterCssFullscreen();
-          return;
-        }
-        enterNativeFullscreen(containerRef.current);
+      if (portraitModeRef.current) {
+        if (!isCssFullscreen) enterCssFullscreen();
+        else exitCssFullscreen();
         return;
       }
 
+      if (!isFullscreen) {
+        enterNativeFullscreen(containerRef.current);
+        return;
+      }
       if (isCssFullscreen) {
         exitCssFullscreen();
         return;
@@ -314,59 +400,45 @@ const CustomVideoPlayer = forwardRef(
     };
 
     useEffect(() => {
-      const handleFullscreenChange = () => {
-        setIsNativeFullscreen(
-          !!(
-            document.fullscreenElement ||
-            document.webkitFullscreenElement ||
-            document.msFullscreenElement
-          ),
-        );
+      const onFsChange = () => {
+        const fsEl =
+          document.fullscreenElement ||
+          document.webkitFullscreenElement ||
+          document.msFullscreenElement;
+
+        if (portraitModeRef.current && fsEl) {
+          // Kick out of OS fullscreen immediately (causes landscape on OnePlus).
+          exitAnyNativeFullscreen();
+          setIsNativeFullscreen(false);
+          return;
+        }
+
+        setIsNativeFullscreen(!!fsEl);
       };
 
-      document.addEventListener("fullscreenchange", handleFullscreenChange);
-      document.addEventListener(
-        "webkitfullscreenchange",
-        handleFullscreenChange,
-      );
-      document.addEventListener("msfullscreenchange", handleFullscreenChange);
+      document.addEventListener("fullscreenchange", onFsChange);
+      document.addEventListener("webkitfullscreenchange", onFsChange);
+      document.addEventListener("msfullscreenchange", onFsChange);
 
-      return () => {
-        document.removeEventListener(
-          "fullscreenchange",
-          handleFullscreenChange,
-        );
-        document.removeEventListener(
-          "webkitfullscreenchange",
-          handleFullscreenChange,
-        );
-        document.removeEventListener(
-          "msfullscreenchange",
-          handleFullscreenChange,
-        );
-      };
-    }, []);
-
-    useEffect(() => {
-      if (!isNativeFullscreen || !stayPortraitRef.current) return;
-      exitNativeFullscreen();
-      enterCssFullscreen();
-    }, [isNativeFullscreen]);
-
-    useEffect(() => {
       const video = videoRef.current;
-      if (!video) return undefined;
-      const onBeginNativeFs = () => {
-        if (!stayPortraitRef.current) return;
-        video.webkitExitFullscreen?.();
-        document.exitFullscreen?.().catch(() => {});
-        enterCssFullscreen();
-      };
-      video.addEventListener("webkitbeginfullscreen", onBeginNativeFs);
+      if (video) {
+        video.addEventListener("fullscreenchange", onFsChange);
+        video.addEventListener("webkitbeginfullscreen", blockNativeVideoFullscreen);
+      }
+
       return () => {
-        video.removeEventListener("webkitbeginfullscreen", onBeginNativeFs);
+        document.removeEventListener("fullscreenchange", onFsChange);
+        document.removeEventListener("webkitfullscreenchange", onFsChange);
+        document.removeEventListener("msfullscreenchange", onFsChange);
+        if (video) {
+          video.removeEventListener("fullscreenchange", onFsChange);
+          video.removeEventListener(
+            "webkitbeginfullscreen",
+            blockNativeVideoFullscreen,
+          );
+        }
       };
-    }, []);
+    }, [portraitMode]);
 
     useEffect(() => {
       if (!isCssFullscreen) return undefined;
@@ -440,31 +512,31 @@ const CustomVideoPlayer = forwardRef(
 
     const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
-    return (
+    const fullscreenStyle = isCssFullscreen
+      ? {
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: "100vw",
+          height: "100dvh",
+          maxWidth: "none",
+          maxHeight: "none",
+          zIndex: 2147483646,
+          background: "#000",
+          transform: "none",
+          borderRadius: 0,
+        }
+      : undefined;
+
+    const playerNode = (
       <div
         ref={containerRef}
         className={`relative group ${className} ${
-          isCssFullscreen ? "bg-black flex items-center justify-center" : ""
+          isCssFullscreen ? "bg-black flex items-center justify-center oph-portrait-video-fs" : ""
         }`}
-        style={
-          isCssFullscreen
-            ? {
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                width: "100vw",
-                height: "100dvh",
-                maxWidth: "none",
-                maxHeight: "none",
-                zIndex: 2147483646,
-                background: "#000",
-                transform: "none",
-                borderRadius: 0,
-              }
-            : undefined
-        }
+        style={fullscreenStyle}
         onMouseMove={resetControlsTimeout}
         onMouseLeave={() => {
           if (isPlaying && controlsTimeoutRef.current) {
@@ -517,7 +589,12 @@ const CustomVideoPlayer = forwardRef(
           }}
           autoPlay={autoPlay}
           playsInline
+          webkit-playsinline="true"
+          x5-playsinline="true"
+          x5-video-player-type="h5"
+          x5-video-player-fullscreen="false"
           disablePictureInPicture
+          controls={false}
           controlsList="nodownload nofullscreen noremoteplayback"
         />
 
@@ -640,7 +717,7 @@ const CustomVideoPlayer = forwardRef(
             </div>
 
             {/* Right Controls */}
-            {allowFullscreen && (
+            {allowFullscreen && !hideExpandButton && (
               <div className="flex items-center">
                 <button
                   type="button"
@@ -660,6 +737,12 @@ const CustomVideoPlayer = forwardRef(
         </div>
       </div>
     );
+
+    if (isCssFullscreen && typeof document !== "undefined") {
+      return ReactDOM.createPortal(playerNode, document.body);
+    }
+
+    return playerNode;
   },
 );
 

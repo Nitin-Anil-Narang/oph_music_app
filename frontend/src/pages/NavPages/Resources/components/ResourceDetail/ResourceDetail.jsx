@@ -186,6 +186,9 @@ export default function ResourceDetail() {
               ? "portrait"
               : "landscape"
           }
+          immersiveOnMobile={
+            resourceType === "story" || resourceType === "reel"
+          }
         />
       </div>
 
