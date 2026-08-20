@@ -49,6 +49,11 @@ const CustomVideoPlayer = forwardRef(
     const [isCssFullscreen, setIsCssFullscreen] = useState(false);
     const isFullscreen = isNativeFullscreen || isCssFullscreen;
     const [videoIsLandscape, setVideoIsLandscape] = useState(false);
+    const [videoIsPortrait, setVideoIsPortrait] = useState(false);
+    const stayPortrait =
+      orientation === "portrait" || videoIsPortrait;
+    const stayPortraitRef = useRef(stayPortrait);
+    stayPortraitRef.current = stayPortrait;
     const [showControls, setShowControls] = useState(true);
     const controlsTimeoutRef = useRef(null);
     const wasPlayingBeforeSeek = useRef(false);
@@ -90,8 +95,15 @@ const CustomVideoPlayer = forwardRef(
         setDuration(video.duration);
         const w = video.videoWidth;
         const h = video.videoHeight;
-        setVideoIsLandscape(Number(w) > 0 && Number(h) > 0 && w > h);
+        const landscape = Number(w) > 0 && Number(h) > 0 && w > h;
+        const portrait = Number(w) > 0 && Number(h) > 0 && h > w;
+        setVideoIsLandscape(landscape);
+        setVideoIsPortrait(portrait);
       };
+
+      video.setAttribute("playsinline", "true");
+      video.setAttribute("webkit-playsinline", "true");
+      video.setAttribute("x5-playsinline", "true");
 
       video.addEventListener("timeupdate", updateTime);
       video.addEventListener("loadedmetadata", updateDuration);
@@ -276,9 +288,11 @@ const CustomVideoPlayer = forwardRef(
      * Portrait videos (stories/reels): never use the OS video fullscreen API.
      * On phones that always rotates to landscape. Use a viewport overlay instead.
      */
-    const toggleFullscreen = () => {
+    const toggleFullscreen = (e) => {
+      e?.stopPropagation?.();
+      e?.preventDefault?.();
       if (!containerRef.current) return;
-      const useCssPortrait = orientation === "portrait";
+      const useCssPortrait = stayPortraitRef.current;
 
       if (!isFullscreen) {
         if (useCssPortrait) {
@@ -331,17 +345,25 @@ const CustomVideoPlayer = forwardRef(
     }, []);
 
     useEffect(() => {
+      if (!isNativeFullscreen || !stayPortraitRef.current) return;
+      exitNativeFullscreen();
+      enterCssFullscreen();
+    }, [isNativeFullscreen]);
+
+    useEffect(() => {
       const video = videoRef.current;
-      if (!video || orientation !== "portrait") return undefined;
+      if (!video) return undefined;
       const onBeginNativeFs = () => {
+        if (!stayPortraitRef.current) return;
         video.webkitExitFullscreen?.();
+        document.exitFullscreen?.().catch(() => {});
         enterCssFullscreen();
       };
       video.addEventListener("webkitbeginfullscreen", onBeginNativeFs);
       return () => {
         video.removeEventListener("webkitbeginfullscreen", onBeginNativeFs);
       };
-    }, [orientation]);
+    }, []);
 
     useEffect(() => {
       if (!isCssFullscreen) return undefined;
@@ -419,10 +441,27 @@ const CustomVideoPlayer = forwardRef(
       <div
         ref={containerRef}
         className={`relative group ${className} ${
-          isCssFullscreen
-            ? "!fixed inset-0 z-[9999] !w-screen !h-[100dvh] !max-w-none !aspect-auto bg-black flex items-center justify-center"
-            : ""
+          isCssFullscreen ? "bg-black flex items-center justify-center" : ""
         }`}
+        style={
+          isCssFullscreen
+            ? {
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                width: "100vw",
+                height: "100dvh",
+                maxWidth: "none",
+                maxHeight: "none",
+                zIndex: 2147483646,
+                background: "#000",
+                transform: "none",
+                borderRadius: 0,
+              }
+            : undefined
+        }
         onMouseMove={resetControlsTimeout}
         onMouseLeave={() => {
           if (isPlaying && controlsTimeoutRef.current) {
@@ -601,6 +640,7 @@ const CustomVideoPlayer = forwardRef(
             {allowFullscreen && (
               <div className="flex items-center">
                 <button
+                  type="button"
                   onClick={toggleFullscreen}
                   className="text-white hover:text-[#5DC9DE] transition-colors text-sm sm:text-base"
                   title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
