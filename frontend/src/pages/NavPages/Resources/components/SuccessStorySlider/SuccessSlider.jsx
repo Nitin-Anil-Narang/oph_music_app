@@ -83,6 +83,10 @@ function SuccessSlider({ searchText, title }) {
     }
   };
 
+  const handleCardActivate = (videoUrl) => {
+    if (!isDragging) openModal(videoUrl);
+  };
+
   const stopAllVideos = () => {
     videoRefs.current.forEach((video) => {
       if (video) {
@@ -187,6 +191,7 @@ function SuccessSlider({ searchText, title }) {
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={() => handleMouseUp(success.video_url)}
+                  onClick={() => handleCardActivate(success.video_url)}
                 >
                   <div className="w-full h-full rounded-2xl overflow-hidden">
                     <Image
@@ -227,6 +232,7 @@ function SuccessSlider({ searchText, title }) {
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={() => handleMouseUp(success.video_url)}
+                  onClick={() => handleCardActivate(success.video_url)}
                 >
                   <div className="w-full h-full rounded-2xl overflow-hidden">
                     <Image

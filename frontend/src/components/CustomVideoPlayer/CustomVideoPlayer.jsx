@@ -16,6 +16,7 @@ import {
 } from "react-icons/fa";
 import { FaBackward, FaForward } from "react-icons/fa";
 import { pauseAllAudio } from "../../utils/pauseAllAudio";
+import { hideMobileNav, showMobileNav } from "../../utils/hideMobileNav";
 
 const CustomVideoPlayer = forwardRef(
   (
@@ -33,6 +34,8 @@ const CustomVideoPlayer = forwardRef(
       pauseOtherVideos = true,
       id,
       allowFullscreen = true,
+      /** Modal already fills the phone — hide expand on mobile (reels/stories). */
+      immersiveOnMobile = false,
       /** "portrait" uses CSS fullscreen (no OS landscape player); anything else uses native */
       orientation = "landscape",
     },
@@ -56,6 +59,10 @@ const CustomVideoPlayer = forwardRef(
     const stayPortraitRef = useRef(stayPortrait);
     stayPortraitRef.current = stayPortrait;
 
+    const isCoarseMobile =
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
+    const hideExpandButton = immersiveOnMobile && isCoarseMobile;
     const portraitMode = orientation === "portrait" || stayPortrait;
     const portraitModeRef = useRef(portraitMode);
     portraitModeRef.current = portraitMode;
@@ -331,11 +338,13 @@ const CustomVideoPlayer = forwardRef(
     const enterCssFullscreen = () => {
       setIsCssFullscreen(true);
       document.body.style.overflow = "hidden";
+      hideMobileNav();
     };
 
     const exitCssFullscreen = () => {
       setIsCssFullscreen(false);
       document.body.style.overflow = "";
+      showMobileNav();
     };
 
     const enterNativeFullscreen = (el) => {
@@ -369,7 +378,7 @@ const CustomVideoPlayer = forwardRef(
     const toggleFullscreen = (e) => {
       e?.stopPropagation?.();
       e?.preventDefault?.();
-      if (!containerRef.current) return;
+      if (!containerRef.current || hideExpandButton) return;
 
       if (portraitModeRef.current) {
         if (!isCssFullscreen) enterCssFullscreen();
@@ -507,19 +516,12 @@ const CustomVideoPlayer = forwardRef(
           top: 0,
           left: 0,
           right: 0,
-          // Leave room for mobile bottom nav so fullscreen controls stay tappable
-          bottom:
-            typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
-              ? 88
-              : 0,
+          bottom: 0,
           width: "100vw",
-          height:
-            typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
-              ? "calc(100dvh - 88px)"
-              : "100dvh",
+          height: "100dvh",
           maxWidth: "none",
           maxHeight: "none",
-          zIndex: 40,
+          zIndex: 2147483646,
           background: "#000",
           transform: "none",
           borderRadius: 0,
@@ -622,9 +624,9 @@ const CustomVideoPlayer = forwardRef(
           </div>
         )}
 
-        {/* Custom Controls — extra bottom pad on mobile so expand clears the nav */}
+        {/* Custom Controls */}
         <div
-          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 z-[60] pb-2 md:pb-0 ${
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 z-[60] ${
             showControls ? "opacity-100" : "opacity-0"
           }`}
         >
@@ -713,7 +715,7 @@ const CustomVideoPlayer = forwardRef(
             </div>
 
             {/* Right Controls */}
-            {allowFullscreen && (
+            {allowFullscreen && !hideExpandButton && (
               <div className="flex items-center">
                 <button
                   type="button"

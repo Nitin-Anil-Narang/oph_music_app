@@ -35,3 +35,9 @@
     display: none;
   }
 }
+
+/* Hide bottom nav while portrait reels/stories play full-viewport */
+body.oph-hide-mobile-nav .mobile-bottom-nav {
+  display: none !important;
+  pointer-events: none !important;
+}
