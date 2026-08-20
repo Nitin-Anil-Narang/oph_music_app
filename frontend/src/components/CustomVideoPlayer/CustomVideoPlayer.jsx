@@ -48,6 +48,7 @@ const CustomVideoPlayer = forwardRef(
     const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
     const [isCssFullscreen, setIsCssFullscreen] = useState(false);
     const isFullscreen = isNativeFullscreen || isCssFullscreen;
+    const [videoIsLandscape, setVideoIsLandscape] = useState(false);
     const [showControls, setShowControls] = useState(true);
     const controlsTimeoutRef = useRef(null);
     const wasPlayingBeforeSeek = useRef(false);
@@ -85,7 +86,12 @@ const CustomVideoPlayer = forwardRef(
       if (!video) return;
 
       const updateTime = () => setCurrentTime(video.currentTime);
-      const updateDuration = () => setDuration(video.duration);
+      const updateDuration = () => {
+        setDuration(video.duration);
+        const w = video.videoWidth;
+        const h = video.videoHeight;
+        setVideoIsLandscape(Number(w) > 0 && Number(h) > 0 && w > h);
+      };
 
       video.addEventListener("timeupdate", updateTime);
       video.addEventListener("loadedmetadata", updateDuration);
@@ -414,7 +420,7 @@ const CustomVideoPlayer = forwardRef(
         ref={containerRef}
         className={`relative group ${className} ${
           isCssFullscreen
-            ? "!fixed inset-0 z-[9999] !w-screen !h-[100dvh] !max-w-none bg-black flex items-center justify-center"
+            ? "!fixed inset-0 z-[9999] !w-screen !h-[100dvh] !max-w-none !aspect-auto bg-black flex items-center justify-center"
             : ""
         }`}
         onMouseMove={resetControlsTimeout}
@@ -430,7 +436,11 @@ const CustomVideoPlayer = forwardRef(
           id={id}
           src={src}
           poster={poster}
-          className="w-full h-full object-contain"
+          className={`w-full h-full ${
+            orientation === "portrait" && videoIsLandscape
+              ? "object-cover"
+              : "object-contain"
+          }`}
           onContextMenu={handleContextMenu}
           onClick={handleVideoClick}
           onPlay={(e) => {
