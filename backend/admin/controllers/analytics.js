@@ -102,13 +102,15 @@ const getMetricByOph = async (req, res) => {
             for (const month of Object.keys(yearObj)) {
               const records = yearObj[month];
               if (!Array.isArray(records)) continue;
+              const ophStr = String(OPH_ID).trim();
               matchedRecords.push(
-                ...records.filter(
-                  (r) =>
-                    r &&
-                    r.OPH_ID === OPH_ID &&
-                    s3AudioStreamsPositive(r),
-                ),
+                ...records
+                  .filter((r) => {
+                    if (!r || !s3AudioStreamsPositive(r)) return false;
+                    const id = r.OPH_ID ?? r.oph_id;
+                    return id != null && String(id).trim() === ophStr;
+                  })
+                  .map((r) => ({ ...r, year, month })),
               );
             }
           }

@@ -3,7 +3,7 @@ import provideImg1 from "/assets/images/provide1.png";
 import provideImg2 from "/assets/images/provide2.png";
 import provideImg3 from "/assets/images/provide3.png";
 import provideImg4 from "/assets/images/provide4.png";
-import whatWePro from "../../../../../../public/assets/images/what-we-provide.png";
+import whatWePro from "../../../../../../public/assets/images/what-we-provide.jpg";
 import Struggle from "../../../../../../public/assets/images/struggle2.png";
 
 const WhatWeProvide = () => {
@@ -27,6 +27,8 @@ const WhatWeProvide = () => {
         src={Struggle}
         className="absolute sm:w-[100vh] -rotate-12 sm:right-[-57px]"
         alt=""
+        loading="lazy"
+        decoding="async"
       />
       <div className="lg:container lg:mx-auto pb-10 grid grid-cols-1 lg:pb-20 xl:pb-0 lg:grid-cols-2 gap-12 items-start">
         {/* Left Content */}
@@ -62,6 +64,8 @@ const WhatWeProvide = () => {
           className="object-cover z-30 hidden lg:block w-full xl:h-[900px] md:h-[500px] lg:h-[650px] xl:mt-[-150px] mt-0 "
           src={whatWePro}
           alt="Free Music Distribution"
+          loading="lazy"
+          decoding="async"
         />
       </div>
 
@@ -71,6 +75,8 @@ const WhatWeProvide = () => {
           className="object-cover absolute top-1/2 -translate-y-1/2 h-[600px]"
           src={whatWePro}
           alt="Free Music Distribution"
+          loading="lazy"
+          decoding="async"
         />
       </div>
     </div>

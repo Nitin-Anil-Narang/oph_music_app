@@ -226,10 +226,11 @@ const getTopSearchedArtists = async (
   };
 };
 
-const getTopArtists = async (page = 1, perPage = 6) => {
+const getTopArtists = async (page = 1, perPage = 6, { includeSongs = false } = {}) => {
   const p = Math.max(1, parseInt(page, 10) || 1);
   const per = Math.min(100, Math.max(1, parseInt(perPage, 10) || 6));
   const offset = (p - 1) * per;
+  const wantSongs = Boolean(includeSongs);
 
   // =========================================================
   // 1. COUNT TOTAL ARTISTS
@@ -299,8 +300,15 @@ const getTopArtists = async (page = 1, perPage = 6) => {
   }));
 
   // =========================================================
-  // 4. FETCH SONGS FOR EACH ARTIST
+  // 4. FETCH SONGS FOR EACH ARTIST (opt-in — home carousel only needs photos)
   // =========================================================
+
+  if (!wantSongs) {
+    artistRows.forEach((artist) => {
+      delete artist.artist_type;
+    });
+    return { rows: artistRows, total };
+  }
 
   for (const artist of artistRows) {
     try {
