@@ -327,7 +327,7 @@ function Leaderboard() {
                 <div className="flex items-center text-gray-400 text-sm uppercase mb-4 px-4">
                   <div className="flex-1 relative left-2">#</div>
                   <div className="flex-1">Artist</div>
-                  <div className="flex-1">Stage Name</div>
+                  <div className="flex-1 pr-[12px]">Stage Name</div>
                   <div className="flex-1">Location</div>
                   <div className="flex-1 text-center">Songs</div>
                   <div className="flex-1 text-center">Reach</div>
@@ -368,7 +368,7 @@ function Leaderboard() {
                           />
                         </div>
                       </div>
-                      <div className="flex-1 text-gray-300 min-[640px]:pr-[12px] max-[900px]:truncate">
+                      <div className="flex-1 text-gray-300 min-[740px]:pr-[12px] max-[900px]:truncate">
                         {artist.stage_name}
                       </div>
                       <div className="flex-1 text-gray-300">

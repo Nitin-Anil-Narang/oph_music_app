@@ -315,6 +315,16 @@ const ArtistDetail = () => {
 
   const [professions, setProfessions] = useState([]);
 
+  const sumOfPlays = (song) => {
+    let sum = 0;
+
+    for (let i = 0; i < song.length; i++) {
+      sum += song[i].total_song_views;
+    }
+
+    return sum;
+  };
+
   // Fetch professions from API
   const fetchProfessions = async () => {
     try {
@@ -424,7 +434,7 @@ const ArtistDetail = () => {
                 <p className="text-primary mb-2 font-bold">
                   {artist.total_content}{" "}
                   {artist.total_content > 1 ? "Songs" : "Song"} —{" "}
-                  {formatListeners(artist.total_views)}
+                  {formatListeners(sumOfPlays(artist.songs))}
                 </p>
                 <p className="text-gray-400 mb-6">{artist.bio}</p>
 
@@ -718,7 +728,8 @@ const ArtistDetail = () => {
                           {(song.primaryArtist || song.primary_artist) && (
                             <div className="text-xs text-gray-400 mb-3">
                               {song.primaryArtist || song.primary_artist}
-                              {song.secondary_artist && `, ${song.secondary_artist}`}
+                              {song.secondary_artist &&
+                                `, ${song.secondary_artist}`}
                             </div>
                           )}
                           <div className="flex flex-col gap-2">
@@ -824,6 +835,17 @@ export default ArtistDetail;
 
 const RelatedArtists = ({ rankedArtists }) => {
   const navigate = useNavigate();
+
+  const sumOfPlays = (song) => {
+    let sum = 0;
+
+    for (let i = 0; i < song.length; i++) {
+      sum += song[i].total_song_views;
+    }
+
+    return sum;
+  };
+
   const formatListeners = (views) => {
     const v = views == null || Number.isNaN(Number(views)) ? 0 : Number(views);
     if (v >= 1000000) {
@@ -873,7 +895,7 @@ const RelatedArtists = ({ rankedArtists }) => {
                   {artist.stage_name}
                 </p>
                 <p className="text-gray-400 text-sm">
-                  {formatListeners(artist.total_views)}
+                  {formatListeners(sumOfPlays(artist.songs))}
                 </p>
               </div>
             );
