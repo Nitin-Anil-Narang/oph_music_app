@@ -379,7 +379,7 @@ function Leaderboard() {
                           />
                         </div>
                       </div>
-                      <div className="flex-1 text-gray-300 min-[1240px]:pr-[12px] max-[900px]:truncate">
+                      <div className="flex-1 text-gray-300 w-[740px] pr-[12px]">
                         {artist.stage_name}
                       </div>
                       <div className="flex-1 text-gray-300">
