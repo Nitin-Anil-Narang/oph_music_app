@@ -32,10 +32,10 @@ const StruggleEndsSection = () => {
   return (
     aboutUs && (
       <div className="bg-black relative text-white py-16">
-        <img src={Music2} className="absolute z-20 right-0 w-[300px]" alt="" />
+        <img src={Music2} className="absolute z-0 md:z-20 right-0 w-[300px]" alt="" />
         <img
           src={Elipse}
-          className="absolute z-10 right-0 -top-[300px] w-[400px]"
+          className="absolute z-0 md:z-10 right-0 -top-[300px] w-[400px]"
           alt=""
         />
         <div className="container px-3 sm:px-4 md:px-16 lg:px-16 mx-auto">
