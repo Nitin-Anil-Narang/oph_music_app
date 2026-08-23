@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NavbarRight from "../../../components/Navbar/NavbarRight";
 import NavbarLeft from "../../../components/Navbar/NavbarLeft";
+import FilterSelect from "../../../components/FilterSelect/FilterSelect";
 
 const REGISTER_SONG_STATE_KEY = "registerSongState";
 const SONG_DATA_KEY = "songData"; // New key for storing song data in sessionStorage
@@ -849,7 +850,7 @@ export default function RegisterSongForm() {
           <label className="block">
             Release Date <span className="text-red-500">*</span>
           </label>
-          <select
+          {/* <select
             name="release_date"
             value={formData.release_date}
             onChange={handleChange}
@@ -869,7 +870,29 @@ export default function RegisterSongForm() {
                 })}
               </option>
             ))}
-          </select>
+          </select> */}
+
+          <FilterSelect
+            value={formData.release_date}
+            placeholder="Select a blocked date"
+            ariaLabel="Blocked Date"
+            options={artistBlockedDates.map((date) => {
+              const formattedDate = new Date(date).toLocaleDateString("en-IN", {
+                timeZone: "Asia/Kolkata",
+              });
+
+              return {
+                value: formattedDate,
+                label: formattedDate,
+              };
+            })}
+            onChange={(value) => {
+              setFormData((prev) => ({
+                ...prev,
+                release_date: value,
+              }));
+            }}
+          />
         </div>
       );
     }
