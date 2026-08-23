@@ -31,7 +31,10 @@ const ArtistProfile = ({ id }) => {
 
   const sumOfPlays = (songs) => {
     if (!Array.isArray(songs)) return 0;
-    return songs.reduce((sum, song) => sum + (Number(song?.total_views) || 0), 0);
+    return songs.reduce(
+      (sum, song) => sum + (Number(song?.total_views) || 0),
+      0,
+    );
   };
 
   const fetchArtistDetail = async () => {
@@ -150,6 +153,13 @@ const ArtistProfile = ({ id }) => {
     });
     setPlayingSongId(key);
   };
+
+  function formatListeners(count) {
+    const n = Number(count) || 0;
+    if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+    if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+    return String(n);
+  }
 
   const handleSeek = (key, value) => {
     const el = audioRef.current;
@@ -287,7 +297,9 @@ const ArtistProfile = ({ id }) => {
                   <span className="text-gray-600">→</span>
                   <span style={{ color: "#6F4FA0" }}>
                     {" "}
-                    {Number(artist.total_views) || sumOfPlays(artist.songs)} Listeners
+                    {Number(artist.total_views) ||
+                      formatListeners(sumOfPlays(artist.songs))}{" "}
+                    Listeners
                   </span>
                 </div>
 
