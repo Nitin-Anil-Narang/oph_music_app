@@ -5,8 +5,62 @@ import arrowLeftIc from "/assets/images/arrowLeftIc.svg";
 import axiosApi from "../../../../../conf/axios";
 import MusicBg from "../../../../../../public/assets/images/music_bg.png";
 import Elipse from "../../../../../../public/assets/images/elipse2.png";
-import { Image, Shimmer } from "react-shimmer";
+import { Shimmer } from "react-shimmer";
 import ArtistProfile from "./ArtistProfile";
+
+const DEFAULT_ARTIST_PHOTO = "/assets/images/pfp.png";
+
+function resolveArtistPhoto(photo) {
+  const url = typeof photo === "string" ? photo.trim() : "";
+  return url || DEFAULT_ARTIST_PHOTO;
+}
+
+/** Keep the <img> mounted so carousel slides actually load (react-shimmer unmounts it). */
+function ArtistSlidePhoto({ src, alt, selected }) {
+  const photoSrc = resolveArtistPhoto(src);
+  const [status, setStatus] = useState(photoSrc === DEFAULT_ARTIST_PHOTO ? "ready" : "loading");
+  const [displaySrc, setDisplaySrc] = useState(photoSrc);
+
+  useEffect(() => {
+    const next = resolveArtistPhoto(src);
+    setDisplaySrc(next);
+    setStatus(next === DEFAULT_ARTIST_PHOTO ? "ready" : "loading");
+  }, [src]);
+
+  const showShimmer = status === "loading";
+
+  return (
+    <div className="relative w-[120px] sm:w-[150px] lg:w-[180px] aspect-square flex-shrink-0">
+      {showShimmer && (
+        <div className="absolute inset-0 z-10 overflow-hidden rounded-full">
+          <Shimmer width={180} height={180} className="rounded-full !w-full !h-full" />
+        </div>
+      )}
+      <img
+        src={displaySrc}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setStatus("ready")}
+        onError={() => {
+          setStatus("ready");
+          setDisplaySrc((current) =>
+            current === DEFAULT_ARTIST_PHOTO ? current : DEFAULT_ARTIST_PHOTO,
+          );
+        }}
+        className={`
+          w-full h-full
+          rounded-full
+          object-cover
+          transition-all duration-300
+          border-2
+          ${showShimmer ? "opacity-0" : "opacity-100"}
+          ${selected ? "border-[#5DC9DE] shadow-[0_0_15px_rgba(93,201,222,0.4)]" : "border-[#6F4FA0] shadow-[0_0_15px_rgba(111,79,160,0.3)]"}
+        `}
+      />
+    </div>
+  );
+}
 
 /** Page size for /get-top-artist (max 100 on the API). */
 const TOP_ARTIST_PAGE_SIZE = 36;
@@ -308,30 +362,10 @@ const ArtistSlider = ({
                     }}
                   >
                     <div className="flex justify-center overflow-hidden">
-                      <Image
+                      <ArtistSlidePhoto
                         src={artist.personal_photo}
-                        fallback={
-                          <Shimmer
-                            width={150}
-                            height={150}
-                            className="rounded-full"
-                          />
-                        }
                         alt={artist.stage_name}
-                        NativeImgProps={{
-                          loading: "lazy",
-                          decoding: "async",
-                          className: `
-                            w-[120px] sm:w-[150px] lg:w-[180px]
-                            aspect-square
-                            rounded-full
-                            object-cover
-                            flex-shrink-0
-                            transition-all duration-300
-                            border-2
-                            ${id === currArtist ? "border-[#5DC9DE] shadow-[0_0_15px_rgba(93,201,222,0.4)]" : "border-[#6F4FA0] shadow-[0_0_15px_rgba(111,79,160,0.3)]"}
-                          `,
-                        }}
+                        selected={id === currArtist}
                       />
                     </div>
                     <div
