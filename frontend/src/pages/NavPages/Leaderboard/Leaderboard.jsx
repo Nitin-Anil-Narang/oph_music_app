@@ -77,16 +77,29 @@ function asMonthArtistMapFromHistory(full) {
 
 const LEADERBOARD_TOP_PER_MONTH = 10;
 
-/** Best rank first, then take first N (API order may vary). */
+function formatLeaderboardRank(rank) {
+  const n = Number(rank);
+  if (!Number.isFinite(n) || n < 1) return "01";
+  return n < 10 ? `0${n}` : `${n}`;
+}
+
+/** Top N for this month, ranked 1–N (not global community rank). */
 function getTopArtistsForMonth(artists) {
   if (!Array.isArray(artists)) return [];
   return [...artists]
     .sort((a, b) => {
+      const scoreA = Number(a?.score ?? 0);
+      const scoreB = Number(b?.score ?? 0);
+      if (scoreA !== scoreB) return scoreB - scoreA;
       const ra = Number(a?.ranks ?? a?.rank ?? 1e9);
       const rb = Number(b?.ranks ?? b?.rank ?? 1e9);
       return ra - rb;
     })
-    .slice(0, LEADERBOARD_TOP_PER_MONTH);
+    .slice(0, LEADERBOARD_TOP_PER_MONTH)
+    .map((artist, index) => {
+      const rank = index + 1;
+      return { ...artist, ranks: rank, rank };
+    });
 }
 
 function Leaderboard() {
@@ -354,9 +367,7 @@ function Leaderboard() {
                         <span
                           className={`text-lg font-bold ${index === 0 ? "bg-amber-400 p-2 text-black text-xl" : index === 1 ? "bg-green-400 p-2 text-black text-xl" : index === 2 ? "bg-cyan-400 p-2 text-black text-xl" : "p-2 text-gray-300"}`}
                         >
-                          {artist.ranks < 10
-                            ? `0${artist.ranks}`
-                            : `${artist.ranks}`}
+                          {formatLeaderboardRank(artist.ranks)}
                         </span>
                       </div>
                       <div className="flex-1">
@@ -419,10 +430,7 @@ function Leaderboard() {
                 {/* Pure Vertical Cards Stack Stacked Top-to-Bottom */}
                 <div className="flex flex-col space-y-8">
                   {topArtists.map((artist, index) => {
-                    const formattedRank =
-                      artist.ranks < 10
-                        ? `0${artist.ranks}`
-                        : `${artist.ranks}`;
+                    const formattedRank = formatLeaderboardRank(artist.ranks);
                     const isHighlighted =
                       artistExists &&
                       artistExists.some(

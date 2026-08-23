@@ -35,6 +35,44 @@ function normalizeLeaderboardArtistRow(r) {
 const LEADERBOARD_TOP_PER_MONTH = 10;
 const LEADERBOARD_MAX_MONTHS = 3;
 
+/** Sort by score, keep top N, assign monthly ranks 1–N (not global community rank). */
+function rankTopArtistsForMonth(artists) {
+  if (!Array.isArray(artists)) return [];
+  return [...artists]
+    .sort((a, b) => {
+      const scoreA = Number(a?.score ?? 0);
+      const scoreB = Number(b?.score ?? 0);
+      if (scoreA !== scoreB) return scoreB - scoreA;
+      const ra = Number(a?.ranks ?? a?.rank ?? 1e9);
+      const rb = Number(b?.ranks ?? b?.rank ?? 1e9);
+      return ra - rb;
+    })
+    .slice(0, LEADERBOARD_TOP_PER_MONTH)
+    .map((r, idx) => {
+      const rank = idx + 1;
+      return { ...r, ranks: rank, rank };
+    });
+}
+
+function rankAllMonths(payload) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return payload;
+  }
+  const ranked = {};
+  for (const year of Object.keys(payload)) {
+    const months = payload[year];
+    if (!months || typeof months !== "object" || Array.isArray(months)) {
+      ranked[year] = months;
+      continue;
+    }
+    ranked[year] = {};
+    for (const month of Object.keys(months)) {
+      ranked[year][month] = rankTopArtistsForMonth(months[month]);
+    }
+  }
+  return ranked;
+}
+
 const MONTH_INDEX = {
   January: 0,
   February: 1,
@@ -101,13 +139,7 @@ async function buildLeaderboardHistoryFromDatabase() {
   for (const [year, months] of Object.entries(buckets)) {
     result[year] = {};
     for (const [month, byOph] of Object.entries(months)) {
-      result[year][month] = [...byOph.values()]
-        .sort((a, b) => Number(b.score ?? 0) - Number(a.score ?? 0))
-        .slice(0, LEADERBOARD_TOP_PER_MONTH)
-        .map((r, idx) => {
-          const rank = idx + 1;
-          return { ...r, ranks: rank, rank };
-        });
+      result[year][month] = rankTopArtistsForMonth([...byOph.values()]);
     }
   }
   return result;
@@ -202,7 +234,7 @@ const getLeaderBoardData = async (req, res) => {
       console.error("[leaderboard/history] DB month buckets failed:", dbErr.message);
     }
 
-    data = trimLeaderboardToLatestMonths(data);
+    data = rankAllMonths(trimLeaderboardToLatestMonths(data));
 
     return res.status(200).json({
       success: true,
