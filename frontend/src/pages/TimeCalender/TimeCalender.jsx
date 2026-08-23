@@ -495,38 +495,40 @@ export default function TimeCalendar() {
                   />
                 </button>
 
-                {mobileDropdownOpen &&
-                  ReactDOM.createPortal(
-                    <ul
-                      style={dropdownStyle}
-                      className="max-h-60 overflow-y-auto rounded-xl border border-white/20 bg-[#4A425B] text-white shadow-lg"
-                    >
-                      {Array.from(
-                        { length: 5 },
-                        (_, y) => new Date().getFullYear() + y,
-                      ).flatMap((year) =>
-                        months.map((month, index) => (
-                          <li
-                            key={`${index}-${year}`}
-                            className={`px-4 py-3 cursor-pointer hover:bg-white/10 ${
-                              currentMonthIndex === index &&
-                              currentYear === year
-                                ? "bg-white/10"
-                                : ""
-                            }`}
-                            onClick={() => {
-                              setCurrentMonthIndex(index);
-                              setCurrentYear(year);
-                              setMobileDropdownOpen(false);
-                            }}
-                          >
-                            {month} {year}
-                          </li>
-                        )),
-                      )}
-                    </ul>,
-                    document.body,
-                  )}
+               {mobileDropdownOpen &&
+  ReactDOM.createPortal(
+    <ul
+      style={dropdownStyle}
+      className="max-h-60 overflow-y-auto rounded-xl border border-white/20 bg-[#4A425B] text-white shadow-lg"
+      onMouseDown={(e) => e.stopPropagation()}
+    >
+      {Array.from(
+        { length: 5 },
+        (_, y) => new Date().getFullYear() + y,
+      ).flatMap((year) =>
+        months.map((month, index) => (
+          <li
+            key={`${index}-${year}`}
+            className={`px-4 py-3 cursor-pointer hover:bg-white/10 ${
+              currentMonthIndex === index &&
+              currentYear === year
+                ? "bg-white/10"
+                : ""
+            }`}
+            onClick={() => {
+              setCurrentMonthIndex(index);
+              setCurrentYear(year);
+              setMobileDropdownOpen(false);
+            }}
+          >
+            {month} {year}
+          </li>
+        )),
+      )}
+    </ul>,
+    document.body,
+  )}
+
               </div>
 
               <div className="flex flex-wrap justify-between gap-2 mt-4 text-[10px]">
