@@ -105,7 +105,12 @@ function sortArtistsScoredFirst(list) {
 
 const sumOfPlays = (songs) => {
   if (!Array.isArray(songs)) return 0;
-  return songs.reduce((sum, song) => sum + (Number(song?.total_views) || 0), 0);
+  return songs.reduce((sum, song) => {
+    const n = Number(
+      song?.total_views ?? song?.youtube_views ?? song?.total_song_views ?? 0,
+    );
+    return sum + (Number.isFinite(n) ? n : 0);
+  }, 0);
 };
 
 function listenerCount(artist) {

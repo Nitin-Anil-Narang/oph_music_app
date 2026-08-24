@@ -31,10 +31,12 @@ const ArtistProfile = ({ id }) => {
 
   const sumOfPlays = (songs) => {
     if (!Array.isArray(songs)) return 0;
-    return songs.reduce(
-      (sum, song) => sum + (Number(song?.total_views) || 0),
-      0,
-    );
+    return songs.reduce((sum, song) => {
+      const n = Number(
+        song?.total_views ?? song?.youtube_views ?? song?.total_song_views ?? 0,
+      );
+      return sum + (Number.isFinite(n) ? n : 0);
+    }, 0);
   };
 
   const fetchArtistDetail = async () => {
@@ -376,7 +378,10 @@ const ArtistProfile = ({ id }) => {
                         </td>
 
                         <td className="py-4">
-                          {song.total_views ?? song.youtube_views ?? "—"}
+                          {song.total_views ??
+                            song.youtube_views ??
+                            song.total_song_views ??
+                            "—"}
                         </td>
                         <td className="py-4 text-center">
                           <SongDuration url={audioSrc} />
@@ -475,7 +480,10 @@ const ArtistProfile = ({ id }) => {
                             )}
                           <div className="flex flex-col gap-2">
                             <div className="text-base text-gray-300">
-                              {song.total_views ?? song.youtube_views ?? "—"}
+                              {song.total_views ??
+                                song.youtube_views ??
+                                song.total_song_views ??
+                                "—"}
                             </div>
                             <div className="text-base text-gray-300">
                               <SongDuration url={audioSrc} />
