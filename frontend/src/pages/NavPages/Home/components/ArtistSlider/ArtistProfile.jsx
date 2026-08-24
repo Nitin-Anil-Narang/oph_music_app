@@ -297,8 +297,7 @@ const ArtistProfile = ({ id }) => {
                   <span className="text-gray-600">→</span>
                   <span style={{ color: "#6F4FA0" }}>
                     {" "}
-                    {Number(artist.total_views) ||
-                      formatListeners(sumOfPlays(artist.songs))}{" "}
+                    {formatListeners(sumOfPlays(artist.songs))}{" "}
                     Listeners
                   </span>
                 </div>

@@ -435,7 +435,7 @@ const ArtistDetail = () => {
                 <p className="text-primary mb-2 font-bold">
                   {artist.total_content}{" "}
                   {artist.total_content > 1 ? "Songs" : "Song"} —{" "}
-                  {formatListeners(artist.total_views)}
+                  {formatListeners(sumOfPlays(artist.songs))}
                 </p>
                 <p className="text-gray-400 mb-6">{artist.bio}</p>
 

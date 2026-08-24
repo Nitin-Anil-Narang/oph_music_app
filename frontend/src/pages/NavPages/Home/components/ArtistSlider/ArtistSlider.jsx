@@ -109,8 +109,6 @@ const sumOfPlays = (songs) => {
 };
 
 function listenerCount(artist) {
-  const fromTotal = Number(artist?.total_views);
-  if (Number.isFinite(fromTotal) && fromTotal > 0) return fromTotal;
   return sumOfPlays(artist?.songs);
 }
 
