@@ -160,7 +160,7 @@ const ArtistSlider = ({
         const perPage = Math.min(TOP_ARTIST_PAGE_SIZE, cap);
         // Light list: photos + KPI only (songs load on profile click).
         const response = await axiosApi.get(
-          `/get-top-artist?page=1&per_page=${perPage}&include_songs=0`,
+          `/get-top-artist?page=1&per_page=${perPage}&include_songs=1`,
         );
         if (cancelled) return;
 
