@@ -83,16 +83,14 @@ const SignInForm = () => {
   };
 
   return (
-    <div
-      className="py-15 pt-24 flex items-center justify-center bg-[url('/assets/images/music_bg.png')] bg-cover bg-center relative"
-    >
+    <div className="py-15 pt-24 flex items-center justify-center bg-[url('/assets/images/music_bg.png')] bg-cover bg-center relative">
       <div className="w-full max-w-2xl p-8 rounded-lg relative z-10">
         <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
-          SIGN IN
+          YOUR FAMILY MISSED YOU
         </h1>
         <p className="text-gray-400 text-center mb-8 text-sm">
-          Hey family member, your personal portal is waiting for you, where
-          every step leads you toward growth and success in your music career.
+          Your beloved community is waiting for you. Come in, reconnect with
+          your people, and continue your music journey.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -197,12 +195,12 @@ const SignInForm = () => {
             } text-gray-900 font-medium rounded-full transition-colors duration-200`}
             disabled={loading}
           >
-            {loading ? "Logging In..." : "Log In"}
+            {loading ? "Logging In..." : "LOGIN"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-gray-400 text-sm">
-          Don&apos;t have an account?{" "}
+          NEW TO FAMILY?{" "}
           <a
             href="#"
             className="text-cyan-400 hover:text-cyan-300"
@@ -210,7 +208,7 @@ const SignInForm = () => {
               navigate("/auth/signup");
             }}
           >
-            Create Account
+            BECOME THE MEMBER
           </a>
         </p>
       </div>

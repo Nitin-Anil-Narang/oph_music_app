@@ -356,14 +356,13 @@ const MusicPlayerProfile2 = ({
       <div className="mx-auto">
         <div className="flex flex-col">
           <h2 className="text-4xl font-bold text-left mb-2">
-            <span className="text-[#5DC9DE]">LEADING ARTISTS </span>OF THE
-            SPOTLIGHT
+            <span className="text-[#5DC9DE]">Meet the Artists </span>
+            Making Their Mark
           </h2>
           <p className="text-gray-400 text-left mb-[12px]">
-            The artists are grabing every opportunity and rising as the stars of
-            tomorrow. The best platform for independent artists. What are you
-            waiting for? Create your profile and take a chance to collaborate
-            with our community artists.
+            Ranked by their work, not their money because here your talent
+            should be what gets you noticed. No favours. Just hard work, and
+            progress
           </p>
         </div>
 

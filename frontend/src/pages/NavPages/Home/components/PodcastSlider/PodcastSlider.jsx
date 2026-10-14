@@ -202,10 +202,10 @@ function PodcastSlider({ searchText, title }) {
           </h2>
         ) : (
           <h1 className="text-xl lg:text-4xl font-bold text-center mb-8 leading-tight uppercase mt-2">
-            BUILT FOR ARTISTS - BACKED BY COMMUNITY
+            Your Guide to Being Part of this Community.
             <br />
             <span className="text-[#5DC9DE]">
-              ARTISTS LEARNING MUSIC PLATFORM STARTS HERE
+              Learn. Participate. Grow With Your Music Family.
             </span>
           </h1>
         )}
@@ -432,7 +432,7 @@ function PodcastSlider({ searchText, title }) {
             rel="noopener noreferrer"
             className="w-full lg:w-[unset] bg-[#5DC9DE] text-black font-semibold text-sm min-[390px]:text-base py-3 px-8 rounded-full hover:font-bold transition delay-300 pointer-events-auto"
           >
-            COMMUNITY PLATFORM – SIGN UP
+            Explore More
           </a>
         </div>
       </div>

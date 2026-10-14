@@ -402,7 +402,7 @@ function Leaderboard() {
                           }}
                           className="px-4 py-1 text-sm text-[#5DC9DE] border border-[#5DC9DE] rounded-full hover:bg-cyan-400 hover:text-black transition-colors"
                         >
-                          View Profile
+                          Profile Visit
                         </button>
                       </div>
                     </div>
