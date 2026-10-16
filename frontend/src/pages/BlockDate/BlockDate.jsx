@@ -64,7 +64,7 @@ export default function BlockDateForm() {
       state: {
         date: formData.selectedDate,
         returnPath: "/dashboard/block-date",
-        heading: "Date Blocking Fee",
+        heading: "Release Date Blocking Fee",
         from: "Date booking",
       },
     });
@@ -130,7 +130,7 @@ export default function BlockDateForm() {
         <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
           <div className="space-y-2">
             <label className="block">
-              OPH ID <span className="text-red-500">*</span>
+              OPH Artist Code <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -143,7 +143,7 @@ export default function BlockDateForm() {
 
           <div className="space-y-2">
             <label className="block">
-              Number of songs <span className="text-red-500">*</span>
+              Number of Songs <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <select
@@ -166,7 +166,7 @@ export default function BlockDateForm() {
 
           <div className="space-y-2">
             <label className="block">
-              Select Date <span className="text-red-500">*</span>
+             Selected Date <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input

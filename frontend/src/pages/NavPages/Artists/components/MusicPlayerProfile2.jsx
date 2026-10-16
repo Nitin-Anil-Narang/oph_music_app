@@ -362,7 +362,7 @@ const MusicPlayerProfile2 = ({
           <p className="text-gray-400 text-left mb-[12px]">
             Ranked by their work, not their money because here your talent
             should be what gets you noticed. No favours. Just hard work, and
-            progress
+            progress.
           </p>
         </div>
 

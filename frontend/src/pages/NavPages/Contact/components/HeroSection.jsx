@@ -196,7 +196,7 @@ function HeroSection() {
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full px-4 py-2.5 rounded-full bg-gray-900/90 border border-gray-700 text-sm text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
-                placeholder="John Doe"
+                placeholder="Full Name"
                 required
               />
             </div>

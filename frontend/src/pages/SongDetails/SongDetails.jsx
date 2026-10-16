@@ -221,7 +221,7 @@ const SongDetails = () => {
       {/* RELEASE DETAILS */}
       <div className="mt-[24px] md:mt-12">
         <h2 className="text-xl md:text-3xl font-bold mb-8 text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
-          RELEASE DETAILS:
+          Song DETAILS:
         </h2>
 
         {/* Desktop */}

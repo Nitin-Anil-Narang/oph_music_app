@@ -36,9 +36,9 @@ const HeroSection = ({ handleSearch, setArtistExists, artistExists, handleFilter
 
       {/* Content */}
       <div className="relative z-20 max-w-3xl w-full mt-10 text-center space-y-6">
-        <h1 className="text-3xl lg:text-5xl font-bold uppercase">
-          TOP LEADING ARTISTS
-          <span className="text-cyan-400">OF THE COMMUNITY.</span>
+        <h1 className="text-3xl lg:text-5xl font-bold uppercase text-cyan-400">
+          TOP LEADING ARTISTS OF THE
+          <span className="text-white"> COMMUNITY</span>
         </h1>
 
         <h2 className="text-gray-300 text-lg">

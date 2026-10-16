@@ -486,12 +486,12 @@ export default function ArtistProfile() {
                   <tr className="text-center text-gray-300 border-b border-gray-800 text-xs">
                     <th className="pb-4 font-normal">#</th>
                     <th className="pb-4 font-normal">SONG NAME</th>
-                    <th className="pb-4 font-normal">PLAYS</th>
+                    <th className="pb-4 font-normal">LISTENERS </th>
                     <th
                       className="pb-4 font-normal"
                       title="Length of your uploaded audio file"
                     >
-                      TIME
+                      DURATION
                     </th>
                     <th className="pb-4 font-normal">PLAY</th>
                   </tr>

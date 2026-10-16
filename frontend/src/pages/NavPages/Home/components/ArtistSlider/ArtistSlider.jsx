@@ -254,15 +254,17 @@ const ArtistSlider = ({
       <div className="relative lg:container lg:mx-auto">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-8 sm:mb-16">
-          <div className="text-left px-3 sm:text-center p-0 lg:max-w-xl">
-            <h2 className="text-2xl lg:text-5xl font-black mb-3 uppercase tracking-tight text-white leading-tight">
-              The Rest of Our{" "}
-              <span className="text-[#5DC9DE]">Music Family.</span>
+          <div className="text-left px-3 p-0 lg:max-w-6xl">
+            <h2 className="text-2xl lg:text-5xl font-black mb-3 uppercase tracking-tight text-[#5DC9DE] leading-tight">
+              Find the Right Artist in Seconds{" "}
+              <span className="text-[#FFFFFF]">
+                Already Part of the Family.
+              </span>
             </h2>
             <p className="text-gray-400 text-sm sm:text-base">
-              You don’t have to be #1 to be found. Every artist here has a
-              story, a skill, and a connection waiting to happen. Your next
-              collaboration could be just one message away.
+              No chasing Instagram DMs. No searching for an agent. No one taking
+              a cut. Choose a skill, city, or language. Find the right profile,
+              see their work, and connect directly.
             </p>
           </div>
           <div className="hidden sm:flex pe-0 py-4 lg:py-0 sm:mt-8 lg:pe-6 xl:pe-16 relative z-50 items-center gap-2">

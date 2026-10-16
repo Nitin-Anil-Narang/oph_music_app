@@ -69,7 +69,7 @@ WHERE sre.oph_id = ? AND sre.songId = ?`,
         status: rd.release_time ? 1 : 0,
       },
       {
-        stream_name: "Music Video Release Timing YouTube",
+        stream_name: "Youtube Music Video Release Timing",
         release_time: rd.youtube_release_time,
         link: rd.youtube_url,
         status: rd.youtube_release_time ? 1 : 0,

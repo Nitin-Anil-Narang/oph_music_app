@@ -121,7 +121,7 @@ const HeroSection = ({
       {/* Fix: Added max-w-full to prevent horizontal layout overflow */}
       <div className="relative z-20 max-w-5xl w-full max-w-full text-center space-y-6 px-4">
         <h1 className="text-4xl sm:text-5xl font-bold">
-          FIND THE TALENT <span className="text-[#5DC9DE]">YOU NEED.</span>
+         <span className="text-[#5DC9DE]"> FIND THE TALENT </span> YOU NEED
         </h1>
         <p className="text-gray-300 sm:text-base lg:text-lg">
           Browse. Discover. Start a conversation. Verified singers, rappers,

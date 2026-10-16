@@ -125,7 +125,7 @@ export default function DateChangeForm() {
         <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
           <div className="space-y-2">
             <label className="block">
-              OPH ID <span className="text-red-500">*</span>
+              OPH Artist Code <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -153,7 +153,7 @@ export default function DateChangeForm() {
 
           <div className="space-y-2">
             <label className="block">
-              New Blocked Date <span className="text-red-500">*</span>
+             New Selected Date <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input
@@ -174,11 +174,14 @@ export default function DateChangeForm() {
               />
             </div>
             {checkingNewDate && (
-              <span className="text-gray-400 text-sm">Checking availability…</span>
+              <span className="text-gray-400 text-sm">
+                Checking availability…
+              </span>
             )}
             {!checkingNewDate && newDateTaken && (
               <span className="text-red-500 text-sm">
-                This date is taken by another artist. Please choose another date.
+                This date is taken by another artist. Please choose another
+                date.
                 <Link to="/dashboard/time-calendar">
                   <span className="underline ms-2">
                     Click to See Available Dates
@@ -190,7 +193,7 @@ export default function DateChangeForm() {
 
           <div className="space-y-2">
             <label className="block">
-              Reason for Change <span className="text-red-500">*</span>
+             Reason for Change <span className="text-red-500">*</span>
             </label>
             <textarea
               name="reason"

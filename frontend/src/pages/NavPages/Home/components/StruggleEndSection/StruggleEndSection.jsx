@@ -32,19 +32,17 @@ const StruggleEndsSection = () => {
   return (
     aboutUs && (
       <div className="bg-black relative text-white py-16">
-        <img src={Music2} className="absolute z-0 md:z-20 right-0 w-[300px]" alt="" />
+        <img
+          src={Music2}
+          className="absolute z-0 md:z-20 right-0 w-[300px]"
+          alt=""
+        />
         <img
           src={Elipse}
           className="absolute z-0 md:z-10 right-0 -top-[300px] w-[400px]"
           alt=""
         />
         <div className="container px-3 sm:px-4 md:px-16 lg:px-16 mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-center md:text-left">
-                ABOUT <span className="text-[#5DC9DE]">OPH COMMUNITY </span>
-            </h2>
-          </div>
-
           <div className="grid md:grid-cols-2 gap-4 sm:gap-8 items-center">
             <div className="relative group w-full overflow-hidden">
               <CustomVideoPlayer
@@ -56,15 +54,25 @@ const StruggleEndsSection = () => {
               />
             </div>
 
+
             <div className="space-y-4">
-              <p className="text-gray-400 text-center md:text-left" style={{
-                fontWeight: 300,
-                fontSize: 'clamp(14px, 3.5vw, 20px)',
-                lineHeight: '170%',
-                letterSpacing: '0px'
-              }}>
+              <div className="mb-8">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-center md:text-left">
+                ABOUT <span className="text-[#5DC9DE]">OPH COMMUNITY </span>
+              </h2>
+              </div>
+              
+              <h3
+                className="text-gray-400 text-center md:text-left"
+                style={{
+                  fontWeight: 300,
+                  fontSize: "clamp(14px, 3.5vw, 20px)",
+                  lineHeight: "170%",
+                  letterSpacing: "0px",
+                }}
+              >
                 {aboutUs.about_us_desc}
-              </p>
+              </h3>
             </div>
           </div>
         </div>

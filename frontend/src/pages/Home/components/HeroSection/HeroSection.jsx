@@ -257,14 +257,14 @@ const HeroSection = ({
                     </div>
                     <div className="text-slate-300 text-sm sm:text-base space-y-2">
                       <div className="flex flex-wrap gap-1 sm:gap-2">
-                        <span>Competition Date:</span>
+                        <span>Event Date: </span>
                         <span className="font-medium text-white">
                           {formatDateAndAdjustMonth(ev.dateTime)}
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-1 sm:gap-2">
                         <span>
-                          Registration:{" "}
+                          Event Registration:{" "}
                           <span className="font-medium text-white">
                             {formatRegistrationStartDate(ev.registrationStart)}{" "}
                             to {formatRegistrationEndDate(ev.registrationEnd)}

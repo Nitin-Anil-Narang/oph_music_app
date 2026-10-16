@@ -395,11 +395,11 @@ export default function TimeCalendar() {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#6B7280]"></div>
-                  <span>Reserved (pending approval)</span>
+                  <span>Reserved (Need Approval)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#FF6B6B]"></div>
-                  <span>Locked (within 5 days)</span>
+                  <span>Locked (Coming 5 Days) </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#2DDA89]"></div>

@@ -30,15 +30,15 @@ function HeroSection() {
       {/* Content container */}
       <div className="md:container pt-[40px] md:pt-[45px] lg:pt-5 lg:mx-auto mt-16 lg:mt-24 mb-16 lg:mb-24 relative z-10 w-full">
         <div className="md:max-w-2xl w-full text-left pt-4 md:pt-0 lg:pl-8">
-          <p className="text-sm sm:text-base md:text-lg opacity-75 text-[#9BA3B7] mb-2 tracking-wide uppercase">
+          <h1 className="text-sm sm:text-base md:text-lg opacity-75 text-[#9BA3B7] mb-2 tracking-wide uppercase">
             The Platform Where Artists Find Their Next Opportunity.
-          </p>
+          </h1>
 
           <div className="relative">
             <h1 className="text-4xl sm:text-5xl lg:text-7xl text-white leading-tight font-black mb-6 relative z-10 tracking-tight">
               YOUR MUSIC <br />
               YOUR RIGHTS <br />
-              YOUR STAGES
+              YOUR STAGE
             </h1>
           </div>
 

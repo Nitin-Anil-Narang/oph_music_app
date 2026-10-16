@@ -52,7 +52,7 @@ const Learnings = () => {
       </div>
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-bold mt-8 mb-12 text-cyan-300 font-extrabold drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
-          LEARNINGS
+          LEARNING ROOM
         </h2>
         <div className="hidden lg:block">
           <NavbarRight />

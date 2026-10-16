@@ -9,7 +9,9 @@ function Footer({ className = "" }) {
   const navigate = useNavigate();
 
   return (
-    <div className={`w-full h-auto py-[16px] lg:py-0 lg:px-16 px-[12px] flex flex-col bg-[url('/assets/images/contact/footer.png')] bg-cover bg-center relative ${className}`}>
+    <div
+      className={`w-full h-auto py-[16px] lg:py-0 lg:px-16 px-[12px] flex flex-col bg-[url('/assets/images/contact/footer.png')] bg-cover bg-center relative ${className}`}
+    >
       <div className="flex h-full flex-col justify-between w-full lg:container lg:mx-auto gap-6 lg:gap-0 sm:mt-12 mt-4 mb-[95px] lg:mb-0 ">
         {/* Top Section */}
         <div className="flex flex-col lg:flex-row w-full items-center lg:items-start">
@@ -27,7 +29,7 @@ function Footer({ className = "" }) {
               }}
               className="bg-primary h-14 text-black font-semibold py-3 px-6 sm:px-8 rounded-full hover:font-bold transition"
             >
-              ONLY FOR FIRST 1000 ARTISTS
+              Join OPH Community
             </button>
           </div>
         </div>
@@ -35,18 +37,52 @@ function Footer({ className = "" }) {
         {/* Middle Navigation Section */}
         <div className="w-full flex flex-col lg:flex-row justify-between items-center">
           <div className="text-md text-center lg:text-left text-[#9BA3B7] w-full lg:w-1/3 px-8 lg:px-0 py-3">
-          OPH COMMUNITY: India&apos;s First Decentralized Music Platform. A Best Platform for Independent Artists 2025
+            OPH COMMUNITY - A Best Music Platform For Music Artists in India
+            Search & Connect • 50% Off on Events • 0% Commission. • One-time
+            Membership.
           </div>
           <ul className="hidden lg:flex gap-8 justify-end text-white w-1/2">
-            <li><Link to="/" className="hover:text-gray-300">Home</Link></li>
-            <li><Link to="/events/online-music-events" className="hover:text-gray-300">Events</Link></li>
-            <li><a href="/find-your-collaborator" className="hover:text-gray-300">Artists</a></li>
-            <li><a href="/leaderboard/top-music-networking-platform-for-creators/" className="hover:text-gray-300">Leaderboard</a></li>
-            <li><a href="/resources/music-learning-education" className="hover:text-gray-300">Resources</a></li>
-            <li><Link to="/contact" className="hover:text-gray-300">Contact</Link></li>
+            <li>
+              <Link to="/" className="hover:text-gray-300">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/events/online-music-events"
+                className="hover:text-gray-300"
+              >
+                Events
+              </Link>
+            </li>
+            <li>
+              <a href="/find-your-collaborator" className="hover:text-gray-300">
+               Discover
+              </a>
+            </li>
+            <li>
+              <a
+                href="/leaderboard/top-music-networking-platform-for-creators/"
+                className="hover:text-gray-300"
+              >
+                Leaderboard
+              </a>
+            </li>
+            <li>
+              <a
+                href="/resources/music-learning-education"
+                className="hover:text-gray-300"
+              >
+                Resources
+              </a>
+            </li>
+            <li>
+              <Link to="/contact" className="hover:text-gray-300">
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
-        
 
         {/* Divider */}
         <div className="lg:container w-full h-[1px] opacity-30 mx-auto bg-white sm:my-8 my-2"></div>
@@ -54,27 +90,68 @@ function Footer({ className = "" }) {
         {/* Bottom Policies + Socials */}
         <div className="w-full flex flex-col sm:flex-row sm:justify-between items-center sm:items-start gap-4 sm:gap-0 sm:my-8 text-center sm:text-left">
           <ul className="flex flex-wrap justify-center sm:justify-start gap-x-6 gap-y-2 text-white text-sm">
-            <li><Link className="hover:text-gray-300" to="/privacy-policy">Privacy Policy</Link></li>
-            <li><Link className="hover:text-gray-300 whitespace-nowrap" to="/terms-and-conditions">Terms & Conditions</Link></li>
-            <li><Link className="hover:text-gray-300" to="/refund-policy">Refund Policy</Link></li>
-            <li><Link className="hover:text-gray-300 whitespace-nowrap" to="/cancellation-policy">Cancellation Policy</Link></li>
-            <li><Link className="hover:text-gray-300" to="/disclaimer">Disclaimer</Link></li>
+            <li>
+              <Link className="hover:text-gray-300" to="/privacy-policy">
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="hover:text-gray-300 whitespace-nowrap"
+                to="/terms-and-conditions"
+              >
+                Terms & Conditions
+              </Link>
+            </li>
+            <li>
+              <Link className="hover:text-gray-300" to="/refund-policy">
+                Refund Policy
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="hover:text-gray-300 whitespace-nowrap"
+                to="/cancellation-policy"
+              >
+                Cancellation Policy
+              </Link>
+            </li>
+            <li>
+              <Link className="hover:text-gray-300" to="/disclaimer">
+                Disclaimer
+              </Link>
+            </li>
           </ul>
 
           <div className="flex justify-center sm:justify-end gap-3 pt-2 sm:pt-0">
-            <a href="/facebook" className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors">
+            <a
+              href="/facebook"
+              className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors"
+            >
               <FaFacebook size={24} />
             </a>
-            <a href="/instagram" className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors">
+            <a
+              href="/instagram"
+              className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors"
+            >
               <AiFillInstagram size={24} />
             </a>
-            <a href="/linkedin" className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors">
+            <a
+              href="/linkedin"
+              className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors"
+            >
               <FaLinkedin size={24} />
             </a>
-            <a href="/spotify" className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors">
+            <a
+              href="/spotify"
+              className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors"
+            >
               <FaSpotify size={24} />
             </a>
-            <a href="/apple-music" className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors">
+            <a
+              href="/apple-music"
+              className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors"
+            >
               <FaApple size={24} />
             </a>
           </div>

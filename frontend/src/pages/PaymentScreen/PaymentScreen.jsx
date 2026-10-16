@@ -697,10 +697,12 @@ const PaymentScreen = () => {
             className="w-48 h-48 drop-shadow-[0_0_15px_rgb(252 253 253 / 45%))]"
           />
 
-          <h2 className="text-xl text-center">SCAN QR AND PAY WITH UPI</h2>
+          <h2 className="text-xl text-center">
+            SCAN QR AND PAY WITH ANY UPI APPS
+          </h2>
 
           <div className="text-gray-400 text-sm text-center">
-            Scan QR code, complete payment and enter the transaction ID below
+            Scan QR code | Complete Payment
           </div>
 
           {error && (
@@ -710,11 +712,11 @@ const PaymentScreen = () => {
           <form onSubmit={handlePaymentSuccess} className="w-full space-y-4">
             <input
               type="text"
-              placeholder="Enter Transaction ID"
+              placeholder="Enter your UPI ID here"
               value={trans}
               onChange={(e) => setTrans(e.target.value)}
               className="w-full rounded-full px-4 py-3 text-white text-center border border-gray-600 sm:bg-gray-800 sm:rounded-md"
-              style={{ backgroundColor: 'rgba(47, 43, 43, 0.577)' }}
+              style={{ backgroundColor: "rgba(47, 43, 43, 0.577)" }}
               required
               disabled={loading}
             />

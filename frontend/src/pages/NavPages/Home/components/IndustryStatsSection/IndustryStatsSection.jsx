@@ -18,17 +18,17 @@ const IndustryStats = () => {
           setStats([
             {
               id: 1,
-              value: numbers.total_artists.toLocaleString() + "+",
+              value: numbers.total_artists.toLocaleString() + "%",
               param: "num_of_artist_connections",
             },
             {
               id: 2,
-              value: numbers.total_songs.toLocaleString() + "+",
+              value: numbers.total_songs.toLocaleString() + "%",
               param: "num_of_songs",
             },
             {
               id: 3,
-              value: numbers.total_audience.toLocaleString() + "+",
+              value: numbers.total_audience.toLocaleString() + "%",
               param: "num_of_audience",
             },
           ]);
@@ -85,8 +85,8 @@ const IndustryStats = () => {
           <h2 className="text-3xl lg:text-6xl font-bold mb-[20px] lg:mb-8">
             THE PROMISES THAT MATTER
             <br />
-            NO HIDDEN CONDITIONS.{" "}
-            <span className="text-[#5DC9DE]">WHERE YOU CAN SEE IT.</span>
+            <span className="text-[#5DC9DE]"> NO HIDDEN CONDITIONS.{" "}</span>
+           WHERE YOU CAN SEE IT.
           </h2>
 
           <div className="lg:flex justify-between">
