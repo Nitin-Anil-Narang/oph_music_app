@@ -1,7 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 
-// Section component for reusability
 const Section = ({ title, children }) => (
   <section className="mb-10">
     <h2 className="text-2xl font-semibold text-[#5DC9DE] mb-2">{title}</h2>
@@ -14,92 +13,86 @@ const RefundPolicy = () => {
     <>
       <Helmet>
         <title>Refund Policy - OPH Community</title>
-        <meta name="description" content="Learn about the terms and conditions under which refund requests are processed for services rendered by the OPH Community." />
+        <meta name="description" content="Learn about OPH Community's refund policy, eligibility criteria, and refund processing procedures." />
       </Helmet>
 
       <div className="px-6 lg:px-10 xl:px-16 pt-32 pb-10 bg-black text-white min-h-screen">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-4xl font-bold mb-6 text-[#5DC9DE]">Refund Policy</h1>
 
-          {/* Section 1 */}
-          <Section title="1. Introduction">
-            <ul className="list-disc ml-6">
-              <li>This Refund Policy governs the terms and conditions under which refund requests are processed for services rendered by the Company. By making a payment, the user acknowledges and agrees to the provisions set forth herein. [Refer to: Indian Contract Act, 1872].</li>
+          <p className="mb-6 text-gray-300">
+            This Refund Policy sets out the terms and conditions governing the eligibility, processing, and issuance of refunds for payments made to OPH Community. It is intended to provide clear and transparent information regarding the circumstances in which refunds may or may not be issued.
+            Refunds shall be processed in accordance with the applicable provisions of the Consumer Protection Act, 2019 (India) and other applicable laws and regulations.
+          </p>
+
+          <Section title="1. Scope">
+            <p className="text-gray-300 mb-3">This Refund Policy applies uniformly to all payments made on the OPH Community platform, including but not limited to the Membership Fee, Song Registration Fee, Event/Competition participation fees, and any other fee that may be introduced by the Company from time to time (collectively, the "Fees"). The same conditions set out below govern refund eligibility regardless of which Fee has been paid.</p>
+            <p className="text-gray-300 mb-3">This Policy applies to all services offered, booked, or purchased through our platform, website, mobile application, or physical offices. By engaging our services, you agree to be bound by the terms outlined herein.</p>
+            <p className="text-gray-300">This Policy should be read together with our Terms & Conditions and Cancellation Policy.</p>
+          </Section>
+
+          <Section title="2. General Refund Conditions">
+            <p className="text-gray-300 mb-3">The following conditions apply to every Fee paid on the Platform:</p>
+            
+            <p className="text-gray-300 mb-3"><strong>2.1 Verification-Related Refunds.</strong> Where an Artist's registration, submission, or participation cannot proceed due to an issue arising during ID or eligibility verification, the Artist may request a refund of the relevant Fee. Where such a refund is approved, 80% of the Fee will be refunded, with a 20% administrative/processing charge deducted and retained by the Company.</p>
+            
+            <p className="text-gray-300 mb-3"><strong>2.2 Early-Stage Refunds.</strong> Separately, a refund of 50% of the relevant Fee is available where both of the following conditions are met:</p>
+            <ul className="list-disc ml-6 text-gray-300 space-y-1 mb-3">
+              <li>The refund request is made within 2 (two) days of the date of payment; and</li>
+              <li>The status of the relevant service, submission, or entry is still "Under Review" at the time of the request (i.e., it has not yet been approved to proceed).</li>
+            </ul>
+            
+            <p className="text-gray-300 mb-3"><strong>2.3 No Refund Situations.</strong> No refund will be provided under any circumstance where:</p>
+            <ul className="list-disc ml-6 text-gray-300 space-y-1 mb-3">
+              <li>The request is made citing a mere change of mind</li>
+              <li>The status of the relevant service, submission, or entry has already moved to "Approved" or beyond — even if the request is made within the 2-day window described in Section 2.2</li>
+              <li>The request for the Section 2.2 route is made after 2 (two) days from the date of payment</li>
+            </ul>
+            
+            <p className="text-gray-300"><strong>2.4 Grounds for Compulsory Refunds (Service Deficiencies)</strong> In accordance with Indian consumer laws, a 100% refund will be issued regardless of standard timelines if:</p>
+            <ul className="list-disc ml-6 text-gray-300 space-y-1">
+              <li><strong>Non-Delivery:</strong> The service is completely failed to be delivered by our business on the agreed date and time.</li>
+              <li><strong>Deficiency in Service:</strong> The delivered service is significantly faulty, imperfect, delayed, or inadequate in quality compared to what was promised.</li>
+              <li><strong>Unfair Trade Practice:</strong> Misleading claims or unannounced hidden charges were applied to the transaction.</li>
             </ul>
           </Section>
 
-          {/* Section 2 */}
-          <Section title="2. General Policy">
-            <ul className="list-disc ml-6">
-              <li>All refund requests shall be subject to a thorough review and approval process in accordance with the terms of service and applicable policies.</li>
-              <li>Refunds shall only be granted under circumstances expressly stipulated in the relevant agreements between the parties. [Refer to: Consumer Protection Act, 2019].</li>
+          <Section title="3. Refund Process">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>3.1</strong> To request a refund, the Artist must submit a request along with any supporting documents required by the Company to verify eligibility (e.g., proof of the verification issue, or details of the relevant submission/entry). Submission: All cancellation and refund requests must be submitted in writing via email to our support desk.</li>
+              <li><strong>3.2</strong> Refund requests will be reviewed within 2–3 working days of submission of all required documents.</li>
+              <li><strong>3.3</strong> Once a refund is approved, it will be initiated within 7–10 working days.</li>
+              <li><strong>3.4</strong> As the Platform does not use a third-party payment gateway, all approved refunds will be processed via direct UPI/bank transfer to the same account/UPI ID used for the original payment.</li>
             </ul>
           </Section>
 
-          {/* Section 3 */}
-          <Section title="3. Membership Fees">
-            <ul className="list-disc ml-6">
-              <li>All one-time membership fees paid during artist registration are non-refundable.</li>
+          <Section title="4. Non-Refundable Scenarios">
+            <p className="text-gray-300 mb-3">Refunds will not be provided under the following circumstances:</p>
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>The service was successfully delivered in full compliance with the service agreement.</li>
+              <li>The customer changes their mind or experiences a change of personal circumstances after the service has already commenced or been completed.</li>
+              <li>Once the relevant status has reached "Approved"</li>
+              <li>Where an Artist's account is suspended or terminated for breach of the Terms & Conditions (e.g., uploading prohibited Content, providing false information)</li>
             </ul>
           </Section>
 
-          {/* Section 4 */}
-          <Section title="4. Event Participation Fees">
-            <ul className="list-disc ml-6">
-              <li>Fees paid to participate in events (e.g., competitions, workshops) are non-refundable, even if the artist cancels participation or the event is rescheduled.</li>
+          <Section title="5. Force Majeure (Unforeseen Events)">
+            <p className="text-gray-300 mb-3">Neither party shall be held liable for failure or delay to perform obligations caused by acts of God, government regulations, natural disasters, strikes, or other events beyond reasonable control. In such cases:</p>
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>A rescheduling option will be prioritized.</li>
+              <li>If rescheduling is impossible, a refund of unearned fees will be evaluated on a case-by-case basis.</li>
             </ul>
           </Section>
 
-          {/* Section 5 */}
-          <Section title="5. Song Submission & Registration">
-            <ul className="list-disc ml-6">
-              <li>Fees for song submissions (New/Hybrid Projects) are non-refundable once the submission is processed.</li>
-            </ul>
+          <Section title="6. Your Rights Under Consumer Protection Law">
+            <p className="text-gray-300">Nothing in this Refund Policy limits any right or remedy available to an Artist under the Consumer Protection Act, 2019, including the right to approach the appropriate consumer forum in case of an unresolved dispute.</p>
           </Section>
 
-          {/* Section 6 */}
-          <Section title="6. Technical Errors">
-            <ul className="list-disc ml-6">
-              <li>If a payment error occurs (e.g., duplicate charges), artists may request a refund within 7 days by contacting support. Refunds will be processed within 15 business days after verification. [Refer to: Payment and Settlement Systems Act, 2007].</li>
-            </ul>
-          </Section>
-
-          {/* Section 7 */}
-          <Section title="7. Revenue Withdrawals">
-            <ul className="list-disc ml-6">
-              <li>Artists retain 100% revenue from their work. After deduction from third-party platforms. Withdrawal requests are processed in 10–15 days, but OPH is not liable for delays caused by third-party payment gateways. [Refer to: Payment and Settlement Systems Act, 2007].</li>
-            </ul>
-          </Section>
-
-          {/* Section 8 */}
-          <Section title="8. Eligibility for Refunds">
-            <ul className="list-disc ml-6">
-              <li>Refunds shall not be granted once the service has been fully rendered and delivered.</li>
-              <li>Any refund issued may be subject to the deduction of applicable processing fees. [Refer to: Consumer Protection Act, 2019].</li>
-            </ul>
-          </Section>
-
-          {/* Section 9 */}
-          <Section title="9. No Refund Policy">
-            <ul className="list-disc ml-6">
-              <li>All payments made to the Company shall be deemed final and non-refundable. Notwithstanding the foregoing, the OPH Community team reserves the sole and absolute discretion to consider and grant exceptions in extraordinary circumstances.</li>
-            </ul>
-          </Section>
-
-          {/* Section 10 */}
-          <Section title="10. Exceptional Cases">
-            <ul className="list-disc ml-6">
-              <li>Refunds may be issued solely in cases where the service has not been provided in accordance with the agreed-upon terms and conditions.</li>
-            </ul>
-          </Section>
-
-          {/* Section 11 */}
-          <Section title="11. Refund Request Process">
-            <ul className="list-disc ml-6">
-              <li>A formal request for a refund must be submitted by the user within forty-eight (48) hours of payment.</li>
-              <li>Refund requests shall be initiated by submitting a formal ticket along with valid and verifiable proof of claim.</li>
-              <li>The Company shall review and respond to the refund request within forty-eight (48) business hours.</li>
-              <li>In the event that a refund is approved, the funds shall be processed and disbursed within ten (10) to fifteen (15) business days from the date of approval. [Refer to: Consumer Protection Act, 2019].</li>
+          <Section title="7. Contact Us">
+            <p className="text-gray-300 mb-3">For any refund-related query, please contact our Grievance Officer:</p>
+            <ul className="list-disc ml-6 text-gray-300 space-y-1">
+              <li>Email: connect@ophcommunity.org</li>
+              <li>Address: Mumbai, Maharashtra, India</li>
             </ul>
           </Section>
         </div>

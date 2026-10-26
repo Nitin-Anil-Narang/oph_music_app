@@ -646,7 +646,7 @@ const ProfessionalDetailsForm = () => {
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
-                        ExperienceYearly: parseInt(e.target.value) || 0,
+                        ExperienceYearly: parseInt(e.target.value),
                       }))
                     }
                     className="w-[95%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
@@ -664,7 +664,7 @@ const ProfessionalDetailsForm = () => {
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
-                        experienceMonths: parseInt(e.target.value) || 0,
+                        experienceMonths: parseInt(e.target.value),
                       }))
                     }
                     className="w-[95%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner
@@ -689,7 +689,7 @@ const ProfessionalDetailsForm = () => {
                       onChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          songsPlanned: parseInt(e.target.value) || 0,
+                          songsPlanned: parseInt(e.target.value),
                         }))
                       }
                       className="w-[95%] sm:w-96 md:w-full h-12 border-l-[1px] border-t-[1px] border-r-[1px] backdrop-blur-md border-[#757475] px-4 text-white bg-[rgba(30,30,30,0.7)] rounded-full outline-none shadow-inner

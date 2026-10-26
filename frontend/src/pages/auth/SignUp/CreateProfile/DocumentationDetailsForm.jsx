@@ -812,7 +812,15 @@ const DocumentationDetailsForm = () => {
                 required
               />
               <label htmlFor="agreement" className="text-sm text-gray-400">
-                I agree to all the Terms & Conditions{" "}
+                I agree to all the{" "}
+                <a
+                  href="/terms-and-conditions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-400 hover:text-cyan-300 underline"
+                >
+                  Terms & Conditions
+                </a>{" "}
                 <span className="text-red-500">*</span>
               </label>
             </div>

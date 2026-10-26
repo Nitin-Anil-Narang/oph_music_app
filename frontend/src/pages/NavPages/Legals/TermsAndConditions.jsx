@@ -1,7 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 
-// Reusable Section component
 const Section = ({ title, children }) => (
   <section className="mb-10">
     <h2 className="text-2xl font-semibold text-[#5DC9DE] mb-2">{title}</h2>
@@ -14,938 +13,272 @@ const TermsAndConditions = () => {
     <>
       <Helmet>
         <title>Terms and Conditions - OPH Community</title>
-        <meta
-          name="description"
-          content="Read the official Terms and Conditions and Artist Agreement for the OPH Music Community Platform."
-        />
+        <meta name="description" content="Read OPH Community's Terms and Conditions governing your use of the Platform." />
       </Helmet>
 
       <div className="px-6 lg:px-10 xl:px-16 pt-32 pb-10 bg-black text-white min-h-screen">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl font-bold mb-6 text-[#5DC9DE]">
-            Terms and Conditions of the OPH Music Community Platform
-          </h1>
-          <p className="mb-4">
-            Welcome to the OPH Music Community Platform. By accessing or using
-            the OPH Music Community Platform, including but not limited to both
-            the website and the artist portal, you (the "User" or "Artist")
-            agree to abide by and be bound by these Terms and Conditions
-            ("Terms"). Please read these Terms carefully before proceeding with
-            any use of the Platform. If you do not agree to these Terms, you
-            should refrain from using the Platform.
-          </p>
-          <Section title="1. General Overview">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH community is an open-source network collaboration platform
-                that is a fully technology-driven, one-stop solution designed to
-                support an artist’s journey from start to finish. The platform
-                with no middlemen, providing direct access and a pre-booking
-                system for music releases. It ensures 100% revenue and ownership
-                remain with the artists and offers additional benefits such as
-                competitions, events, and educational learning opportunities. To
-                access the Platform, you agree to abide by these Terms.
-              </li>
-            </ul>
-          </Section>
+          <h1 className="text-4xl font-bold mb-6 text-[#5DC9DE]">Terms & Conditions</h1>
 
-          <Section title="2. Website Composition and Functions">
-            <p className="mb-4">
-              The Platform website has six main sections: Home, Event, Artists,
-              Resources, Leaderboard, and Contact. Each section offers different
-              services and functionalities, as follows:{" "}
-            </p>
-            <ul className="list-disc ml-6">
-              <li className="mt-2">
-                <strong>Homepage : </strong>
-                The Home page gives an overview of the user statistics on the
-                Platform with videos, podcasts, artist songs, showcases, and
-                rankings. It also features a media player for artist songs,
-                tutorials, and calls to action to encourage users to join the
-                Platform. The data is covered under Section 43 of the IT Act,
-                2000 ("IT Act, 2000").
-              </li>
-              <li className="mt-2">
-                <strong>Event Page : </strong>
-                The Event page gives all information regarding upcoming and past
-                events held by OPH, which include the registration and payment
-                gateway for participation in the event. Rewards of the events
-                will be provided offline and no online data of the financial
-                details will be collected. The transactions are also according
-                to Section 10A of the IT Act, 2000, through which electronic
-                transactions get legal recognition.
-              </li>
-              <li className="mt-2">
-                <strong>Artists Page : </strong>
-                This page is for displaying rankings, artist profiles, and media
-                content by artists. Automatic calculations are involved with
-                ranking data and no adjustments allowed through manual entries.
-                Personal data use is subjected to Section 72 of the IT Act,
-                2000, for data privacy protection.
-              </li>
-              <li className="mt-2">
-                <strong>Leaderboard Page : </strong>
-                Artist uploads song performances with metrics and rankings.
-                There is a showcase of artist profiles that include public
-                viewing of the data of performance on their songs.
-              </li>
-              <li className="mt-2">
-                <strong>Resources Page : </strong>
-                The Resources page contains artist stories, podcasts, tutorials,
-                and other relevant learning content.
-              </li>
-              <li className="mt-2">
-                <strong>Contact Page : </strong>
-                The Contact page enables the Platform to connect with its
-                artists. The contact form captures personal information such as
-                full name, email address, mobile number, and Instagram handle.
-                Such information is protected under Rule 4 of the IT Rules,
-                2011.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="3. Artist Portal and Services">
-            <p className="mb-4">
-              An artist portal allows artists to edit their profiles and
-              services by their own accounts. An artist, who registers, agrees
-              to:{" "}
-            </p>
-            <ul className="list-disc ml-6">
-              <li className="mt-2">
-                <strong>Registration Process : </strong>
-                Artists will be required to provide valid personal details and
-                supporting documents, such as an Aadhar card, bio, signature,
-                and bank account details, for verification. After successful
-                verification, an account will be generated. Registration is done
-                after taking consent for the use of Aadhar for verification
-                under Section 7 of the Aadhaar Act, 2016.
-              </li>
-              <li className="mt-2">
-                <strong>Song Submission : </strong>
-                Artists can submit their songs through two project patterns:
-                <br />
-                <b> New Project Pattern : </b> Songs that have never been
-                uploaded elsewhere can be released solely on the OPH platform.
-                The copyright will belong to the artist, but he or she will
-                assign rights to OPH to upload and publish the song. The revenue
-                will be paid directly to the artist.
-                <br />
-                <b>Hybrid Project Pattern : </b>Songs already released elsewhere
-                can be uploaded to OPH. The artist owns the copyright but gives
-                OPH permission to upload and distribute the song. Artists cannot
-                file copyright infringement against OPH. The money generated
-                from the song will be paid directly to the artist. These terms
-                comply with the Copyright Act, 1957.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="4. Revenue and Payment Terms">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists will receive their money from the song submission within
-                10-15 days of the withdrawal request. The Indian Contract Act,
-                1872, does not refund event participation fees, membership
-                payments, and song registration fees.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="5. Content and Copyright">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists will receive their money from the song submission within
-                10-15 days of the withdrawal request. The Indian Contract Act,
-                1872, does not refund event participation fees, membership
-                payments, and song registration fees.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="6. Responsibilities of Artists">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists must abide by the services offered by the Platform.
-                Artists shall not request changes or dictate terms relating to
-                the services of the Platform. OPH may modify its pricing or
-                services at any time, subject to Section 37 of the Indian
-                Contract Act, 1872.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="7. Event Participation">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists are liable to pay non-refundable participation fees for
-                events. Rewards from events will be processed offline, and
-                artists will provide the necessary details for disbursement as
-                required by Section 10 of the Indian Contract Act, 1872.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="8. Limitation of Liability">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH is not responsible or liable for any damage, loss, or
-                dispute arising out of the use of the Platform. Artists agree to
-                indemnify OPH from all claims connected with the uploading of
-                content, ranking, or distribution of revenue under Section 73 of
-                the Indian Contract Act, 1872.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="9. Terms Modifications">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH reserves the right to modify or update these Terms at its
-                discretion. Continued use of the Platform constitutes acceptance
-                of the updated Terms, in compliance with Rule 5 of the IT Rules,
-                2011.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="10. Service Availability and Charges">
-            <ul className="list-disc ml-6">
-              <li>
-                Blocking dates for weekends is free, but it may charge later.
-                Date changes will attract a fee of INR 100. According to Section
-                10 of the Indian Contract Act, 1872, changes are permissible up
-                to one week before the date scheduled.
-              </li>
-            </ul>
-          </Section>
-          <Section title="11. Revenue and Payments">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists can take the revenue after processing periods. Service
-                charges, such as Song Registration Forms, are non-refundable as
-                per Section 2(1)(r) of the Consumer Protection Act, 2019.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="12. Transparency and Data">
-            <ul className="list-disc ml-6">
-              <li>
-                Live data, including rankings and KPIs, will be updated
-                according to the specified schedule. Artists cannot request
-                additional data or proof beyond what is displayed. This is
-                governed under Section 72 of the IT Act, 2000.
-              </li>
-            </ul>
-          </Section>
-          <Section title="13. Tickets and Requests">
-            <ul className="list-disc ml-6">
-              <li>
-                Requests for modifications under wrong categories will be
-                declined without compromise, based on the Indian Contract Act,
-                1872.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="14. Liabilities and Responsibilities">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH shall not be liable for defamation or negative publicity due
-                to an artist's public profile, as stated in Section 499 of the
-                Indian Penal Code.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="15. Eligibility for TV Publishing">
-            <ul className="list-disc ml-6">
-              <li>
-                The OPH team determines the eligibility for TV publishing. Only
-                eligible artists may be considered for publishing, in accordance
-                with Section 38 of the Copyright Act, 1957.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="16. Data Collection">
-            <ul className="list-disc ml-6">
-              <li>
-                Data collected from users participating in events will solely be
-                used for promotional and engagement purposes, in compliance with
-                the IT Rules, 2011.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="17. Governing Law and Dispute Resolution">
-            <ul className="list-disc ml-6">
-              <li>
-                These Terms are subject to Indian law. Any dispute shall be
-                settled by arbitration or conciliation in accordance with the
-                Arbitration and Conciliation Act, 1996.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="18. Calendar Rules">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists cannot choose the dates already blocked for releasing a
-                song. Once a submission has been rejected for errors or failing
-                to comply with requirements, all money paid for reservation of
-                dates shall be non-refundable. Artist must re-block a new date
-                of release for future submissions.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="19. Fair Treatment">
-            <ul className="list-disc ml-6">
-              <li>
-                All artists are treated equally, and no special treatment is
-                given to any particular individual so that it can be fair and
-                transparent.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="20. Use of the Platform">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists shall be responsible for knowing how to use the Platform
-                properly. All transactions are final and cannot be cancelled
-                unless otherwise stated, and it follows Section 2(h) of the
-                Indian Contract Act, 1872.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="21. General Duties">
-            <ul className="list-disc ml-6">
-              <li>
-                Settlement is NOT allowed for OPH in case any registered user or
-                artist does not participate in events. All notifications sent to
-                the artists will be on purely work-related matters.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="22. Submission Rules">
-            <ul className="list-disc ml-6">
-              <li>
-                Artist submitting "Free for Profit Beats" in wrong categories
-                will attract strikes. Post-publication copyright violations will
-                attract the strikes as given by the Copyright Act, 1957.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="23. Analytics and Metrics">
-            <ul className="list-disc ml-6">
-              <li>
-                Metrics and analytics are calculated transparently. Regular
-                updates within the specified timeframes are there. In case of
-                delay in analytics, there will be visible revenue supplied.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="24. Ticket Policy">
-            <ul className="list-disc ml-6">
-              <li>
-                Those requests raised under incorrect categories will be
-                declined according to the Indian Contract Act, 1872.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="25. Forms and Updates">
-            <ul className="list-disc ml-6">
-              <li>
-                The update of the forms, like sign-up and song registration,
-                shall be processed within 24 to 48 hours.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="26. Intellectual Property">
-            <ul className="list-disc ml-6">
-              <li>
-                All intellectual property rights of the Platform are protected
-                under the Copyright Act, 1957. Any unauthorized use is strictly
-                prohibited.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="27. Refunds and Corrections">
-            <ul className="list-disc ml-6">
-              <li>
-                Refunds will be issued only in certain conditions. Artists can
-                request basic changes but should note that most changes will not
-                be accommodated.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="28. Leaderboard and Ranking Rules">
-            <ul className="list-disc ml-6">
-              <li>
-                Rankings on the leaderboard, based on performance metrics, are
-                final and non-negotiable.
-              </li>
-            </ul>
-          </Section>
-          <Section title="29. Account Management & Security">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists are solely responsible for maintaining the
-                confidentiality of their account credentials, including but not
-                limited to passwords.
-              </li>
-              <li>
-                OPH shall not be liable for any unauthorized access due to the
-                negligence of Artists.
-              </li>
-              <li>
-                OPH reserves the right to suspend or deactivate accounts, with
-                prior notice, in cases of policy violations, including but not
-                limited to fraud, hate speech, or breach of applicable laws.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="30. Content Guidelines & Moderation">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists shall not upload content that infringes on intellectual
-                property rights, includes explicit material, or violates any
-                applicable law in India, including the Information Technology
-                Act, 2000.
-              </li>
-              <li>
-                OPH reserves the right to remove any content violating these
-                guidelines without prior notice. Artists shall have the right to
-                appeal such removal.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="31. Third-Party Platforms">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH shall not be held liable for any actions taken by
-                third-party platforms, such as removal of content by streaming
-                services (e.g., Spotify).
-              </li>
-              <li>
-                The availability of caller tunes is subject to the discretion of
-                telecom providers, and OPH shall bear no responsibility in this
-                regard.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="32. Updates & Maintenance">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH shall notify Artists of scheduled downtime at least 48 hours
-                in advance.
-              </li>
-              <li>
-                OPH reserves the right to add, modify, or remove features
-                without prior notice.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="33. Force Majeure">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH shall not be held liable for any delays or failures in
-                performance due to force majeure events, including but not
-                limited to natural disasters, pandemics, or government
-                restrictions.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="34. Age Restrictions">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists must be at least 18 years of age or provide verifiable
-                parental/legal guardian consent to use the Platform.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="35. Governing Law & Jurisdiction">
-            <ul className="list-disc ml-6">
-              <li>
-                These T&Cs shall be governed by and construed in accordance with
-                the laws of India.
-              </li>
-              <li>
-                Any disputes arising under these T&Cs shall be subject to the
-                exclusive jurisdiction of the courts in Mumbai, Maharashtra.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="36. Limitation of Liability">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH shall bear no liability for any acts, omissions, or conduct
-                of the Artist. The Artist assumes full responsibility for their
-                actions in all circumstances.
-              </li>
-              <li>
-                OPH shall not be liable for indirect, incidental, or
-                consequential damages, including but not limited to lost
-                opportunities or revenue.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="37. Beta Features">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists acknowledge that beta features may have limitations, and
-                they use such features at their own risk.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="38. Updates to T&Cs">
-            <ul className="list-disc ml-6">
-              <li>
-                Any changes to these T&Cs shall be communicated to Artists via
-                email or the Portal.
-              </li>
-              <li>
-                Continued use of the Platform following updates constitutes
-                acceptance of the revised T&Cs.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="39. Disclaimers">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH does not guarantee success, exposure, or revenue for
-                Artists.
-              </li>
-              <li>
-                All services are provided on an "as-is" basis without warranties
-                of any kind.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="40. Intellectual Property Infringement">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH shall implement a DMCA policy outlining the process for
-                reporting and countering infringement claims.
-              </li>
-              <li>
-                Artists shall ensure their content does not infringe upon
-                third-party intellectual property rights.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="41. Disclaimer on Upcoming Features">
-            <ul className="list-disc ml-6">
-              <li>
-                Some features displayed on the sign-up page are planned for
-                future release. These upcoming features are currently under
-                development and may be introduced progressively as part of
-                future updates to the platform.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="42. Use of Third-Party Analytics Tools for Service Optimization">
-            <ul className="list-disc ml-6">
-              <li>
-                We utilize third-party software tools such as Microsoft Clarity,
-                Google Analytics, and Google Tag Manager to better understand
-                user behavior and enhance the quality of our services. These
-                tools help us analyze user interactions, improve user
-                experience, and optimize our offerings in line with user needs.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="43. Performance Metrics and Non-Disputability Clause">
-            <ul className="list-disc ml-6">
-              <li>
-                The services outlined by the Company are subject to specific
-                performance metrics. These metrics may be requested by the
-                artist from the Company and shall be considered final and
-                binding. The artist shall not have the right to dispute or
-                challenge these metrics at any stage. All such provisions fall
-                strictly under the scope of the Company’s Terms and Conditions.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="44. Language & Communication">
-            <ul className="list-disc ml-6">
-              <li>
-                These T&Cs are provided in English, and all disputes shall be
-                resolved in English.
-              </li>
-              <li>
-                Official communications shall be conducted exclusively via
-                email, WhatsApp, or the Platform.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="45. No Partnership/Agency">
-            <ul className="list-disc ml-6">
-              <li>
-                Nothing in these T&Cs shall be deemed to create any partnership,
-                agency, or employment relationship between OPH and Artists.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="46. Survival Clause">
-            <ul className="list-disc ml-6">
-              <li>
-                Certain provisions, including but not limited to ownership and
-                liability clauses, shall survive termination of an Artist’s
-                account.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="47. Feedback & Dispute Resolution">
-            <ul className="list-disc ml-6">
-              <li>Artists may submit feedback via OPH’s support channels.</li>
-              <li>
-                Disputes shall follow an escalation process, including mediation
-                and arbitration as per the Arbitration and Conciliation Act,
-                1996.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="48. Ownership & Intellectual Property">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists retain full ownership of their music, videos, and all
-                other content created or uploaded to the Platform, in accordance
-                with Section 17 of the Copyright Act, 1957, which vests
-                ownership of original works with the creator.
-              </li>
-              <li>
-                OPH shall obtain only a limited, non-exclusive, royalty-free
-                license to distribute, market, and promote the Artist’s content
-                for the benefit of the Artist, as permitted under Section 30 of
-                the Copyright Act, 1957, which governs licensing agreements.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="49. Revenue & Payments">
-            <ul className="list-disc ml-6">
-              <li>
-                Artists shall receive 100% of their earnings from audio and
-                video monetization, in compliance with Section 18 of the Indian
-                Contract Act, 1872, which ensures lawful consideration for
-                services rendered.
-              </li>
-              <li>
-                A detailed breakdown of revenue sources, including but not
-                limited to streaming, downloads, and licensing, shall be made
-                available to Artists on the Platform.
-              </li>
-              <li>
-                There shall be no minimum withdrawal thresholds or hidden fees,
-                and payment processing timelines shall be defined as 10–15
-                business days from the date of revenue generation, in accordance
-                with the Payment and Settlement Systems Act, 2007, which
-                regulates payment timelines and transparency.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="50. Platform Stability">
-            <ul className="list-disc ml-6">
-              <li>
-                OPH guarantees a minimum monthly platform availability of 99%,
-                with compensation mechanisms for prolonged downtime, in
-                accordance with the Consumer Protection Act, 2019, which
-                safeguards consumer rights and provides for compensation in case
-                of service deficiencies.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="51. Educational Resources">
-            <ul className="list-disc ml-6">
-              <li>
-                All learning materials provided by OPH are the exclusive
-                property of OPH, and OPH retains full ownership and intellectual
-                property rights over them, as per the Copyright Act, 1957.
-              </li>
-              <li>
-                Members are granted a limited, non-exclusive, non-transferable
-                license to use these materials solely for personal,
-                non-commercial purposes.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="52. Contact Us">
-            <ul className="list-disc ml-6">
-              <li>
-                For any question or complaint, you can contact OPH using the
-                contact details available on the Contact Page. Communications
-                will be covered by Section 72A of the IT Act, 2000.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="53. Acknowledgement">
-            <ul className="list-disc ml-6">
-              <li>
-                You acknowledge having read, understood, and agreeing to the
-                Terms and Conditions every time you access the OPH Community
-                Platform.
-              </li>
-            </ul>
-          </Section>
-
-          <Section title="54. Compliance">
-            <ul className="list-disc ml-6">
-              <li>
-                This document ensures compliance with the relevant Indian laws
-                while safeguarding the rights and obligations of the artists as
-                well as the Platform.
-              </li>
-            </ul>
-          </Section>
-
-          <h1 className="text-4xl font-bold mb-6 text-[#5DC9DE]">
-            OPH Community Artist Agreement
-          </h1>
-          <p className="mb-4">
-            This Artist Agreement (the "Agreement") is entered into by and between OPH Community (hereinafter referred to as "OPH Community" or "Platform") and the individual artist (hereinafter referred to as the "Artist"), collectively referred to as the "Parties." By registering for and participating in OPH Community, the Artist agrees to be bound by the following terms and conditions. This Agreement shall be deemed a legally binding contract upon the Artist's submission and registration with OPH Community.
+          <p className="mb-6 text-gray-300">
+            These Terms & Conditions ("Terms") constitute a legally binding agreement between you ("User," "Artist," or "you") and OPH Community, a business having its registered office in Mumbai, Maharashtra, India ("OPH Community," "Company," "we," "us," or "our").
+            These Terms govern your access to and use of the OPH Community website, Artist Portal, and all related features, products, and services (collectively, the "Platform" or "Services"). Applies to all visitors, Users, Artists, and other persons who access or use the Platform. By accessing, registering with, or using the Platform or Services, you acknowledge that you have read, understood, and agree to be bound by these Terms.
+            Before accessing or using the Platform, please read these Terms carefully. They set out the terms governing your use of the Platform, the Services provided by OPH Community, and the respective rights, obligations, and responsibilities of you and OPH Community.
+            The Privacy Policy explains how OPH Community collects, uses, stores, protects, and discloses Personal Data and other information in connection with your access to and use of the Platform.
+            By registering, accessing, or using the Platform, you acknowledge that you have read, understood, and agreed to these Terms and all applicable policies incorporated herein, including the Privacy Policy, Refund Policy, Cancellation Policy, Disclaimer, Cookie Policy, and any other expressly applicable policies or guidelines.
+            If you do not agree to these Terms or applicable policies, you must not register for, access, or use the Platform or Services.
+            If you have any questions or concerns regarding these Terms, you may contact us at connect@ophcommunity.org before using the Platform.
           </p>
 
-          <Section title="1. Acceptance of Changes">
-            <p>
-              The Artist accepts and agrees that the dates, features, and all other details of the event related to OPH Community are subject to alteration, cancellation, or change without prior notice by OPH Community at its discretion. The Artist agrees to follow any such changes.
-            </p>
+          <Section title="1. Definitions">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>Platform</strong> means the OPH Community website, artist portal, and any associated mobile or web-based services operated by the Company.</li>
+              <li><strong>Independent Artist</strong> means a User who creates, performs, or produces a song or musical work independently and who consequently holds 100% (full) ownership rights in such work.</li>
+              <li><strong>Specialist Artist</strong> means a User who specializes in and contributes one specific component of a musical work and who holds ownership rights only in their individual contribution to that work.</li>
+              <li><strong>Membership</strong> means the one-time, non-recurring registration undertaken by an Artist to access the Platform's services.</li>
+              <li><strong>Content</strong> means any song, recording, video, image, profile information, biography, artwork, or other material uploaded by a User on the Platform.</li>
+              <li><strong>Services</strong> means the features made available through the Platform, including artist search, EPK profiles, Leaderboard, song distribution, marketing support, analytics, TV release facilitation, and income withdrawal.</li>
+            </ul>
           </Section>
 
-          <Section title="2. Event Terms Acceptance">
-            <p>
-              Upon registration to any event organized by OPH Community, the Artist agrees to be bound by all the terms and conditions of such events as may be applicable. The parties mutually and explicitly acknowledge and agree that the registration and participation in any event form the basis of a valid contract within the realm of Section 10 of the Indian Contract Act, 1872, wherein their consent to the terms forms the foundation of the contract.
-            </p>
+          <Section title="2. Eligibility">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>You must be at least 18 (eighteen) years of age to independently register as an Artist on the Platform.</li>
+              <li>Individuals below 18 years of age may register only with the explicit consent and involvement of a parent or legal guardian.</li>
+              <li>By registering, you represent that all information provided by you is true, accurate, and complete, and that you have the legal right and authority to enter into this agreement.</li>
+            </ul>
           </Section>
 
-          <Section title="3. Consent to Terms">
-            <p>
-              By checking the checkbox or otherwise agreeing to and continuing the registration or submission process, the Artist agrees and consents to all terms and conditions of this Agreement, establishing a binding legal relationship between the parties.
-            </p>
+          <Section title="3. Account Registration & Artist Portals">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>3.1</strong> The Platform offers two distinct categories of Artist registration: Independent Artist Portal and Specialist Artist Portal.</li>
+              <li><strong>3.2</strong> You must select the category that accurately reflects your role. The Company reserves the right to verify or re-categorize a registration where information appears inconsistent.</li>
+              <li><strong>3.3</strong> You are responsible for maintaining the confidentiality of your account credentials and for all activity under your account. You must notify us immediately of any unauthorized use.</li>
+              <li><strong>3.4</strong> The Company reserves the right to refuse, suspend, or terminate registration where information is found to be false or in violation of these Terms.</li>
+            </ul>
           </Section>
 
-          <Section title="4. Updatable Profile on Chargeable Terms">
-            <p>
-              The Artist acknowledges and agrees that any updation, amendment, or change to the Artist's profile made on OPH Community may be on chargeable terms at the discretion of the Platform at any given time.
-            </p>
+          <Section title="4. Membership & Fees">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>Access to the Platform's core Services requires payment of a one-time, non-recurring Membership Fee at the time of registration.</li>
+              <li>The Membership Fee is a one-time payment only. OPH Community does not charge any subscription fee, recurring fee, or annual renewal fee.</li>
+              <li>Independent Artists may additionally register individual songs for a separate, per-song Song Registration Fee.</li>
+              <li><strong>Payment Method:</strong> All fees are currently processed through direct UPI/bank transfer. Users are responsible for ensuring the accuracy of their bank/UPI details.</li>
+              <li>All fees are subject to the terms set out in our separate Refund Policy and Cancellation Policy.</li>
+            </ul>
           </Section>
 
-          <Section title="5. Ranking Transparency">
-            <p>
-              The Artist understands and agrees that all rankings shown on leaderboards, spotlight pages, or any other ranking systems in OPH Community are calculated based on particular performance metrics. The Artist also understands that such rankings cannot be contested.
-            </p>
+          <Section title="5. Platform Services">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>Search & Direct Connect:</strong> The Platform enables Users to search for and directly connect with other Artists without any commission charged by the Company.</li>
+              <li><strong>EPK Profiles:</strong> Artists may build a profile showcasing their work, story, and social media presence.</li>
+              <li><strong>Leaderboard, KPI & Spotlight:</strong> Independent Artists may be ranked on a performance-based Leaderboard and may receive free rewards at the Company's sole discretion.</li>
+              <li><strong>Release Calendar:</strong> Independent Artists may schedule an advance release date for a song.</li>
+              <li><strong>Song Release & Distribution:</strong> Independent Artists may release songs through the Platform with distribution support across applicable platforms.</li>
+              <li><strong>TV Release:</strong> Certain songs may be considered for release on television channels, subject to the Company's review and approval.</li>
+              <li><strong>Analytics:</strong> Independent Artists will receive periodic analytics relating to their released songs, updated approximately every 2–5 days.</li>
+              <li><strong>Events & Competitions:</strong> The Platform organizes virtual music competitions and events. Artists registered on the Platform receive a 50% discount on event participation fees.</li>
+              <li><strong>Support:</strong> Artists may raise support requests via ticket, call, or chat through their personal portal.</li>
+            </ul>
           </Section>
 
-          <Section title="6. Refund Decisions">
-            <p>
-              Artist shall be bounded by OPH Community's refund policy. Any disputes arose between them shall be submitted to the review team for its final decision which shall be binding upon both parties. Artist further acknowledges that refunds, if granted, will follow the provisions of Section 72 of the Indian Contract Act, 1872 and is to be provided only when paid either by mistake or due to coercion.
-            </p>
+          <Section title="6. Specialist Artist — Additional Terms">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>Specialist Artists receive all Services described in Section 5 except Leaderboard, KPI, Spotlight, Release Calendar, Song Release, TV Release, and Analytics.</li>
+              <li>A Specialist Artist may showcase up to two (2) songs on their profile from projects they have contributed to, at no additional cost.</li>
+              <li>Specialist Artists may directly edit their own profile through their personal portal.</li>
+            </ul>
           </Section>
 
-          <Section title="7. Management Authority">
-            <p>
-              The Artist acknowledges that once they join OPH Community, the Platform shall have exclusive authority over all decisions, actions, and management of the Artist’s participation. The Artist agrees that no requests for changes to Platform decisions will be entertained by OPH Community.
-            </p>
+          <Section title="7. Ownership, Intellectual Property & Content License">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>Independent Artists retain 100% ownership of all rights, title, and interest in any song or musical work they create and release through the Platform.</li>
+              <li>Specialist Artists retain ownership of their individual creative contribution to any project they work on.</li>
+              <li>Where a Specialist Artist showcases work from a collaborative project, they represent and warrant that they hold the necessary right, license, or permission from other contributing Artist(s).</li>
+              <li>By uploading Content to the Platform, you grant OPH Community a limited, non-exclusive, royalty-free, revocable license to host, display, reproduce, and promote such Content for operating the Platform and your song's marketing and distribution.</li>
+              <li>You retain full ownership and 100% of the revenue generated from your released work while your Membership is active, subject to the Cancellation Policy.</li>
+              <li>Once a song has been released and distributed through the Platform, an Artist may not require the Company to remove or take down such song from any streaming or video platform.</li>
+              <li>User confirms that the Content belongs to them or that they have the necessary rights to use it.</li>
+              <li>By enabling YouTube Content ID for a release, you represent and warrant that you exclusively control 100% of the composition and master rights, and that the recording is a unique and original master.</li>
+            </ul>
           </Section>
 
-          <Section title="8. Strike Policy">
-            <p>
-              The Artist agrees to adhere to OPH Community's strike policy wherein three (3) strikes may lead to deactivation of the Artist's account. The Artist accepts that OPH Community has the protection accorded by Section 79 of the Information Technology Act, 2000, and will act only as an intermediary unless such due diligence is not followed.
-            </p>
+          <Section title="8. User Content & Conduct">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>You are solely responsible for the Content you upload to the Platform.</li>
+              <li>You agree not to upload any Content that infringes intellectual property rights, is defamatory, obscene, false, misleading, or contains viruses or malware.</li>
+              <li>The Company reserves the right to review, remove, or disable access to any Content that violates these Terms or applicable Indian law.</li>
+              <li>Repeated or serious violations may result in suspension or termination of your account.</li>
+            </ul>
           </Section>
 
-          <Section title="9. Correct Submissions">
-            <p>
-              The Artist covenants to ensure all submissions, without limitation, by way of illustration and not by way of limitation, content, projects, materials, are entered under the appropriate project type, and are to be accurate. The Artist holds the Platform harmless for any and all errors, or discrepancies arising from submitted content.
-            </p>
+          <Section title="9. Direct Dealings Between Artists">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>The Platform enables Artists to connect and collaborate directly with one another, without the Company acting as an agent or intermediary.</li>
+              <li>Any collaboration or agreement entered into between Artists is a private arrangement solely between the concerned Artists.</li>
+              <li>OPH Community bears no responsibility or liability for the performance, quality, or outcome of any direct arrangement between Artists.</li>
+              <li>Artists are strongly encouraged to clearly document the terms of any direct collaboration before commencing work.</li>
+            </ul>
           </Section>
 
-          <Section title="10. Data Security">
-            <p>
-              The Artist consents to OPH Community’s implementation of reasonable security measures to safeguard the personal data provided by the Artist during registration. The Platform agrees to comply with Section 43A of the Information Technology Act, 2000, in protecting personal data from unauthorized access or misuse.
-            </p>
+          <Section title="10. Income, Withdrawals & Taxes">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>All income earned by an Artist through the Platform is displayed within their personal portal.</li>
+              <li>Artists may withdraw their available income at any time, in any amount, with no minimum withdrawal threshold.</li>
+              <li>The Company does not take any commission on income earned directly between Artists or from third-party platforms.</li>
+              <li>Artists are solely responsible for determining, declaring, and paying any income tax, GST, TDS, or other statutory dues applicable to income earned through the Platform.</li>
+              <li>The Company is not responsible for revenue fluctuations or policy changes made by third-party platforms.</li>
+            </ul>
           </Section>
 
-          <Section title="11. General Agreement">
-            <p>
-              The Artist agrees as follows: 
-              <ul>
-                <li>a. To accept and be bound by the Terms and Conditions outlined in this Agreement.</li>
-                <li>b. To provide accurate, truthful, and updated information at the time of registration and participating.</li>
-                <li>c. To grant OPH Community permission to use details from the Artist for purposes such as uploading, release, distribution, and marketing. These may include, but are not limited to, advertising.</li>
-              </ul>
-            </p>
+          <Section title="11. Suspension & Termination">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>11.1 Suspension or Termination by the Company:</strong> OPH Community may suspend, restrict, or terminate an Artist's account if the Artist breaches these Terms, provides false information, uploads prohibited Content, or engages in fraudulent or harmful conduct.</li>
+              <li><strong>11.2 Termination by the Artist:</strong> An Artist may close or terminate their account at any time by following the applicable account-closure process.</li>
+              <li><strong>11.3 Effect on Ownership and Income:</strong> Termination does not transfer ownership of the Artist's Content to OPH Community and does not extinguish income that has already been validly earned.</li>
+              <li><strong>11.4 Previously Released Content:</strong> Termination does not automatically require OPH Community to remove songs that have already been released or distributed through third-party platforms.</li>
+              <li><strong>11.5 Suspension Does Not Affect Existing Obligations:</strong> Suspension does not automatically cancel obligations that arose before the suspension.</li>
+              <li><strong>11.6 Survival:</strong> Provisions relating to ownership, intellectual property, Content rights, payments, and liability shall survive termination.</li>
+            </ul>
           </Section>
 
-          <Section title="12. Content Submission and Obligations">
-            <p>
-              The Artist agrees to:
-              <ul>
-                <li>a. Provide 100% copyright-free content for new projects or initiatives.</li>
-                <li>b. Grant OPH Community the right to modify, distribute, and use the submitted content, including videos, images, and other marketing materials, for promotional and other purposes in accordance with the platform's policies.</li>
-              </ul>
-            </p>
+          <Section title="12. Disclaimers">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>12.1 Platform Provided on an "As Is" Basis:</strong> The Platform and Services are provided on an "as is" and "as available" basis. We do not guarantee that the Platform will always be available, uninterrupted, secure, accurate, or error-free.</li>
+              <li><strong>12.2 No Guarantee of Specific Results:</strong> OPH Community does not guarantee any specific outcome, performance, opportunity, or financial result for any Artist, including ranking, visibility, revenue, or approval for TV release.</li>
+              <li><strong>12.3 Third-Party Data and Services:</strong> OPH Community does not guarantee the accuracy or availability of information obtained from third-party platforms and is not responsible for inaccuracies or delays originating from those sources.</li>
+              <li><strong>12.4 No Warranty Regarding Completeness or Accuracy:</strong> OPH Community disclaims all warranties and representations regarding the completeness, security, reliability, accuracy, or availability of the Platform or Services.</li>
+              <li><strong>12.5 Artist's Own Expectations and Decisions:</strong> You acknowledge that your use of the Platform involves circumstances that may depend on factors outside OPH Community's control.</li>
+              <li><strong>12.6 Limitations Required by Law:</strong> Nothing in this Section excludes any warranty or liability that cannot lawfully be excluded under applicable law.</li>
+            </ul>
           </Section>
 
-          <Section title="13. Rights and Ownership">
-            <p>
-              The Artist grants OPH Community full and exclusive rights to release, host, and distribute the Artist's content across all relevant platforms, including television, digital media, and any other distribution channels. The Artist acknowledges that OPH Community retains all intellectual property rights with respect to the Platform and its services.
-            </p>
+          <Section title="13. Limitation of Liability">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>13.1 Exclusion of Certain Damages:</strong> OPH Community shall not be liable for any indirect, incidental, special, punitive, or consequential damages arising out of or relating to these Terms or the Platform.</li>
+              <li><strong>13.2 Overall Liability Cap:</strong> The total aggregate liability of OPH Community shall not exceed the total amount of Membership Fees and Song Registration Fees actually paid by the relevant Artist during the twelve (12) months preceding the claim.</li>
+              <li><strong>13.3 Third-Party Platforms and Services:</strong> OPH Community shall not be responsible for losses arising from the acts or omissions of third-party platforms or service providers.</li>
+              <li><strong>13.4 Artist's Own Conduct:</strong> OPH Community shall not be liable for any loss arising from an Artist's Content, representations, unlawful conduct, or breach of these Terms.</li>
+              <li><strong>13.5 No Limitation of Non-Excludable Liability:</strong> Nothing in these Terms shall exclude any liability that cannot lawfully be excluded under applicable Indian law.</li>
+              <li><strong>13.7 No Exclusion of Amounts Properly Payable:</strong> Nothing in this Section shall allow OPH Community to avoid paying any amount that is validly earned and expressly payable to an Artist.</li>
+            </ul>
           </Section>
 
-          <Section title="14. Revenue Sharing Agreement">
-            <p>
-              The Artist will comply with the revenue sharing model of OPH Community prevailing at the time of registration or participation and accept that the same may be altered from time to time with due notice. All withdrawals of income will be governed by the timeliness and taxation policies of the Platform, consistent with the extant laws so far as Section 194J of the Income Tax Act, 1961 is concerned among others.
-            </p>
+          <Section title="14. Indemnification">
+            <p className="text-gray-300">You agree to indemnify and hold harmless OPH Community, its founders, employees, and representatives from any claim, loss, liability, or expense arising out of: (a) your breach of these Terms; (b) your Content or lack of rights therein; (c) your violation of any applicable law; or (d) any dispute between you and another Artist.</p>
           </Section>
 
-          <Section title="15. Indemnification">
-            <p>
-              Artist will indemnify, defend, and hold harmless OPH Community, its affiliates, agents, employees, and representatives from any and all claims, damages, losses, or liabilities arising from or related to the Artist's use of the Platform, including but not limited to violations of this Agreement or applicable laws.
-            </p>
+          <Section title="15. Governing Law & Jurisdiction">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>15.1 Governing Law:</strong> These Terms shall be governed by and construed in accordance with the laws of India.</li>
+              <li><strong>15.2 Jurisdiction:</strong> Disputes shall be subject to the jurisdiction of the competent courts at Mumbai, Maharashtra, India.</li>
+              <li><strong>15.3 Consumer Rights:</strong> Nothing in this Section shall restrict any statutory right of an Artist to approach a Consumer Commission or other competent forum.</li>
+              <li><strong>15.4 No Waiver:</strong> Failure to enforce any right shall not constitute a waiver of that right.</li>
+              <li><strong>15.5 Severability:</strong> If any provision is determined to be invalid, that provision shall be enforced to the maximum extent permitted by law.</li>
+              <li><strong>15.6 Entire Agreement:</strong> These Terms, together with the Privacy Policy and other incorporated policies, constitute the entire agreement between you and OPH Community.</li>
+              <li><strong>15.7 Continuing Effect:</strong> Provisions required to continue after termination shall remain effective.</li>
+            </ul>
           </Section>
 
-          <Section title="16. Fees & Refunds">
-            <p>
-              One-time fees and per-song fees are non-refundable except under specific circumstances, as governed by Section 56 of the Indian Contract Act, 1872, which deals with the doctrine of frustration and impossibility of performance.
-            </p>
+          <Section title="16. Amendments to These Terms">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>16.1 Right to Amend:</strong> OPH Community reserves the right to modify, update, or amend these Terms from time to time.</li>
+              <li><strong>16.2 Notice of Material Changes:</strong> Where we make material changes, we may notify Users through the Platform, by email, or by another reasonable means.</li>
+              <li><strong>16.3 User's Responsibility to Review:</strong> You are responsible for reviewing the Terms periodically.</li>
+              <li><strong>16.4 Acceptance of Revised Terms:</strong> Your continued access to or use of the Platform after revised Terms become effective constitutes your acceptance of the revised Terms.</li>
+              <li><strong>16.5 If You Do Not Agree:</strong> If you do not agree with any revised Terms, you should discontinue use of the Platform.</li>
+            </ul>
           </Section>
 
-          <Section title="17. Service Commitments">
-            <p>
-              Service Level Agreements (SLAs) shall govern marketing, creative deliverables, and distribution timelines, ensuring accountability as per Section 73 of the Indian Contract Act, 1872, which provides for compensation in case of breach of contract. OPH shall handle licensing and logistics for TV releases at no additional cost to the Artist, subject to prior written approval from the Artist, in compliance with the Cinematograph Act, 1952, and the Copyright Act, 1957.
-            </p>
+          <Section title="17. Purchases">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>If you wish to purchase any product or service, you may be asked to supply information including your payment details and billing address.</li>
+              <li>You represent and warrant that you have the legal right to use any card or payment method and that the information you supply is true and complete.</li>
+              <li>We may employ third-party services for payment processing. By submitting your information, you grant us the right to provide it to these third parties.</li>
+              <li>We reserve the right to refuse or cancel your order for reasons including product availability, errors, or suspected fraud.</li>
+            </ul>
           </Section>
 
-          <Section title="18. Data Privacy & Usage">
-            <p>
-              OPH shall comply with the Information Technology Act, 2000, and the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011, to ensure the protection of Artists’ personal and sensitive data. Artists’ data shall be used solely for Platform operations and shall not be sold, shared, or disclosed to third parties without explicit consent, as mandated under Section 43A of the Information Technology Act, 2000.
-            </p>
+          <Section title="18. Contests, Sweepstakes and Promotions">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>Any contests, sweepstakes, or promotions made available through the Service may be governed by separate rules.</li>
+              <li>If you participate in any Promotions, please review the applicable rules as well as our Privacy Policy.</li>
+              <li>You retain all rights to any Content you submit, and you are responsible for protecting those rights.</li>
+              <li>By posting Content, you grant us the right and license to use, modify, publicly perform, display, reproduce, and distribute such Content.</li>
+              <li>OPH Community has the right but not the obligation to monitor and edit all Content provided by users.</li>
+            </ul>
           </Section>
 
-          <Section title="19. Termination & Content Removal">
-            <p>
-              Artists may terminate their accounts at any time, and all content shall be removed or archived upon written request, in compliance with Section 5 of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021. The term "Lifetime" shall refer to the operational life of OPH. In the event of platform shutdown, Artists shall receive a minimum of 90 days’ prior notice, as per Section 56 of the Indian Contract Act, 1872, which governs the termination of agreements due to impossibility of performance.
-            </p>
+          <Section title="19. Prohibited Uses">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>You may use the Service only for lawful purposes and in accordance with these Terms.</li>
+              <li>You agree not to use the Service in any way that violates any applicable law, exploits minors, transmits spam, impersonates others, or infringes upon the rights of others.</li>
+              <li>You agree not to use any robot, spider, or automatic device to access the Service, introduce viruses or malware, or attempt to gain unauthorized access to the Service.</li>
+              <li>You agree not to attack the Service via denial-of-service attacks or take any action that may damage or falsify Company rating.</li>
+            </ul>
           </Section>
 
-          <Section title="20. Community & Conduct">
-            <p>
-              Artists shall adhere to community guidelines prohibiting hate speech, discriminatory behavior, and unethical collaborations, in compliance with Section 79 of the Information Technology Act, 2000, which mandates the removal of unlawful content. Criteria for competitions hosted by OPH shall be published transparently and made accessible to all participants, in accordance with the Prize Competitions Act, 1955.
-            </p>
+          <Section title="20. Copyright Policy">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>We respect the intellectual property rights of others and have a policy to respond to any claim that Content posted on the Service infringes on the copyright or other intellectual property rights of any person or entity.</li>
+              <li>If you believe that the copyrighted work has been copied in a way that constitutes copyright infringement, please submit your claim via email to connect@ophcommunity.org with the subject line: "Copyright Infringement".</li>
+              <li>You may be held accountable for damages for misrepresentation or bad-faith claims on the infringement of any Content.</li>
+            </ul>
           </Section>
 
-          <Section title="21. Support & Communication">
-            <p>
-              Support requests shall be responded to within 48 hours, with ticket resolution within 72 hours, as per Section 10 of the Indian Contract Act, 1872, which mandates that all agreements must be made with free consent and lawful consideration.
-            </p>
+          <Section title="21. DMCA Notice and Procedure for Copyright Infringement Claims">
+            <p className="text-gray-300 mb-3">You may submit a notification pursuant to the Digital Millennium Copyright Act (DMCA) by providing our Copyright Agent with the following information in writing:</p>
+            <ul className="list-disc ml-6 text-gray-300 space-y-1">
+              <li>An electronic or physical signature of the person authorized to act on behalf of the copyright owner</li>
+              <li>A description of the copyrighted work that you claim has been infringed, including the URL where it exists</li>
+              <li>Identification of the URL or other specific location on the Service where the infringing material is located</li>
+              <li>Your address, telephone number, and email address</li>
+              <li>A statement that you have a good faith belief that the disputed use is not authorized by the copyright owner</li>
+              <li>A statement, made under penalty of perjury, that the above information is accurate and that you are the copyright owner or authorized to act on their behalf</li>
+            </ul>
+            <p className="text-gray-300 mt-3">You can contact our Copyright Agent via email at connect@ophcommunity.org.</p>
           </Section>
 
-          <Section title="22. Exclusivity & Portability">
-            <p>
-              Artists remain free to use other platforms, services, or tools for their work. No exclusivity requirements shall be imposed on Artists by OPH, in compliance with the Competition Act, 2002, which prohibits anti-competitive agreements.
-            </p>
+          <Section title="22. Error Reporting and Feedback">
+            <p className="text-gray-300">You may provide us with information and feedback concerning errors, suggestions for improvements, ideas, problems, complaints, and other matters related to our Service ("Feedback"). You acknowledge and agree that: (i) you shall not retain any intellectual property right in the Feedback; (ii) Company may have development ideas similar to the Feedback; (iii) Feedback does not contain confidential information; and (iv) Company is not under any obligation of confidentiality with respect to the Feedback. In the event the transfer of ownership to the Feedback is not possible due to applicable laws, you grant Company an exclusive, transferable, irrevocable, free-of-charge, sub-licensable, unlimited and perpetual right to use the Feedback in any manner.</p>
           </Section>
 
-          <Section title="23. Documentation Fees">
-            <p>
-              A non-refundable, one-time documentation fee is required for lifetime membership, as governed by Section 74 of the Indian Contract Act, 1872, which deals with liquidated damages and penalties.
-            </p>
+          <Section title="23. Links to Third-Party Websites and Services">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>23.1 Third-Party Links:</strong> The Platform may contain links to third-party websites, platforms, or services that are not owned or controlled by OPH Community.</li>
+              <li><strong>23.2 No Control or Responsibility:</strong> OPH Community does not control and is not responsible for the content, availability, accuracy, security, or privacy practices of any third-party website or service.</li>
+              <li><strong>23.3 Third-Party Services:</strong> Your use of any third-party website or service is governed by that third party's own terms and policies.</li>
+              <li><strong>23.4 No Liability for Third-Party Content:</strong> OPH Community shall not be responsible for any loss or damage arising from your access to or use of any third-party website or service.</li>
+              <li><strong>23.5 Third-Party Availability and Changes:</strong> Third-party platforms may change, become unavailable, or modify their policies without notice.</li>
+              <li><strong>23.6 Review Before Use:</strong> We strongly recommend that you read the Terms of Service and Privacy Policy of any third-party website before accessing or using it.</li>
+            </ul>
           </Section>
 
-          <Section title="24. Acknowledgement">
-            <p>
-              By registering and participating in OPH Community, the Artist hereby acknowledges and agrees to all the terms and conditions contained in this Agreement. In case of any queries or clarifications, the Artist may reach out to [Insert Contact Information].
-            </p>
-            <p>
-              This Agreement shall be governed by the laws of India and any dispute arising out of or in connection with this Agreement shall be subject to arbitration in accordance with the Arbitration and Conciliation Act, 1996.
-            </p>
-          </Section>
-          <h1 className="text-4xl font-bold mb-6 text-[#5DC9DE] mt-10">Non-Objection Certificate</h1>
-
-          <Section title="Introduction">
-            <p>I, as an artist, do hereby declare and certify that I have thoroughly read, understood, and unequivocally accept the Terms & Conditions, as well as the agreement put forth by the OPH Community. I further affirm that I have no objections whatsoever to the contents of the said Terms & Conditions or the obligations outlined therein.</p>
+          <Section title="24. Changes To Service">
+            <p className="text-gray-300">We reserve the right to withdraw or amend our Service, and any service or material we provide via the Service, in our sole discretion without notice. We will not be liable if for any reason all or any part of the Service is unavailable at any time or for any period.</p>
           </Section>
 
-          <Section title="1. Personal and Professional Information">
-            <p>I have voluntarily provided all personal and professional details during the signup process, and I hereby declare that the information shared by me is accurate, truthful, and complete to the best of my knowledge.</p>
+          <Section title="25. Waiver And Severability">
+            <p className="text-gray-300">No waiver by Company of any term or condition set forth in these Terms shall be deemed a further or continuing waiver of such term or condition. If any provision of these Terms is held by a court to be invalid, illegal, or unenforceable, such provision shall be eliminated or limited to the minimum extent such that the remaining provisions will continue in full force and effect.</p>
           </Section>
 
-          <Section title="2. Permission for Data Usage">
-            <p>I grant explicit permission to OPH Community to display, use, and process the details I have shared as per their requirements for the purposes of their initiative, program, or any other related activities.</p>
+          <Section title="26. Acknowledgement">
+            <p className="text-gray-300">By accessing, registering on, or using the OPH Community Platform or any Services provided by us, you acknowledge that you have read, understood, and agreed to be bound by these Terms & Conditions and all policies incorporated into them. If you do not agree with these Terms or any applicable policy, you must not access or use the Platform or Services.</p>
           </Section>
 
-          <Section title="3. Usage of Shared Details">
-            <p>I have no objection to the usage, publication, or dissemination of my shared details as per the scope of the Terms & Conditions agreed upon.</p>
+          <Section title="27. Communications">
+            <p className="text-gray-300">By using our Service, you agree to subscribe to newsletters, marketing or promotional materials and other information we may send. However, you may opt out of receiving any, or all, of these communications from us by following the unsubscribe link or by emailing at connect@ophcommunity.org.</p>
           </Section>
 
-          <Section title="4. Services for Song">
-            <p>I affirm that I have no objection to the submission, distribution, release, upload, promotion, marketing, and all services provided by the OPH Community Platform for my song.</p>
-          </Section>
-
-          <Section title="5. Ownership of the Song">
-            <p>I warrant that I am the sole and exclusive owner of all rights, title, and interest in the Song. I confirm that I am the sole creator of the Song.</p>
-          </Section>
-
-          <Section title="6. Authorization for Distribution and Promotion">
-            <p>I authorize OPH Community to undertake all necessary actions related to the distribution, release, upload, promotion, marketing, and other services of the Song on the OPH Community Platform. This authorization includes actions undertaken at their sole discretion and in the manner they deem appropriate.</p>
-          </Section>
-
-          <Section title="7. Scope of Authorization">
-            <p>Authorization explicitly includes, but is not limited to: (a) Distributing the Song on digital and/or physical platforms. (b) Promoting the Song through any and all marketing channels. (c) Performing any other actions incidental to or associated with the Song's release.</p>
-          </Section>
-
-          <Section title="8. No Further Claims">
-            <p>By granting this authorization, I agree not to assert any further claims, demands, or objections regarding the use of the Song as described above.</p>
-          </Section>
-
-          <Section title="9. Voluntary Signing">
-            <p>I am signing this NOC voluntarily, without any coercion, undue influence, or misrepresentation by any party.</p>
-          </Section>
-
-          <Section title="10. Affirmation of Acceptance">
-            <p>By checking the checkbox and making the payment, the artist affirms that they accept all the terms and conditions stated above and have provided their consent. This action shall also be considered equivalent to signing this declaration.</p>
-          </Section>
-
-          <Section title="11. Certification">
-            <p>This certificate is issued in good faith as a formal declaration of my consent and agreement with OPH Community and its associated activities. I understand that this document establishes a clear and mutual understanding of the obligations and rights between both parties.</p>
+          <Section title="28. Contact Us">
+            <ul className="list-disc ml-6 text-gray-300 space-y-1">
+              <li>OPH Community</li>
+              <li>Mumbai, Maharashtra, India</li>
+              <li>Email: connect@ophcommunity.org</li>
+            </ul>
           </Section>
         </div>
-        </div>
+      </div>
     </>
   );
 };

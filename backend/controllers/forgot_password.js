@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { Resend } = require('resend');
 const user_details = require('../model/forgot_password');
-const { forgotPasswordEmail } = require('../utils/emailTemplates');
+const { forgotPasswordEmail, passwordResetSuccessEmail } = require('../utils/emailTemplates');
 
 const resend = new Resend('re_XMPVxrwG_5piBuXZ9ti12ovEuQC7RVuV5');
 
@@ -47,7 +47,9 @@ const forgotPassword = async (req, res) => {
       html: forgotPasswordEmail(artistData.name || artistData.full_name || "Artist", resetLink),
     });
 
-    console.log("Email sent successfully:", emailResult);
+    console.log("Email result:", JSON.stringify(emailResult, null, 2));
+
+
 
     res.json({
       success: true,

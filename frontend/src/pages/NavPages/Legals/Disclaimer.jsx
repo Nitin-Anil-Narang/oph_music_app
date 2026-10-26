@@ -21,69 +21,80 @@ const Disclaimer = () => {
         <div className="max-w-5xl mx-auto">
           <h1 className="text-4xl font-bold mb-6 text-[#5DC9DE]">Disclaimer</h1>
 
-          <Section title="1. Introduction">
-            <p>This Disclaimer sets forth the limitations of liability, conditions of service usage, and legal compliance requirements governing access to and use of our website and services. By accessing or utilizing our platform, users expressly acknowledge and agree to the terms stipulated herein. If you do not agree with any part of this Disclaimer, you must refrain from using our services.</p>
-            <p className="mt-2">Scope: This Disclaimer applies to the website, artist portal, and offline interactions. [Refer to: Indian Contract Act, 1872].</p>
+          <p className="mb-6 text-gray-300">
+            This Disclaimer applies to the OPH Community website and Artist Portal (collectively, the "Platform") and should be read together with our Terms & Conditions.
+            The information provided by OPH Community ("Company," "we," "us," or "our") through ophcommunity.com, ophcommunity.in, and ophcommunity.org (collectively, the "Site") is provided for general informational purposes only.
+            We make reasonable efforts to keep the Site accurate and up to date; however, we do not guarantee that the information will always be accurate, complete, reliable, or continuously available. Your use of the Site and reliance on its information is at your own risk.
+            To the fullest extent permitted by applicable law, OPH Community shall not be liable for any loss or damage arising from your use of, or reliance on, the Site or its information. We do not guarantee specific results, opportunities, earnings, growth, reach, or other outcomes from using the Platform or Services.
+          </p>
+
+          <Section title="1. No Guarantee of Income, Success, or Outcome">
+            <p className="text-gray-300">OPH Community does not guarantee that any Artist will earn a specific amount of income, achieve a particular level of success, reach a certain audience size, win any event or competition, or attain a specific Leaderboard rank. Any figures, examples, testimonials, or illustrations shared by the Company on the Platform or in its marketing are for illustrative purposes only and do not represent a promise or assurance of similar results for any individual Artist. An Artist's outcomes depend on multiple factors outside the Company's control, including audience response, market conditions, and the Artist's own creative work.</p>
           </Section>
 
-          <Section title="2. Content Responsibility">
-            <p>Artists retain 100% ownership of their work but grant OPH the right to distribute, showcase, and monetize it. OPH is not liable for copyright disputes arising from Hybrid Projects (re-released songs). [Refer to: Copyright Act, 1957].</p>
+          <Section title="2. Third Party - External Links">
+            <p className="text-gray-300 mb-3">The Site may include links to third-party websites, services, or features. These external links are provided for convenience, but we do not control, verify, or guarantee the accuracy, reliability, availability, or content of those third-party websites.</p>
+            <p className="text-gray-300">We are not responsible for any information, products, services, or transactions provided by third parties. Any interaction or transaction you have with a third-party website is at your own risk and subject to their own terms and policies.</p>
           </Section>
 
-          <Section title="3. Limitation of Liability">
-            <p>The Company does not warrant that its services will be uninterrupted, error-free, or free from defects. To the fullest extent permitted by law, the Company shall not be held liable for any direct, indirect, incidental, consequential, punitive, or special damages arising out of or in connection with the use of its services, including but not limited to loss of profits, data, business opportunities, or goodwill. [Refer to: Indian Contract Act, 1872].</p>
+          <Section title="3. Discretionary Features">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li><strong>TV Release.</strong> Consideration for release of a song on television is entirely at the Company's discretion. Submission of a song does not guarantee approval or eventual TV release.</li>
+              <li><strong>Leaderboard, KPI, Spotlight & Rewards.</strong> Rankings, Spotlight features, and any associated rewards are determined by the Company based on performance criteria that may be updated from time to time, at the Company's sole discretion, and do not constitute a guaranteed entitlement for any Artist.</li>
+              <li><strong>Events & Competitions.</strong> Results of any virtual event or competition are determined in accordance with the specific rules published for that event and are final and binding, subject to applicable law.</li>
+            </ul>
           </Section>
 
-          <Section title="4. Service Usage">
-            <p>Users acknowledge and accept that the availability, functionality, and quality of services may be affected by external factors beyond the Company's control, including but not limited to technical issues, third-party service disruptions, or force majeure events.</p>
+          <Section title="4. Testimonials">
+            <ul className="list-disc ml-6 text-gray-300 space-y-2">
+              <li>The Site may include testimonials from our users sharing their personal experiences and opinions. These experiences are unique to each individual and may not represent the experience of every user.</li>
+              <li>We do not guarantee that you will achieve the same results or have the same experience.</li>
+              <li>Testimonials shared on the Site may be provided in text, audio, or video and are reviewed before publication. They may be edited only to correct grammar, typing errors, or remove unnecessary details for brevity.</li>
+              <li>The experiences and opinions shared in these testimonials belong solely to the individual users and do not represent the views or opinions of OPH Community.</li>
+              <li><em>In simple terms: Every artist's journey is different, so results may vary from person to person.</em></li>
+            </ul>
           </Section>
 
-          <Section title="5. Legal Compliance">
-            <p>Users agree to comply with all applicable laws, regulations, and industry standards when accessing or using the Company's services. Any violation of such laws or regulations may result in the suspension or termination of services without prior notice. [Refer to: IT Act, 2000].</p>
+          <Section title="5. Third-Party Data & Analytics">
+            <p className="text-gray-300">Analytics, streaming statistics, and other data displayed on the Platform are sourced from third-party platforms (such as YouTube, Instagram, and audio streaming services). OPH Community relies on the accuracy of data provided by these third parties and is not responsible for any delay, inaccuracy, or discrepancy originating from such external sources.</p>
           </Section>
 
-          <Section title="6. Service Availability">
-            <p>The Company strives to maintain 24/7 access to its services but disclaims responsibility for any downtime due to scheduled maintenance, technical difficulties, or third-party service failures.</p>
+          <Section title="6. Direct Dealings Between Artists">
+            <p className="text-gray-300">The Platform enables Artists to connect and collaborate directly with one another. OPH Community is not a party to, and disclaims all responsibility for, the outcome, quality, or performance of any direct arrangement, collaboration, or transaction between Artists arising from a connection made through the Platform. Further detail is available in Section 9 of our Terms & Conditions.</p>
           </Section>
 
-          <Section title="7. No Warranty">
-            <p>The Company's website and services are provided on an "as is" and "as available" basis, without any express or implied warranties of any kind, including but not limited to warranties of merchantability, fitness for a particular purpose, accuracy, or non-infringement. The Company expressly disclaims any representations or guarantees regarding the reliability, security, or timeliness of its services.</p>
+          <Section title="7. Errors & Omissions Disclaimer">
+            <p className="text-gray-300">We make every reasonable effort to provide accurate and reliable information on the Site. However, errors or omissions may occur, and we do not guarantee that all information is complete, accurate, current, or suitable for every purpose. The information is provided "as is", without any express or implied guarantee. OPH Community is not responsible for any loss, damage, or consequences resulting from decisions or actions taken based on information provided on the Site.</p>
           </Section>
 
-          <Section title="8. Third-Party Links">
-            <p>The Company's website may contain links to third-party websites for user convenience. The Company does not endorse, control, or assume responsibility for the content, accuracy, legality, or reliability of such third-party websites, nor shall it be liable for any damages resulting from their use. Users access such links at their own risk.</p>
+          <Section title="8. Not Professional Advice">
+            <p className="text-gray-300 mb-3">Nothing on the Platform including any content, guidance, or communication from the Company constitutes legal, financial, tax, or professional career advice. Artists are responsible for obtaining independent professional advice, including in relation to income tax, GST, or other statutory obligations arising from income earned through the Platform.</p>
           </Section>
 
-          <Section title="9. Financial Transactions">
-            <p>OPH is not responsible for losses resulting from payment gateway errors, currency fluctuations, or delays in bank processing. [Refer to: Payment and Settlement Systems Act, 2007].</p>
+          <Section title="9. Guest Contributors Disclaimer">
+            <p className="text-gray-300">The Site may include content from guest contributors. Any views or opinions expressed in such content are their own and do not necessarily represent the views of OPH Community, its employees, staff, or affiliates, unless explicitly stated otherwise.</p>
           </Section>
 
-          <Section title="10. Event Outcomes">
-            <p>Event results, including rankings and rewards, are final. OPH disclaims liability for disputes arising from judging criteria, rankings, or rewards.</p>
+          <Section title="10. Accuracy of Content">
+            <p className="text-gray-300">While we make reasonable efforts to keep information on the Platform accurate and up to date, OPH Community does not warrant that the Platform's content is free of errors, omissions, or typographical inaccuracies, and reserves the right to correct any such error at any time without prior notice.</p>
           </Section>
 
-          <Section title="11. Educational Resources">
-            <p>Any tutorials, podcasts, and resources available on the platform are for general guidance. OPH does not guarantee specific outcomes such as career growth, revenue, or success in competitions.</p>
+          <Section title="11. Logos & Trademarks Disclaimer">
+            <p className="text-gray-300 mb-3">All third-party logos and trademarks displayed or mentioned on ophcommunity.com, ophcommunity.in, or ophcommunity.org belong to their respective owners.</p>
+            <p className="text-gray-300">Their use on our Site does not mean that those owners endorse, sponsor, approve of, or are affiliated with OPH Community.</p>
           </Section>
 
-          <Section title="12. Legal Compliance (User Responsibility)">
-            <p>Artists are solely responsible for complying with applicable laws, including tax filings, copyright licenses, and other legal obligations. OPH is not liable for legal actions arising from user-generated content. [Refer to: Copyright Act, 1957 and Income Tax Act, 1961].</p>
+          <Section title="12. Limitation of Liability">
+            <p className="text-gray-300">This Disclaimer should be read together with the Disclaimers and Limitation of Liability provisions set out in Sections 12 and 13 of our Terms & Conditions, which apply in full to this page.</p>
           </Section>
 
-          <Section title="13. Upcoming Features">
-            <p>Some features shown on the platform are planned for future release. These features are under development and may be rolled out gradually. Users should not rely on these features until they are officially launched.</p>
-          </Section>
-
-          <Section title="14. Risk Acknowledgement">
-            <p>Use of the platform is at the user's own risk. OPH disclaims liability for any data loss, unauthorized access, or damages resulting from using the platform.</p>
-          </Section>
-
-          <Section title="15. Disclaimer Updates">
-            <p>We may modify, amend, or update this Disclaimer at any time. Any significant changes to the terms of this Disclaimer will be communicated to users via email or notification on the platform. Continued use of the services after any changes will constitute acceptance of the revised terms.</p>
-          </Section>
-
-          <Section title="16. Contact Information">
-            <p>For any queries or concerns regarding this Disclaimer, you can contact us at <a href="mailto:support@ophcommunity.com" className="text-[#5DC9DE] underline">support@ophcommunity.com</a></p>
+          <Section title="13. Contact Us">
+            <p className="text-gray-300 mb-3">For any questions regarding this Disclaimer, please contact us at:</p>
+            <ul className="list-disc ml-6 text-gray-300 space-y-1">
+              <li>OPH Community</li>
+              <li>Mumbai, Maharashtra, India</li>
+              <li>Email: connect@ophcommunity.org</li>
+            </ul>
           </Section>
         </div>
       </div>
