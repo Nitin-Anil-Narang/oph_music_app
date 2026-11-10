@@ -474,7 +474,7 @@ export default function TVPublishing() {
                             checked={agreement}
                             onChange={(e) => setAgreement(e.target.checked)}
                           />
-                          <span>Agree with <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 underline">terms and conditions</a>.</span>
+                          <span>Agree with terms and conditions.</span>
                         </label>
                       </div>
 

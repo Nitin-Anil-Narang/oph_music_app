@@ -1,7 +1,6 @@
 const db = require('../../DB/connect');
 const ApplicationStatusService = require('../../services/application/ApplicationStatusService');
 
-
 class AdminApplicationStatusService {
   /**
    * Update application step status from admin panel

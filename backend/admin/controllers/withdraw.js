@@ -1,6 +1,6 @@
 const WithdrawModel = require("../model/withdraw");
 const { Resend } = require("resend");
-const { paymentApprovedEmail, paymentRejectedEmail, incomeWithdrawalApprovedEmail, incomeWithdrawalRejectedEmail } = require("../../utils/emailTemplates");
+const { paymentApprovedEmail, paymentRejectedEmail } = require("../../utils/emailTemplates");
 const db = require("../../DB/connect");
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -48,18 +48,18 @@ const updateWithdrawStatus = async (req, res) => {
           await resend.emails.send({
             from: "OPH Community <creators@ophcommunity.org>",
             to: userEmail,
-            subject: "Income Withdrawal Approved!",
-            html: incomeWithdrawalApprovedEmail(userName, withdrawal_id, amount),
+            subject: "Withdrawal Request Approved!",
+            html: paymentApprovedEmail(userName, withdrawal_id, amount),
           });
-          console.log("Income withdrawal approval email sent to:", userEmail);
+          console.log("Withdrawal approval email sent to:", userEmail);
         } else if (action === "reject") {
           await resend.emails.send({
             from: "OPH Community <creators@ophcommunity.org>",
             to: userEmail,
-            subject: "Income Withdrawal Rejected",
-            html: incomeWithdrawalRejectedEmail(userName, withdrawal_id, reason, amount),
+            subject: "Withdrawal Request Rejected",
+            html: paymentRejectedEmail(userName, withdrawal_id, reason, amount),
           });
-          console.log("Income withdrawal rejection email sent to:", userEmail);
+          console.log("Withdrawal rejection email sent to:", userEmail);
         }
       }
     }

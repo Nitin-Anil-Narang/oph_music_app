@@ -1,41 +1,105 @@
 /**
  * Email Templates for OPH Community
+ * Redesigned to match reference image style
  */
 
 const getEmailTemplate = (headerTitle, headerEmoji, content) => {
+  console.log("📧 EMAIL TEMPLATE GENERATION");
+  console.log("Header Title:", headerTitle);
+  console.log("Header Emoji:", headerEmoji);
+  console.log("Content Length:", content.length);
+
   return `
     <!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <title>OPH Community</title>
+      <style>
+        @media only screen and (max-width: 600px) {
+          .email-container {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .content-padding {
+            padding: 20px !important;
+          }
+          .header-padding {
+            padding: 20px !important;
+          }
+          .footer-padding {
+            padding: 20px !important;
+          }
+          .details-box-padding {
+            padding: 15px !important;
+          }
+          .header-title {
+            font-size: 18px !important;
+          }
+          .header-emoji {
+            font-size: 24px !important;
+          }
+          .details-table td {
+            display: block !important;
+            width: 100% !important;
+            padding: 8px 0 !important;
+          }
+          .details-table tr {
+            border-bottom: 1px solid #e9ecef !important;
+            display: block !important;
+            padding: 8px 0 !important;
+          }
+          .footer-links {
+            font-size: 12px !important;
+            line-height: 1.8 !important;
+          }
+        }
+      </style>
     </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
+    <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
       <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 20px 0;">
         <tr>
           <td align="center">
-            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; max-width: 600px; border-radius: 8px;">
+            <table class="email-container" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; max-width: 600px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+              
+              <!-- Header -->
               <tr>
-                <td style="background: linear-gradient(135deg, #684C9C 0%, #8B6BB8 100%); padding: 30px 40px;">
-                  <span style="font-size: 32px;">${headerEmoji}</span>
-                  <span style="font-size: 22px; font-weight: 600; color: #ffffff; margin-left: 10px;">${headerTitle}</span>
+                <td class="header-padding" style="background: linear-gradient(135deg, #684C9C 0%, #8B6BB8 100%); padding: 30px 40px;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td>
+                        <span class="header-emoji" style="font-size: 32px;">${headerEmoji}</span>
+                        <span class="header-title" style="font-size: 22px; font-weight: 600; color: #ffffff; margin-left: 10px;">${headerTitle}</span>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
+              
+              <!-- Content -->
               <tr>
-                <td style="padding: 40px;">
+                <td class="content-padding" style="padding: 40px;">
                   ${content}
                 </td>
               </tr>
+              
+              <!-- Footer -->
               <tr>
-                <td style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
-                  <p style="margin: 0; font-size: 14px; color: #333333;">
-                    <strong style="color: #684C9C;">Regards,</strong><br/>
-                    OPH Community<br/>
-                    India's First Music Community Platform
+                <td class="footer-padding" style="background-color: #f8f9fa; padding: 30px 40px; border-top: 1px solid #e9ecef;">
+                  <p style="margin: 0 0 10px 0; font-size: 14px; color: #333333;">
+                    <strong style="color: #684C9C;">Best regards,</strong><br/>
+                    OPH Community Team
+                  </p>
+                  <p class="footer-links" style="margin: 15px 0 0 0; font-size: 14px; color: #555555;">
+                    <a href="mailto:connect@ophcommunity.org" style="color: #5DC9DE; text-decoration: none;">📧 connect@ophcommunity.org</a> | 
+                    <a href="https://wa.me/918976592947" style="color: #5DC9DE; text-decoration: none;">📱 WhatsApp</a> | 
+                    <a href="https://ophcommunity.org/contact" style="color: #5DC9DE; text-decoration: none;">🌐 Contact Us</a>
                   </p>
                 </td>
               </tr>
+              
             </table>
           </td>
         </tr>
@@ -45,643 +109,687 @@ const getEmailTemplate = (headerTitle, headerEmoji, content) => {
   `;
 };
 
+// Contact Form Confirmation Email
+const contactFormConfirmationEmail = (
+  name,
+  email,
+  phone,
+  instagramHandle,
+  description,
+) => {
+  console.log("\n🎉 CONTACT FORM EMAIL");
+  console.log("Name:", name);
+  console.log("Email:", email);
+  console.log("Phone:", phone);
+  console.log("Instagram:", instagramHandle);
+  console.log("Description:", description);
+
+  const content = `
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${name || "there"},</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Thank you for reaching out to us! We've received your message and our team will get back to you within <strong>24 hours</strong>.
+    </p>
+    
+    <!-- Details Box -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
+      <tr>
+        <td class="details-box-padding" style="padding: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Your Submitted Details:</p>
+          
+          <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
+            <tr style="border-bottom: 1px solid #e9ecef;">
+              <td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Name:</td>
+              <td style="color: #555555; font-size: 14px;">${name}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e9ecef;">
+              <td style="font-weight: 600; color: #333333; font-size: 14px;">Email:</td>
+              <td style="color: #555555; font-size: 14px;">${email}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e9ecef;">
+              <td style="font-weight: 600; color: #333333; font-size: 14px;">Phone:</td>
+              <td style="color: #555555; font-size: 14px;">${phone}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e9ecef;">
+              <td style="font-weight: 600; color: #333333; font-size: 14px;">Instagram:</td>
+              <td style="color: #555555; font-size: 14px;">@${instagramHandle}</td>
+            </tr>
+            ${
+              description
+                ? `
+            <tr>
+              <td style="font-weight: 600; color: #333333; font-size: 14px; vertical-align: top; padding-top: 12px;">Message:</td>
+              <td style="color: #555555; font-size: 14px; padding-top: 12px;">${description}</td>
+            </tr>
+            `
+                : ""
+            }
+          </table>
+        </td>
+      </tr>
+    </table>
+    
+    <p style="margin: 30px 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">What's Next?</p>
+    
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="padding: 8px 0;">
+          <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
+          <span style="color: #555555; font-size: 14px;">Our team will review your message and respond within 24 hours</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0;">
+          <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
+          <span style="color: #555555; font-size: 14px;">Explore upcoming events and competitions on our platform</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0;">
+          <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
+          <span style="color: #555555; font-size: 14px;">Connect with other artists in the community</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0;">
+          <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
+          <span style="color: #555555; font-size: 14px;">Start uploading your music and content</span>
+        </td>
+      </tr>
+    </table>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin: 25px 0;">
+      <tr>
+        <td style="background-color: #e8f4f8; border-left: 4px solid #5DC9DE; padding: 15px 20px; border-radius: 4px;">
+          <p style="margin: 0; font-size: 14px; color: #684C9C; line-height: 1.6;">
+            We're excited to have you on board! Your journey as an OPH Community member starts now.
+          </p>
+        </td>
+      </tr>
+    </table>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      If you have any questions or need immediate assistance, don't hesitate to reach out to our support team.
+    </p>
+    
+    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555;">
+      Welcome aboard!
+    </p>
+  `;
+
+  return getEmailTemplate(
+    "Thank You for Contacting OPH Community!",
+    "🎉",
+    content,
+  );
+};
+
 // Event Booking Approved Email
 const eventBookingApprovedEmail = (userName, transactionId, eventName) => {
+  console.log("\n🎉 EVENT BOOKING EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+  console.log("Event Name:", eventName);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hey ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Great news! Your booking for has been successfully approved. 🎶</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your place at the event is now confirmed, and you're one step closer to getting your music in front of the right audience.</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Thank you for registering! We're excited to confirm that your event registration has been successfully approved.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
         <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR EVENT DETAILS:</p>
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Event Details</p>
+          
           <table width="100%" cellpadding="8" cellspacing="0">
             ${eventName ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Event:</td><td style="color: #555555; font-size: 14px;">${eventName}</td></tr>` : ""}
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
+            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Keep creating, keep performing, and keep showing the world what your music stands for.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Your stage is waiting. Go make it yours. ❤️</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      You can view your event details and manage your registration in your dashboard.
+    </p>
   `;
-  return getEmailTemplate("Your Event Booking Has Been Approved! 🕺", "🎉", content);
+
+  return getEmailTemplate("Event Successfully Booked!", "🎉", content);
 };
-
-module.exports = {
-  eventBookingApprovedEmail,
-  getEmailTemplate
-};
-
-
-// Event Booking Rejected Email
-const eventBookingRejectedEmail = (userName, transactionId, rejectReason, amount) => {
-  const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hey ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">We've reviewed your registration request. Unfortunately, your booking could not be approved at this time. There may be specific reasons for this decision.</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
-      <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR PAYMENT DETAILS:</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction Id:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Declined</td></tr>
-            ${rejectReason ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">₹${amount}</td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Don't worry. Kindly review the details and take the necessary action, if required.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Keep creating. Keep applying. Your next opportunity could be the one. 🎵</p>
-  `;
-  return getEmailTemplate("Update on Your Event Booking — Payment ⚠️", "⛔️", content);
-};
-
 
 // Date Booking Approved Email
 const dateBookingApprovedEmail = (userName, transactionId, releaseDate) => {
+  console.log("\n🎉 DATE BOOKING EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+  console.log("Release Date:", releaseDate);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hey ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your Blocked Release Date has officially been approved! 🎉 Your date is now secured with OPH Community.</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Excellent news! Your time calendar date has been successfully booked.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
         <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR BOOKING DETAILS:</p>
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Booking Details</p>
+          
           <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Released Date:</td><td style="color: #555555; font-size: 14px;">${releaseDate}</td></tr>
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Release Date:</td><td style="color: #555555; font-size: 14px;">${releaseDate}</td></tr>
             ${transactionId ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>` : ""}
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
+            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Confirmed ✓</td></tr>
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">While you're recording, creating, performing, or working on your next big move — We're here to support you every step of the way. Let's make this release unforgettable!</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Looking forward to seeing what you create next.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Your Song's Date Is Officially Locked! ❤️</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      Your date is now reserved. Mark your calendar and get ready for your release!
+    </p>
   `;
-  return getEmailTemplate("📅 New Release Date Has Been Approved!", "📅", content);
-};
 
+  return getEmailTemplate("Date Booking Successful!", "🎉", content);
+};
 
 // Song Registration Approved Email
 const songRegistrationApprovedEmail = (userName, transactionId, songName) => {
+  console.log("\n🎵 SONG REGISTRATION EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+  console.log("Song Name:", songName);
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hey ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your song is now officially registered with OPH Community. Thank you for trusting us with your Music.</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Fantastic news! Your song has been successfully registered.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
         <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR SONG STATUS:</p>
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Song Details</p>
+          
           <table width="100%" cellpadding="8" cellspacing="0">
             ${songName ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Song:</td><td style="color: #555555; font-size: 14px;">${songName}</td></tr>` : ""}
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction Id:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Content & Payment:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
+            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Registered ✓</td></tr>
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Your Song has successfully passed the content approval process, and your payment has also been approved!</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">You've taken an Important step towards your Music Goals. Your music deserves to be heard.🎶</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      Keep creating amazing music! We're excited to have your work in our community.
+    </p>
   `;
-  return getEmailTemplate("🎙️ Your Song Is Officially Registered with OPH Community!", "🎵", content);
-};
 
-// Song Registration Rejected Email
-const songRegistrationRejectedEmail = (userName, transactionId, rejectReason, amount) => {
-  const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hey ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">We've carefully reviewed the payment submitted for your song. Unfortunately, we weren't able to approve it at this time. Please check the reason provided below, make the necessary changes.</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
-      <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR PAYMENT DETAILS:</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction Id:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Payment Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Declined</td></tr>
-            ${rejectReason ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">₹${amount}</td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Your song registration cannot move forward until the payment issue is resolved. Please review the payment details and resubmit the payment with the correct transaction ID to continue.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Don't let a small step hold back a big song. 🎵</p>
-  `;
-  return getEmailTemplate("Urgent Action Required: Song Registration Payment ⚠️", "⛔️", content);
+  return getEmailTemplate("Song Successfully Registered!", "🎵", content);
 };
-
 
 // Special Artist Song Approved Email
 const specialArtistSongApprovedEmail = (userName, transactionId, songName) => {
-  const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hey ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your Song has Successfully passed our review process and Officially Approved! 🎉</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
-      <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR SONG STATUS:</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
-            ${songName ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Song:</td><td style="color: #555555; font-size: 14px;">${songName}</td></tr>` : ""}
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction Id:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Another milestone in your musical journey. Keep going — your sound deserves to be heard. ❤️</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Keep building your Music. Keep pushing your creativity. Keep being yourself.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Your music. Your identity. Your journey. 🎵</p>
-  `;
-  return getEmailTemplate("🎶 Your Song Is Officially Registered with OPH Community!", "🌟", content);
-};
+  console.log("\n⭐ SPECIAL ARTIST SONG EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+  console.log("Song Name:", songName);
 
-// Special Artist Song Payment Approved Email
-const specialArtistSongPaymentApprovedEmail = (userName, transactionId, amount) => {
-  const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hey ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your Song Payment is Officially Approved! 🎉</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
-      <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR PAYMENT DETAILS:</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction Id:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">₹${amount}</td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">We've carefully reviewed the payment submitted for your song, and we're pleased to confirm that your payment has been successfully approved.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Thank you for choosing and being part of OPH Community.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Keep creating. Keep growing. 🎶</p>
-  `;
-  return getEmailTemplate("🎶 Your Specialist Song Payment Has Been Approved!", "✅", content);
-};
-
-
-// Payment Approved Email
-const paymentApprovedEmail = (userName, transactionId, amount) => {
   const content = `
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your one-time membership payment has been successfully approved! 🎉</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">This is more than just a payment confirmation — this is the beginning of your journey as a member of the OPH Community. ❤️</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Congratulations! Your special artist song has been approved.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
         <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR PAYMENT DETAILS:</p>
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Song Details</p>
+          
           <table width="100%" cellpadding="8" cellspacing="0">
+            ${songName ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Song:</td><td style="color: #555555; font-size: 14px;">${songName}</td></tr>` : ""}
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Payment Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">✅ Approved</td></tr>
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">₹${amount}</td></tr>
+            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">You've taken an important step toward being part of a community built for music artists — whether you're an Independent Artist or a Specialist Artist.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">From here, you can explore the opportunities, connections, and benefits available to you as an OPH Community member.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Thank you for trusting us and choosing to become a part of our music family. We're excited to have you with us. 🎵</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Welcome to the family. Your journey with OPH Community starts now. ❤️🎵</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      Thank you for being a special artist in our community!
+    </p>
   `;
-  return getEmailTemplate("🎉 Welcome to the OPH Community Family!", "🎉", content);
+
+  return getEmailTemplate("Special Artist Song Approved!", "⭐", content);
+};
+
+// Payment Approved Email (Generic)
+const paymentApprovedEmail = (userName, transactionId, amount) => {
+  console.log("\n✅ PAYMENT APPROVED EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+
+  const content = `
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      ✅ Great news! Your payment has been approved.
+    </p>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
+      <tr>
+        <td style="padding: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Payment Details</p>
+          <table width="100%" cellpadding="8" cellspacing="0">
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
+            <tr><td style="font-weight: 600; color: #333333; font-size: 14px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
+<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">${amount}</td></tr>          
+            </table>
+        </td>
+      </tr>
+    </table>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      You can now access your dashboard and start using our services.
+    </p>
+  `;
+
+  return getEmailTemplate("Payment Approved!", "✅", content);
 };
 
 // Payment Rejected Email
-const paymentRejectedEmail = (userName, transactionId, rejectReason, amount) => {
+const paymentRejectedEmail = (userName, transactionId, rejectReason,amount) => {
+  console.log("\n❌ PAYMENT REJECTED EMAIL");
+  console.log("User Name:", userName);
+  console.log("Transaction ID:", transactionId);
+  console.log("Reject Reason:", rejectReason);
+
   const content = `
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">We're currently unable to confirm your membership payment. It may not have been received or may not yet be visible to us. Don't worry — this does not mean your membership has been rejected. ❤️</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">There may be an issue with the payment or transaction details. Please check the reason provided below, take the required action, and if the payment was not completed successfully, you can try again.</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      We regret to inform you that your payment has been rejected.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
         <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR PAYMENT DETAILS:</p>
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Payment Details</p>
+          
           <table width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction ID:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Payment Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Declined</td></tr>
-            ${rejectReason ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">₹${amount}</td></tr>
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Rejected</td></tr>
+            ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">${amount}</td></tr>
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">We want to make sure everything is in place so you can complete your membership and enjoy the benefits of being part of the OPH Community Family. 🎵</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Take care of the required step and try again when you're ready. We'll be happy to welcome you into the family. ❤️</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      If you have any questions or need assistance, please don't hesitate to contact us. We're here to help resolve any issues.
+    </p>
   `;
-  return getEmailTemplate("Action Needed: Your Membership Payment Needs Attention ⚠️", "⚠️", content);
-};
 
+  return getEmailTemplate("Payment Rejected", "❌", content);
+};
 
 // Personal Details Approved Email
 const personalDetailsApprovedEmail = (userName) => {
+  console.log("\n✅ PERSONAL DETAILS APPROVED EMAIL");
+  console.log("User Name:", userName);
+
   const content = `
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your Personal Details have been successfully reviewed and approved by OPH Community. 🎉</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Great news! Your personal details have been successfully verified and approved.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Your Verification Status</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
+        <td class="details-box-padding" style="padding: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Verification Status</p>
+          
+          <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Step:</td><td style="color: #555555; font-size: 14px;">Personal Details</td></tr>
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
+            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">One more important part of your artist profile is now complete. Your profile is taking shape, and every completed detail helps us understand the artist behind the music.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Keep going — you're building your artist journey one step at a time. ❤️</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      You're one step closer to joining the OPH Community! Please complete the remaining steps in your dashboard.
+    </p>
   `;
-  return getEmailTemplate("👤 Your Personal Details Have Been Approved!", "✅", content);
+
+  return getEmailTemplate("Personal Details Approved!", "✅", content);
 };
 
 // Personal Details Rejected Email
 const personalDetailsRejectedEmail = (userName, rejectReason) => {
+  console.log("\n❌ PERSONAL DETAILS REJECTED EMAIL");
+  console.log("User Name:", userName);
+  console.log("Reject Reason:", rejectReason);
+
   const content = `
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">We've reviewed the personal details submitted to your OPH Community. So, the information could not be approved. Make the necessary changes, resubmit your details, and keep moving forward.</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Unfortunately, your personal details have been rejected and require updates.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Your Verification Status</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
+        <td class="details-box-padding" style="padding: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Verification Status</p>
+          
+          <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Step:</td><td style="color: #555555; font-size: 14px;">Personal Details</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Declined</td></tr>
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Rejected</td></tr>
             ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">You're simply another step toward completing your artist profile. 🎵</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      Please update your personal information in your dashboard and resubmit for verification.
+    </p>
   `;
-  return getEmailTemplate("Your Personal Action Required: Update Your Personal Details", "👤", content);
-};
 
+  return getEmailTemplate("Personal Details Rejected", "❌", content);
+};
 
 // Professional Details Approved Email
 const professionalDetailsApprovedEmail = (userName) => {
+  console.log("\n✅ PROFESSIONAL DETAILS APPROVED EMAIL");
+  console.log("User Name:", userName);
+
   const content = `
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your professional details have been successfully reviewed and approved by OPH Community. One more important part of your artist profile is now complete. You're now one step closer to being complete.</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Excellent! Your professional details have been successfully verified and approved.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Your Verification Status</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
+        <td class="details-box-padding" style="padding: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Verification Status</p>
+          
+          <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Step:</td><td style="color: #555555; font-size: 14px;">Professional Details</td></tr>
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
+            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Your experience, work and journey — this is what makes your artist identity yours.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Keep building. Keep growing. Keep creating. ❤️</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      You're making great progress! Please complete the remaining steps in your dashboard.
+    </p>
   `;
-  return getEmailTemplate("💼 Your Professional Details Have Been Approved!", "✅", content);
+
+  return getEmailTemplate("Professional Details Approved!", "✅", content);
 };
 
 // Professional Details Rejected Email
 const professionalDetailsRejectedEmail = (userName, rejectReason) => {
+  console.log("\n❌ PROFESSIONAL DETAILS REJECTED EMAIL");
+  console.log("User Name:", userName);
+  console.log("Reject Reason:", rejectReason);
+
   const content = `
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">We've reviewed the Professional details submitted to your OPH Community. So, the information could not be approved. Please review the feedback and make the required changes before resubmitting.</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Unfortunately, your professional details have been rejected and require updates.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Your Verification Status</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
+        <td class="details-box-padding" style="padding: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Verification Status</p>
+          
+          <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Step:</td><td style="color: #555555; font-size: 14px;">Professional Details</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Declined</td></tr>
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Rejected</td></tr>
             ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Every correction brings your profile one step closer to completion.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Keep going. Your journey is bigger than one review. 🎶</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      Please update your professional information in your dashboard and resubmit for verification.
+    </p>
   `;
-  return getEmailTemplate("Your Professional Action Required: Update Your Professional Details", "💼", content);
-};
 
+  return getEmailTemplate("Professional Details Rejected", "❌", content);
+};
 
 // Documentation Details Approved Email
 const documentationDetailsApprovedEmail = (userName) => {
+  console.log("\n✅ DOCUMENTATION DETAILS APPROVED EMAIL");
+  console.log("User Name:", userName);
+
   const content = `
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your documentation details have been successfully reviewed and approved by OPH Community. Another important part of your artist profile is now complete. You're now one step closer to being complete.</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Perfect! Your documentation details have been successfully verified and approved.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Your Verification Status</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
+        <td class="details-box-padding" style="padding: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Verification Status</p>
+          
+          <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Step:</td><td style="color: #555555; font-size: 14px;">Documentation Details</td></tr>
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
+            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Thank you for taking the time to complete your details and helping us keep the artist ecosystem genuine and reliable.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">One more step completed. Keep moving forward. ❤️</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      Almost there! Please complete any remaining steps in your dashboard.
+    </p>
   `;
-  return getEmailTemplate("🪪 Your Documentation Details Have Been Approved!", "✅", content);
+
+  return getEmailTemplate("Documentation Details Approved!", "✅", content);
 };
 
 // Documentation Details Rejected Email
 const documentationDetailsRejectedEmail = (userName, rejectReason) => {
+  console.log("\n❌ DOCUMENTATION DETAILS REJECTED EMAIL");
+  console.log("User Name:", userName);
+  console.log("Reject Reason:", rejectReason);
+
   const content = `
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">We've reviewed the Professional details submitted to your OPH Community. So, the information could not be approved. Please review the reason provided and submit the required information again.</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Unfortunately, your documentation details have been rejected and require updates.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Your Verification Status</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
+        <td class="details-box-padding" style="padding: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Verification Status</p>
+          
+          <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Step:</td><td style="color: #555555; font-size: 14px;">Documentation Details</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Declined</td></tr>
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Rejected</td></tr>
             ${rejectReason ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px; vertical-align: top;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Don't let this step slow you down.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Fix it. Resubmit it. Keep moving. Your music journey continues. 🎵</p>
+    
+    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">
+      Please update your documentation in your dashboard and resubmit for verification.
+    </p>
   `;
-  return getEmailTemplate("Your Action Required: Update Your Documentation Details", "🪪", content);
-};
 
+  return getEmailTemplate("Documentation Details Rejected", "❌", content);
+};
 
 // All Documents Verified Email
 const allDocumentsVerifiedEmail = (userName) => {
+  console.log("\n🎉 ALL DOCUMENTS VERIFIED EMAIL");
+  console.log("User Name:", userName);
+
   const content = `
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Great news! All your submitted documents have been successfully verified. The verification process is now complete.</p>
+    
+    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+      Congratulations! All your documents have been successfully verified and approved.
+    </p>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
       <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Verification Status</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">👤 Personal Details</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">💼 Professional Details</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">🪪 Documentation</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
+        <td class="details-box-padding" style="padding: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Verification Complete</p>
+          
+          <table class="details-table" width="100%" cellpadding="8" cellspacing="0">
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Personal Details:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
+            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Professional Details:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
+            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Documentation:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✓</td></tr>
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 30px 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">What's Next? 🎵</p>
-    <table width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td style="padding: 8px 0;">
-          <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
-          <span style="color: #555555; font-size: 14px;">Explore your dashboard and access the features available to you.</span>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding: 8px 0;">
-          <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
-          <span style="color: #555555; font-size: 14px;">Upload your music and content and start building your artist presence.</span>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding: 8px 0;">
-          <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
-          <span style="color: #555555; font-size: 14px;">Join upcoming events and competitions and discover new opportunities.</span>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding: 8px 0;">
-          <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
-          <span style="color: #555555; font-size: 14px;">Connect with fellow artists and become part of the OPH music community. ❤️</span>
-        </td>
-      </tr>
-    </table>
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin: 25px 0;">
-      <tr>
-        <td style="background-color: #e8f4f8; border-left: 4px solid #5DC9DE; padding: 15px 20px; border-radius: 4px;">
-          <p style="margin: 0; font-size: 14px; color: #684C9C; line-height: 1.6;">OPH Community is Happy to see you Onboard. Your journey has just begun. Keep creating, connecting, and growing with OPH Community.</p>
-        </td>
-      </tr>
-    </table>
-  `;
-  return getEmailTemplate("💌 Your All Documents Have Been Successfully Verified!", "✅", content);
-};
-
-// Contact Form Confirmation Email
-const contactFormConfirmationEmail = (name, email, phone, instagramHandle, description) => {
-  const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${name || "there"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">We've successfully received your message and our team will review it and get back to you within 24 hours.</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
-      <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">Your Submission Details:</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Name:</td><td style="color: #555555; font-size: 14px;">${name}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px;">Phone:</td><td style="color: #555555; font-size: 14px;">${phone}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px;">Instagram ID:</td><td style="color: #555555; font-size: 14px;">${instagramHandle}</td></tr>
-            ${description ? `<tr><td style="font-weight: 600; color: #333333; font-size: 14px; vertical-align: top;">Message:</td><td style="color: #555555; font-size: 14px;">${description}</td></tr>` : ""}
-          </table>
-        </td>
-      </tr>
-    </table>
+    
     <p style="margin: 30px 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">What's Next?</p>
+    
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td style="padding: 8px 0;">
           <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
-          <span style="color: #555555; font-size: 14px;">Our team will review your message and get back to you within 24 hours.</span>
+          <span style="color: #555555; font-size: 14px;">Access all features in your dashboard</span>
         </td>
       </tr>
       <tr>
         <td style="padding: 8px 0;">
           <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
-          <span style="color: #555555; font-size: 14px;">Explore upcoming events and competitions and find opportunities to be part of something bigger.</span>
+          <span style="color: #555555; font-size: 14px;">Start uploading your music and content</span>
         </td>
       </tr>
       <tr>
         <td style="padding: 8px 0;">
           <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
-          <span style="color: #555555; font-size: 14px;">Connect with fellow artists and grow your music community.</span>
+          <span style="color: #555555; font-size: 14px;">Participate in events and competitions</span>
         </td>
       </tr>
       <tr>
         <td style="padding: 8px 0;">
           <span style="color: #5DC9DE; font-size: 18px; font-weight: bold; margin-right: 10px;">•</span>
-          <span style="color: #555555; font-size: 14px;">Start sharing your music and content with the OPH Community.</span>
+          <span style="color: #555555; font-size: 14px;">Connect with other artists in the community</span>
         </td>
       </tr>
     </table>
+    
     <table width="100%" cellpadding="0" cellspacing="0" style="margin: 25px 0;">
       <tr>
         <td style="background-color: #e8f4f8; border-left: 4px solid #5DC9DE; padding: 15px 20px; border-radius: 4px;">
-          <p style="margin: 0; font-size: 14px; color: #684C9C; line-height: 1.6;">This is just a Beginning of our First Connection ❤️ We're excited to have you. Your journey as a member of OPH Community starts here a place to create, connect, discover, get opportunities, and grow alongside other music artists.</p>
+          <p style="margin: 0; font-size: 14px; color: #684C9C; line-height: 1.6;">
+            Welcome to the OPH Community! We're excited to have you on board and can't wait to see your amazing work.
+          </p>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">If you have any questions or need help along the way, our support team is always here for you.</p>
   `;
-  return getEmailTemplate("💙 OPH Community Received Your Message", "🌟", content);
+
+  return getEmailTemplate(
+    "Congratulations! Your Documents are Verified",
+    "🎉",
+    content,
+  );
 };
 
+// 📧 Forgot Password Email Template
+function forgotPasswordEmail(userName, resetLink) {
+  console.log("📧 Generating forgot password email template");
 
-// Forgot Password Email
-const forgotPasswordEmail = (userName, resetLink) => {
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Looks like you requested to reset your Portal Password. No worries—it happens to the best of us! 😊</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Click the button below to create a new password and get back to your account.</p>
+    <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Hi ${userName},</p>
+    
+    <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Forgot your password? No worries—it happens to the best of us! Just click the button below to set a new one and get back into your account:</p>
+    
     <table cellpadding="0" cellspacing="0" border="0" style="margin: 30px 0;">
       <tr>
         <td style="background: linear-gradient(135deg, #684C9C 0%, #8B6BB8 100%); border-radius: 8px; text-align: center;">
-          <a href="${resetLink}" style="display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600;">RESET PASSWORD</a>
+          <a href="${resetLink}" style="display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600;">Reset Password</a>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">If you didn't request this password reset, you can safely ignore this email. This link will expire in 5 minutes, so be sure to reset it soon.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Need help? We're happy to assist - just reach out!</p>
+    
+    <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">If you didn't request this, feel free to ignore this email—your account is safe.</p>
+    
+    <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">⏰ This link will expire in 5 minutes, so be sure to reset it soon. Need help? We're happy to assist—just reach out!</p>
   `;
-  return getEmailTemplate("🔐 Reset Your OPH Community Password.", "🤗", content);
-};
 
-// Password Reset Success Email
-const passwordResetSuccessEmail = (userName) => {
+  return getEmailTemplate("Reset Your Password", "🔐", content);
+}
+
+// 📧 Password Reset Success Email Template
+function passwordResetSuccessEmail(userName) {
+  console.log("📧 Generating password reset success email template");
+
   const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your OPH Community Artist Portal Password has been successfully reset.</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
+    <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Hi ${userName},</p>
+    
+    <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Your password has been successfully reset! 🎉</p>
+    
+    <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #f8f9fa; border-radius: 8px; margin: 20px 0;">
       <tr>
-        <td style="padding: 25px;">
-          <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;">
-              <td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td>
-              <td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Password Reset Successful ✅</td>
+        <td style="padding: 20px;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+            <tr>
+              <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                  <tr>
+                    <td style="width: 140px; color: #666; font-size: 14px; vertical-align: top;">Status:</td>
+                    <td style="color: #2DDA89; font-size: 14px; font-weight: 600;">✅ Password Changed Successfully</td>
+                  </tr>
+                </table>
+              </td>
             </tr>
             <tr>
-              <td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Security Note:</td>
-              <td style="color: #555555; font-size: 14px;">Your account is now ready to use with your new password.</td>
+              <td style="padding: 10px 0;">
+                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                  <tr>
+                    <td style="width: 140px; color: #666; font-size: 14px; vertical-align: top;">Security Note:</td>
+                    <td style="color: #333; font-size: 14px;">You can now log in with your new password</td>
+                  </tr>
+                </table>
+              </td>
             </tr>
           </table>
         </td>
       </tr>
     </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">If you made this change, you're all set. If you didn't reset your password, please contact the OPH Community Admin Team immediately.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Stay secure. Keep creating. Keep your music live. ❤️</p>
+    
+    <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">🔒 If you didn't make this change, please contact us immediately to secure your account.</p>
   `;
-  return getEmailTemplate("🗝️ Your Password Has Been Successfully Reset", "😊", content);
-};
 
-// Date Booking Rejected Email
-const dateBookingRejectedEmail = (userName, transactionId, rejectReason, amount) => {
-  const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hey ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">We've reviewed your Date Booking Request. Unfortunately, the requested date could not be approved.</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
-      <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR PAYMENT DETAILS:</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction Id:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Declined</td></tr>
-            ${rejectReason ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">₹${amount}</td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">There may be a specific reason behind the decision. Please check the reason provided below to understand what happened and what you can do next.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Keep going. Your journey doesn't end with one unavailable date. 🎶</p>
-  `;
-  return getEmailTemplate("Update on Your Date Booking — Payment ⚠️", "⛔️", content);
-};
-
-
-// Special Artist Song Payment Rejected Email
-const specialArtistSongPaymentRejectedEmail = (userName, transactionId, rejectReason, amount) => {
-  const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hey ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">We've completed the review of your song submitted. Unfortunately, the submission could not be approved at this time.</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
-      <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR PAYMENT DETAILS:</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Transaction Id:</td><td style="color: #555555; font-size: 14px;">${transactionId}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Payment Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Declined</td></tr>
-            ${rejectReason ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Amount:</td><td style="color: #555555; font-size: 14px;">₹${amount}</td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Go through the feedback below, make the required changes, and resubmit for another review if needed.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">A rejection is not the end of your journey. Take the feedback, keep improving, and come back stronger.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Your Music is still yours. Keep Hustling. 🎵</p>
-  `;
-  return getEmailTemplate("Update on Your Special Artist Song — Payment ⚠️", "⛔️", content);
-};
-
-
-// Income Withdrawal Approved Email
-const incomeWithdrawalApprovedEmail = (userName, withdrawalId, amount) => {
-  const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Good news! Your income withdrawal request has been successfully reviewed and approved. 🕺</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">Your work created the value. Now it's time to receive it. ❤️</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
-      <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR INCOME REQUEST</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Withdrawal ID:</td><td style="color: #555555; font-size: 14px;">${withdrawalId}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #2DDA89; font-size: 14px; font-weight: 600;">Approved ✅</td></tr>
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Requested Amount:</td><td style="color: #555555; font-size: 14px;">₹${amount}</td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">What you earn through your music, your work, and the opportunities you find through the OPH Community is an important part of your journey. We're happy to see you turning your talent and participation into real earnings.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">This is one of the many things that makes being part of the OPH Community special — create, connect, discover, get opportunities, grow, and earn along the way.💰</p>
-  `;
-  return getEmailTemplate("💰 Your Income Withdrawal Request Has Been Approved!", "💰", content);
-};
-
-// Income Withdrawal Rejected Email
-const incomeWithdrawalRejectedEmail = (userName, withdrawalId, rejectReason, amount) => {
-  const content = `
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #333333;">Hi ${userName || "Artist"},</p>
-    <p style="margin: 0 0 20px 0; font-size: 15px; color: #555555; line-height: 1.6;">We've completed the review of your income withdrawal request. At this time, we're unable to approve it.</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 8px; margin: 25px 0;">
-      <tr>
-        <td style="padding: 25px;">
-          <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #684C9C;">YOUR INCOME REQUEST</p>
-          <table width="100%" cellpadding="8" cellspacing="0">
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Withdrawal ID:</td><td style="color: #555555; font-size: 14px;">${withdrawalId}</td></tr>
-            <tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Status:</td><td style="color: #dc3545; font-size: 14px; font-weight: 600;">Declined ⚠️</td></tr>
-            ${rejectReason ? `<tr style="border-bottom: 1px solid #e9ecef;"><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Reason:</td><td style="color: #555555; font-size: 14px;">${rejectReason}</td></tr>` : ""}
-            <tr><td style="font-weight: 600; color: #333333; font-size: 14px; width: 140px;">Requested Amount:</td><td style="color: #555555; font-size: 14px;">₹${amount}</td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <p style="margin: 25px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Don't worry — this is just a step in the process. 100% always will stay yours.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Please review the reason provided and take the required action before submitting a new withdrawal request.</p>
-    <p style="margin: 15px 0 0 0; font-size: 14px; color: #555555; line-height: 1.6;">Your journey continues, and we're here to help you keep moving forward. 🎵</p>
-  `;
-  return getEmailTemplate("💙 Update on Your Income Withdrawal Request", "💙", content);
-};
-
+  return getEmailTemplate("Password Reset Successful", "✅", content);
+}
 
 module.exports = {
   contactFormConfirmationEmail,
   eventBookingApprovedEmail,
-  eventBookingRejectedEmail,
   dateBookingApprovedEmail,
-  dateBookingRejectedEmail,
   songRegistrationApprovedEmail,
-  songRegistrationRejectedEmail,
   specialArtistSongApprovedEmail,
-  specialArtistSongPaymentApprovedEmail,
-  specialArtistSongPaymentRejectedEmail,
   paymentApprovedEmail,
   paymentRejectedEmail,
   personalDetailsApprovedEmail,
@@ -691,9 +799,6 @@ module.exports = {
   documentationDetailsApprovedEmail,
   documentationDetailsRejectedEmail,
   allDocumentsVerifiedEmail,
-  incomeWithdrawalApprovedEmail,
-  incomeWithdrawalRejectedEmail,
   forgotPasswordEmail,
   passwordResetSuccessEmail,
-  getEmailTemplate
 };

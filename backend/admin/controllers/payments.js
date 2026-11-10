@@ -6,12 +6,9 @@ const { Resend } = require("resend");
 const {
   songRegistrationApprovedEmail,
   dateBookingApprovedEmail,
-  dateBookingRejectedEmail,
   paymentApprovedEmail,
   paymentRejectedEmail,
   eventBookingApprovedEmail,
-  songRegistrationRejectedEmail,
-  specialArtistSongPaymentRejectedEmail,
 } = require("../../utils/emailTemplates");
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -197,24 +194,11 @@ const updateStatus = async (req, res) => {
 
       if (userEmail) {
         console.log("Sending payment rejection email to:", userEmail);
-        
-        // Determine which rejection email template to use based on payment source
-        let emailSubject = "Payment Rejected";
-        let emailBody = paymentRejectedEmail(userName, transactionId, reject_reason);
-        
-        if (place === "Song Registration" || place === "Song Repayment") {
-          emailSubject = "Song Registration Payment Rejected";
-          emailBody = songRegistrationRejectedEmail(userName, transactionId, reject_reason, paymentDetails[0]?.amount);
-        } else if (place === "Special artist song registration") {
-          emailSubject = "Special Artist Song Payment Rejected";
-          emailBody = specialArtistSongPaymentRejectedEmail(userName, transactionId, reject_reason, paymentDetails[0]?.amount);
-        }
-        
         const emailResult = await resend.emails.send({
           from: "OPH Community <creators@ophcommunity.org>",
           to: userEmail,
-          subject: emailSubject,
-          html: emailBody,
+          subject: "Payment Rejected",
+          html: paymentRejectedEmail(userName, transactionId, reject_reason),
         });
         console.log("Rejection email sent successfully:", emailResult);
       }
@@ -852,7 +836,7 @@ const setPaymentVerificationController = async (req, res) => {
             from: "OPH Community <creators@ophcommunity.org>",
             to: userEmail,
             subject: "Date Booking Rejected",
-            html: dateBookingRejectedEmail(userName, null, reason, null),
+            html: paymentRejectedEmail(userName, null, reason),
           });
           console.log("Rejection email sent successfully:", emailResult);
         }
