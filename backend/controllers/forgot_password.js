@@ -3,7 +3,7 @@ const { Resend } = require('resend');
 const user_details = require('../model/forgot_password');
 const { forgotPasswordEmail, passwordResetSuccessEmail } = require('../utils/emailTemplates');
 
-const resend = new Resend('re_XMPVxrwG_5piBuXZ9ti12ovEuQC7RVuV5');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const forgotPassword = async (req, res) => {
   try {
