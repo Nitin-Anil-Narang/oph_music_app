@@ -116,27 +116,28 @@ const HeroSection = ({ onSearch }) => {
       {/* Content */}
       <div className="relative z-20 max-w-3xl w-full text-center space-y-6 mx-auto mt-8 md:mt-12 lg:mt-20 xl:mt-24 mb-[28px] lg:mb-0 ">
         {/* <div className="relative md:mt-12 z-20 max-w-3xl w-full text-center space-y-6 mx-auto"> */}
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-8 text-center leading-snug">
-          FROM LEARNING TO LAUNCH <br />
-          <span className="text-cyan-400 block sm:inline">
-            A HOME FOR EVERY ARTISTS
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-8 text-center leading-snug uppercase">
+          Grow With Community
+          <br />
+          <span className="text-cyan-400 block sm:inline uppercase">
+            Learn What Really Matters
           </span>
         </h1>
 
         <p className="text-gray-300 text-base sm:text-lg mt-4 max-w-3xl text-center px-4">
-          Access free music education podcasts, videos, and reels in our online
-          community platform. Learn from success stories and grow with the best
-          music community in India.
+          Our Community doesn’t believe in keeping secrets. Access to real
+          artist stories, practical tutorials, BTS moments, and industry
+          knowledge all in one place.
         </p>
 
         {/* Search bar */}
         <div className="flex justify-center mt-8 relative" ref={dropdownRef}>
-          <div className="relative flex items-center w-[510px] sm:w-[450px] md:w-[600px] max-w-none rounded-3xl p-2 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg" >
+          <div className="relative flex items-center w-[510px] sm:w-[450px] md:w-[600px] max-w-none rounded-3xl p-2 transition-colors bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent shadow-lg">
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Search Podcasts, Songs, Reels..."
+              placeholder="Search by Name or Keywords…"
               className="flex-1 px-2 sm:px-4 py-2 bg-transparent text-white placeholder-gray-300 focus:outline-none text-sm sm:text-base"
             />
             <button className="flex items-center gap-1 sm:gap-2 px-4 py-2 bg-cyan-400 hover:bg-cyan-500 rounded-full transition-colors text-gray-800 font-medium text-sm sm:text-base">

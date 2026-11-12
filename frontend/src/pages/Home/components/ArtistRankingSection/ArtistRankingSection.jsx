@@ -82,7 +82,7 @@ const ArtistRankingSection = ({ data, selectedMonth }) => {
         <div className="flex-1">Location</div>
         <div className="flex-1 text-center">Songs</div>
         <div className="flex-1 text-center">Reach</div>
-        <div className="flex-1 text-center">Profile</div>
+        <div className="flex-1 text-center">Profile Visit</div>
       </div>
 
       <div className="sm:hidden space-y-6">

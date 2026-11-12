@@ -89,7 +89,7 @@ function Navbar() {
             className="font-semibold uppercase hover:text-[#22D3EE] hover:cursor-pointer"
             onClick={() => navigateWithOrigin("/find-your-collaborator")}
           >
-            Artists
+            Discover
           </li>
           <li
             className="font-semibold uppercase hover:text-[#22D3EE] hover:cursor-pointer"

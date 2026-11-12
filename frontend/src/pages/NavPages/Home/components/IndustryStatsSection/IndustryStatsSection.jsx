@@ -18,17 +18,17 @@ const IndustryStats = () => {
           setStats([
             {
               id: 1,
-              value: numbers.total_artists.toLocaleString() + "+",
+              value: numbers.total_artists.toLocaleString() + "%",
               param: "num_of_artist_connections",
             },
             {
               id: 2,
-              value: numbers.total_songs.toLocaleString() + "+",
+              value: numbers.total_songs.toLocaleString() + "%",
               param: "num_of_songs",
             },
             {
               id: 3,
-              value: numbers.total_audience.toLocaleString() + "+",
+              value: numbers.total_audience.toLocaleString() + "%",
               param: "num_of_audience",
             },
           ]);
@@ -83,18 +83,19 @@ const IndustryStats = () => {
       <div className="lg:container lg:mx-auto">
         <div>
           <h2 className="text-3xl lg:text-6xl font-bold mb-[20px] lg:mb-8">
-            SUPPORTING ARTISTS
+            THE PROMISES THAT MATTER
             <br />
-            GROWTH <span className="text-[#5DC9DE]">WITH THESE NUMBERS.</span>
+            <span className="text-[#5DC9DE]"> NO HIDDEN CONDITIONS.{" "}</span>
+           WHERE YOU CAN SEE IT.
           </h2>
 
           <div className="lg:flex justify-between">
             <div>
               <p className="text-gray-400 mb-12 max-w-md">
-                Artists across all over India trust OPH Community to build their
-                music careers without compromising their artistic freedom. We’ve
-                empowered thousands of artists to go independent — and hustle in
-                their music journey.
+                Before you explore the features, know these three factors. They
+                define our promise to you. If any of them changes, so does the
+                promise. Putting them right here - clear, upfront, and
+                accountable.
               </p>
             </div>
           </div>
@@ -121,13 +122,13 @@ const IndustryStats = () => {
                 </h3>
                 <p className="text-gray-400 text-sm xl:text-base">
                   {stat.param === "num_of_artist_connections"
-                    ? "Total number of artist connections"
+                    ? "Income of Your Earnings"
                     : stat.param === "num_of_songs"
-                    ? "Total number of songs"
-                    : "Total number of audience reach"}
+                      ? "Commission on Your Work"
+                      : "Off on Every Events"}
                 </p>
               </div>
-            ) : null
+            ) : null,
           )}
         </div>
       </div>

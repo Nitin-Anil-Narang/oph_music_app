@@ -121,18 +121,18 @@ const HeroSection = ({
       {/* Fix: Added max-w-full to prevent horizontal layout overflow */}
       <div className="relative z-20 max-w-5xl w-full max-w-full text-center space-y-6 px-4">
         <h1 className="text-4xl sm:text-5xl font-bold">
-          FIND YOUR <span className="text-[#5DC9DE]">COLLABORATOR</span>
+         <span className="text-[#5DC9DE]"> FIND THE TALENT </span> YOU NEED
         </h1>
         <p className="text-gray-300 sm:text-base lg:text-lg">
-          No need to look anywhere else—every music artist you seek is right
-          here.
+          Browse. Discover. Start a conversation. Verified singers, rappers,
+          songwriters, composers. You just need a place where you can find them.
         </p>
 
         <div className="flex flex-col items-center gap-4 mt-8 py-8 w-full">
           <div className="relative flex w-full max-w-[600px] bg-[rgb(52,53,55,0.4)] rounded-3xl backdrop-blur-md py-2 border border-white/5 shadow-lg">
             <input
               type="text"
-              placeholder="Search Artists..."
+              placeholder="Search Our Music Family…"
               value={inputName}
               className="flex-1 px-4 sm:px-6 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none min-w-0"
               onChange={(e) => setInputName(e.target.value)}

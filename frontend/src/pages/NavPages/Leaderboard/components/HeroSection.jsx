@@ -36,12 +36,15 @@ const HeroSection = ({ handleSearch, setArtistExists, artistExists, handleFilter
 
       {/* Content */}
       <div className="relative z-20 max-w-3xl w-full mt-10 text-center space-y-6">
-        <h1 className="text-3xl lg:text-5xl font-bold uppercase">
-          Who ranks<span className="text-cyan-400"> top Today</span>
+        <h1 className="text-3xl lg:text-5xl font-bold uppercase text-cyan-400">
+          TOP LEADING ARTISTS OF THE
+          <span className="text-white"> COMMUNITY</span>
         </h1>
 
         <h2 className="text-gray-300 text-lg">
-          Easily find and explore artists ranked on the leaderboard.
+          See who’s rising through their work. Connect with them directly. No
+          agents. No middlemen. Explore the last 3 months. Find your next
+          connection.
         </h2>
 
         {/* Search bar — commented out
@@ -81,10 +84,10 @@ const HeroSection = ({ handleSearch, setArtistExists, artistExists, handleFilter
           {Array.isArray(artistExists) &&
             artistExists.length === 0 &&
             input.trim() !== "" && (
-            <div className="text-red-500 transition-opacity duration-500">
-              This Artist has not been Ranked.
-            </div>
-          )}
+              <div className="text-red-500 transition-opacity duration-500">
+                This Artist has not been Ranked.
+              </div>
+            )}
         </div>
       </div>
     </div>

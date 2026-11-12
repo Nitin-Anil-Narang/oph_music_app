@@ -257,15 +257,17 @@ const ArtistSlider = ({
       <div className="relative lg:container lg:mx-auto">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-8 sm:mb-16">
-          <div className="text-left px-3 sm:text-center p-0 lg:max-w-xl">
-            <h2 className="text-2xl lg:text-5xl font-black mb-3 uppercase tracking-tight text-white leading-tight">
-              THESE ARTISTS ARE{" "}
-              <span className="text-[#5DC9DE]">INDUSTRY BANGERS.</span>
+          <div className="text-left px-3 p-0 lg:max-w-6xl">
+            <h2 className="text-2xl lg:text-5xl font-black mb-3 uppercase tracking-tight text-[#5DC9DE] leading-tight">
+              Find the Right Artist in Seconds{" "}
+              <span className="text-[#FFFFFF]">
+                Already Part of the Family.
+              </span>
             </h2>
             <p className="text-gray-400 text-sm sm:text-base">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took
+              No chasing Instagram DMs. No searching for an agent. No one taking
+              a cut. Choose a skill, city, or language. Find the right profile,
+              see their work, and connect directly.
             </p>
           </div>
           <div className="hidden sm:flex pe-0 py-4 lg:py-0 sm:mt-8 lg:pe-6 xl:pe-16 relative z-50 items-center gap-2">
@@ -304,103 +306,103 @@ const ArtistSlider = ({
         {/* Slider Section */}
         <div className="relative">
           {artists.length > 0 && (
-          <Slider
-            key={`artists-${artists.length}`}
-            ref={sliderRef}
-            {...{
-              dots: false,
-              speed: 300,
-              autoplay: artists.length > 0 && selectedArtist == null,
-              autoplaySpeed: 3000,
-              pauseOnHover: true,
-              infinite: useInfiniteCarousel,
-              slidesToShow: 5.6,
-              slidesToScroll: 1,
-              arrows: false,
-              rows: rows,
-              swipeToSlide: true,
-              touchThreshold: 10,
-              responsive: [
-                {
-                  breakpoint: 1024,
-                  settings: {
-                    slidesToShow: 4.6,
-                    slidesToScroll: 1,
-                    centerMode: false,
-                    centerPadding: "0%",
+            <Slider
+              key={`artists-${artists.length}`}
+              ref={sliderRef}
+              {...{
+                dots: false,
+                speed: 300,
+                autoplay: artists.length > 0 && selectedArtist == null,
+                autoplaySpeed: 3000,
+                pauseOnHover: true,
+                infinite: useInfiniteCarousel,
+                slidesToShow: 5.6,
+                slidesToScroll: 1,
+                arrows: false,
+                rows: rows,
+                swipeToSlide: true,
+                touchThreshold: 10,
+                responsive: [
+                  {
+                    breakpoint: 1024,
+                    settings: {
+                      slidesToShow: 4.6,
+                      slidesToScroll: 1,
+                      centerMode: false,
+                      centerPadding: "0%",
+                    },
                   },
-                },
-                {
-                  breakpoint: 768,
-                  settings: {
-                    slidesToShow: 3.8,
-                    slidesToScroll: 1,
-                    centerMode: false,
-                    centerPadding: "0%",
+                  {
+                    breakpoint: 768,
+                    settings: {
+                      slidesToShow: 3.8,
+                      slidesToScroll: 1,
+                      centerMode: false,
+                      centerPadding: "0%",
+                    },
                   },
-                },
-                {
-                  breakpoint: 480,
-                  settings: {
-                    slidesToShow: 2.8,
-                    slidesToScroll: 1,
-                    centerMode: false,
-                    centerPadding: "0%",
+                  {
+                    breakpoint: 480,
+                    settings: {
+                      slidesToShow: 2.8,
+                      slidesToScroll: 1,
+                      centerMode: false,
+                      centerPadding: "0%",
+                    },
                   },
-                },
-              ],
-            }}
-          >
-            {artists.map((artist, index) => {
-              const id = artist.oph_id ?? artist.OPH_ID;
-              return (
-                <div
-                  key={id ?? `artist-slide-${index}`}
-                  className="px-2 cursor-pointer mb-10"
-                >
+                ],
+              }}
+            >
+              {artists.map((artist, index) => {
+                const id = artist.oph_id ?? artist.OPH_ID;
+                return (
                   <div
-                    className="group relative pointer-events-auto"
-                    onTouchEnd={(e) => {
-                      handleArtistClick(id, index);
-                    }}
+                    key={id ?? `artist-slide-${index}`}
+                    className="px-2 cursor-pointer mb-10"
                   >
-                    <div className="flex justify-center overflow-hidden">
-                      <ArtistSlidePhoto
-                        src={artist.personal_photo}
-                        alt={artist.stage_name}
-                        selected={id === currArtist}
-                      />
-                    </div>
                     <div
-                      className="flex flex-col text-center items-center justify-end p-4"
-                      onMouseUp={(e) => {
-                        if (e.button === 0) handleArtistClick(id, index);
+                      className="group relative pointer-events-auto"
+                      onTouchEnd={(e) => {
+                        handleArtistClick(id, index);
                       }}
                     >
-                      <a
-                        className={`text-base sm:text-lg font-semibold tracking-tight transition-colors duration-300 ${
-                          id === currArtist ? "text-[#5DC9DE]" : "text-white"
-                        }`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleArtistClick(id, index);
+                      <div className="flex justify-center overflow-hidden">
+                        <ArtistSlidePhoto
+                          src={artist.personal_photo}
+                          alt={artist.stage_name}
+                          selected={id === currArtist}
+                        />
+                      </div>
+                      <div
+                        className="flex flex-col text-center items-center justify-end p-4"
+                        onMouseUp={(e) => {
+                          if (e.button === 0) handleArtistClick(id, index);
                         }}
                       >
-                        {artist.stage_name}
-                      </a>
-                      <p
-                        className={`text-xs sm:text-sm transition-colors duration-300 ${
-                          id === currArtist ? "text-white" : "text-gray-400"
-                        }`}
-                      >
-                        {formatListeners(listenerCount(artist))} Listeners
-                      </p>
+                        <a
+                          className={`text-base sm:text-lg font-semibold tracking-tight transition-colors duration-300 ${
+                            id === currArtist ? "text-[#5DC9DE]" : "text-white"
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleArtistClick(id, index);
+                          }}
+                        >
+                          {artist.stage_name}
+                        </a>
+                        <p
+                          className={`text-xs sm:text-sm transition-colors duration-300 ${
+                            id === currArtist ? "text-white" : "text-gray-400"
+                          }`}
+                        >
+                          {formatListeners(listenerCount(artist))} Listeners
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </Slider>
+                );
+              })}
+            </Slider>
           )}
         </div>
 

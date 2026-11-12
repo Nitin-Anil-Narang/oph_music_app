@@ -196,7 +196,7 @@ const EventsNewReleases = ({ upcomingEvent, artistBookEvents = [] }) => {
         {/* Events Section */}
         <div className="flex flex-col min-w-0">
           <h2 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
-            EVENTS
+            EXPLORE EVENTS
           </h2>
           {upcomingEvent && (
             <div
@@ -249,7 +249,7 @@ const EventsNewReleases = ({ upcomingEvent, artistBookEvents = [] }) => {
         {/* New Releases Section */}
         <div className="flex relative flex-col min-h-0 min-w-0">
           <h2 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
-            NEW RELEASES
+            TOP RELEASES
           </h2>
 
           <img src={ReleaseBlur} className="absolute -left-48" alt="" />

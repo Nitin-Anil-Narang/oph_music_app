@@ -8,17 +8,17 @@ import Struggle from "../../../../../../public/assets/images/struggle2.png";
 
 const WhatWeProvide = () => {
   const features = [
-    "Top Music Networking Platform for Creators",
-    "100% Ownership Music Platform",
-    "Collaboration Platform",
-    "Best Music Distribution Service in India",
-    "Music Marketing",
-    "Virtual Music Events",
-    "Music Learning Platform",
-    "Artists EPK",
-    "Artists Management",
-    "Artists Revenue Tools",
-    "All-in-one Music Business Tool",
+    "Search & Connect",
+    "Find Your Next Collaboration",
+    "Connect Directly. 0 middlemen",
+    "Put Your Story & Work in One Place",
+    "100% rights. 100% revenue",
+    "Get Found Across India",
+    "Events – Half of Cost",
+    "Compete Events. Get Rewarded.",
+    "Participate From Anywhere",
+    "Turn Your Talent Into Opportunities",
+    "Be Discovered Beyond Your Circle",
   ];
 
   return (
@@ -34,21 +34,19 @@ const WhatWeProvide = () => {
         {/* Left Content */}
         <div className="space-y-6 mt-8 lg:text-left text-center">
           <h2 className="text-4xl lg:text-5xl font-bold">
-            THE VALUE <span className="text-[#5DC9DE]">WE PROVIDE</span>
-          </h2>
-
+            A Home Built Around{" "}
+            <span className="text-[#5DC9DE]">What Artists Actually Need.</span>
+          </h2> 
           <p className="text-gray-400">
-            OPH Community is a unique platform that relieves artists burden of
-            juggling to multiple services. We empowers artists by providing them
-            with essential tools, exposure, and opportunities, ensuring their
-            growth and success without unnecessary obstacles.
+            Every Artist’s Needs are Different. Choose the Path that fits you.
+            We have built the Community around what actually helps you Create,
+            Connect, Grow, and Earn — without providing you things you’ll never
+            have a use for.
           </p>
-
           {/* <p className="text-gray-400">
           OPH Community is a unified platform that relieves artists of the burden of juggling multiple services. We empowers artists by providing them with essential tools, 
           exposure, and opportunities, ensuring their growth and success without unnecessary obstacles.
           </p> */}
-
           <ul className="space-y-3">
             {features.map((feature, index) => (
               <li key={index} className="flex items-center space-x-2">

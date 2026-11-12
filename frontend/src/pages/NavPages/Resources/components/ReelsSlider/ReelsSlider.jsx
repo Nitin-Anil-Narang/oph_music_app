@@ -172,7 +172,7 @@ function ReelsSlider({ searchText, title }) {
           </h2>
         ) : (
           <h1 className="text-2xl md:text-5xl font-bold text-center mb-10 leading-tight uppercase mt-4">
-            Reels
+            The Untold Stories
           </h1>
         )}
       </div>

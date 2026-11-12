@@ -152,7 +152,7 @@ transition-all duration-250 border-0 select-none hover:shadow-[inset_0_-25px_18p
             })
           }
         >
-          Get Details
+          Get More Details
         </button>
       </div>
 

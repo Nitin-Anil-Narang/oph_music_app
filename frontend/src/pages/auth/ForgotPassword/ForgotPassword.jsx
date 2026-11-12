@@ -41,15 +41,16 @@ const ForgotPassword = () => {
     >
       <div className="w-full max-w-2xl p-8 rounded-lg relative z-10">
         <h1 className="text-cyan-400 text-xl font-extrabold mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] text-center">
-          FORGOT PASSWORD
+          HAPPENS TO EVERYONE
         </h1>
         <p className="text-gray-400 text-center mb-8 text-sm">
-        Oops! Don’t worry, it happens. You still have full control—just follow the steps to recover your portal.
+          Let’s Get You Back In. Your profile is still here. Enter your email,
+          and you’ll be back in your music home in less than a minute.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label 
+            <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-300 mb-1 ml-4"
             >
@@ -71,15 +72,17 @@ const ForgotPassword = () => {
             type="submit"
             disabled={isLoading}
             className={`w-full py-2 px-4 ${
-              isLoading ? 'bg-cyan-500 cursor-not-allowed' : 'bg-cyan-400 hover:bg-cyan-500'
+              isLoading
+                ? "bg-cyan-500 cursor-not-allowed"
+                : "bg-cyan-400 hover:bg-cyan-500"
             } text-gray-900 font-medium rounded-full transition-colors duration-200`}
           >
-            {isLoading ? 'Sending...' : 'Continue'}
+            {isLoading ? "Sending..." : "SEND RESET LINK"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-gray-400 text-sm">
-          Don&apos;t have an account?{" "}
+          NEW TO FAMILY?{" "}
           <a
             href="#"
             className="text-cyan-400 hover:text-cyan-300"
@@ -87,7 +90,7 @@ const ForgotPassword = () => {
               navigate("/auth/signup");
             }}
           >
-            Create Account
+            BECOME THE MEMBER
           </a>
         </p>
       </div>

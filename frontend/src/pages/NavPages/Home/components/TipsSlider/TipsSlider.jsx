@@ -139,63 +139,74 @@ const TipsSlider = () => {
       <div className="mx-auto">
         <div className="container px-4 lg:px-16 xl:px-16 text-white py-10 w-full">
           <h2 className="text-3xl lg:text-5xl font-bold mb-2">
-            ARE YOU <span className="text-[#5DC9DE]">STRUGGLING</span> TOO?
+            Real Artists.<span className="text-[#5DC9DE]">Real Stories.</span>
+            Real Journeys.{" "}
           </h2>
-          <p className="text-gray-400 max-w-2xl">
-            If you're also facing challenges, working hard, and striving for
-            success in music industry, join this online music community today.
+          <p className="text-gray-400 max-w-4xl">
+            The struggle. The first song. The first earning. The first stage. No
+            perfect setups. No overnight-success. Just artists in their own
+            spaces, sharing how they started, what they earned, what went wrong,
+            and what they wish they knew earlier.
           </p>
         </div>
 
         {/* Desktop - Original Slider */}
         <div className="hidden md:block relative px-4 mb-16">
           {tips.length > 0 && (
-          <Slider ref={sliderRef} {...settings} className="tips-slider">
-            {tips.map((tip) => (
-              <div key={tip.id} className="px-2">
-                <div
-                  className="relative rounded-lg overflow-hidden aspect-[3/4.5] cursor-pointer"
-                  onMouseDown={(e) => {
-                    dragStartPos.current = { x: e.clientX, y: e.clientY };
-                  }}
-                  onMouseUp={(e) => {
-                    const deltaX = Math.abs(e.clientX - dragStartPos.current.x);
-                    const deltaY = Math.abs(e.clientY - dragStartPos.current.y);
-                    if (deltaX < 10 && deltaY < 10) {
-                      openModal(tip.video_url);
-                    }
-                  }}
-                  onTouchStart={(e) => {
-                    dragStartPos.current = {
-                      x: e.touches[0].clientX,
-                      y: e.touches[0].clientY,
-                    };
-                  }}
-                  onTouchEnd={(e) => {
-                    const touch = e.changedTouches[0];
-                    const deltaX = Math.abs(touch.clientX - dragStartPos.current.x);
-                    const deltaY = Math.abs(touch.clientY - dragStartPos.current.y);
-                    if (deltaX < 10 && deltaY < 10) {
-                      openModal(tip.video_url);
-                    }
-                  }}
-                >
-                  <Image
-                    src={
-                      tip.thumbnail_url ||
-                      "https://via.placeholder.com/300x400?text=No+Image"
-                    }
-                    fallback={<Shimmer width={300} height={400} />}
-                    alt={tip.title || "Podcast"}
-                    NativeImgProps={{
-                      className: "w-[300px] h-[auto] object-contain",
+            <Slider ref={sliderRef} {...settings} className="tips-slider">
+              {tips.map((tip) => (
+                <div key={tip.id} className="px-2">
+                  <div
+                    className="relative rounded-lg overflow-hidden aspect-[3/4.5] cursor-pointer"
+                    onMouseDown={(e) => {
+                      dragStartPos.current = { x: e.clientX, y: e.clientY };
                     }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    onMouseUp={(e) => {
+                      const deltaX = Math.abs(
+                        e.clientX - dragStartPos.current.x,
+                      );
+                      const deltaY = Math.abs(
+                        e.clientY - dragStartPos.current.y,
+                      );
+                      if (deltaX < 10 && deltaY < 10) {
+                        openModal(tip.video_url);
+                      }
+                    }}
+                    onTouchStart={(e) => {
+                      dragStartPos.current = {
+                        x: e.touches[0].clientX,
+                        y: e.touches[0].clientY,
+                      };
+                    }}
+                    onTouchEnd={(e) => {
+                      const touch = e.changedTouches[0];
+                      const deltaX = Math.abs(
+                        touch.clientX - dragStartPos.current.x,
+                      );
+                      const deltaY = Math.abs(
+                        touch.clientY - dragStartPos.current.y,
+                      );
+                      if (deltaX < 10 && deltaY < 10) {
+                        openModal(tip.video_url);
+                      }
+                    }}
+                  >
+                    <Image
+                      src={
+                        tip.thumbnail_url ||
+                        "https://via.placeholder.com/300x400?text=No+Image"
+                      }
+                      fallback={<Shimmer width={300} height={400} />}
+                      alt={tip.title || "Podcast"}
+                      NativeImgProps={{
+                        className: "w-[300px] h-[auto] object-contain",
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </Slider>
+              ))}
+            </Slider>
           )}
         </div>
 
@@ -220,14 +231,18 @@ const TipsSlider = () => {
                       className: "w-full h-full object-cover",
                     }}
                   />
-                  
+
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
-                  
+
                   {/* Play Button Overlay */}
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="bg-[#5DC9DE]/90 rounded-full p-4 backdrop-blur-sm">
-                      <svg className="w-8 h-8 text-black ml-1" fill="currentColor" viewBox="0 0 20 20">
+                      <svg
+                        className="w-8 h-8 text-black ml-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
                         <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                       </svg>
                     </div>

@@ -344,7 +344,7 @@ function Leaderboard() {
                   <div className="flex-1">Location</div>
                   <div className="flex-1 text-center">Songs</div>
                   <div className="flex-1 text-center">Reach</div>
-                  <div className="flex-1 text-center">Profile</div>
+                  <div className="flex-1 text-center">Profile Visit</div>
                 </div>
                 <div className="container w-full h-[1px] mx-auto bg-gray-400 opacity-30 relative mb-2"></div>
 
@@ -402,7 +402,7 @@ function Leaderboard() {
                           }}
                           className="px-4 py-1 text-sm text-[#5DC9DE] border border-[#5DC9DE] rounded-full hover:bg-cyan-400 hover:text-black transition-colors"
                         >
-                          View Profile
+                         View Profile
                         </button>
                       </div>
                     </div>

@@ -13,33 +13,35 @@ import CustomVideoPlayer from "../../../../components/CustomVideoPlayer/CustomVi
 
 const artistTypeData = {
   "Independent artist": [
-    "Direct Control Over Your Music",
-    "100% Revenue Retention",
-    "Creative Freedom & Ownership",
-    "Build Your Own Brand",
-    "Direct Fan Connection",
-    "Flexible Release Schedule",
-    "No Label Restrictions",
-    "Full Artistic Control",
-    "Independent Promotion Rights",
-    "Personal Artist Portal",
-    "Real-time Analytics Dashboard",
-    "Direct Collaboration Network",
+    "Everything to Build your Music Career",
+    "Make Your Music Discoverable.",
+    "More Opportunities. More Income.",
+    "Make the Music you Love. Leave the Rest to Us",
+    "Let the Right People Find You",
+    "No Location Barriers on Events",
+    "Give Your Story a Place to Live",
+    "Get Seen. Track Your Growth. Get Rewarded.",
+    "Plan Your Release. Reach More People.",
+    "Keep 100% of What You Earn.",
+    "Take Your Music to TV",
+    "Get Your Moment in the Spotlight",
+    "Make Yourself Findable.",
   ],
 
   "Special artist": [
-    "Professional Production Support",
-    "Expert Marketing Team",
-    "Advanced Distribution Network",
-    "Premium Branding Services",
-    "Dedicated Artist Manager",
-    "Priority Release Strategy",
-    "Enhanced Visibility",
-    "Professional Studio Access",
-    "Specialized Promotion Campaigns",
-    "Industry Connections",
-    "Advanced Analytics & Insights",
-    "Exclusive Collaboration Opportunities",
+    "Tell Your Story. Show Your Work.",
+    "Get Discovered. Stay Visible.",
+    "Compete From Your Own Space",
+    "Be Heard - Let Your Songs Be at One Place",
+    "Stay in Control of Your Identity",
+    "Your Room Can Be Your Stage.",
+    "Be Found. Connect Directly.",
+    "Keep 100% of What You Earn.",
+    "More Events. More Opportunities.",
+    "One Decision. Life-Time Membership.",
+    "Be Found. Be Heard.",
+    "Regular Opportunities",
+    "Where Music Finds You.",
   ],
 };
 
@@ -243,12 +245,11 @@ const SignUpForm = () => {
               style={{ backgroundImage: `url(${Struggle})` }}
             >
               <h1 className="text-cyan-400 text-lg lg:text-xl font-extrabold mb-3 lg:mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,1)] mt-8 sm:mt-0">
-                SIGN UP
+                IT’S TIME TO BE DISCOVERED{" "}
               </h1>
               <p className="text-gray-400 mb-6 lg:mb-8 text-xs sm:text-xs">
-                OPH Community, along with all artists and fans, warmly welcomes
-                you. Once you sign up, you’ll become a valued member of our
-                music family.
+                OPH Community isn’t just a platform. It’s a family. And today,
+                the doors of that family are open to you.
               </p>
             </div>
 
@@ -371,14 +372,17 @@ const SignUpForm = () => {
                     formData.artistType === "Independent artist"
                       ? "Independent Artist"
                       : formData.artistType === "Special artist"
-                      ? "Specialist Artist"
-                      : ""
+                        ? "Specialist Artist"
+                        : ""
                   }
                   placeholder="Select Artist Type"
                   ariaLabel="Artist Type"
                   className="w-full flex items-center justify-between px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-b from-white/20 to-white/5 border-t border-l border-r border-white/20 border-b-transparent text-gray-100 text-xs sm:text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 shadow-lg transition-all cursor-pointer"
                   options={[
-                    { value: "Independent artist", label: "Independent Artist" },
+                    {
+                      value: "Independent artist",
+                      label: "Independent Artist",
+                    },
                     { value: "Special artist", label: "Specialist Artist" },
                   ]}
                   onChange={(val) =>
@@ -548,8 +552,6 @@ const SignUpForm = () => {
           </div>
         </div>
 
-        <div className="container w-full h-[1px] mx-auto bg-[#959494] my-5 opacity-30 relative"></div>
-
         {/* Video Modal */}
         {videoModal && (
           <div
@@ -619,19 +621,20 @@ const SignUpForm = () => {
         />
 
         <h1 className="text-xl sm:text-3xl text-left text-white font-bold mt-8">
-          <span className="text-[#5DC9DE]">ABOUT:</span> WHAT WE PROVIDE TO
-          ARTIST
+          <span className="text-[#5DC9DE]">THIS IS WHERE YOU BELONG:</span>A
+          HOME FOR EVERY ARTIST.
         </h1>
         <h2 className="text-left mt-3 text-xs sm:text-sm text-[#9BA3B7] leading-relaxed">
-         Everything will be supported by OPH COMMUNITY Artist only need to focus on their Creative Work – Making Music
+          You don’t need a Big Name, a Big Following, or the Big Connections to
+          belong here. If Music is your World, this is your Home.
         </h2>
 
         <div className="pt-6 sm:pt-12 lg:pt-6">
           <h2 className="uppercase text-base sm:text-xl font-semibold">
-            OPH Community Music Platform Function
+            TWO DOORS. ONE FAMILY. BUILT FOR TWO DIFFERENT ARTISTS.
           </h2>
           <h2 className="uppercase text-xs sm:text-base font-semibold mt-2 text-[#5DC9DE]">
-            YOUR MUSIC, YOUR RIGHTS, YOUR STAGE
+            Every Artist Has a Different Journey. Which One Is Yours?
           </h2>
 
           {/* Artist Type Selector Buttons - Mobile Only */}
@@ -671,7 +674,7 @@ const SignUpForm = () => {
             {/* Independent Artist Column */}
             <div>
               <h3 className="text-lg font-semibold text-white mb-4">
-                Independent Artist
+                Independent Artists
               </h3>
               <ol className="list-none space-y-2">
                 {artistTypeData["Independent artist"].map((item, index) => (
@@ -687,7 +690,7 @@ const SignUpForm = () => {
             {/* Specialist Artist Column */}
             <div>
               <h3 className="text-lg font-semibold text-white mb-4">
-                Specialist Artist
+                Specialist Artists
               </h3>
               <ol className="list-none space-y-2">
                 {artistTypeData["Special artist"].map((item, index) => (
@@ -742,8 +745,9 @@ const SignUpForm = () => {
 
           <div className="relative">
             <h2 className="mt-6 sm:mt-8 text-xs sm:text-lg text-[#5DC9DE] font-bold leading-normal">
-              + Everything Included Mentioned below (Free of Cost by OPH
-              COMMUNITY) Only for our Talented Indian Music Artist
+              + Built Two Different Doors because your needs are different.
+              Choose the path that fits you - get exactly what you need, and not
+              what you don’t.
             </h2>
           </div>
 
@@ -899,311 +903,532 @@ const SignUpForm = () => {
             {/* Left Column */}
             <div>
               <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                1. Marketing Functions:
+                1. EPK Artist Profile | Your Whole Identity, All in One Place.
               </h2>
               <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>100% Google Ads marketing by the OPH Community</h3>
-                <h3>100% Facebook Ads marketing by the OPH Community</h3>
-                <h3>
-                  All creatives and artist branding will be managed by the OPH
-                  Community
-                </h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                2. Creative Function
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>Teaser</h3>
-                <h3>Song Reel</h3>
-                <h3>Poster</h3>
-                <h3>Distribution Poster</h3>
-                <h3>Thumbnail</h3>
-                <h3>Artist Story</h3>
+                <li>
+                  Your Work - Songs, projects, credits, and everything you've
+                  created.
+                </li>
+                <li>
+                  Your Story - Where you come from, why you make music, and what
+                  drives you.
+                </li>
+                <li>
+                  Your Socials - Instagram, YouTube, and more, all in one place.
+                </li>
               </ul>
               <p className="text-gray-400 mt-3 text-xs sm:text-sm">
-                This will be{" "}
-                <span className="text-[#5DC9DE]">
-                  created by the OPH Community
-                </span>
+                Share one link and let people discover who you are and what you
+                create. Your story deserves a place of its own.
               </p>
 
               <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
 
               <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                3. Distribution Audio Functions:
+                2. Direct Connect | 0% Commission. 0 Middlemen.
               </h2>
               <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  Distribution across all music platforms (including Indian
-                  platforms)
-                </h3>
-                <h3>Artist profile linking on Instagram</h3>
-                <h3>
-                  Creation of new profiles on Apple Music and Spotify (if the
-                  artist doesn't already have one)
-                </h3>
-                <h3>Caller tunes will be made available</h3>
-                <h3>Image design will be handled by the OPH Community</h3>
-                <h3>
-                  All data will be accessible through the Artist Portal, managed
-                  by the OPH Community.
-                </h3>
+                <li>No agent. No manager. No one taking cut.</li>
+                <li>Paid, free, or revenue-share - you decide.</li>
+                <li>No more lost opportunities. Connect directly.</li>
               </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                4. Ownership:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  Full ownership will remain with the artist, with no
-                  interference.
-                </h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                5. TV Release:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  The artist's music video will have the opportunity to be
-                  released on TV platforms across various channels.
-                </h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                6. Revenue Model:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  100% of the revenue from both audio and video will go to the
-                  artist.
-                </h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                7. Withdrawal Threshold:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  No limit or threshold on the withdrawal amount. Artists can
-                  withdraw any amount, even as low as ₹100.
-                </h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                8. Exposure:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  The artist's EPK and profile will be displayed on the official
-                  OPH Community website, providing connections and networking
-                  opportunities.
-                </h3>
-              </ul>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                9. Support:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>Call Support</h3>
-                <h3>Chat Support</h3>
-                <h3>Ticket Raising System</h3>
-                <h3>Access To a Personal Portal</h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <p className="underline text-[#5DC9DE] font-bold text-base sm:text-xl before:text-base sm:before:text-lg before:mr-2 w-full px-1 sm:px-3">
-                First Time Ever in India – Only for Limited Thousand Artist
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Your rate. Your terms. Your money. Keep What You Earn
               </p>
-              <p className="mt-4 sm:mt-6 text-xs sm:text-sm font-medium before:content-['•'] before:text-base sm:before:text-lg before:mr-2 w-full px-1 sm:px-3">
-                One Time Artist Documentation Registration fees –{" "}
-                <span className="text-[#5DC9DE] font-black">
-                  2,999 for lifetime Access
-                </span>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                3. Song Release | You Make the Music. We Handle the Rest.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Release on our platform + YouTube, or your own channel - your
+                  choice.
+                </li>
+                <li>
+                  Marketing, promotion &amp; distribution handled, so you can
+                  focus on creating.
+                </li>
+                <li>
+                  Song Registration is optional - release when you're ready,
+                  with no pressure.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                You make the music. We make sure it doesn't get lost in the
+                crowd.
               </p>
-              <p className="mt-2 text-xs sm:text-sm font-medium before:content-['•'] before:text-base sm:before:text-lg before:mr-2 w-full px-1 sm:px-3">
-                Pay as You Go Per{" "}
-                <span className="text-[#5DC9DE] font-black">
-                  Song Registration Documentation fees – 799
-                </span>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                4. Give Your Old Songs a Second Life
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Bring previously released songs back into the spotlight. Old
+                  or new, every good song deserves another chance.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                The song wasn't bad. It just needed another opportunity. Every
+                Song Deserves a 2nd chance. Here, it gets one.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                5. 100% Ownership + 100% Revenue
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Your Rights stays 100% yours, and so does the Revenue it
+                  generates. We don't take any ownership or a cut.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                You created it. It's yours. No questions, no compromises.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                6. Release Calendar | Your Music. Your Timing.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Book your release date months in advance - just like booking a
+                  flight.
+                </li>
+                <li>
+                  Add your title, credits &amp; metadata whenever you're ready -
+                  no rush.
+                </li>
+                <li>
+                  Plan your releases around festivals, birthdays, anniversaries,
+                  wedding seasons &amp; more.
+                </li>
+                <li>
+                  Want your song release 4-5 days before your favourite
+                  occasion? Lock your date early.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                You're the boss of your release date. You're in control of when
+                your music gets its moment.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                7. Events &amp; Competitions | Everyone Gets a Chance
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Save on travel, hotels &amp; food - no expensive trips
+                  required.
+                </li>
+                <li>Members get 50% off every event, always.</li>
+                <li>Win and earn directly through your portal.</li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                You shouldn't have to afford a flight, a hotel, or a long
+                journey just to be heard. Your talent deserves a chance,
+                wherever you are.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                8. TV Release | From Your Screen to Big Screen.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Today's independent artists deserve opportunities beyond
+                  digital platforms. We're opening one more door. Selected songs
+                  can get an opportunity for TV release, with Approvals.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                An opportunity that once felt reserved for labels can now have a
+                door open for you.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                9. Analytics | Know Your Music Performance.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  YouTube, Instagram &amp; Audio platforms - all in one
+                  dashboard.
+                </li>
+                <li>
+                  Once your Data is Ready, your Analytics are too. No waiting
+                  for Days or Months.
+                </li>
+                <li>
+                  Let the data guide your next move - See what's working, where
+                  you're heard, and what's growing.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Stop creating in the dark. See your numbers. Understand your
+                audience. Grow smarter.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                10. Leaderboard, KPI &amp; Artist Spotlight
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>Leaderboard - See your rank across the community.</li>
+                <li>
+                  KPI System - Track your growth and know what to improve.
+                </li>
+                <li>
+                  Artist Spotlight - Top performers get featured with free
+                  visibility.
+                </li>
+                <li>
+                  Rewards - Earn performance-based rewards at no extra cost.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Hard work can go unnoticed. Here, your progress gets seen. You
+                shouldn't have to wait to be recognized. Let your work speak.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                11. Income &amp; Withdrawal | Your Money Stays in your Pocket.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  See your complete income in your portal - where it came from
+                  and how much you earned.
+                </li>
+                <li>
+                  No confusing delays or "wait until next quarter" excuses.
+                </li>
+                <li>Withdraw whenever you want, even ₹1. No minimum limit.</li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Here, everything stays transparent. Your money is yours and you
+                shouldn't have to ask for it.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                12. Support + One-Time Membership
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>Ticket, Call or Chat - When you need. We're here.</li>
+                <li>One time Membership fees and stay forever.</li>
+                <li>No subscriptions. No auto-renewals.</li>
+                <li>Once joined - You're the family and will stay forever.</li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Because belonging shouldn't come with a monthly price tag.
               </p>
             </div>
 
-            {/* Right Column - Duplicate */}
+            {/* Right Column */}
             <div>
               <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                1. Marketing Functions:
+               1. ★ Exclusive | Showcase Your Work | First 2 Songs Free.
               </h2>
               <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>100% Google Ads marketing by the OPH Community</h3>
-                <h3>100% Facebook Ads marketing by the OPH Community</h3>
-                <h3>
-                  All creatives and artist branding will be managed by the OPH
-                  Community
-                </h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                2. Creative Function
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>Teaser</h3>
-                <h3>Song Reel</h3>
-                <h3>Poster</h3>
-                <h3>Distribution Poster</h3>
-                <h3>Thumbnail</h3>
-                <h3>Artist Story</h3>
+                <li>Your first 2 showcases are completely free.</li>
+                <li>
+                  Add songs where you contributed through singing, music,
+                  lyrics, mixing, mastering, and more. (While keeping your
+                  rights in the Project)
+                </li>
+                <li>
+                  Let clients hear your work and see your contribution before
+                  they decide.
+                </li>
               </ul>
               <p className="text-gray-400 mt-3 text-xs sm:text-sm">
-                This will be{" "}
-                <span className="text-[#5DC9DE]">
-                  created by the OPH Community
-                </span>
+                Let your work speak for you - now you have the proof.
               </p>
 
               <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
 
               <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                3. Distribution Audio Functions:
+                2. ★ Exclusive | Your Profile. Your Control.
               </h2>
               <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  Distribution across all music platforms (including Indian
-                  platforms)
-                </h3>
-                <h3>Artist profile linking on Instagram</h3>
-                <h3>
-                  Creation of new profiles on Apple Music and Spotify (if the
-                  artist doesn't already have one)
-                </h3>
-                <h3>Caller tunes will be made available</h3>
-                <h3>Image design will be handled by the OPH Community</h3>
-                <h3>
-                  All data will be accessible through the Artist Portal, managed
-                  by the OPH Community.
-                </h3>
+                <li>
+                  Edit your profile directly from your portal, whenever you
+                  want.
+                </li>
+                <li>Keep your profile fresh with your latest work.</li>
+                <li>Stay in complete control - your profile, your identity.</li>
               </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                4. Ownership:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  Full ownership will remain with the artist, with no
-                  interference.
-                </h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                5. TV Release:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  The artist's music video will have the opportunity to be
-                  released on TV platforms across various channels.
-                </h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                6. Revenue Model:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  100% of the revenue from both audio and video will go to the
-                  artist.
-                </h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                7. Withdrawal Threshold:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  No limit or threshold on the withdrawal amount. Artists can
-                  withdraw any amount, even as low as ₹100.
-                </h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                8. Exposure:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>
-                  The artist's EPK and profile will be displayed on the official
-                  OPH Community website, providing connections and networking
-                  opportunities.
-                </h3>
-              </ul>
-
-              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
-                9. Support:
-              </h2>
-              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
-                <h3>Call Support</h3>
-                <h3>Chat Support</h3>
-                <h3>Ticket Raising System</h3>
-                <h3>Access To a Personal Portal</h3>
-              </ul>
-
-              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
-
-              <p className="underline text-[#5DC9DE] font-bold text-base sm:text-xl before:text-base sm:before:text-lg before:mr-2 w-full px-1 sm:px-3">
-                First Time Ever in India – Only for Limited Thousand Artist
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Your identity should always be in your hands.
               </p>
-              <p className="mt-4 sm:mt-6 text-xs sm:text-sm font-medium before:content-['•'] before:text-base sm:before:text-lg before:mr-2 w-full px-1 sm:px-3">
-                One Time Artist Documentation Registration fees –{" "}
-                <span className="text-[#5DC9DE] font-black">
-                  2,999 for lifetime Access
-                </span>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                3. Get Found for Work Across India | Let Your Name Travel.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Be discovered by producers, directors, and artists looking for
+                  your skills.
+                </li>
+                <li>
+                  Message directly. Deal directly. No agents. No commission.
+                </li>
+                <li>
+                  Collaborate with artists across India - paid or creative, you
+                  decide.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Your talent never needed a shortcut. It just needed the right
+                door.
               </p>
-              <p className="mt-2 text-xs sm:text-sm font-medium before:content-['•'] before:text-base sm:before:text-lg before:mr-2 w-full px-1 sm:px-3">
-                Pay as You Go Per{" "}
-                <span className="text-[#5DC9DE] font-black">
-                  Song Registration Documentation fees – 799
-                </span>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+               4. KPI | See Your Growth. Know Your Progress.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  KPI System - Track your performance, measure your growth, and
+                  understand where you stand all directly from your portal.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                You deserve to see how far your talent is taking you.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                5. Competitions | Your Chance to Be Seen.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Take your smaller steps towards to get known to this Family.
+                </li>
+                <li>Members get 50% off every event, always.</li>
+                <li>Win and earn directly through your portal</li>
+                <h4>
+                  Talent lives in every corner of India. Your location shouldn't
+                  decide your opportunity.
+                </h4>
+              </ul>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+               6. EPK Artist Profile | Your Whole Identity, All in One Place.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Your Work - Songs, projects, credits, and everything you've
+                  created.
+                </li>
+                <li>
+                  Your Story - Where you come from, why you make music, and what
+                  drives you.
+                </li>
+                <li>
+                  Your Socials - Instagram, YouTube, and more, all in one place.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Share one link and let people discover who you are and what you
+                create. Your story deserves a place of its own.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                7. Direct Connect | Let Opportunities Find You.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>Connect directly with industry professionals.</li>
+                <li>
+                  No agents or middlemen standing between you and the
+                  opportunity.
+                </li>
+                <li>Discuss, collaborate, and build connections directly.</li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Your talent shouldn't have to pass through someone else to reach
+                the right opportunity.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+               8. 0% Commission | What You Earn Is Yours.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Keep 100% of what you earn. No one takes a cut from your deal.
+                </li>
+                <li>Set your own rate and terms.</li>
+                <li>
+                  Paid, free, or revenue share - you decide what works for you.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Your work. Your deal. Your choice.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+              9. Events | Opportunities without Borders.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Virtual events - from a village in Bihar to a home in
+                  Bangalore, everyone gets a fair chance.
+                </li>
+                <li>
+                  Save on travel, hotels &amp; food - no expensive trips
+                  required.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                "I can't afford to travel" should never stand between you and
+                your dream.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                10. One-Time Membership | Join Once. Stay Forever.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>Become the Member of the Family.</li>
+                <li>No subscriptions. No auto-renewals. No recurring fees.</li>
+                <li>Once you join, you're family - and you stay forever.</li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Because family doesn't charge you every month just to belong.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                11. Income &amp; Withdrawal | What You Earn, You Keep.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>See every event earning inside your portal.</li>
+                <li>Withdraw anytime, even ₹1 - no minimum limit.</li>
+                <li>
+                  Income Section will remain locked until you receive any
+                  Earning or Reward.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                When your work earns, you should have control of what you earn.
+              </p>
+
+              <div className="container w-full h-[1px] mx-auto bg-[#666666] my-4 sm:my-5 opacity-30 relative"></div>
+
+              <h2 className="mt-4 sm:mt-8 text-base sm:text-2xl font-semibold">
+                12. Support | You're Never Alone.
+              </h2>
+              <ul className="list-disc px-4 sm:px-5 mt-3 text-gray-400 space-y-2 text-xs sm:text-sm">
+                <li>
+                  Ticket, Call or Chat Whenever you feel stuck, reach out. We're
+                  here to listen, guide, and help.
+                </li>
+                <li>
+                  Whether it's a question, a problem, or simply something you
+                  don't understand - you'll always have someone to turn to.
+                </li>
+              </ul>
+              <p className="text-gray-400 mt-3 text-xs sm:text-sm">
+                Every artist needs someone in their corner. We're here to be
+                yours.
               </p>
             </div>
           </div>
 
           <div className="container w-full h-[1px] mx-auto bg-[#666666] my-5 opacity-30 relative"></div>
 
-          <p className="text-center mt-6 sm:mt-8 leading-relaxed mx-auto px-4 sm:px-0 uppercase" style={{ fontSize: 'clamp(18px, 5vw, 32px)', fontWeight: 400, color: '#E5E7EB', maxWidth: '1334px' }}>
-            Now – No hassle for Anything just Make your Music Peacefully – Rest live on
-            India's Only Real Music Community
-          </p>
+          <h2 className="text-center mt-8 sm:mt-12 text-xl sm:text-3xl font-bold">
+            The Beginning of this Community. Starting Soon — with Only the First
+            1000 Artists.
+          </h2>
+
+          <div className="hidden lg:grid lg:grid-cols-2 gap-12 mt-8">
+            {/* Left Column */}
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-4">
+                One Time Membership Registration –{" "}
+                <span className="text-[#5DC9DE]">
+                  ₹2,999 for Lifetime Access.
+                </span>
+              </h3>
+              <h3 className="text-lg font-semibold text-white mb-4">
+                Pay as You Go ₹ 799 Per{" "}
+                <span className="text-[#5DC9DE]">
+                  Song Registration + Marketing fees (With More Included)
+                </span>
+              </h3>
+            </div>
+
+            {/* Right Column */}
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-4">
+                One Time Membership Registration –{" "}
+                <span className="text-[#5DC9DE]">
+                  ₹1,499 for Lifetime Access.
+                </span>
+              </h3>
+              <h3 className="text-lg font-semibold text-white mb-4">
+                Start by Showcasing{" "}
+                <span className="text-[#5DC9DE]">
+                  Your Work - First 2 Songs Free.
+                </span>
+              </h3>
+            </div>
+          </div>
+
+          <h2
+            className="text-center mt-6 sm:mt-8 leading-relaxed mx-auto px-4 sm:px-0 uppercase"
+            style={{
+              fontSize: "clamp(18px, 5vw, 32px)",
+              fontWeight: 400,
+              color: "#E5E7EB",
+              maxWidth: "1334px",
+            }}
+          >
+            The Heart of the Platform
+          </h2>
+
+          <h3
+            className="text-center mt-6 sm:mt-8 leading-relaxed mx-auto px-4 sm:px-0"
+          >
+            Search. Find. Connect. Work — No One in Between.
+          </h3>
 
           <h2 className="mt-8 sm:mt-10 text-center text-xl sm:text-3xl font-bold">
             OPH COMMUNITY
           </h2>
           <p className="text-gray-400 text-center mt-2 sm:mt-5 text-xs sm:text-lg">
-            Now its time to bridge a gap between artists music and their
-            audience
+            Find the right people. Talk directly. Turn connections into
+            opportunities.
           </p>
 
           <div className="w-full flex justify-center">
@@ -1211,7 +1436,7 @@ const SignUpForm = () => {
               className="px-8 sm:px-10 py-2.5 sm:py-3 rounded-full text-black mt-5 bg-[#5DC9DE] font-bold w-full sm:w-auto"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             >
-              Lets Start
+              Start Your Journey
             </button>
           </div>
         </div>

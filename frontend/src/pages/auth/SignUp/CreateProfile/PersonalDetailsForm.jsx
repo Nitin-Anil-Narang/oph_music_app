@@ -14,6 +14,7 @@ import Elipse from "../../../../../public/assets/images/elipse2.png";
 import { useLocation } from "react-router-dom";
 
 const indianStates = [
+  "Andaman and Nicobar Islands",
   "Andhra Pradesh",
   "Arunachal Pradesh",
   "Assam",

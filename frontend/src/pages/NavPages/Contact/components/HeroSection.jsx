@@ -140,21 +140,24 @@ function HeroSection() {
         {/* Left Side Content Column */}
         <div className="flex flex-col w-full lg:w-1/2 text-left justify-center">
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[36px] text-white uppercase font-black leading-tight tracking-wide">
-            Fill out this form to get updates, detailed info, and{" "}
+            EVERY MESSAGE HERE REACHES A REAL PERSON. FILL OUT THIS FORM TO GET
+            UPDATES, DETAILED INFO, AND{" "}
             <span className="text-[#5DC9DE]">
-              stay connected with the OPH Community
+              STAY CONNECTED TO BE THE FAMILY
             </span>
           </h1>
           <p className="text-xs sm:text-sm md:text-base text-[#9BA3B7] mt-4 font-medium leading-relaxed">
-            Give us a call, and if the call doesn&apos;t connect, please fill
-            out the form. We will get in touch with you within 24 hours.
+            No Bots. No Automation. Just Us. Have a question, an idea, a problem
+            or just want to say hello? Someone from the OPH Community reads it.
+            Someone replies. Building something big and that means when you
+            reach out, you reach us directly.
           </p>
 
           <div className="w-full h-[1px] opacity-20 bg-white my-6"></div>
 
           <div className="flex flex-col text-sm sm:text-base md:text-lg">
             <span className="text-white font-bold uppercase tracking-wider text-xs text-gray-400 mb-2">
-              OPH Contact Details:
+              Direct Contact Details:
             </span>
             <div className="flex flex-col gap-2">
               <a
@@ -184,7 +187,7 @@ function HeroSection() {
                 htmlFor="name"
                 className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 text-left"
               >
-                Full Name <span className="text-red-500">*</span>
+                Your Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -193,7 +196,7 @@ function HeroSection() {
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full px-4 py-2.5 rounded-full bg-gray-900/90 border border-gray-700 text-sm text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
-                placeholder="John Doe"
+                placeholder="Full Name"
                 required
               />
             </div>
@@ -231,7 +234,7 @@ function HeroSection() {
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full px-4 py-2.5 rounded-full bg-gray-900/90 border border-gray-700 text-sm text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
-                placeholder="1234567890"
+                placeholder="91+1234567890"
                 required
               />
             </div>
@@ -250,7 +253,7 @@ function HeroSection() {
                 value={formData.instagram_handle}
                 onChange={handleChange}
                 className="w-full px-4 py-2.5 rounded-full bg-gray-900/90 border border-gray-700 text-sm text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
-                placeholder="username or profile link"
+                placeholder="username or profile full link"
                 required
               />
             </div>
@@ -270,7 +273,7 @@ function HeroSection() {
                 value={formData.description}
                 onChange={handleChange}
                 className="w-full px-4 py-3 rounded-xl bg-gray-900/90 border border-gray-700 text-sm text-gray-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 resize-none"
-                placeholder="Your description here..."
+                placeholder="Write Down What You Feel..."
               />
             </div>
 
@@ -304,9 +307,10 @@ function HeroSection() {
               alt="tick"
             />
             <p className="mt-2 text-sm sm:text-base md:text-lg font-medium px-2 sm:px-6 leading-relaxed">
-              Thank you for submitting your details! You’ll receive regular
-              updates and detailed information directly to your email. Stay
-              connected with the OPH Community!
+              You’re In. First Step towards joining the Family. Thank you for
+              submitting your details! We will get back to you within 24 hours
+              and keep you updated with everything you need to know straight to
+              your inbox.
             </p>
             <Link to={"/"} className="w-full sm:w-auto">
               <button className="w-full sm:px-14 mt-8 py-3 bg-[#5DC9DE] text-[#181B24] font-bold uppercase rounded-full text-xs sm:text-sm tracking-wide shadow-md hover:bg-opacity-90 transition-all">
